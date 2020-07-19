@@ -1,10 +1,20 @@
 """Astoria HTTP API."""
 
 from fastapi import FastAPI
+from pydantic import BaseModel
 
-from .response_models import DaemonInfo, SystemMetadata
+from astoria import __version__
+from astoria.common.metadata import SystemMetadata
 
 app = FastAPI()
+
+
+class DaemonInfo(BaseModel):
+    """Information about the daemon."""
+
+    version: str = __version__
+    name: str = "Astoria Daemon"
+    code_status: str = "UNKNOWN"
 
 
 @app.get('/', response_model=DaemonInfo)
@@ -20,4 +30,4 @@ async def system_metadata() -> SystemMetadata:
 
     This is the data that should be provided to users.
     """
-    return SystemMetadata()
+    return SystemMetadata.init()
