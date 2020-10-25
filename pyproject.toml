@@ -36,3 +36,6 @@ isort = {version = "*",extras = ["pyproject"]}
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
+
+[tool.poetry.scripts]
+astdiskd = 'astoria.components.diskd.app:main'
