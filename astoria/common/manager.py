@@ -1,8 +1,11 @@
 """Common code for manager daemons."""
+import atexit
 import logging
 from abc import ABCMeta, abstractmethod
 from signal import SIGHUP, SIGINT, SIGTERM, Signals, signal
 from types import FrameType
+
+from systemd.daemon import notify
 
 from astoria import __version__
 
@@ -28,9 +31,10 @@ class ManagerDaemon(metaclass=ABCMeta):
         LOGGER.info(f"{self.name} v{__version__} - {self.__doc__}")
         self.init()
 
-        signal(SIGHUP, self._signal_stop)
-        signal(SIGINT, self._signal_stop)
-        signal(SIGTERM, self._signal_stop)
+        atexit.register(self.halt)
+        signal(SIGHUP, self._signal_halt)
+        signal(SIGINT, self._signal_halt)
+        signal(SIGTERM, self._signal_halt)
 
     def init(self) -> None:
         """Initialisation of the manager."""
@@ -48,7 +52,8 @@ class ManagerDaemon(metaclass=ABCMeta):
 
         Should be a blocking call, as the daemon loops.
         """
-        LOGGER.debug("Started")
+        notify("READY=1")
+        LOGGER.info("Ready")
         self._run()
 
     @abstractmethod
@@ -66,6 +71,7 @@ class ManagerDaemon(metaclass=ABCMeta):
 
         Should stop the daemon safely.
         """
+        notify("STOPPING=1")
         LOGGER.debug("Halting")
         self._halt()
 
@@ -84,6 +90,6 @@ class ManagerDaemon(metaclass=ABCMeta):
         """Name of the daemon."""
         raise NotImplementedError
 
-    def _signal_stop(self, signal: Signals, __: FrameType) -> None:
+    def _signal_halt(self, signal: Signals, __: FrameType) -> None:
         LOGGER.debug(f"Received {Signals(signal).name}, triggering halt")
         self.halt()

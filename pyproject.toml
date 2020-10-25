@@ -17,6 +17,7 @@ classifiers = [
 python = "^3.6"
 pydantic = "^1.6.1"
 click = "^7.1.2"
+systemd-python = "^234"
 
 [tool.poetry.dev-dependencies]
 flake8 = "*"
