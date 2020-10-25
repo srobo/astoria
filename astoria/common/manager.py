@@ -74,6 +74,7 @@ class ManagerDaemon(metaclass=ABCMeta):
         notify("STOPPING=1")
         LOGGER.debug("Halting")
         self._halt()
+        LOGGER.info("Halted")
 
     @abstractmethod
     def _halt(self) -> None:
