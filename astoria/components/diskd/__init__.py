@@ -1,1 +1,0 @@
-"""Astoria Disk Manager."""

@@ -32,3 +32,6 @@ class DiskManager(ManagerDaemon):
 
     def _halt(self) -> None:
         self._loop = False
+
+if __name__ == "__main__":
+    main()
