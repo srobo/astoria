@@ -158,6 +158,10 @@ class UdisksConnection:
                                 uuid = DiskUUID(block["IdUUID"])
                                 LOGGER.info(f"Drive {uuid} mounted ({mount_path})")
                                 self._drives[uuid] = mount_path
+                            else:
+                                LOGGER.warning(f"UUID unavailable for {mount_path}")
+                        else:
+                            LOGGER.warning(f"No block available for {mount_path}")
 
 
 if __name__ == "__main__":
