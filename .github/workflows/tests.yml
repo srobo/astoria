@@ -19,6 +19,8 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: ${{ matrix.python }}
+      - name: Install systemd libraries
+        run: sudo apt-get install -y libsystemd-dev libgirepository1.0-dev
       - name: Install Poetry
         run: pip install poetry
       - name: Use in-project virtualenv
