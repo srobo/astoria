@@ -10,7 +10,7 @@ from gi.repository import GLib
 from pydbus import SystemBus
 
 from astoria.common.manager import ManagerDaemon
-from astoria.common.messages.disk import DiskUUID
+from astoria.common.messages.astdiskd import DiskUUID
 
 LOGGER = logging.getLogger(__name__)
 
