@@ -20,7 +20,7 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - name: Install systemd libraries
-        run: sudo apt-get install -y libsystemd-dev libgirepository1.0-dev
+        run: sudo apt-get install -y libsystemd-dev
       - name: Install Poetry
         run: pip install poetry
       - name: Use in-project virtualenv
