@@ -141,10 +141,9 @@ class UdisksConnection:
             mount_points: List[List[int]] = \
                 await drive_filesystem.get_mount_points()  # type: ignore
 
-            if len(mount_points) > 0:
+            try:
                 # We are only interested in the first mountpoint.
-                mount_point = mount_points[0]
-                mount_path = self._bytes_to_path(mount_point)
+                mount_path = self._bytes_to_path(mount_points[0])
                 if mount_path.exists() and mount_path.is_dir():
                     drive_block = drive_obj.get_interface("org.freedesktop.UDisks2.Block")
                     uuid: DiskUUID = DiskUUID(
@@ -157,36 +156,36 @@ class UdisksConnection:
                         LOGGER.error(f"Drive UUID collision! uuid={uuid}")
                 else:
                     LOGGER.warning(f"Invalid mount path: {mount_path}")
-            else:
+            except IndexError:
                 LOGGER.warning(f"No mount points available for drive at {disk_bus_path}")
+
         except InterfaceNotFoundError:
+            # Object doesn't have a Filesystem interface
             pass
 
     async def cleanup_task(self) -> None:
         """Handle a cleanup event."""
         await asyncio.sleep(0.3)  # Allow enough time for the unmount to occur.
+
         # We have no information to tell which drive left.
-        # Thus we need to check.
-        removed_drives: List[DiskUUID] = []
+        # Thus we need to check all of them.
         for uuid, path in self._drives.items():
             if not path.exists():
                 LOGGER.info(f"Drive {uuid} removed ({path})")
-                removed_drives.append(uuid)
-        for uuid in removed_drives:
-            self._drives.pop(uuid)
+                self._drives.pop(uuid)
 
     async def _detect_initial_drives(self, udisks_obj_manager: ProxyInterface) -> None:
         """Detect and register drives as startup."""
         LOGGER.info("Checking for initial drives at startup.")
+
+        # The block devices are dbus objects managed by Udisks
+        # We have to fetch them all unless we already know what they are.
         managed_objects: Dict[str, Dict[str, str]] = \
             await udisks_obj_manager.call_get_managed_objects()  # type: ignore
-        block_devices = {
-            x: managed_objects[x]
-            for x in managed_objects.keys()
-            if x.startswith("/org/freedesktop/UDisks2/block_devices/")
-        }
-        for path, _ in block_devices.items():
-            asyncio.ensure_future(self.mount_task(path))
+
+        for path in managed_objects:
+            if path.startswith("/org/freedesktop/UDisks2/block_devices/"):
+                asyncio.ensure_future(self.mount_task(path))
 
 
 if __name__ == "__main__":
