@@ -29,16 +29,18 @@ class ManagerDaemon(metaclass=ABCMeta):
                 datefmt="%Y-%m-%d %H:%M:%S",
             )
         LOGGER.info(f"{self.name} v{__version__} - {self.__doc__}")
+
+        self._running = True
         self.init()
 
-        atexit.register(self.halt)
+        atexit.register(lambda: self.halt() if self._running else None)
         signal(SIGHUP, self._signal_halt)
         signal(SIGINT, self._signal_halt)
         signal(SIGTERM, self._signal_halt)
 
     def init(self) -> None:
         """Initialisation of the manager."""
-        LOGGER.debug("Initialising")
+        LOGGER.debug("Initialising manager")
         self._init()
 
     @abstractmethod
@@ -71,6 +73,7 @@ class ManagerDaemon(metaclass=ABCMeta):
 
         Should stop the daemon safely.
         """
+        self._running = False
         notify("STOPPING=1")
         LOGGER.debug("Halting")
         self._halt()
