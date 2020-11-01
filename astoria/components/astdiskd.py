@@ -3,7 +3,7 @@
 import asyncio
 import logging
 from pathlib import Path
-from typing import Dict, List
+from typing import Callable, Coroutine, Dict, List, Set, Union
 
 import click
 from dbus_next.aio import MessageBus
@@ -11,9 +11,14 @@ from dbus_next.aio.proxy_object import ProxyInterface
 from dbus_next.constants import BusType
 from dbus_next.errors import InterfaceNotFoundError
 from dbus_next.signature import Variant
+from pydantic import BaseModel
 
 from astoria.common.manager import ManagerDaemon
-from astoria.common.messages.astdiskd import DiskUUID
+from astoria.common.messages.astdiskd import (
+    DiskInfoMessage,
+    DiskManagerStatusMessage,
+    DiskUUID,
+)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -36,7 +41,10 @@ class DiskManager(ManagerDaemon):
     name = "astdiskd"
 
     def _init(self) -> None:
-        self._udisks = UdisksConnection()
+        self._state_lock = asyncio.Lock()
+        self._state_disks: Set[DiskUUID] = set()
+
+        self._udisks = UdisksConnection(notify_coro=self.update_state)
         asyncio.ensure_future(self._udisks.loop())
 
     def _run(self) -> None:
@@ -45,6 +53,43 @@ class DiskManager(ManagerDaemon):
     def _halt(self) -> None:
         loop.stop()
 
+    async def update_state(self) -> None:
+        """Update the daemon state on MQTT."""
+        async with self._state_lock:
+            disk_set = set(self._udisks.drives.keys())
+            added_disks = disk_set - self._state_disks
+            removed_disks = self._state_disks - disk_set
+            self._state_disks = disk_set
+
+        for disk_uuid in added_disks:
+            asyncio.ensure_future(self.mqtt_publish(
+                f"/astoria/disk/disks/{disk_uuid}",
+                DiskInfoMessage(
+                    uuid=disk_uuid,
+                    mount_path=self._udisks.drives[disk_uuid],
+                ),
+            ))
+
+        await self.mqtt_publish(
+            "/astoria/disk/status",
+            DiskManagerStatusMessage(
+                disks=list(disk_set),
+                status=DiskManagerStatusMessage.ManagerStatus.RUNNING,
+            ),
+        )
+
+        for disk_uuid in removed_disks:
+            await self.mqtt_publish(
+                f"/astoria/disk/disks/{disk_uuid}",
+                "",
+            )
+
+    async def mqtt_publish(self, topic: str, payload: Union[BaseModel, str]) -> None:
+        """Mock publish."""
+        if isinstance(payload, BaseModel):
+            payload = payload.json()
+        print(f"{topic} :: {payload}")
+
 
 class UdisksConnection:
     """Connect and communicate with UDisks2."""
@@ -52,8 +97,18 @@ class UdisksConnection:
     DBUS_PATH: str = "/org/freedesktop/UDisks2"
     DBUS_NAME: str = "org.freedesktop.UDisks2"
 
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        *,
+        notify_coro: Callable[[], Coroutine[None, None, None]],
+    ) -> None:
         self._drives: Dict[DiskUUID, Path] = {}
+        self._notify_coro = notify_coro
+
+    @property
+    def drives(self) -> Dict[DiskUUID, Path]:
+        """Currently mounted drives."""
+        return self._drives
 
     async def loop(self) -> None:
         """Udisks loop."""
@@ -75,7 +130,7 @@ class UdisksConnection:
         await self._detect_initial_drives(udisks_obj_manager)
 
         while True:
-            await asyncio.sleep(0.2)
+            await asyncio.sleep(0.2)  # Replace with incoming MQTT await here
 
     def _bytes_to_path(self, data: List[int]) -> Path:
         """Convert a null terminated int array to a path."""
@@ -100,7 +155,7 @@ class UdisksConnection:
         if path.startswith("/org/freedesktop/UDisks2/jobs/"):
             for job in data.keys():
                 event_data = data[job]
-                if "Operation" in event_data.keys():
+                try:
                     if event_data["Operation"].value == "filesystem-mount":
                         LOGGER.debug(f"disk_signal: Mount Event detected at {path}")
                         if all((
@@ -121,8 +176,10 @@ class UdisksConnection:
                     if event_data["Operation"].value == "cleanup":
                         LOGGER.debug(f"disk_signal: Removal Event detected at {path}")
                         asyncio.ensure_future(self.cleanup_task())
+                except IndexError:
+                    pass
 
-    async def mount_task(self, disk_bus_path: str) -> None:
+    async def mount_task(self, disk_bus_path: str, *, notify: bool = True) -> None:
         """Handle a mount event."""
         await asyncio.sleep(0.3)  # Allow enough time for the mount to occur.
 
@@ -152,6 +209,9 @@ class UdisksConnection:
                     if uuid not in self._drives.keys():
                         LOGGER.info(f"Drive {uuid} mounted ({mount_path})")
                         self._drives[uuid] = mount_path
+
+                        if notify:
+                            asyncio.ensure_future(self._notify_coro())
                     else:
                         LOGGER.error(f"Drive UUID collision! uuid={uuid}")
                 else:
@@ -163,16 +223,27 @@ class UdisksConnection:
             # Object doesn't have a Filesystem interface
             pass
 
-    async def cleanup_task(self) -> None:
+    async def cleanup_task(self, *, notify: bool = True) -> None:
         """Handle a cleanup event."""
         await asyncio.sleep(0.3)  # Allow enough time for the unmount to occur.
 
         # We have no information to tell which drive left.
         # Thus we need to check all of them.
+        removed_drives: List[DiskUUID] = []
         for uuid, path in self._drives.items():
             if not path.exists():
                 LOGGER.info(f"Drive {uuid} removed ({path})")
-                self._drives.pop(uuid)
+                removed_drives.append(uuid)
+
+        # We have to remove the drives here as we cannot modify
+        # a dictionary as we are iterating over it.
+        # Equally, we cannot break the previous loop in case a
+        # drive had multiple partitions that were mounted.
+        for uuid in removed_drives:
+            self._drives.pop(uuid)
+
+        if notify:
+            asyncio.ensure_future(self._notify_coro())
 
     async def _detect_initial_drives(self, udisks_obj_manager: ProxyInterface) -> None:
         """Detect and register drives as startup."""
@@ -183,9 +254,18 @@ class UdisksConnection:
         managed_objects: Dict[str, Dict[str, str]] = \
             await udisks_obj_manager.call_get_managed_objects()  # type: ignore
 
-        for path in managed_objects:
-            if path.startswith("/org/freedesktop/UDisks2/block_devices/"):
-                asyncio.ensure_future(self.mount_task(path))
+        # Start a mount task for every block device and wait
+        # for all of the tasks to be complete.
+        await asyncio.gather(
+            *(
+                self.mount_task(path, notify=False)
+                for path in managed_objects
+                if path.startswith("/org/freedesktop/UDisks2/block_devices/")
+            ),
+        )
+
+        # Send one notify
+        asyncio.ensure_future(self._notify_coro())
 
 
 if __name__ == "__main__":

@@ -73,11 +73,10 @@ class ManagerDaemon(metaclass=ABCMeta):
 
         Should stop the daemon safely.
         """
-        self._running = False
+        self._running = False  # Prevent atexit calling this twice
         notify("STOPPING=1")
-        LOGGER.debug("Halting")
+        LOGGER.info("Halting")
         self._halt()
-        LOGGER.info("Halted")
 
     @abstractmethod
     def _halt(self) -> None:
