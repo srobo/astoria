@@ -14,6 +14,7 @@ from dbus_next.signature import Variant
 from pydantic import BaseModel
 
 from astoria.common.manager import ManagerDaemon
+from astoria.common.messages.base import BaseManagerStatusMessage
 from astoria.common.messages.astdiskd import (
     DiskInfoMessage,
     DiskManagerStatusMessage,
@@ -43,6 +44,13 @@ class DiskManager(ManagerDaemon):
     def _init(self) -> None:
         self._state_lock = asyncio.Lock()
         self._state_disks: Set[DiskUUID] = set()
+        self.mqtt_last_will(
+            "/astoria/disk/status",
+            DiskManagerStatusMessage(
+                status=DiskManagerStatusMessage.ManagerStatus.STOPPED,
+                disks=[],
+            ),
+        )
 
         self._udisks = UdisksConnection(notify_coro=self.update_state)
         asyncio.ensure_future(self._udisks.loop())
@@ -83,6 +91,10 @@ class DiskManager(ManagerDaemon):
                 f"/astoria/disk/disks/{disk_uuid}",
                 "",
             )
+
+    def mqtt_last_will(self, topic: str, payload: BaseManagerStatusMessage) -> None:
+        """Mock last will."""
+        print(f"LASTWILL {topic} :: {payload.json()}")
 
     async def mqtt_publish(self, topic: str, payload: Union[BaseModel, str]) -> None:
         """Mock publish."""
@@ -256,13 +268,12 @@ class UdisksConnection:
 
         # Start a mount task for every block device and wait
         # for all of the tasks to be complete.
-        await asyncio.gather(
-            *(
-                self.mount_task(path, notify=False)
-                for path in managed_objects
-                if path.startswith("/org/freedesktop/UDisks2/block_devices/")
-            ),
+        tasks = (
+            self.mount_task(path, notify=False)
+            for path in managed_objects
+            if path.startswith("/org/freedesktop/UDisks2/block_devices/")
         )
+        await asyncio.gather(*tasks)
 
         # Send one notify
         asyncio.ensure_future(self._notify_coro())
