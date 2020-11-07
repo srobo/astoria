@@ -1,8 +1,16 @@
 """MQTT message definitions for the disk manager daemon."""
+from enum import Enum
 from pathlib import Path
-from typing import List, NewType
+from typing import Dict, List, NewType
 
 from pydantic import BaseModel
+
+from astoria.common.disk_constraints import (
+    Constraint,
+    FalseConstraint,
+    FilePresentConstraint,
+    TrueConstraint,
+)
 
 from .base import BaseManagerStatusMessage
 
@@ -19,6 +27,31 @@ class DiskManagerStatusMessage(BaseManagerStatusMessage):
     disks: List[DiskUUID]
 
 
+class DiskType(Enum):
+    """Type of disk."""
+
+    USERCODE = "USERCODE"
+    METADATA = "METADATA"
+    UPDATE = "UPDATE"
+    NOACTION = "NOACTION"
+
+    @classmethod
+    def determine_disk_type(cls, mount_path: Path) -> 'DiskType':
+        """Determine the disk type from the mount path."""
+        constraints: Dict['DiskType', Constraint] = {
+            cls.USERCODE: FilePresentConstraint("robot.zip"),
+            cls.METADATA: FilePresentConstraint("pepper2.json"),
+            cls.UPDATE: FalseConstraint(),  # Unknown
+            cls.NOACTION: TrueConstraint(),  # Always match
+        }
+
+        for typ, constraint in constraints.items():
+            if constraint.matches(mount_path):
+                return typ
+
+        raise RuntimeError("Unable to determine type of disk.")
+
+
 class DiskInfoMessage(BaseModel):
     """
     Information about a mounted disk.
@@ -28,3 +61,4 @@ class DiskInfoMessage(BaseModel):
 
     uuid: DiskUUID
     mount_path: Path
+    disk_type: DiskType

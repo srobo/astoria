@@ -14,12 +14,13 @@ from dbus_next.signature import Variant
 from pydantic import BaseModel
 
 from astoria.common.manager import ManagerDaemon
-from astoria.common.messages.base import BaseManagerStatusMessage
 from astoria.common.messages.astdiskd import (
     DiskInfoMessage,
     DiskManagerStatusMessage,
+    DiskType,
     DiskUUID,
 )
+from astoria.common.messages.base import BaseManagerStatusMessage
 
 LOGGER = logging.getLogger(__name__)
 
@@ -70,13 +71,15 @@ class DiskManager(ManagerDaemon):
             self._state_disks = disk_set
 
         for disk_uuid in added_disks:
-            asyncio.ensure_future(self.mqtt_publish(
+            mount_path = self._udisks.drives[disk_uuid]
+            await self.mqtt_publish(
                 f"/astoria/disk/disks/{disk_uuid}",
                 DiskInfoMessage(
                     uuid=disk_uuid,
-                    mount_path=self._udisks.drives[disk_uuid],
+                    mount_path=mount_path,
+                    disk_type=DiskType.determine_disk_type(mount_path),
                 ),
-            ))
+            )
 
         await self.mqtt_publish(
             "/astoria/disk/status",
@@ -87,20 +90,20 @@ class DiskManager(ManagerDaemon):
         )
 
         for disk_uuid in removed_disks:
-            await self.mqtt_publish(
+            asyncio.ensure_future(self.mqtt_publish(
                 f"/astoria/disk/disks/{disk_uuid}",
                 "",
-            )
+            ))
 
     def mqtt_last_will(self, topic: str, payload: BaseManagerStatusMessage) -> None:
         """Mock last will."""
-        print(f"LASTWILL {topic} :: {payload.json()}")
+        LOGGER.debug(f"MQTT LASTWILL :: {topic} :: {payload.json()}")
 
     async def mqtt_publish(self, topic: str, payload: Union[BaseModel, str]) -> None:
         """Mock publish."""
         if isinstance(payload, BaseModel):
             payload = payload.json()
-        print(f"{topic} :: {payload}")
+        LOGGER.debug(f"MQTT PUB :: {topic} :: {payload}")
 
 
 class UdisksConnection:
