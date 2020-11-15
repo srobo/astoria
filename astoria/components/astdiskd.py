@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Callable, Coroutine, Dict, List, Set, Union
 
 import click
+import gmqtt
 from dbus_next.aio import MessageBus
 from dbus_next.aio.proxy_object import ProxyInterface
 from dbus_next.constants import BusType
@@ -43,24 +44,32 @@ class DiskManager(ManagerDaemon):
     name = "astdiskd"
 
     def _init(self) -> None:
-        self._state_lock = asyncio.Lock()
-        self._state_disks: Set[DiskUUID] = set()
-        self.mqtt_last_will(
+        last_will = gmqtt.Message(
             "/astoria/disk/status",
             DiskManagerStatusMessage(
                 status=DiskManagerStatusMessage.ManagerStatus.STOPPED,
                 disks=[],
-            ),
+            ).json(),
+            retain=True,
         )
+        self._mqtt_client = gmqtt.Client("astdiskd", will_message=last_will)
+        self._mqtt_stop_event = asyncio.Event()
+        self._state_lock = asyncio.Lock()
+        self._state_disks: Set[DiskUUID] = set()
 
         self._udisks = UdisksConnection(notify_coro=self.update_state)
-        asyncio.ensure_future(self._udisks.loop())
 
     def _run(self) -> None:
-        loop.run_forever()
+        asyncio.ensure_future(self._udisks.main())
+        loop.run_until_complete(self.main())
 
     def _halt(self) -> None:
-        loop.stop()
+        self._mqtt_stop_event.set()
+
+    async def main(self) -> None:
+        await self._mqtt_client.connect("mqtt.eclipse.org")
+        await self._mqtt_stop_event.wait()
+        await self._mqtt_client.disconnect(reason_code=4, reason_string="Stopping")
 
     async def update_state(self) -> None:
         """Update the daemon state on MQTT."""
@@ -95,16 +104,11 @@ class DiskManager(ManagerDaemon):
                 "",
             ))
 
-    def mqtt_last_will(self, topic: str, payload: BaseManagerStatusMessage) -> None:
-        """Mock last will."""
-        LOGGER.debug(f"MQTT LASTWILL :: {topic} :: {payload.json()}")
-
     async def mqtt_publish(self, topic: str, payload: Union[BaseModel, str]) -> None:
         """Mock publish."""
         if isinstance(payload, BaseModel):
             payload = payload.json()
-        LOGGER.debug(f"MQTT PUB :: {topic} :: {payload}")
-
+        self._mqtt_client.publish(topic, payload, qos=1, retain=True)
 
 class UdisksConnection:
     """Connect and communicate with UDisks2."""
@@ -125,8 +129,8 @@ class UdisksConnection:
         """Currently mounted drives."""
         return self._drives
 
-    async def loop(self) -> None:
-        """Udisks loop."""
+    async def main(self) -> None:
+        """Setup the message bus and task dispatcher."""
         mb = MessageBus(bus_type=BusType.SYSTEM)
         self._bus = await mb.connect()
 
@@ -143,9 +147,6 @@ class UdisksConnection:
         udisks_obj_manager.on_interfaces_added(self._disk_signal)
 
         await self._detect_initial_drives(udisks_obj_manager)
-
-        while True:
-            await asyncio.sleep(0.2)  # Replace with incoming MQTT await here
 
     def _bytes_to_path(self, data: List[int]) -> Path:
         """Convert a null terminated int array to a path."""
