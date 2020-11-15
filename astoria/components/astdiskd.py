@@ -60,7 +60,6 @@ class DiskManager(ManagerDaemon):
         self._udisks = UdisksConnection(notify_coro=self.update_state)
 
     def _run(self) -> None:
-        asyncio.ensure_future(self._udisks.main())
         loop.run_until_complete(self.main())
 
     def _halt(self) -> None:
@@ -68,7 +67,13 @@ class DiskManager(ManagerDaemon):
 
     async def main(self) -> None:
         await self._mqtt_client.connect("mqtt.eclipse.org")
+        asyncio.ensure_future(self._udisks.main())
+
         await self._mqtt_stop_event.wait()
+        async with self._state_lock:
+            for uuid in self._state_disks:
+                await self.mqtt_publish(f"/astoria/disk/disks/{uuid}", "")
+                
         await self._mqtt_client.disconnect(reason_code=4, reason_string="Stopping")
 
     async def update_state(self) -> None:
