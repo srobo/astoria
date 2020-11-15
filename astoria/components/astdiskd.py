@@ -44,7 +44,15 @@ class DiskManager(ManagerDaemon):
     name = "astdiskd"
 
     def _init(self) -> None:
-        last_will = gmqtt.Message(
+        self._mqtt_client = gmqtt.Client(self.name, will_message=self.get_last_will_message())
+        self._mqtt_stop_event = asyncio.Event()
+        self._state_lock = asyncio.Lock()
+        self._state_disks: Set[DiskUUID] = set()
+
+        self._udisks = UdisksConnection(notify_coro=self.update_state)
+
+    def get_last_will_message(self) -> gmqtt.Message:
+        return gmqtt.Message(
             "/astoria/disk/status",
             DiskManagerStatusMessage(
                 status=DiskManagerStatusMessage.ManagerStatus.STOPPED,
@@ -52,13 +60,7 @@ class DiskManager(ManagerDaemon):
             ).json(),
             retain=True,
         )
-        self._mqtt_client = gmqtt.Client("astdiskd", will_message=last_will)
-        self._mqtt_stop_event = asyncio.Event()
-        self._state_lock = asyncio.Lock()
-        self._state_disks: Set[DiskUUID] = set()
-
-        self._udisks = UdisksConnection(notify_coro=self.update_state)
-
+ 
     def _run(self) -> None:
         loop.run_until_complete(self.main())
 
@@ -70,11 +72,14 @@ class DiskManager(ManagerDaemon):
         asyncio.ensure_future(self._udisks.main())
 
         await self._mqtt_stop_event.wait()
+
+        self._mqtt_client.publish(self.get_last_will_message(), qos=1, retain=True)
+
         async with self._state_lock:
             for uuid in self._state_disks:
                 await self.mqtt_publish(f"/astoria/disk/disks/{uuid}", "")
                 
-        await self._mqtt_client.disconnect(reason_code=4, reason_string="Stopping")
+        await self._mqtt_client.disconnect()
 
     async def update_state(self) -> None:
         """Update the daemon state on MQTT."""
