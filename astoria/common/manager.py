@@ -1,19 +1,29 @@
 """Common code for manager daemons."""
+import asyncio
 import atexit
 import logging
 from abc import ABCMeta, abstractmethod
 from signal import SIGHUP, SIGINT, SIGTERM, Signals, signal
 from types import FrameType
+from typing import Union
 
+import gmqtt
+from pydantic import BaseModel
 from systemd.daemon import notify
 
 from astoria import __version__
 
 LOGGER = logging.getLogger(__name__)
 
+loop = asyncio.get_event_loop()
+
 
 class ManagerDaemon(metaclass=ABCMeta):
-    """A manager daemon."""
+    """
+    A manager daemon.
+
+    Communicates data with a MQTT server.
+    """
 
     def __init__(self, verbose: bool) -> None:
         if verbose:
@@ -31,41 +41,31 @@ class ManagerDaemon(metaclass=ABCMeta):
         LOGGER.info(f"{self.name} v{__version__} - {self.__doc__}")
 
         self._running = True
-        self.init()
+
+        self._mqtt_client = gmqtt.Client(self.name, will_message=self.last_will_message)
+        self._mqtt_stop_event = asyncio.Event()
 
         atexit.register(lambda: self.halt() if self._running else None)
         signal(SIGHUP, self._signal_halt)
         signal(SIGINT, self._signal_halt)
         signal(SIGTERM, self._signal_halt)
 
-    def init(self) -> None:
-        """Initialisation of the manager."""
-        LOGGER.debug("Initialising manager")
         self._init()
 
-    @abstractmethod
     def _init(self) -> None:
         """Initialisation of the manager."""
-        raise NotImplementedError
+        pass
 
     def run(self) -> None:
-        """
-        Run the daemon.
-
-        Should be a blocking call, as the daemon loops.
-        """
+        """Run the daemon."""
         notify("READY=1")
         LOGGER.info("Ready")
-        self._run()
+        loop.run_until_complete(self._run_main())
 
-    @abstractmethod
-    def _run(self) -> None:
-        """
-        Run the daemon.
-
-        Should be a blocking call, as the daemon loops.
-        """
-        raise NotImplementedError
+    async def _run_main(self) -> None:
+        await self._mqtt_client.connect("mqtt.eclipse.org")
+        await self.main()
+        await self._mqtt_client.disconnect()
 
     def halt(self) -> None:
         """
@@ -76,15 +76,11 @@ class ManagerDaemon(metaclass=ABCMeta):
         self._running = False  # Prevent atexit calling this twice
         notify("STOPPING=1")
         LOGGER.info("Halting")
-        self._halt()
+        self._mqtt_stop_event.set()
 
     @abstractmethod
-    def _halt(self) -> None:
-        """
-        Halt the daemon.
-
-        Should stop the daemon safely.
-        """
+    async def main(self) -> None:
+        """Main."""
         raise NotImplementedError
 
     @property
@@ -93,6 +89,29 @@ class ManagerDaemon(metaclass=ABCMeta):
         """Name of the daemon."""
         raise NotImplementedError
 
+    @property
+    @abstractmethod
+    def last_will_message(self) -> gmqtt.Message:
+        """The last will message for the MQTT client."""
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def mqtt_prefix(self) -> str:
+        """The topic prefix for MQTT."""
+        raise NotImplementedError
+
     def _signal_halt(self, signal: Signals, __: FrameType) -> None:
         LOGGER.debug(f"Received {Signals(signal).name}, triggering halt")
         self.halt()
+
+    async def mqtt_publish(self, topic: str, payload: Union[BaseModel, str]) -> None:
+        """Mock publish."""
+        if isinstance(payload, BaseModel):
+            payload = payload.json()
+        self._mqtt_client.publish(
+            f"{self.mqtt_prefix}/{topic}",
+            payload,
+            qos=1,
+            retain=True,
+        )

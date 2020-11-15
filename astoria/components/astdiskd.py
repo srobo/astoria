@@ -3,7 +3,7 @@
 import asyncio
 import logging
 from pathlib import Path
-from typing import Callable, Coroutine, Dict, List, Set, Union
+from typing import Callable, Coroutine, Dict, List, Set
 
 import click
 import gmqtt
@@ -12,7 +12,6 @@ from dbus_next.aio.proxy_object import ProxyInterface
 from dbus_next.constants import BusType
 from dbus_next.errors import InterfaceNotFoundError
 from dbus_next.signature import Variant
-from pydantic import BaseModel
 
 from astoria.common.manager import ManagerDaemon
 from astoria.common.messages.astdiskd import (
@@ -21,7 +20,6 @@ from astoria.common.messages.astdiskd import (
     DiskType,
     DiskUUID,
 )
-from astoria.common.messages.base import BaseManagerStatusMessage
 
 LOGGER = logging.getLogger(__name__)
 
@@ -42,44 +40,37 @@ class DiskManager(ManagerDaemon):
     """Astoria Disk Manager."""
 
     name = "astdiskd"
+    mqtt_prefix = "/astoria/astdiskd"
 
     def _init(self) -> None:
-        self._mqtt_client = gmqtt.Client(self.name, will_message=self.get_last_will_message())
-        self._mqtt_stop_event = asyncio.Event()
         self._state_lock = asyncio.Lock()
         self._state_disks: Set[DiskUUID] = set()
 
         self._udisks = UdisksConnection(notify_coro=self.update_state)
 
-    def get_last_will_message(self) -> gmqtt.Message:
+    @property
+    def last_will_message(self) -> gmqtt.Message:
+        """The MQTT last will and testament."""
         return gmqtt.Message(
-            "/astoria/disk/status",
+            f"{self.mqtt_prefix}/status",
             DiskManagerStatusMessage(
                 status=DiskManagerStatusMessage.ManagerStatus.STOPPED,
                 disks=[],
             ).json(),
             retain=True,
         )
- 
-    def _run(self) -> None:
-        loop.run_until_complete(self.main())
-
-    def _halt(self) -> None:
-        self._mqtt_stop_event.set()
 
     async def main(self) -> None:
-        await self._mqtt_client.connect("mqtt.eclipse.org")
+        """Main routine for astdiskd."""
         asyncio.ensure_future(self._udisks.main())
 
         await self._mqtt_stop_event.wait()
 
-        self._mqtt_client.publish(self.get_last_will_message(), qos=1, retain=True)
+        self._mqtt_client.publish(self.last_will_message, qos=1, retain=True)
 
         async with self._state_lock:
             for uuid in self._state_disks:
-                await self.mqtt_publish(f"/astoria/disk/disks/{uuid}", "")
-                
-        await self._mqtt_client.disconnect()
+                await self.mqtt_publish(f"disks/{uuid}", "")
 
     async def update_state(self) -> None:
         """Update the daemon state on MQTT."""
@@ -92,7 +83,7 @@ class DiskManager(ManagerDaemon):
         for disk_uuid in added_disks:
             mount_path = self._udisks.drives[disk_uuid]
             await self.mqtt_publish(
-                f"/astoria/disk/disks/{disk_uuid}",
+                f"disks/{disk_uuid}",
                 DiskInfoMessage(
                     uuid=disk_uuid,
                     mount_path=mount_path,
@@ -101,7 +92,7 @@ class DiskManager(ManagerDaemon):
             )
 
         await self.mqtt_publish(
-            "/astoria/disk/status",
+            "status",
             DiskManagerStatusMessage(
                 disks=list(disk_set),
                 status=DiskManagerStatusMessage.ManagerStatus.RUNNING,
@@ -110,15 +101,10 @@ class DiskManager(ManagerDaemon):
 
         for disk_uuid in removed_disks:
             asyncio.ensure_future(self.mqtt_publish(
-                f"/astoria/disk/disks/{disk_uuid}",
+                f"disks/{disk_uuid}",
                 "",
             ))
 
-    async def mqtt_publish(self, topic: str, payload: Union[BaseModel, str]) -> None:
-        """Mock publish."""
-        if isinstance(payload, BaseModel):
-            payload = payload.json()
-        self._mqtt_client.publish(topic, payload, qos=1, retain=True)
 
 class UdisksConnection:
     """Connect and communicate with UDisks2."""
