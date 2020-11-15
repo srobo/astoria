@@ -140,7 +140,7 @@ class UdisksConnection:
         udisks_obj_manager = udisks_proxy.get_interface(
             "org.freedesktop.DBus.ObjectManager",
         )
-        udisks_obj_manager.on_interfaces_added(self._disk_signal)  # type: ignore
+        udisks_obj_manager.on_interfaces_added(self._disk_signal)
 
         await self._detect_initial_drives(udisks_obj_manager)
 
@@ -211,7 +211,7 @@ class UdisksConnection:
             )
 
             mount_points: List[List[int]] = \
-                await drive_filesystem.get_mount_points()  # type: ignore
+                await drive_filesystem.get_mount_points()
 
             try:
                 # We are only interested in the first mountpoint.
@@ -219,7 +219,7 @@ class UdisksConnection:
                 if mount_path.exists() and mount_path.is_dir():
                     drive_block = drive_obj.get_interface("org.freedesktop.UDisks2.Block")
                     uuid: DiskUUID = DiskUUID(
-                        await drive_block.get_id_uuid(),  # type: ignore
+                        await drive_block.get_id_uuid(),
                     )
                     if uuid not in self._drives.keys():
                         LOGGER.info(f"Drive {uuid} mounted ({mount_path})")
@@ -267,7 +267,7 @@ class UdisksConnection:
         # The block devices are dbus objects managed by Udisks
         # We have to fetch them all unless we already know what they are.
         managed_objects: Dict[str, Dict[str, str]] = \
-            await udisks_obj_manager.call_get_managed_objects()  # type: ignore
+            await udisks_obj_manager.call_get_managed_objects()
 
         # Start a mount task for every block device and wait
         # for all of the tasks to be complete.

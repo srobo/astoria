@@ -18,7 +18,7 @@ python = "^3.6"
 pydantic = "^1.6.1"
 click = "^7.1.2"
 systemd-python = "^234"
-dbus-next = { git = "https://github.com/trickeydan/python-dbus-next.git", branch = "master" }
+dbus-next = "^0.2.1"
 
 [tool.poetry.dev-dependencies]
 flake8 = "*"
