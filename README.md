@@ -1,6 +1,17 @@
 # Astoria
 
-Robot Management Daemon
+Robot Management System Prototype
+
+## Usage
+
+- Install Poetry and Python 3.6+
+- `poetry install`
+
+Only `astdiskd` is available at present. It requires Udiskie to detect new drives.
+
+The code currently uses the `mqtt.eclipse.org` MQTT broker for testing.
+
+- `poetry run astdiskd`
 
 ## Contributions
 
