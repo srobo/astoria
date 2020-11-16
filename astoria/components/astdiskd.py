@@ -13,7 +13,7 @@ from dbus_next.constants import BusType
 from dbus_next.errors import InterfaceNotFoundError
 from dbus_next.signature import Variant
 
-from astoria.common.manager import ManagerDaemon
+from astoria.common.manager import StateManager
 from astoria.common.messages.astdiskd import (
     DiskInfoMessage,
     DiskManagerStatusMessage,
@@ -36,7 +36,7 @@ def main(*, verbose: bool) -> None:
 loop = asyncio.get_event_loop()
 
 
-class DiskManager(ManagerDaemon):
+class DiskManager(StateManager):
     """Astoria Disk Manager."""
 
     name = "astdiskd"

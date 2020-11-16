@@ -17,11 +17,11 @@ LOGGER = logging.getLogger(__name__)
 loop = asyncio.get_event_loop()
 
 
-class ManagerDaemon(metaclass=ABCMeta):
+class StateManager(metaclass=ABCMeta):
     """
-    A manager daemon.
+    State Manager.
 
-    Communicates data with a MQTT server.
+    A process that stores and mutates some state.
     """
 
     def __init__(self, verbose: bool) -> None:
