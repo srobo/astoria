@@ -17,7 +17,6 @@ classifiers = [
 python = "^3.6"
 pydantic = "^1.6.1"
 click = "^7.1.2"
-systemd-python = "^234"
 dbus-next = "^0.2.1"
 gmqtt = "^0.6.8"
 

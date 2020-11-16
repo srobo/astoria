@@ -9,7 +9,6 @@ from typing import Union
 
 import gmqtt
 from pydantic import BaseModel
-from systemd.daemon import notify
 
 from astoria import __version__
 
@@ -58,7 +57,6 @@ class ManagerDaemon(metaclass=ABCMeta):
 
     def run(self) -> None:
         """Run the daemon."""
-        notify("READY=1")
         LOGGER.info("Ready")
         loop.run_until_complete(self._run_main())
 
@@ -74,7 +72,6 @@ class ManagerDaemon(metaclass=ABCMeta):
         Should stop the daemon safely.
         """
         self._running = False  # Prevent atexit calling this twice
-        notify("STOPPING=1")
         LOGGER.info("Halting")
         self._mqtt_stop_event.set()
 
