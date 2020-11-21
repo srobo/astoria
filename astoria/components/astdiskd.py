@@ -23,6 +23,8 @@ from astoria.common.messages.astdiskd import (
 
 LOGGER = logging.getLogger(__name__)
 
+loop = asyncio.get_event_loop()
+
 
 @click.command("astdiskd")
 @click.option("-v", "--verbose", is_flag=True)
@@ -30,10 +32,7 @@ def main(*, verbose: bool) -> None:
     """Disk Manager Application Entrypoint."""
     diskd = DiskManager(verbose)
 
-    diskd.run()
-
-
-loop = asyncio.get_event_loop()
+    loop.run_until_complete(diskd.run())
 
 
 class DiskManager(StateManager):
@@ -64,7 +63,8 @@ class DiskManager(StateManager):
         """Main routine for astdiskd."""
         asyncio.ensure_future(self._udisks.main())
 
-        await self._mqtt_stop_event.wait()
+        # Wait whilst the program is running.
+        await self.wait_loop()
 
         self._mqtt_client.publish(self.last_will_message, qos=1, retain=True)
 

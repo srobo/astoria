@@ -1,4 +1,4 @@
-"""Common code for manager daemons."""
+"""Common code for state managers."""
 import asyncio
 import atexit
 import logging
@@ -55,29 +55,30 @@ class StateManager(metaclass=ABCMeta):
         """Initialisation of the manager."""
         pass
 
-    def run(self) -> None:
-        """Run the daemon."""
+    async def run(self) -> None:
+        """Entrypoint for the State Manager."""
         LOGGER.info("Ready")
-        loop.run_until_complete(self._run_main())
-
-    async def _run_main(self) -> None:
         await self._mqtt_client.connect("mqtt.eclipse.org")
         await self.main()
         await self._mqtt_client.disconnect()
 
-    def halt(self) -> None:
-        """
-        Halt the daemon.
+    async def wait_loop(self) -> None:
+        """Wait until the state manager is halted."""
+        await self._mqtt_stop_event.wait()
 
-        Should stop the daemon safely.
-        """
+    def halt(self) -> None:
+        """Stop the state manager."""
         self._running = False  # Prevent atexit calling this twice
         LOGGER.info("Halting")
         self._mqtt_stop_event.set()
 
     @abstractmethod
     async def main(self) -> None:
-        """Main."""
+        """
+        Main method of the state manager.
+
+        Must make a call to ``self.wait_loop()`` to wait for the stop event.
+        """
         raise NotImplementedError
 
     @property
