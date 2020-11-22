@@ -7,7 +7,6 @@ from pydantic import BaseModel
 
 from astoria.common.disk_constraints import (
     Constraint,
-    FalseConstraint,
     FilePresentConstraint,
     TrueConstraint,
 )
@@ -40,8 +39,8 @@ class DiskType(Enum):
         """Determine the disk type from the mount path."""
         constraints: Dict['DiskType', Constraint] = {
             cls.USERCODE: FilePresentConstraint("robot.zip"),
-            cls.METADATA: FilePresentConstraint("pepper2.json"),
-            cls.UPDATE: FalseConstraint(),  # Unknown
+            cls.METADATA: FilePresentConstraint("astoria.json"),
+            cls.UPDATE: FilePresentConstraint("updatefile.txt"),
             cls.NOACTION: TrueConstraint(),  # Always match
         }
 
@@ -49,7 +48,7 @@ class DiskType(Enum):
             if constraint.matches(mount_path):
                 return typ
 
-        raise RuntimeError("Unable to determine type of disk.")
+        raise RuntimeError("Unable to determine type of disk.")  # pragma: nocover
 
 
 class DiskInfoMessage(BaseModel):

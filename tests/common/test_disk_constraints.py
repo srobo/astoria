@@ -13,7 +13,7 @@ from astoria.common.disk_constraints import (
     TrueConstraint,
 )
 
-DATA_PATH = Path("tests/data")
+DATA_PATH = Path("tests/data/constraints")
 
 EMPTY_PATH = DATA_PATH.joinpath("empty")
 NOT_EXIST_PATH = DATA_PATH.joinpath("does_not_exist")
