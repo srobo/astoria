@@ -20,7 +20,7 @@ class DiskManagerStatusMessage(BaseManagerStatusMessage):
     """
     Status message for Disk Manager.
 
-    Published to /astoria/disk/status.
+    Published to /astoria/astdisk/status.
     """
 
     disks: List[DiskUUID]
@@ -55,7 +55,7 @@ class DiskInfoMessage(BaseModel):
     """
     Information about a mounted disk.
 
-    Published to /astoria/disk/disks/<DiskUUID>
+    Published to /astoria/astdisk/disks/<DiskUUID>
     """
 
     uuid: DiskUUID
