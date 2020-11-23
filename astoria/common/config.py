@@ -18,6 +18,11 @@ class MQTTBrokerInfo(BaseModel):
     topic_prefix: str = "/astoria"
     force_protocol_version_3_1: bool = False
 
+    class Config:
+        """Pydantic config."""
+
+        extra = "forbid"
+
 
 class AstoriaConfig(BaseModel):
     """Config schema for Astoria."""
