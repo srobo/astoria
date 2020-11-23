@@ -5,12 +5,14 @@ import logging
 from abc import ABCMeta, abstractmethod
 from signal import SIGHUP, SIGINT, SIGTERM, Signals, signal
 from types import FrameType
-from typing import Union
+from typing import IO, Union
 
 import gmqtt
 from pydantic import BaseModel
 
 from astoria import __version__
+
+from .config import AstoriaConfig
 
 LOGGER = logging.getLogger(__name__)
 
@@ -24,7 +26,9 @@ class StateManager(metaclass=ABCMeta):
     A process that stores and mutates some state.
     """
 
-    def __init__(self, verbose: bool) -> None:
+    def __init__(self, verbose: bool, config_file: IO[str]) -> None:
+        self.config = AstoriaConfig.load_from_file(config_file)
+
         if verbose:
             logging.basicConfig(
                 level=logging.DEBUG,
@@ -62,7 +66,17 @@ class StateManager(metaclass=ABCMeta):
     async def run(self) -> None:
         """Entrypoint for the State Manager."""
         LOGGER.info("Ready")
-        await self._mqtt_client.connect("mqtt.eclipse.org")
+
+        mqtt_version = gmqtt.constants.MQTTv50
+        if self.config.mqtt.force_protocol_version_3_1:
+            mqtt_version = gmqtt.constants.MQTTv311
+
+        await self._mqtt_client.connect(
+            self.config.mqtt.host,
+            port=self.config.mqtt.port,
+            ssl=self.config.mqtt.enable_tls,
+            version=mqtt_version,
+        )
         await self.main()
         await self._mqtt_client.disconnect()
 
@@ -98,10 +112,9 @@ class StateManager(metaclass=ABCMeta):
         raise NotImplementedError
 
     @property
-    @abstractmethod
     def mqtt_prefix(self) -> str:
         """The topic prefix for MQTT."""
-        raise NotImplementedError
+        return f"{self.config.mqtt.topic_prefix}/{self.name}"
 
     def _signal_halt(self, signal: Signals, __: FrameType) -> None:
         LOGGER.debug(f"Received {Signals(signal).name}, triggering halt")

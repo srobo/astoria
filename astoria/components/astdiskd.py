@@ -3,7 +3,7 @@
 import asyncio
 import logging
 from pathlib import Path
-from typing import Callable, Coroutine, Dict, List, Set
+from typing import IO, Callable, Coroutine, Dict, List, Set
 
 import click
 import gmqtt
@@ -28,10 +28,10 @@ loop = asyncio.get_event_loop()
 
 @click.command("astdiskd")
 @click.option("-v", "--verbose", is_flag=True)
-def main(*, verbose: bool) -> None:
+@click.option("-c", "--config-file", type=click.File('r'), default=Path("astoria.toml"))
+def main(*, verbose: bool, config_file: IO[str]) -> None:
     """Disk Manager Application Entrypoint."""
-    diskd = DiskManager(verbose)
-
+    diskd = DiskManager(verbose, config_file)
     loop.run_until_complete(diskd.run())
 
 
@@ -39,7 +39,6 @@ class DiskManager(StateManager):
     """Astoria Disk Manager."""
 
     name = "astdiskd"
-    mqtt_prefix = "/astoria/astdiskd"
 
     def _init(self) -> None:
         self._state_lock = asyncio.Lock()
