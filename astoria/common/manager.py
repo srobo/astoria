@@ -37,6 +37,10 @@ class StateManager(metaclass=ABCMeta):
                 format=f"%(asctime)s {self.name} %(levelname)s %(message)s",
                 datefmt="%Y-%m-%d %H:%M:%S",
             )
+
+            # Suppress INFO messages from gmqtt
+            logging.getLogger("gmqtt").setLevel(logging.WARNING)
+
         LOGGER.info(f"{self.name} v{__version__} - {self.__doc__}")
 
         self._running = True
