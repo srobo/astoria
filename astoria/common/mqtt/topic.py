@@ -4,8 +4,8 @@ MQTT Topic Abstraction.
 Allows topic strings to be constructed, along with regex to match them.
 """
 
-from re import compile, match
-from typing import Dict, Optional, Match, Pattern, Sequence
+from re import compile
+from typing import Dict, Match, Optional, Pattern, Sequence
 
 
 class Topic:
