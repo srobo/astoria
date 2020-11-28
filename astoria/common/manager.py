@@ -13,6 +13,7 @@ from pydantic import BaseModel
 from astoria import __version__
 
 from .config import AstoriaConfig
+from .mqtt import Registry
 
 LOGGER = logging.getLogger(__name__)
 
@@ -26,8 +27,9 @@ class StateManager(metaclass=ABCMeta):
     A process that stores and mutates some state.
     """
 
-    def __init__(self, verbose: bool, config_file: IO[str]) -> None:
+    def __init__(self, verbose: bool, config_file: IO[str], registry: Registry) -> None:
         self.config = AstoriaConfig.load_from_file(config_file)
+        self.registry = registry
 
         if verbose:
             logging.basicConfig(
@@ -51,6 +53,8 @@ class StateManager(metaclass=ABCMeta):
 
         self._mqtt_client = gmqtt.Client(self.name, will_message=self.last_will_message)
         self._mqtt_stop_event = asyncio.Event()
+
+        self.registry.manager = self
 
         atexit.register(lambda: self.halt() if self._running else None)
         signal(SIGHUP, self._signal_halt)

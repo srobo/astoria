@@ -20,10 +20,13 @@ from astoria.common.messages.astdiskd import (
     DiskType,
     DiskUUID,
 )
+from astoria.common.mqtt import Registry
 
 LOGGER = logging.getLogger(__name__)
 
 loop = asyncio.get_event_loop()
+
+registry = Registry()
 
 
 @click.command("astdiskd")
@@ -31,7 +34,7 @@ loop = asyncio.get_event_loop()
 @click.option("-c", "--config-file", type=click.File('r'), default=Path("astoria.toml"))
 def main(*, verbose: bool, config_file: IO[str]) -> None:
     """Disk Manager Application Entrypoint."""
-    diskd = DiskManager(verbose, config_file)
+    diskd = DiskManager(verbose, config_file, registry)
     loop.run_until_complete(diskd.run())
 
 
