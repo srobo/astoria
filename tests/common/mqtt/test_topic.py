@@ -4,7 +4,7 @@ from re import compile
 
 import pytest
 
-from astoria.common.topic import Topic
+from astoria.common.mqtt import Topic
 
 BASIC_TOPICS = [
     (["foo", "bar", "biz"], "foo/bar/biz"),
