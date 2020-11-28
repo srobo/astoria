@@ -4,7 +4,8 @@ MQTT Topic Abstraction.
 Allows topic strings to be constructed, along with regex to match them.
 """
 
-from typing import Dict, Sequence
+from re import compile, match
+from typing import Dict, Optional, Match, Pattern, Sequence
 
 
 class Topic:
@@ -21,6 +22,10 @@ class Topic:
 
     def __init__(self, parts: Sequence[str]) -> None:
         self.parts = parts
+
+    def match(self, topic: str) -> Optional[Match[str]]:
+        """Perform a regex match on a topic."""
+        return self.regex.match(topic)
 
     @classmethod
     def parse(cls, topic: str) -> 'Topic':
@@ -45,6 +50,9 @@ class Topic:
     def __repr__(self) -> str:
         return f"Topic(\"{self}\")"
 
+    def __hash__(self) -> int:
+        return hash(repr(self))
+
     def __eq__(self, other: object) -> bool:
         try:
             return self.parts == other.parts  # type: ignore
@@ -61,7 +69,7 @@ class Topic:
         return all(x not in self.parts for x in self.WILDCARDS)
 
     @property
-    def regex(self) -> str:
+    def regex(self) -> Pattern[str]:
         """
         Regular expression to match the topic.
 
@@ -74,4 +82,4 @@ class Topic:
             except KeyError:
                 handled_parts.append(p)
 
-        return "^" + "/".join(handled_parts) + "$"
+        return compile("^" + "/".join(handled_parts) + "$")

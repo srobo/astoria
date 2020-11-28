@@ -49,6 +49,13 @@ def test_topic_equality() -> None:
     assert t != "bees"
     assert t != Topic(["bees", "hive"])
 
+def test_topic_hash() -> None:
+    """Test that we can hash a topic."""
+    t = Topic(["bees"])
+    assert hash(t) is not None
+    a = {}
+    a[t] = "bees"
+    assert a[t] == "bees"
 
 def test_topic_parse() -> None:
     """Test that we can parse topics."""
@@ -90,10 +97,17 @@ def test_topic_regex() -> None:
     """Test the regex property."""
     for parts, topic in BASIC_TOPICS:
         t = Topic(parts)
-        assert t.regex == f"^{topic}$"
+        assert t.regex == compile(f"^{topic}$")
 
     for parts, topic, example in WILDCARD_TOPICS:
         t = Topic(parts)
-        reg = compile(t.regex)
-        assert reg.match(example)
-        assert not reg.match("u85932q4fds9/3£2####")
+        assert t.regex.match(example)
+        assert not t.regex.match("u85932q4fds9/3£2####")
+
+
+def test_topic_match() -> None:
+    """Test the match function."""
+    for parts, topic, example in WILDCARD_TOPICS:
+        t = Topic(parts)
+        assert t.match(example)
+        assert not t.match("u85932q4fds9/3£2####")
