@@ -1,6 +1,7 @@
 from typing import Any
 
 from dbus_next.constants import BusType
+
 from .proxy_object import ProxyObject
 
 class MessageBus:

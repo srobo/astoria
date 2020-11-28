@@ -1,5 +1,17 @@
 """Stubs for gmqtt.client."""
-from typing import Any, List, Tuple, Dict, Union, Optional, Sequence
+from typing import (
+    Any,
+    Callable,
+    Coroutine,
+    Dict,
+    List,
+    Optional,
+    Sequence,
+    Tuple,
+    Union,
+)
+
+from .constants import PubRecReasonCode
 
 class Message:
     def __init__(
@@ -23,6 +35,7 @@ class Subscription:
     ): ...
 
 class Client:
+
     def __init__(
         self,
         client_id: str,
@@ -34,6 +47,19 @@ class Client:
 
     @property
     def is_connected(self) -> bool: ...
+
+    @property
+    def on_message(self) -> Callable[[Client, str, bytes, int, Dict[str, int]], Coroutine[Any, Any, PubRecReasonCode]]: ...
+
+    @on_message.setter
+    def on_message(self, f: Callable[[Client, str, bytes, int, Dict[str, int]], Coroutine[Any, Any, PubRecReasonCode]]) -> None: ...
+
+    @property
+    def on_connect(self) -> Callable[[Client, int, int, Dict[str, List[int]]], None]: ...
+
+    @on_connect.setter
+    def on_connect(self, f: Callable[[Client, int, int, Dict[str, List[int]]], None]) -> None: ...
+
 
     def set_auth_credentials(self, username: str, password: Optional[str] = None) -> None: ...
 
