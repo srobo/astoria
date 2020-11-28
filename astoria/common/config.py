@@ -15,7 +15,7 @@ class MQTTBrokerInfo(BaseModel):
     host: str
     port: int
     enable_tls: bool = False
-    topic_prefix: str = "/astoria"
+    topic_prefix: str = "astoria"
     force_protocol_version_3_1: bool = False
 
     class Config:
