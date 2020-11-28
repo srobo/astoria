@@ -49,6 +49,7 @@ def test_topic_equality() -> None:
     assert t != "bees"
     assert t != Topic(["bees", "hive"])
 
+
 def test_topic_hash() -> None:
     """Test that we can hash a topic."""
     t = Topic(["bees"])
@@ -56,6 +57,7 @@ def test_topic_hash() -> None:
     a = {}
     a[t] = "bees"
     assert a[t] == "bees"
+
 
 def test_topic_parse() -> None:
     """Test that we can parse topics."""
