@@ -55,8 +55,6 @@ class DiskManager(StateManager):
         # Wait whilst the program is running.
         await self.wait_loop()
 
-        self._mqtt_client.publish(self.last_will_message, qos=1, retain=True)
-
         async with self._state_lock:
             for uuid in self._state_disks:
                 await self.mqtt_publish(f"disks/{uuid}", "")
@@ -79,13 +77,6 @@ class DiskManager(StateManager):
                     disk_type=DiskType.determine_disk_type(mount_path),
                 ),
             )
-
-        await self.mqtt_publish(
-            "status",
-            ManagerStatusMessage(
-                status=ManagerStatusMessage.ManagerStatus.RUNNING,
-            ),
-        )
 
         for disk_uuid in removed_disks:
             asyncio.ensure_future(self.mqtt_publish(

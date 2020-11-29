@@ -31,6 +31,7 @@ class StateManager(metaclass=ABCMeta):
     def __init__(self, verbose: bool, config_file: IO[str], registry: Registry) -> None:
         self.config = AstoriaConfig.load_from_file(config_file)
         self.registry = registry
+        self._status = ManagerStatusMessage.ManagerStatus.STOPPED
 
         if verbose:
             logging.basicConfig(
@@ -50,14 +51,12 @@ class StateManager(metaclass=ABCMeta):
 
         LOGGER.info(f"{self.name} v{__version__} - {self.__doc__}")
 
-        self._running = True
-
         self._mqtt_client = gmqtt.Client(self.name, will_message=self.last_will_message)
         self._mqtt_stop_event = asyncio.Event()
 
         self.registry.manager = self
 
-        atexit.register(lambda: self.halt() if self._running else None)
+        atexit.register(self.halt)
         signal(SIGHUP, self._signal_halt)
         signal(SIGINT, self._signal_halt)
         signal(SIGTERM, self._signal_halt)
@@ -82,17 +81,26 @@ class StateManager(metaclass=ABCMeta):
             ssl=self.config.mqtt.enable_tls,
             version=mqtt_version,
         )
+        await self.set_status(ManagerStatusMessage.ManagerStatus.RUNNING)
         await self.main()
+        await self.set_status(ManagerStatusMessage.ManagerStatus.STOPPED)
         await self._mqtt_client.disconnect()
 
     async def wait_loop(self) -> None:
         """Wait until the state manager is halted."""
         await self._mqtt_stop_event.wait()
 
+    async def set_status(self, status: ManagerStatusMessage.ManagerStatus) -> None:
+        """Set the manager status."""
+        if status is not self._status:  # Deduplicate messages.
+            self._status = status
+            await self.mqtt_publish(
+                f"status",
+                ManagerStatusMessage(status=status),
+            )
+
     def halt(self) -> None:
         """Stop the state manager."""
-        self._running = False  # Prevent atexit calling this twice
-        LOGGER.info("Halting")
         self._mqtt_stop_event.set()
 
     @abstractmethod
