@@ -1,5 +1,6 @@
 """MQTT Subscription Registry."""
 
+import logging
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -19,6 +20,8 @@ if TYPE_CHECKING:
     from astoria.common.manager import StateManager
 
 Handler = Callable[[Any, Match[str], str], Coroutine[Any, Any, None]]
+
+LOGGER = logging.getLogger(__name__)
 
 
 class Registry:
@@ -54,11 +57,13 @@ class Registry:
         properties: Dict[str, int],
     ) -> gmqtt.constants.PubRecReasonCode:
         """Callback for mqtt messages."""
+        LOGGER.debug(f"Message received on {topic} with payload: {payload!r}")
         for t, handler in self._topic_handlers.items():
             match = t.match(topic)
             if match:
                 mngr = self.manager
                 if mngr is not None:
+                    LOGGER.debug(f"Calling {handler.__name__} to handle {topic}")
                     await handler(mngr, match, payload.decode())
                     break
                 else:
@@ -78,6 +83,7 @@ class Registry:
     ) -> None:
         """Callback for mqtt connection."""
         for topic in self._topic_handlers:
+            LOGGER.debug(f"Subscribing to {topic}")
             client.subscribe(str(topic))
 
     def handler(self, topic: str) -> Callable[[Handler], Handler]:
