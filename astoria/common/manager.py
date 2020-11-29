@@ -3,9 +3,10 @@ import asyncio
 import atexit
 import logging
 from abc import ABCMeta, abstractmethod
+from json import loads
 from signal import SIGHUP, SIGINT, SIGTERM, Signals, signal
 from types import FrameType
-from typing import IO, Union
+from typing import IO, Dict, List, Match, Union
 
 import gmqtt
 from pydantic import BaseModel
@@ -54,7 +55,13 @@ class StateManager(metaclass=ABCMeta):
         self._mqtt_client = gmqtt.Client(self.name, will_message=self.last_will_message)
         self._mqtt_stop_event = asyncio.Event()
 
+        # Setup registry
         self.registry.manager = self
+        self.registry.add_handler('astoria/+/status', self.status_handler)
+
+        self._dependency_events: Dict[str, asyncio.Event] = {
+            name: asyncio.Event() for name in self.dependencies
+        }
 
         atexit.register(self.halt)
         signal(SIGHUP, self._signal_halt)
@@ -69,8 +76,6 @@ class StateManager(metaclass=ABCMeta):
 
     async def run(self) -> None:
         """Entrypoint for the State Manager."""
-        LOGGER.info("Ready")
-
         mqtt_version = gmqtt.constants.MQTTv50
         if self.config.mqtt.force_protocol_version_3_1:
             mqtt_version = gmqtt.constants.MQTTv311
@@ -81,7 +86,9 @@ class StateManager(metaclass=ABCMeta):
             ssl=self.config.mqtt.enable_tls,
             version=mqtt_version,
         )
+        await self.wait_dependencies()
         await self.set_status(ManagerStatusMessage.ManagerStatus.RUNNING)
+        LOGGER.info("Ready")
         await self.main()
         await self.set_status(ManagerStatusMessage.ManagerStatus.STOPPED)
         await self._mqtt_client.disconnect()
@@ -95,9 +102,30 @@ class StateManager(metaclass=ABCMeta):
         if status is not self._status:  # Deduplicate messages.
             self._status = status
             await self.mqtt_publish(
-                f"status",
+                "status",
                 ManagerStatusMessage(status=status),
             )
+
+    async def status_handler(
+        self,
+        _: 'StateManager',
+        match: Match[str],
+        payload: str,
+    ) -> None:
+        """Handle status messages from other state managers."""
+        manager = match.group(1)
+        info = ManagerStatusMessage(**loads(payload))
+        LOGGER.debug(f"Status update from {manager}: {info.status}")
+        if info.status is ManagerStatusMessage.ManagerStatus.RUNNING:
+            try:
+                self._dependency_events[manager].set()
+            except KeyError:
+                pass
+        else:
+            if self._status is ManagerStatusMessage.ManagerStatus.RUNNING \
+                    and manager in self._dependency_events:
+                LOGGER.warning(f"{manager} is unavailable, stopping!")
+                self.halt()
 
     def halt(self) -> None:
         """Stop the state manager."""
@@ -117,6 +145,19 @@ class StateManager(metaclass=ABCMeta):
     def name(self) -> str:
         """Name of the daemon."""
         raise NotImplementedError
+
+    @property
+    def dependencies(self) -> List[str]:
+        """State Managers to depend on."""
+        return []
+
+    async def wait_dependencies(self) -> None:
+        """Wait for all dependencies."""
+        if len(self.dependencies) > 0:
+            LOGGER.info("Waiting for " + ", ".join(self.dependencies))
+            await asyncio.gather(
+                *(event.wait() for event in self._dependency_events.values()),
+            )
 
     @property
     def last_will_message(self) -> gmqtt.Message:

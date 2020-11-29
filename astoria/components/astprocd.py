@@ -10,7 +10,6 @@ import click
 
 from astoria.common.manager import StateManager
 from astoria.common.messages.astdiskd import DiskInfoMessage, DiskUUID
-from astoria.common.messages.base import ManagerStatusMessage
 from astoria.common.mqtt import Registry
 
 LOGGER = logging.getLogger(__name__)
@@ -37,19 +36,6 @@ class ProcessManager(StateManager):
 
     def _init(self) -> None:
         self._cur_disks: Dict[DiskUUID, DiskInfoMessage] = {}
-
-    @registry.handler('astoria/astdiskd/status')
-    async def handle_astdiskd_status_message(
-        self,
-        match: Match[str],
-        payload: str,
-    ) -> None:
-        """Handle astdiskd status messages."""
-        info = ManagerStatusMessage(**loads(payload))
-        if info.status is ManagerStatusMessage.ManagerStatus.STOPPED:
-            LOGGER.warning("astdiskd is not running!")
-        else:
-            LOGGER.info("Successfully synced with astdiskd")
 
     @registry.handler('astoria/astdiskd/disks/+')
     async def handle_astdiskd_disk_info_message(

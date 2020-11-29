@@ -18,7 +18,6 @@ from astoria.common.messages.astdiskd import (
     DiskType,
     DiskUUID,
 )
-from astoria.common.messages.base import ManagerStatusMessage
 from astoria.common.mqtt import Registry
 
 LOGGER = logging.getLogger(__name__)

@@ -86,12 +86,16 @@ class Registry:
             LOGGER.debug(f"Subscribing to {topic}")
             client.subscribe(str(topic))
 
+    def add_handler(self, topic: str, handler: Handler) -> None:
+        """Add a handler."""
+        parsed_topic = Topic.parse(topic)
+        self._topic_handlers[parsed_topic] = handler
+
     def handler(self, topic: str) -> Callable[[Handler], Handler]:
         """Register a topic handler."""
-        parsed_topic = Topic.parse(topic)
 
         def decorator(f: Handler) -> Handler:
-            self._topic_handlers[parsed_topic] = f
+            self.add_handler(topic, f)
             return f
 
         return decorator

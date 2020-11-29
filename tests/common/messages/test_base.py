@@ -11,9 +11,8 @@ def test_manager_status_enum() -> None:
     """Test that the status enum is as expected."""
     StatEnum = ManagerStatusMessage.ManagerStatus
 
-    assert len(StatEnum) == 3
+    assert len(StatEnum) == 2
     assert StatEnum.STOPPED.value == "STOPPED"
-    assert StatEnum.STARTING.value == "STARTING"
     assert StatEnum.RUNNING.value == "RUNNING"
 
 

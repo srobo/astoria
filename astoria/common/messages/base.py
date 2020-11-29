@@ -13,7 +13,6 @@ class ManagerStatusMessage(BaseModel):
         """Running Status of the manager daemon."""
 
         STOPPED = "STOPPED"
-        STARTING = "STARTING"
         RUNNING = "RUNNING"
 
     status: ManagerStatus
