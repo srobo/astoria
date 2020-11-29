@@ -6,7 +6,6 @@ from pathlib import Path
 from typing import IO, Callable, Coroutine, Dict, List, Set
 
 import click
-import gmqtt
 from dbus_next.aio import MessageBus
 from dbus_next.aio.proxy_object import ProxyInterface
 from dbus_next.constants import BusType
@@ -16,10 +15,10 @@ from dbus_next.signature import Variant
 from astoria.common.manager import StateManager
 from astoria.common.messages.astdiskd import (
     DiskInfoMessage,
-    DiskManagerStatusMessage,
     DiskType,
     DiskUUID,
 )
+from astoria.common.messages.base import ManagerStatusMessage
 from astoria.common.mqtt import Registry
 
 LOGGER = logging.getLogger(__name__)
@@ -48,18 +47,6 @@ class DiskManager(StateManager):
         self._state_disks: Set[DiskUUID] = set()
 
         self._udisks = UdisksConnection(notify_coro=self.update_state)
-
-    @property
-    def last_will_message(self) -> gmqtt.Message:
-        """The MQTT last will and testament."""
-        return gmqtt.Message(
-            f"{self.mqtt_prefix}/status",
-            DiskManagerStatusMessage(
-                status=DiskManagerStatusMessage.ManagerStatus.STOPPED,
-                disks=[],
-            ).json(),
-            retain=True,
-        )
 
     async def main(self) -> None:
         """Main routine for astdiskd."""
@@ -95,9 +82,8 @@ class DiskManager(StateManager):
 
         await self.mqtt_publish(
             "status",
-            DiskManagerStatusMessage(
-                disks=list(disk_set),
-                status=DiskManagerStatusMessage.ManagerStatus.RUNNING,
+            ManagerStatusMessage(
+                status=ManagerStatusMessage.ManagerStatus.RUNNING,
             ),
         )
 

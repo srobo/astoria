@@ -7,15 +7,10 @@ from pathlib import Path
 from typing import IO, Dict, Match
 
 import click
-import gmqtt
 
 from astoria.common.manager import StateManager
-from astoria.common.messages.astdiskd import (
-    DiskInfoMessage,
-    DiskManagerStatusMessage,
-    DiskUUID,
-)
-from astoria.common.messages.astprocd import ProcessManagerStatusMessage
+from astoria.common.messages.astdiskd import DiskInfoMessage, DiskUUID
+from astoria.common.messages.base import ManagerStatusMessage
 from astoria.common.mqtt import Registry
 
 LOGGER = logging.getLogger(__name__)
@@ -43,17 +38,6 @@ class ProcessManager(StateManager):
     def _init(self) -> None:
         self._cur_disks: Dict[DiskUUID, DiskInfoMessage] = {}
 
-    @property
-    def last_will_message(self) -> gmqtt.Message:
-        """The MQTT last will and testament."""
-        return gmqtt.Message(
-            f"{self.mqtt_prefix}/status",
-            ProcessManagerStatusMessage(
-                status=ProcessManagerStatusMessage.ManagerStatus.STOPPED,
-            ).json(),
-            retain=True,
-        )
-
     @registry.handler('astoria/astdiskd/status')
     async def handle_astdiskd_status_message(
         self,
@@ -61,8 +45,8 @@ class ProcessManager(StateManager):
         payload: str,
     ) -> None:
         """Handle astdiskd status messages."""
-        info = DiskManagerStatusMessage(**loads(payload))
-        if info.status is DiskManagerStatusMessage.ManagerStatus.STOPPED:
+        info = ManagerStatusMessage(**loads(payload))
+        if info.status is ManagerStatusMessage.ManagerStatus.STOPPED:
             LOGGER.warning("astdiskd is not running!")
         else:
             LOGGER.info("Successfully synced with astdiskd")

@@ -11,6 +11,7 @@ import gmqtt
 from pydantic import BaseModel
 
 from astoria import __version__
+from astoria.common.messages.base import ManagerStatusMessage
 
 from .config import AstoriaConfig
 from .mqtt import Registry
@@ -110,10 +111,15 @@ class StateManager(metaclass=ABCMeta):
         raise NotImplementedError
 
     @property
-    @abstractmethod
     def last_will_message(self) -> gmqtt.Message:
-        """The last will message for the MQTT client."""
-        raise NotImplementedError
+        """The MQTT last will and testament."""
+        return gmqtt.Message(
+            f"{self.mqtt_prefix}/status",
+            ManagerStatusMessage(
+                status=ManagerStatusMessage.ManagerStatus.STOPPED,
+            ).json(),
+            retain=True,
+        )
 
     @property
     def mqtt_prefix(self) -> str:

@@ -1,7 +1,7 @@
 """MQTT message definitions for the disk manager daemon."""
 from enum import Enum
 from pathlib import Path
-from typing import Dict, List, NewType
+from typing import Dict, NewType
 
 from pydantic import BaseModel
 
@@ -11,19 +11,7 @@ from astoria.common.disk_constraints import (
     TrueConstraint,
 )
 
-from .base import BaseManagerStatusMessage
-
 DiskUUID = NewType('DiskUUID', str)
-
-
-class DiskManagerStatusMessage(BaseManagerStatusMessage):
-    """
-    Status message for Disk Manager.
-
-    Published to /astoria/astdisk/status.
-    """
-
-    disks: List[DiskUUID]
 
 
 class DiskType(Enum):

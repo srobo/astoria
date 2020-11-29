@@ -2,29 +2,13 @@
 
 from pathlib import Path
 
-from astoria import __version__
 from astoria.common.messages.astdiskd import (
     DiskInfoMessage,
-    DiskManagerStatusMessage,
     DiskType,
     DiskUUID,
 )
 
 DATA_PATH = Path("tests/data/disk_types")
-
-
-def test_manager_status_fields() -> None:
-    """Test that the fields on the status message work."""
-    message = DiskManagerStatusMessage(
-        status=DiskManagerStatusMessage.ManagerStatus.STOPPED,
-        disks=[DiskUUID("foobar")],
-    )
-
-    assert message.status == DiskManagerStatusMessage.ManagerStatus.STOPPED
-    assert message.astoria_version == __version__
-
-    assert message.json() == \
-        '{"status": "STOPPED", "astoria_version": "0.1.0", "disks": ["foobar"]}'
 
 
 def test_disk_type_enum() -> None:
