@@ -55,13 +55,12 @@ class StateManager(metaclass=ABCMeta):
         self._mqtt_client = gmqtt.Client(self.name, will_message=self.last_will_message)
         self._mqtt_stop_event = asyncio.Event()
 
-        # Setup registry
-        self.registry.manager = self
-        self.registry.add_handler('astoria/+/status', self.status_handler)
-
         self._dependency_events: Dict[str, asyncio.Event] = {
             name: asyncio.Event() for name in self.dependencies
         }
+
+        self.registry.manager = self
+        self.registry.add_handler('astoria/+/status', self.status_handler, ignore_deps=True)
 
         atexit.register(self.halt)
         signal(SIGHUP, self._signal_halt)
@@ -88,6 +87,7 @@ class StateManager(metaclass=ABCMeta):
         )
         await self.wait_dependencies()
         await self.set_status(ManagerStatusMessage.ManagerStatus.RUNNING)
+
         LOGGER.info("Ready")
         await self.main()
         await self.set_status(ManagerStatusMessage.ManagerStatus.STOPPED)
@@ -160,6 +160,11 @@ class StateManager(metaclass=ABCMeta):
             )
 
     @property
+    def has_dependencies(self) -> bool:
+        """Are the dependencies of the manager available?"""
+        return all([event.is_set() for event in self._dependency_events.values()])
+
+    @property
     def last_will_message(self) -> gmqtt.Message:
         """The MQTT last will and testament."""
         return gmqtt.Message(
@@ -180,7 +185,7 @@ class StateManager(metaclass=ABCMeta):
         self.halt()
 
     async def mqtt_publish(self, topic: str, payload: Union[BaseModel, str]) -> None:
-        """Mock publish."""
+        """Publish to MQTT"""
         if isinstance(payload, BaseModel):
             payload = payload.json()
         self._mqtt_client.publish(

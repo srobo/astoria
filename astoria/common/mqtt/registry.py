@@ -10,6 +10,7 @@ from typing import (
     List,
     Match,
     Optional,
+    Set,
 )
 
 import gmqtt
@@ -29,6 +30,7 @@ class Registry:
 
     def __init__(self) -> None:
         self._topic_handlers: Dict[Topic, Handler] = {}
+        self._dependent_topics: Set[Topic] = set()
         self._manager: Optional['StateManager'] = None
 
     @property
@@ -63,8 +65,11 @@ class Registry:
             if match:
                 mngr = self.manager
                 if mngr is not None:
-                    LOGGER.debug(f"Calling {handler.__name__} to handle {topic}")
-                    await handler(mngr, match, payload.decode())
+                    if t in self._dependent_topics and not mngr.has_dependencies:
+                        LOGGER.debug(f"Ignoring message on {topic} due to missing manager deps")
+                    else:
+                        LOGGER.debug(f"Calling {handler.__name__} to handle {topic}")
+                        await handler(mngr, match, payload.decode())
                     break
                 else:
                     raise ValueError(
@@ -86,16 +91,29 @@ class Registry:
             LOGGER.debug(f"Subscribing to {topic}")
             client.subscribe(str(topic))
 
-    def add_handler(self, topic: str, handler: Handler) -> None:
+    def add_handler(
+        self,
+        topic: str,
+        handler: Handler,
+        *,
+        ignore_deps: bool = False,
+    ) -> None:
         """Add a handler."""
         parsed_topic = Topic.parse(topic)
         self._topic_handlers[parsed_topic] = handler
+        if not ignore_deps:
+            self._dependent_topics.add(parsed_topic)
 
-    def handler(self, topic: str) -> Callable[[Handler], Handler]:
+    def handler(
+        self,
+        topic: str,
+        *,
+        ignore_deps: bool = False,
+    ) -> Callable[[Handler], Handler]:
         """Register a topic handler."""
 
         def decorator(f: Handler) -> Handler:
-            self.add_handler(topic, f)
+            self.add_handler(topic, f, ignore_deps=ignore_deps)
             return f
 
         return decorator
