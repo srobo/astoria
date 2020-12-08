@@ -6,8 +6,8 @@ from pydantic import BaseModel
 from astoria import __version__
 
 
-class BaseManagerStatusMessage(BaseModel):
-    """Common data that all manager status messages output."""
+class BaseManagerMessage(BaseModel):
+    """Common data that all manager messages output."""
 
     class ManagerStatus(Enum):
         """Running Status of the manager daemon."""

@@ -1,7 +1,7 @@
-"""MQTT message definitions for the disk manager daemon."""
+"""MQTT message definitions for astdiskd."""
 from enum import Enum
 from pathlib import Path
-from typing import Dict, List, NewType
+from typing import Dict, NewType
 
 from pydantic import BaseModel
 
@@ -11,19 +11,9 @@ from astoria.common.disk_constraints import (
     TrueConstraint,
 )
 
-from .base import BaseManagerStatusMessage
+from .base import BaseManagerMessage
 
 DiskUUID = NewType('DiskUUID', str)
-
-
-class DiskManagerStatusMessage(BaseManagerStatusMessage):
-    """
-    Status message for Disk Manager.
-
-    Published to /astoria/astdisk/status.
-    """
-
-    disks: List[DiskUUID]
 
 
 class DiskType(Enum):
@@ -51,13 +41,19 @@ class DiskType(Enum):
         raise RuntimeError("Unable to determine type of disk.")  # pragma: nocover
 
 
-class DiskInfoMessage(BaseModel):
-    """
-    Information about a mounted disk.
-
-    Published to /astoria/astdisk/disks/<DiskUUID>
-    """
+class DiskInfo(BaseModel):
+    """Information about a mounted disk."""
 
     uuid: DiskUUID
     mount_path: Path
     disk_type: DiskType
+
+
+class DiskManagerMessage(BaseManagerMessage):
+    """
+    Status message for Disk Manager.
+
+    Published to /astoria/astdiskd
+    """
+
+    disks: Dict[DiskUUID, DiskInfo]

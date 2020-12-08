@@ -4,12 +4,12 @@ import pytest
 from pydantic import ValidationError
 
 from astoria import __version__
-from astoria.common.messages.base import BaseManagerStatusMessage
+from astoria.common.messages.base import BaseManagerMessage
 
 
 def test_manager_status_enum() -> None:
     """Test that the status enum is as expected."""
-    StatEnum = BaseManagerStatusMessage.ManagerStatus
+    StatEnum = BaseManagerMessage.ManagerStatus
 
     assert len(StatEnum) == 2
     assert StatEnum.STOPPED.value == "STOPPED"
@@ -18,11 +18,11 @@ def test_manager_status_enum() -> None:
 
 def test_manager_status_fields() -> None:
     """Test that the fields on the status message work."""
-    message = BaseManagerStatusMessage(
-        status=BaseManagerStatusMessage.ManagerStatus.STOPPED,
+    message = BaseManagerMessage(
+        status=BaseManagerMessage.ManagerStatus.STOPPED,
     )
 
-    assert message.status == BaseManagerStatusMessage.ManagerStatus.STOPPED
+    assert message.status == BaseManagerMessage.ManagerStatus.STOPPED
     assert message.astoria_version == __version__
 
     assert message.json() == '{"status": "STOPPED", "astoria_version": "0.1.0"}'
@@ -30,7 +30,7 @@ def test_manager_status_fields() -> None:
 
 def test_manager_status_subclass():
     """Test that we can create a subclass."""
-    class MyManagerStatusMessage(BaseManagerStatusMessage):
+    class MyManagerStatusMessage(BaseManagerMessage):
 
         custom_field: int
 
@@ -39,7 +39,7 @@ def test_manager_status_subclass():
         custom_field=12,
     )
 
-    assert message.status == BaseManagerStatusMessage.ManagerStatus.RUNNING
+    assert message.status == BaseManagerMessage.ManagerStatus.RUNNING
     assert message.astoria_version == __version__
     assert message.custom_field == 12
 

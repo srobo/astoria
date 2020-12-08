@@ -3,10 +3,9 @@
 import asyncio
 import logging
 from pathlib import Path
-from typing import IO, Callable, Coroutine, Dict, List, Set
+from typing import IO, Callable, Coroutine, Dict, List
 
 import click
-import gmqtt
 from dbus_next.aio import MessageBus
 from dbus_next.aio.proxy_object import ProxyInterface
 from dbus_next.constants import BusType
@@ -15,8 +14,8 @@ from dbus_next.signature import Variant
 
 from astoria.common.manager import StateManager
 from astoria.common.messages.astdiskd import (
-    DiskInfoMessage,
-    DiskManagerStatusMessage,
+    DiskInfo,
+    DiskManagerMessage,
     DiskType,
     DiskUUID,
 )
@@ -35,27 +34,25 @@ def main(*, verbose: bool, config_file: IO[str]) -> None:
     loop.run_until_complete(diskd.run())
 
 
-class DiskManager(StateManager):
+class DiskManager(StateManager[DiskManagerMessage]):
     """Astoria Disk Manager."""
 
     name = "astdiskd"
 
     def _init(self) -> None:
-        self._state_lock = asyncio.Lock()
-        self._state_disks: Set[DiskUUID] = set()
-
         self._udisks = UdisksConnection(notify_coro=self.update_state)
 
     @property
-    def last_will_message(self) -> gmqtt.Message:
-        """The MQTT last will and testament."""
-        return gmqtt.Message(
-            f"{self.mqtt_prefix}/status",
-            DiskManagerStatusMessage(
-                status=DiskManagerStatusMessage.ManagerStatus.STOPPED,
-                disks=[],
-            ).json(),
-            retain=True,
+    def offline_status(self) -> DiskManagerMessage:
+        """
+        Status to publish when the manager goes offline.
+
+        This status should ensure that any other components relying
+        on this data go into a safe state.
+        """
+        return DiskManagerMessage(
+            status=DiskManagerMessage.ManagerStatus.STOPPED,
+            disks={},
         )
 
     async def main(self) -> None:
@@ -65,44 +62,19 @@ class DiskManager(StateManager):
         # Wait whilst the program is running.
         await self.wait_loop()
 
-        self._mqtt_client.publish(self.last_will_message, qos=1, retain=True)
-
-        async with self._state_lock:
-            for uuid in self._state_disks:
-                await self.mqtt_publish(f"disks/{uuid}", "")
-
     async def update_state(self) -> None:
-        """Update the daemon state on MQTT."""
-        async with self._state_lock:
-            disk_set = set(self._udisks.drives.keys())
-            added_disks = disk_set - self._state_disks
-            removed_disks = self._state_disks - disk_set
-            self._state_disks = disk_set
-
-        for disk_uuid in added_disks:
-            mount_path = self._udisks.drives[disk_uuid]
-            await self.mqtt_publish(
-                f"disks/{disk_uuid}",
-                DiskInfoMessage(
-                    uuid=disk_uuid,
-                    mount_path=mount_path,
-                    disk_type=DiskType.determine_disk_type(mount_path),
-                ),
+        """Update the status of astdiskd when disks are changed."""
+        disks = {}
+        for uuid, mount_path in self._udisks.drives.items():
+            disks[uuid] = DiskInfo(
+                uuid=uuid,
+                mount_path=mount_path,
+                disk_type=DiskType.determine_disk_type(mount_path),
             )
-
-        await self.mqtt_publish(
-            "status",
-            DiskManagerStatusMessage(
-                disks=list(disk_set),
-                status=DiskManagerStatusMessage.ManagerStatus.RUNNING,
-            ),
+        self.status = DiskManagerMessage(
+            status=DiskManagerMessage.ManagerStatus.RUNNING,
+            disks=disks,
         )
-
-        for disk_uuid in removed_disks:
-            asyncio.ensure_future(self.mqtt_publish(
-                f"disks/{disk_uuid}",
-                "",
-            ))
 
 
 class UdisksConnection:
