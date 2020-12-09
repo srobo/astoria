@@ -51,7 +51,7 @@ class DiskManager(StateManager[DiskManagerMessage]):
         on this data go into a safe state.
         """
         return DiskManagerMessage(
-            status=DiskManagerMessage.ManagerStatus.STOPPED,
+            status=DiskManagerMessage.Status.STOPPED,
             disks={},
         )
 
@@ -72,7 +72,7 @@ class DiskManager(StateManager[DiskManagerMessage]):
                 disk_type=DiskType.determine_disk_type(mount_path),
             )
         self.status = DiskManagerMessage(
-            status=DiskManagerMessage.ManagerStatus.RUNNING,
+            status=DiskManagerMessage.Status.RUNNING,
             disks=disks,
         )
 

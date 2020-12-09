@@ -10,13 +10,13 @@ import gmqtt
 from astoria import __version__
 
 from .config import AstoriaConfig
-from .messages.base import BaseManagerMessage
+from .messages.base import ManagerMessage
 
 LOGGER = logging.getLogger(__name__)
 
 loop = asyncio.get_event_loop()
 
-T = TypeVar("T", bound=BaseManagerMessage)
+T = TypeVar("T", bound=ManagerMessage)
 
 
 class StateManager(Generic[T], metaclass=ABCMeta):

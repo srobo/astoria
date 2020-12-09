@@ -11,7 +11,7 @@ from astoria.common.disk_constraints import (
     TrueConstraint,
 )
 
-from .base import BaseManagerMessage
+from .base import ManagerMessage
 
 DiskUUID = NewType('DiskUUID', str)
 
@@ -49,7 +49,7 @@ class DiskInfo(BaseModel):
     disk_type: DiskType
 
 
-class DiskManagerMessage(BaseManagerMessage):
+class DiskManagerMessage(ManagerMessage):
     """
     Status message for Disk Manager.
 
