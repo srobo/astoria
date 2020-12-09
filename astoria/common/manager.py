@@ -51,7 +51,7 @@ class StateManager(Generic[T], metaclass=ABCMeta):
 
         self._mqtt_client = gmqtt.Client(self.name, will_message=self.last_will_message)
 
-        self._mqtt_stop_event = asyncio.Event()
+        self._stop_event = asyncio.Event()
 
         loop.add_signal_handler(SIGHUP, self.halt)
         loop.add_signal_handler(SIGINT, self.halt)
@@ -135,12 +135,12 @@ class StateManager(Generic[T], metaclass=ABCMeta):
 
     async def wait_loop(self) -> None:
         """Wait until the state manager is halted."""
-        await self._mqtt_stop_event.wait()
+        await self._stop_event.wait()
 
     def halt(self) -> None:
         """Stop the state manager."""
         LOGGER.info("Halting")
-        self._mqtt_stop_event.set()
+        self._stop_event.set()
 
     @abstractmethod
     async def main(self) -> None:
