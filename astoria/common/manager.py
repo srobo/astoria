@@ -5,12 +5,11 @@ from abc import ABCMeta, abstractmethod
 from signal import SIGHUP, SIGINT, SIGTERM
 from typing import IO, Generic, List, TypeVar
 
-import gmqtt
-
 from astoria import __version__
 
 from .config import AstoriaConfig
 from .messages.base import ManagerMessage
+from .mqtt.wrapper import MQTTWrapper
 
 LOGGER = logging.getLogger(__name__)
 
@@ -49,7 +48,11 @@ class StateManager(Generic[T], metaclass=ABCMeta):
 
         LOGGER.info(f"{self.name} v{__version__} - {self.__doc__}")
 
-        self._mqtt_client = gmqtt.Client(self.name, will_message=self.last_will_message)
+        self._mqtt = MQTTWrapper(
+            self.name,
+            self.config.mqtt,
+            last_will=self.offline_status,
+        )
 
         self._stop_event = asyncio.Event()
 
@@ -78,12 +81,7 @@ class StateManager(Generic[T], metaclass=ABCMeta):
     def status(self, status: T) -> None:
         """Set the status of the state manager."""
         self._status = status
-        self._mqtt_client.publish(
-            self.mqtt_prefix,
-            status.json(),
-            qos=1,
-            retain=True,
-        )
+        self._mqtt.publish("", status, retain=True)
 
     @property
     @abstractmethod
@@ -101,37 +99,15 @@ class StateManager(Generic[T], metaclass=ABCMeta):
         """State Managers to depend on."""
         return []
 
-    @property
-    def last_will_message(self) -> gmqtt.Message:
-        """The MQTT last will and testament."""
-        return gmqtt.Message(
-            self.mqtt_prefix,
-            self.offline_status.json(),
-            retain=True,
-        )
-
-    @property
-    def mqtt_prefix(self) -> str:
-        """The topic prefix for MQTT."""
-        return f"{self.config.mqtt.topic_prefix}/{self.name}"
-
     async def run(self) -> None:
         """Entrypoint for the State Manager."""
         LOGGER.info("Ready")
+        await self._mqtt.connect()
 
-        mqtt_version = gmqtt.constants.MQTTv50
-        if self.config.mqtt.force_protocol_version_3_1:
-            mqtt_version = gmqtt.constants.MQTTv311
-
-        await self._mqtt_client.connect(
-            self.config.mqtt.host,
-            port=self.config.mqtt.port,
-            ssl=self.config.mqtt.enable_tls,
-            version=mqtt_version,
-        )
         await self.main()
+
         self.status = self.offline_status
-        await self._mqtt_client.disconnect()
+        await self._mqtt.disconnect()
 
     async def wait_loop(self) -> None:
         """Wait until the state manager is halted."""
