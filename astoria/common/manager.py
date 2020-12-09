@@ -1,30 +1,32 @@
 """Common code for state managers."""
 import asyncio
-import atexit
 import logging
 from abc import ABCMeta, abstractmethod
-from signal import SIGHUP, SIGINT, SIGTERM, Signals, signal
-from types import FrameType
-from typing import IO, Union
+from signal import SIGHUP, SIGINT, SIGTERM
+from typing import IO, Generic, List, TypeVar
 
 import gmqtt
-from pydantic import BaseModel
 
 from astoria import __version__
 
 from .config import AstoriaConfig
+from .messages.base import ManagerMessage
 
 LOGGER = logging.getLogger(__name__)
 
 loop = asyncio.get_event_loop()
 
+T = TypeVar("T", bound=ManagerMessage)
 
-class StateManager(metaclass=ABCMeta):
+
+class StateManager(Generic[T], metaclass=ABCMeta):
     """
     State Manager.
 
     A process that stores and mutates some state.
     """
+
+    _status: T
 
     def __init__(self, verbose: bool, config_file: IO[str]) -> None:
         self.config = AstoriaConfig.load_from_file(config_file)
@@ -47,21 +49,71 @@ class StateManager(metaclass=ABCMeta):
 
         LOGGER.info(f"{self.name} v{__version__} - {self.__doc__}")
 
-        self._running = True
-
         self._mqtt_client = gmqtt.Client(self.name, will_message=self.last_will_message)
-        self._mqtt_stop_event = asyncio.Event()
 
-        atexit.register(lambda: self.halt() if self._running else None)
-        signal(SIGHUP, self._signal_halt)
-        signal(SIGINT, self._signal_halt)
-        signal(SIGTERM, self._signal_halt)
+        self._stop_event = asyncio.Event()
+
+        loop.add_signal_handler(SIGHUP, self.halt)
+        loop.add_signal_handler(SIGINT, self.halt)
+        loop.add_signal_handler(SIGTERM, self.halt)
 
         self._init()
 
     def _init(self) -> None:
         """Initialisation of the manager."""
         pass
+
+    @property
+    @abstractmethod
+    def name(self) -> str:
+        """Name of the daemon."""
+        raise NotImplementedError
+
+    @property
+    def status(self) -> T:
+        """Get the status of the state manager."""
+        return self._status
+
+    @status.setter
+    def status(self, status: T) -> None:
+        """Set the status of the state manager."""
+        self._status = status
+        self._mqtt_client.publish(
+            self.mqtt_prefix,
+            status.json(),
+            qos=1,
+            retain=True,
+        )
+
+    @property
+    @abstractmethod
+    def offline_status(self) -> T:
+        """
+        Status to publish when the manager goes offline.
+
+        This status should ensure that any other components relying
+        on this data go into a safe state.
+        """
+        raise NotImplementedError
+
+    @property
+    def dependencies(self) -> List[str]:
+        """State Managers to depend on."""
+        return []
+
+    @property
+    def last_will_message(self) -> gmqtt.Message:
+        """The MQTT last will and testament."""
+        return gmqtt.Message(
+            self.mqtt_prefix,
+            self.offline_status.json(),
+            retain=True,
+        )
+
+    @property
+    def mqtt_prefix(self) -> str:
+        """The topic prefix for MQTT."""
+        return f"{self.config.mqtt.topic_prefix}/{self.name}"
 
     async def run(self) -> None:
         """Entrypoint for the State Manager."""
@@ -78,17 +130,17 @@ class StateManager(metaclass=ABCMeta):
             version=mqtt_version,
         )
         await self.main()
+        self.status = self.offline_status
         await self._mqtt_client.disconnect()
 
     async def wait_loop(self) -> None:
         """Wait until the state manager is halted."""
-        await self._mqtt_stop_event.wait()
+        await self._stop_event.wait()
 
     def halt(self) -> None:
         """Stop the state manager."""
-        self._running = False  # Prevent atexit calling this twice
         LOGGER.info("Halting")
-        self._mqtt_stop_event.set()
+        self._stop_event.set()
 
     @abstractmethod
     async def main(self) -> None:
@@ -98,35 +150,3 @@ class StateManager(metaclass=ABCMeta):
         Must make a call to ``self.wait_loop()`` to wait for the stop event.
         """
         raise NotImplementedError
-
-    @property
-    @abstractmethod
-    def name(self) -> str:
-        """Name of the daemon."""
-        raise NotImplementedError
-
-    @property
-    @abstractmethod
-    def last_will_message(self) -> gmqtt.Message:
-        """The last will message for the MQTT client."""
-        raise NotImplementedError
-
-    @property
-    def mqtt_prefix(self) -> str:
-        """The topic prefix for MQTT."""
-        return f"{self.config.mqtt.topic_prefix}/{self.name}"
-
-    def _signal_halt(self, signal: Signals, __: FrameType) -> None:
-        LOGGER.debug(f"Received {Signals(signal).name}, triggering halt")
-        self.halt()
-
-    async def mqtt_publish(self, topic: str, payload: Union[BaseModel, str]) -> None:
-        """Mock publish."""
-        if isinstance(payload, BaseModel):
-            payload = payload.json()
-        self._mqtt_client.publish(
-            f"{self.mqtt_prefix}/{topic}",
-            payload,
-            qos=1,
-            retain=True,
-        )

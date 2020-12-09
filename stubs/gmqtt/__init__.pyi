@@ -1,8 +1,7 @@
 """Stubs for gmqtt."""
 
-from .client import Client, Message, Subscription
-
 from . import constants
+from .client import Client, Message, Subscription
 
 __all__ = [
     'Client',

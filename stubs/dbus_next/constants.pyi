@@ -1,6 +1,5 @@
 from enum import Enum, IntFlag
 
-
 class BusType(Enum):
     """An enum that indicates a type of bus. On most systems, there are
     normally two different kinds of buses running.
