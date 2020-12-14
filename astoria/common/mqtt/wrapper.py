@@ -56,8 +56,11 @@ class MQTTWrapper:
             will_message=self.last_will_message,
         )
 
+        self._client.reconnect_retries = 0
+
         self._client.on_message = self.on_message
         self._client.on_connect = self.on_connect
+        self._client.on_disconnect = self.on_disconnect
 
         self.subscribe("+", self._dependency_message_handler)
 
@@ -86,7 +89,7 @@ class MQTTWrapper:
     async def connect(self) -> None:
         """Connect to the broker."""
         if self.is_connected:
-            raise RuntimeError("Attempting connection, but client is already connected.")
+            LOGGER.error("Attempting connection, but client is already connected.")
         mqtt_version = gmqtt.constants.MQTTv50
         if self._broker_info.force_protocol_version_3_1:
             mqtt_version = gmqtt.constants.MQTTv311
@@ -101,7 +104,7 @@ class MQTTWrapper:
     async def disconnect(self) -> None:
         """Disconnect from the broker."""
         if not self.is_connected:
-            raise RuntimeError(
+            LOGGER.error(
                 "Attempting disconnection, but client is already disconnected.",
             )
 
@@ -121,6 +124,12 @@ class MQTTWrapper:
         for topic in self._topic_handlers:
             LOGGER.debug(f"Subscribing to {topic}")
             client.subscribe(str(topic))
+
+    def on_disconnect(self, client: gmqtt.client.Client, packet: bytes) -> None:
+        """Callback for mqtt disconnection."""
+        LOGGER.info("MQTT client disconnected")
+        if self._no_dependency_event is not None:
+            self._no_dependency_event.set()
 
     async def on_message(
         self,
@@ -151,7 +160,7 @@ class MQTTWrapper:
     ) -> None:
         """Publish a payload to the broker."""
         if not self.is_connected:
-            raise RuntimeError(
+            LOGGER.error(
                 "Attempted to publish message, but client is not connected.",
             )
 
@@ -195,8 +204,17 @@ class MQTTWrapper:
         """Wait for all dependencies."""
         if len(self._dependencies) > 0:
             LOGGER.debug("Waiting for " + ", ".join(self._dependencies))
-            await asyncio.gather(
+
+            tasks = [asyncio.gather(
                 *(event.wait() for event in self._dependency_events.values()),
+            )]
+
+            if self._no_dependency_event is not None:
+                tasks.append(self._no_dependency_event.wait())  # type: ignore
+
+            await asyncio.wait(
+                tasks,
+                return_when=asyncio.FIRST_COMPLETED,
             )
 
     @property
