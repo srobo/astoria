@@ -144,10 +144,9 @@ class MQTTWrapper:
         for t, handler in self._topic_handlers.items():
             match = t.match(topic)
             if match:
-                LOGGER.debug(f"Calling {handler.__name__} to handle {topic}")
                 asyncio.ensure_future(self.wait_dependencies())
+                LOGGER.debug(f"Calling {handler.__name__} to handle {topic}")
                 asyncio.ensure_future(handler(match, payload.decode()))
-                break
 
         return gmqtt.constants.PubRecReasonCode.SUCCESS
 

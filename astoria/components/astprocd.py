@@ -10,7 +10,7 @@ from typing import IO, Dict, Match, Optional
 import click
 
 from astoria.common.manager import StateManager
-from astoria.common.messages.astdiskd import DiskInfo, DiskType, DiskUUID
+from astoria.common.messages.astdiskd import DiskInfo, DiskType, DiskUUID, DiskManagerMessage
 from astoria.common.messages.astprocd import CodeStatus
 from astoria.common.messages.base import ManagerMessage
 
@@ -38,7 +38,7 @@ class ProcessManager(StateManager[ManagerMessage]):
         self._lifecycle: Optional[UsercodeLifecycle] = None
         self._cur_disks: Dict[DiskUUID, DiskInfo] = {}
 
-        self._mqtt.subscribe("astdiskd/disks/+", self.handle_astdiskd_disk_info_message)
+        self._mqtt.subscribe("astdiskd", self.handle_astdiskd_disk_info_message)
 
     @property
     def offline_status(self) -> ManagerMessage:
@@ -66,17 +66,20 @@ class ProcessManager(StateManager[ManagerMessage]):
         payload: str,
     ) -> None:
         """Handle disk info messages."""
-        uuid = DiskUUID(match.group(1))
         if payload:
-            if uuid not in self._cur_disks:
-                info = DiskInfo(**loads(payload))
-                self._cur_disks[uuid] = info
-                asyncio.ensure_future(self.handle_disk_insertion(uuid, info))
-            else:
-                LOGGER.warning(f"Received duplicate disk insertion for {uuid}")
+            message = DiskManagerMessage(**loads(payload))
+
+            for uuid in self._cur_disks:
+                if uuid not in message.disks:
+                    info = self._cur_disks.pop(uuid)
+                    asyncio.ensure_future(self.handle_disk_removal(uuid, info))
+
+            for uuid, info in message.disks.items():
+                if uuid not in self._cur_disks:
+                    self._cur_disks[uuid] = info
+                    asyncio.ensure_future(self.handle_disk_insertion(uuid, info))
         else:
-            info = self._cur_disks.pop(uuid)
-            asyncio.ensure_future(self.handle_disk_removal(uuid, info))
+            LOGGER.warning("Received empty disk manager message.")
 
     async def handle_disk_insertion(self, uuid: DiskUUID, disk_info: DiskInfo) -> None:
         """Handle a disk insertion."""
