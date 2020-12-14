@@ -5,7 +5,9 @@ import logging
 from json import loads
 from pathlib import Path
 from signal import SIGKILL, SIGTERM
+from tempfile import TemporaryDirectory
 from typing import IO, Dict, Match, Optional
+from zipfile import ZipFile
 
 import click
 
@@ -122,6 +124,7 @@ class UsercodeLifecycle:
         self._disk_info = disk_info
 
         self._process: Optional[asyncio.subprocess.Process] = None
+        self._dir: TemporaryDirectory = TemporaryDirectory()
 
         self._status = CodeStatus.STARTING
 
@@ -148,16 +151,18 @@ class UsercodeLifecycle:
         This function will not return until the code has exited.
         """
         if self._process is None:
-            # TODO Unpack into Tmp file
+            
+            with ZipFile(self._disk_info.mount_path / "robot.zip", "r") as zf:
+                zf.extractall(self._dir)
 
             self._process = await asyncio.create_subprocess_exec(
                 "python",
                 "-u",
-                "test.py",
+                "main.py",
                 stdin=asyncio.subprocess.DEVNULL,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.STDOUT,
-                # TODO CWD to tmp file
+                cwd=self._dir,
                 start_new_session=True,
             )
             if self._process is not None:
@@ -166,7 +171,7 @@ class UsercodeLifecycle:
                 else:
                     LOGGER.warning("Unable to start logger task.")
                 self.status = CodeStatus.RUNNING
-                LOGGER.info(f"Usercode process started with pid {self._process.pid}")
+                LOGGER.info(f"Usercode process started with pid {self._process.pid} in {self._dir}")
 
                 # Wait for the subprocess to exit.
                 # This may include if it is killed.
@@ -181,6 +186,9 @@ class UsercodeLifecycle:
                     self.status = CodeStatus.CRASHED
 
                 self._process = None
+
+                self._dir.cleanup()  # Reset directory
+                self._dir = TemporaryDirectory()
             else:
                 LOGGER.warn("Tried to start process, but failed.")
         else:
