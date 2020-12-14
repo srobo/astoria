@@ -48,17 +48,19 @@ class StateManager(Generic[T], metaclass=ABCMeta):
 
         LOGGER.info(f"{self.name} v{__version__} - {self.__doc__}")
 
-        self._mqtt = MQTTWrapper(
-            self.name,
-            self.config.mqtt,
-            last_will=self.offline_status,
-        )
-
         self._stop_event = asyncio.Event()
 
         loop.add_signal_handler(SIGHUP, self.halt)
         loop.add_signal_handler(SIGINT, self.halt)
         loop.add_signal_handler(SIGTERM, self.halt)
+
+        self._mqtt = MQTTWrapper(
+            self.name,
+            self.config.mqtt,
+            last_will=self.offline_status,
+            dependencies=self.dependencies,
+            no_dependency_event=self._stop_event,
+        )
 
         self._init()
 
@@ -101,8 +103,10 @@ class StateManager(Generic[T], metaclass=ABCMeta):
 
     async def run(self) -> None:
         """Entrypoint for the State Manager."""
-        LOGGER.info("Ready")
         await self._mqtt.connect()
+
+        await self._mqtt.wait_dependencies()
+        LOGGER.info("Ready.")
 
         await self.main()
 
