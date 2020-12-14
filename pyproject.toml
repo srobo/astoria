@@ -42,3 +42,4 @@ build-backend = "poetry.masonry.api"
 
 [tool.poetry.scripts]
 astdiskd = 'astoria.components.astdiskd:main'
+asttestd = 'astoria.components.asttestd:main'
