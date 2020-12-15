@@ -1,5 +1,9 @@
 """Message schemas for astprocd."""
 from enum import Enum
+from typing import Optional
+
+from .astdiskd import DiskInfo
+from .base import ManagerMessage
 
 
 class CodeStatus(str, Enum):
@@ -10,3 +14,14 @@ class CodeStatus(str, Enum):
     KILLED = "code_killed"
     FINISHED = "code_finished"
     CRASHED = "code_crashed"
+
+
+class ProcessManagerMessage(ManagerMessage):
+    """
+    Status message for Process Manager.
+
+    Published to astoria/astprocd
+    """
+
+    code_status: Optional[CodeStatus]
+    disk_info: Optional[DiskInfo]
