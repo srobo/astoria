@@ -1,17 +1,26 @@
 # Astoria
 
-Robot Management System Prototype
+Robot Management System for Student Robotics 2022 kit.
 
 ## Usage
 
 - Install Poetry and Python 3.6+
 - `poetry install`
+- `poetry shell`
 
-Only `astdiskd` is available at present. It requires Udiskie to detect new drives.
+### Available Programs
 
-The code currently uses the `mqtt.eclipse.org` MQTT broker for testing.
+- `astdiskd` - Detects and manages disk drives. It requires Udiskie to detect new drives.
+- `astprocd` - Runs code found in `robot.zip` files on the disk drives
+- `asttestd` - Test state manager
 
-- `poetry run astdiskd`
+### Configuration
+
+All programs take a `-c` argument for the location of the `astoria.toml` config file.
+
+If no config file is supplied, it will look for one in the working directory.
+
+The MQTT broker is configured in the config file. By default it uses `test.mosquitto.org`, which is a public broker and no sensitive information should be published there.
 
 ## Contributions
 
