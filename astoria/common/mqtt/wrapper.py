@@ -127,7 +127,7 @@ class MQTTWrapper:
 
     def on_disconnect(self, client: gmqtt.client.Client, packet: bytes) -> None:
         """Callback for mqtt disconnection."""
-        LOGGER.info("MQTT client disconnected")
+        LOGGER.debug("MQTT client disconnected")
         if self._no_dependency_event is not None:
             self._no_dependency_event.set()
 
