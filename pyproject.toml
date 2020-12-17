@@ -44,3 +44,4 @@ build-backend = "poetry.masonry.api"
 astdiskd = 'astoria.managers.astdiskd:main'
 astprocd = 'astoria.managers.astprocd:main'
 asttestd = 'astoria.managers.asttestd:main'
+astctl = 'astoria.consumers.astctl:main'

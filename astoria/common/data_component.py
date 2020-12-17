@@ -113,9 +113,10 @@ class DataComponent(metaclass=ABCMeta):
         """Wait until the data component is halted."""
         await self._stop_event.wait()
 
-    def halt(self) -> None:
+    def halt(self, *, silent: bool = False) -> None:
         """Stop the component."""
-        LOGGER.info("Halting")
+        if not silent:
+            LOGGER.info("Halting")
         self._stop_event.set()
 
     @abstractmethod
