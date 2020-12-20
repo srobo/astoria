@@ -1,0 +1,260 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>IPC &mdash; Astoria 0.1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Code Bundle Format" href="code_format.html" />
+    <link rel="prev" title="State Managers and Consumers" href="state_managers_consumers.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> Astoria
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Documentation:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Design</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="history.html">Background</a></li>
+<li class="toctree-l2"><a class="reference internal" href="requirements.html">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state_managers_consumers.html">State Managers and Consumers</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">IPC</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#communications">Communications</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#message-types">Message Types</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#manager-messages">Manager Messages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mutation-requests">Mutation Requests</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="code_format.html">Code Bundle Format</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../development.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Astoria</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Design</a> &raquo;</li>
+        
+      <li>IPC</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/design/ipc.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="ipc">
+<h1>IPC<a class="headerlink" href="#ipc" title="Permalink to this headline">¶</a></h1>
+<p>Astoria uses Inter-Process Communications (IPC) to communicate events and data between components.</p>
+<div class="section" id="communications">
+<h2>Communications<a class="headerlink" href="#communications" title="Permalink to this headline">¶</a></h2>
+<p>Components exchange information using JSON messages over MQTT, a pub/sub protocol. All messages should conform
+to a defined schemas, and should be rejected by the receiving component if it does not conform.</p>
+<p>An MQTT broker will need to be run on the robot to faciliate this messaging. It should listen on both TCP and Websockets, so that the Web UI can communicate without an additional proxy in the middle.</p>
+<p>The retained message flag should be used such that information is available immediately after subscribing to a topic on
+the broker. This means that subscribers do not need to wait for the next publication to receive any information.</p>
+</div>
+<div class="section" id="message-types">
+<h2>Message Types<a class="headerlink" href="#message-types" title="Permalink to this headline">¶</a></h2>
+<p>There are currently two classes of message.</p>
+<div class="section" id="manager-messages">
+<h3>Manager Messages<a class="headerlink" href="#manager-messages" title="Permalink to this headline">¶</a></h3>
+<p>A manager message contains information about the status of a manager and it’s current state.</p>
+<p>Published on <code class="docutils literal notranslate"><span class="pre">astoria/[manager_name]</span></code></p>
+<p>Based on the <code class="docutils literal notranslate"><span class="pre">ManagerMessage</span></code> class, must contain at least:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">astoria_version</span></code> - The version of astoria that is running on the manager.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">status</span></code>: <code class="docutils literal notranslate"><span class="pre">&quot;RUNNING&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;STOPPED&quot;</span></code> - Used to allow / disallow running of dependent components.</p></li>
+</ul>
+<p>It should be ensured that the last will and testament of the client is used to change the status to “STOPPED”
+so that clients are alerted to the disconnection. The state should also be cleared to a safe state.</p>
+</div>
+<div class="section" id="mutation-requests">
+<h3>Mutation Requests<a class="headerlink" href="#mutation-requests" title="Permalink to this headline">¶</a></h3>
+<p>Mutation requests have not yet been implemented or formally defined.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="code_format.html" class="btn btn-neutral float-right" title="Code Bundle Format" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="state_managers_consumers.html" class="btn btn-neutral float-left" title="State Managers and Consumers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Dan Trickey
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
