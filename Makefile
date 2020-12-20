@@ -1,4 +1,4 @@
-.PHONY: all clean lint type test test-cov
+.PHONY: all clean docs docs-serve lint type test test-cov
 
 CMD:=poetry run
 PYMODULE:=astoria
@@ -6,6 +6,12 @@ TESTS:=tests
 EXTRACODE:=
 
 all: type test lint
+
+docs:
+	$(CMD) sphinx-build docs/ docs/_build -nWE
+
+docs-serve: docs
+	$(CMD) python3 -m http.server --directory docs/_build
 
 lint:
 	$(CMD) flake8 $(PYMODULE) $(TESTS) $(EXTRACODE)
