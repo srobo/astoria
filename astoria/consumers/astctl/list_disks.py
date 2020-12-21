@@ -15,10 +15,9 @@ loop = asyncio.get_event_loop()
 @click.command("list-disks")
 @click.option("-v", "--verbose", is_flag=True)
 @click.option("-c", "--config-file", type=click.File('r'), default=Path("astoria.toml"))
-@click.option("--json", type=bool, is_flag=True, default=False)
-def list_disks(*, verbose: bool, config_file: IO[str], json: bool) -> None:
+def list_disks(*, verbose: bool, config_file: IO[str]) -> None:
     """List information about mounted disks."""
-    command = ListDisksCommand(verbose, config_file, json)
+    command = ListDisksCommand(verbose, config_file)
     loop.run_until_complete(command.run())
 
 
@@ -26,10 +25,6 @@ class ListDisksCommand(StateConsumer):
     """List disk information."""
 
     name_prefix = "astctl"
-
-    def __init__(self, verbose: bool, config_file: IO[str], json: bool) -> None:
-        super().__init__(verbose, config_file)
-        self._json = json
 
     def _init(self) -> None:
         """Initialise consumer."""
