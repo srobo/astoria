@@ -14,6 +14,7 @@ extensions = [
     "sphinx.ext.doctest",
     "sphinx.ext.intersphinx",
     "sphinx.ext.viewcode",
+    "sphinx.ext.githubpages",
     "sphinx_rtd_theme",
     "sphinx-pydantic",
 ]
