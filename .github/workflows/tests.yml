@@ -29,6 +29,8 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.python }}-pip-${{ hashFiles('poetry.lock') }}-${{ hashFiles('pyproject.toml') }}
       - name: Install dependencies
         run: poetry install
+      - name: Start Mosquitto MQTT broker
+        uses: namoshek/mosquitto-github-action@v0.1.0
       - name: Lint
         run: make lint
       - name: Static type checking
