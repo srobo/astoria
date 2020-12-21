@@ -3,7 +3,7 @@
 import asyncio
 import logging
 from json import loads
-from typing import Any, Callable, Coroutine, Dict, List, Match, Optional, Set
+from typing import Any, Callable, Coroutine, Dict, List, Match, Optional
 
 import gmqtt
 from pydantic import BaseModel
@@ -34,7 +34,7 @@ class MQTTWrapper:
         client_name: str,
         broker_info: MQTTBrokerInfo,
         *,
-        last_will: Optional[ManagerMessage],
+        last_will: Optional[ManagerMessage] = None,
         dependencies: List[str] = [],
         no_dependency_event: Optional[asyncio.Event] = None,
     ) -> None:
@@ -49,7 +49,6 @@ class MQTTWrapper:
         }
 
         self._topic_handlers: Dict[Topic, Handler] = {}
-        self._dependent_topics: Set[Topic] = set()
 
         self._client = gmqtt.Client(
             self._client_name,
@@ -180,8 +179,6 @@ class MQTTWrapper:
         self,
         topic: str,
         callback: Handler,
-        *,
-        ignore_deps: bool = False,
     ) -> None:
         """
         Subscribe to an MQTT Topic.
@@ -196,8 +193,6 @@ class MQTTWrapper:
             topic_complete = Topic.parse(f"{self._broker_info.topic_prefix}/{topic}")
 
         self._topic_handlers[topic_complete] = callback
-        if not ignore_deps:
-            self._dependent_topics.add(topic_complete)
 
     async def wait_dependencies(self) -> None:
         """Wait for all dependencies."""
