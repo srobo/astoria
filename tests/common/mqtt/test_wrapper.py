@@ -17,10 +17,12 @@ BROKER_INFO = MQTTBrokerInfo(
     port=1883,
 )
 
-class TestModel(BaseModel):
+
+class StubModel(BaseModel):
     """Test BaseModel."""
 
     foo: str
+
 
 async def stub_message_handler(
     self,
@@ -65,6 +67,7 @@ def test_wrapper_init_last_will() -> None:
     lw = ManagerMessage(status="RUNNING")
     wr = MQTTWrapper("foo", BROKER_INFO, last_will=lw)
     assert wr._last_will is lw
+
 
 def test_wrapper_init_event() -> None:
     """Test that the no_dep_event is passed properly."""
@@ -119,16 +122,8 @@ def test_subscribe() -> None:
 
 
 @pytest.mark.asyncio
-async def test_connect() -> None:
-    """Test that the wrapper can connect to the broker."""
-    wr = MQTTWrapper("foo", BROKER_INFO)
-    await wr.connect()
-    assert wr.is_connected
-
-
-@pytest.mark.asyncio
-async def test_disconnect() -> None:
-    """Test that the wrapper can disconnect from the broker."""
+async def test_connect_disconnect() -> None:
+    """Test that the wrapper can connect and disconnect from the broker."""
     wr = MQTTWrapper("foo", BROKER_INFO)
     await wr.connect()
     assert wr.is_connected
@@ -162,7 +157,7 @@ async def test_handler_called() -> None:
         {},
     )
     assert res == gmqtt.constants.PubRecReasonCode.SUCCESS
-    
+
     await asyncio.wait_for(ev.wait(), 0.1)
 
     await wr.disconnect()
@@ -185,25 +180,52 @@ async def test_publish_send_and_receive() -> None:
     await wr_sub.connect()
     await wr_pub.connect()
 
-    wr_pub.publish("bees/foo", TestModel(foo="bar"))
-    
+    wr_pub.publish("bees/foo", StubModel(foo="bar"))
+
     await asyncio.wait_for(ev.wait(), 0.5)
 
     await wr_sub.disconnect()
     await wr_pub.disconnect()
 
 
-def test_await_dependencies() -> None:
-    pass
+@pytest.mark.asyncio
+async def test_publish_send_and_receive_on_self() -> None:
+    """Test that we can publish and receive a message on it's own topic."""
+    ev = asyncio.Event()
+
+    async def test_handler(
+        match: Match[str],
+        payload: str,
+    ) -> None:
+        ev.set()
+
+    wr_sub = MQTTWrapper("foo", BROKER_INFO)
+    wr_pub = MQTTWrapper("bar", BROKER_INFO)
+    wr_sub.subscribe("bar", test_handler)
+    await wr_sub.connect()
+    await wr_pub.connect()
+
+    wr_pub.publish("", StubModel(foo="bar"))
+
+    await asyncio.wait_for(ev.wait(), 0.5)
+
+    await wr_sub.disconnect()
+    await wr_pub.disconnect()
 
 
-def test_has_dependencies() -> None:
-    pass
+@pytest.mark.asyncio
+async def test_publish_bad_topic_error() -> None:
+    """Test that we cannot publish to an invalid topic."""
+    wr_pub = MQTTWrapper("bar", BROKER_INFO)
+    await wr_pub.connect()
 
+    with pytest.raises(ValueError):
+        wr_pub.publish("bees/+", StubModel(foo="bar"))
 
-def test_dependency_available() -> None:
-    pass
+    with pytest.raises(ValueError):
+        wr_pub.publish("bees/#", StubModel(foo="bar"))
 
+    with pytest.raises(ValueError):
+        wr_pub.publish("bees/", StubModel(foo="bar"))
 
-def test_dependency_unavailable_event() -> None:
-    pass
+    await wr_pub.disconnect()

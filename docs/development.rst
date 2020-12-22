@@ -28,7 +28,7 @@ You will need the following installed on your machine:
 - GNU Make
 - poetry_
 - Optionally: Udisks2, Udiskie and DBus for astdiskd
-- Optionally: Mosquitto MQTT broker, although a public broker can also be used.
+- Optionally: Mosquitto MQTT broker, although a public broker can also be used. A local broker is required for tests.
 
 Now clone the repository from GitHub_ into a folder on your local machine.
 
