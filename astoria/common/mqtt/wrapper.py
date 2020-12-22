@@ -34,7 +34,7 @@ class MQTTWrapper:
         client_name: str,
         broker_info: MQTTBrokerInfo,
         *,
-        last_will: Optional[ManagerMessage] = None,
+        last_will: Optional[BaseModel],
         dependencies: List[str] = [],
         no_dependency_event: Optional[asyncio.Event] = None,
     ) -> None:
@@ -126,7 +126,7 @@ class MQTTWrapper:
 
     def on_disconnect(self, client: gmqtt.client.Client, packet: bytes) -> None:
         """Callback for mqtt disconnection."""
-        LOGGER.info("MQTT client disconnected")
+        LOGGER.debug("MQTT client disconnected")
         if self._no_dependency_event is not None:
             self._no_dependency_event.set()
 

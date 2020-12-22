@@ -1,15 +1,11 @@
-"""Common code for state managers."""
+"""State Manager base class."""
 import asyncio
 import logging
 from abc import ABCMeta, abstractmethod
-from signal import SIGHUP, SIGINT, SIGTERM
-from typing import IO, Generic, List, TypeVar
+from typing import Generic, TypeVar
 
-from astoria import __version__
-
-from .config import AstoriaConfig
+from .data_component import DataComponent
 from .messages.base import ManagerMessage
-from .mqtt.wrapper import MQTTWrapper
 
 LOGGER = logging.getLogger(__name__)
 
@@ -18,7 +14,7 @@ loop = asyncio.get_event_loop()
 T = TypeVar("T", bound=ManagerMessage)
 
 
-class StateManager(Generic[T], metaclass=ABCMeta):
+class StateManager(DataComponent, Generic[T], metaclass=ABCMeta):
     """
     State Manager.
 
@@ -26,53 +22,6 @@ class StateManager(Generic[T], metaclass=ABCMeta):
     """
 
     _status: T
-
-    def __init__(self, verbose: bool, config_file: IO[str]) -> None:
-        self.config = AstoriaConfig.load_from_file(config_file)
-
-        if verbose:
-            logging.basicConfig(
-                level=logging.DEBUG,
-                format=f"%(asctime)s {self.name} %(name)s %(levelname)s %(message)s",
-                datefmt="%Y-%m-%d %H:%M:%S",
-            )
-        else:
-            logging.basicConfig(
-                level=logging.INFO,
-                format=f"%(asctime)s {self.name} %(levelname)s %(message)s",
-                datefmt="%Y-%m-%d %H:%M:%S",
-            )
-
-            # Suppress INFO messages from gmqtt
-            logging.getLogger("gmqtt").setLevel(logging.WARNING)
-
-        LOGGER.info(f"{self.name} v{__version__} - {self.__doc__}")
-
-        self._stop_event = asyncio.Event()
-
-        loop.add_signal_handler(SIGHUP, self.halt)
-        loop.add_signal_handler(SIGINT, self.halt)
-        loop.add_signal_handler(SIGTERM, self.halt)
-
-        self._mqtt = MQTTWrapper(
-            self.name,
-            self.config.mqtt,
-            last_will=self.offline_status,
-            dependencies=self.dependencies,
-            no_dependency_event=self._stop_event,
-        )
-
-        self._init()
-
-    def _init(self) -> None:
-        """Initialisation of the manager."""
-        pass
-
-    @property
-    @abstractmethod
-    def name(self) -> str:
-        """Name of the daemon."""
-        raise NotImplementedError
 
     @property
     def status(self) -> T:
@@ -97,36 +46,15 @@ class StateManager(Generic[T], metaclass=ABCMeta):
         raise NotImplementedError
 
     @property
-    def dependencies(self) -> List[str]:
-        """State Managers to depend on."""
-        return []
+    def last_will(self) -> T:
+        """Last will and testament of the MQTT client."""
+        return self.offline_status
 
-    async def run(self) -> None:
-        """Entrypoint for the State Manager."""
-        await self._mqtt.connect()
-
-        await self._mqtt.wait_dependencies()
+    async def _post_connect(self) -> None:
+        """Overridable callback after MQTT connection."""
         LOGGER.info("Ready.")
+        await self._mqtt.wait_dependencies()
 
-        await self.main()
-
+    async def _pre_disconnect(self) -> None:
+        """Change status to offline before disconnecting from the broker."""
         self.status = self.offline_status
-        await self._mqtt.disconnect()
-
-    async def wait_loop(self) -> None:
-        """Wait until the state manager is halted."""
-        await self._stop_event.wait()
-
-    def halt(self) -> None:
-        """Stop the state manager."""
-        LOGGER.info("Halting")
-        self._stop_event.set()
-
-    @abstractmethod
-    async def main(self) -> None:
-        """
-        Main method of the state manager.
-
-        Must make a call to ``self.wait_loop()`` to wait for the stop event.
-        """
-        raise NotImplementedError
