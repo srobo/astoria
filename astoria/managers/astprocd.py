@@ -85,7 +85,7 @@ class ProcessManager(DiskHandlerMixin, StateManager[ProcessManagerMessage]):
         if disk_info.disk_type is DiskType.USERCODE:
             LOGGER.info(f"Usercode disk {uuid} removed ({disk_info.mount_path})")
 
-            if self._lifecycle is not None:
+            if self._lifecycle is not None and self._lifecycle._uuid == disk_info.uuid:
                 await self._lifecycle.kill_process()
                 self._lifecycle = None
                 self.update_status()

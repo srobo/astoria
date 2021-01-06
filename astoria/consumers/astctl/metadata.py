@@ -40,7 +40,7 @@ class ShowMetadataCommand(StateConsumer):
         payload: str,
     ) -> None:
         """Handle astmetad status messages."""
-        message = MetadataManagerMessage(**loads(payload))
+        message = MetadataManagerMessage(**loads(payload))  # TODO: Handle error
         if message.status == MetadataManagerMessage.Status.RUNNING:
             for i, v in message.metadata.__dict__.items():
                 print(f"{i}: {v}")

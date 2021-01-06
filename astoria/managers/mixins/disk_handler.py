@@ -26,7 +26,7 @@ class DiskHandlerMixin:
     ) -> None:
         """Handle disk info messages."""
         if payload:
-            message = DiskManagerMessage(**loads(payload))
+            message = DiskManagerMessage(**loads(payload))  # TODO: Handle error
 
             new_set = set(message.disks.keys())
             old_set = set(self._cur_disks.keys())

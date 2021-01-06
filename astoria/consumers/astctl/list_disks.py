@@ -40,7 +40,7 @@ class ListDisksCommand(StateConsumer):
         payload: str,
     ) -> None:
         """Handle astdiskd status messages."""
-        message = DiskManagerMessage(**loads(payload))
+        message = DiskManagerMessage(**loads(payload))  # TODO: Handle error
         if message.status == DiskManagerMessage.Status.RUNNING:
             print(f"{len(message.disks)} disks found")
             for uuid, disk in message.disks.items():

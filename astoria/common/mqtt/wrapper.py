@@ -223,7 +223,7 @@ class MQTTWrapper:
     ) -> None:
         """Handle status messages from state managers."""
         manager = match.group(1)
-        info = ManagerMessage(**loads(payload))
+        info = ManagerMessage(**loads(payload))  # TODO: Handle error
         LOGGER.debug(f"Status update from {manager}: {info.status}")
         if info.status is ManagerMessage.Status.RUNNING:
             try:

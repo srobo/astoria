@@ -53,4 +53,4 @@ class EventCommand(StateConsumer):
             print(data)
         else:
             print("Received message from " + match.group(0))
-            pprint(loads(payload))
+            pprint(loads(payload))  # TODO: Handle error

@@ -4,7 +4,7 @@ import asyncio
 import logging
 from json import loads
 from pathlib import Path
-from typing import IO, Dict, Optional
+from typing import IO, Dict, List, Optional, Set, Tuple
 
 import click
 
@@ -86,9 +86,16 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
                 self.update_status()
 
     def get_current_metadata(self) -> Metadata:
+        """
+        Calculate the current metadata.
 
+        Takes the default, static metadata based on the config and system
+        information. It then overlays data from other sources in a priority order,
+        whereby each source has a set of permitted attributes in the metadata that
+        can be overriden.
+        """
         # Mutation data sources in priority order.
-        MUTATION_SOURCES = [
+        MUTATION_SOURCES: List[Tuple[Set[str], Dict[str, str]]] = [
             ({"arena", "zone", "mode"}, self._requested_data),
         ]
 
