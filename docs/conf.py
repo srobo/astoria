@@ -3,7 +3,7 @@ from typing import List
 import astoria
 
 project = "Astoria"
-copyright = "2020, Dan Trickey"  # noqa: A001
+copyright = "2020-21, Dan Trickey"  # noqa: A001
 author = "Dan Trickey"
 
 release = astoria.__version__
