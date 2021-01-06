@@ -34,7 +34,7 @@ class ProcessManager(DiskHandlerMixin, StateManager[ProcessManagerMessage]):
     """Astoria Process State Manager."""
 
     name = "astprocd"
-    dependencies = ["astdiskd"]
+    dependencies = ["astdiskd", "astmetad"]
 
     def _init(self) -> None:
         self._lifecycle: Optional[UsercodeLifecycle] = None
