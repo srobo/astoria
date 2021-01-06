@@ -44,27 +44,11 @@ class Metadata(BaseModel):
             kit_version=config.kit.version,
         )
 
-    def mutate(self, name: str, value: str) -> None:
-        """
-        Mutate an attribute of the metadata.
-
-        This function should be used to mutate data from a request. It will not modify
-        immutable attributes, and will validate the data.
-
-        Value could be many things, but we want to artifically restrict it to a str here.
-        """
-        if name in ["arena", "zone", "mode"]:
-            super().__setattr__(name, value)
-        else:
-            raise ValueError(f"Unknown mutable metadata key: {name}")
-
     # From Meta USB
     arena: str = "A"
     zone: int = 0
     mode: RobotMode = RobotMode.DEV
     game_timeout: Optional[int] = None
-
-    # Derived from meta USB
     wifi_enabled: bool = True
 
     # From Software
