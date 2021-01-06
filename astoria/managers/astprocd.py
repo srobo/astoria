@@ -2,23 +2,19 @@
 
 import asyncio
 import logging
-from json import loads
 from pathlib import Path
 from signal import SIGKILL, SIGTERM
 from tempfile import TemporaryDirectory
-from typing import IO, Callable, Dict, Match, Optional
+from typing import IO, Callable, Dict, Optional
 from zipfile import BadZipFile, ZipFile
 
 import click
 
 from astoria.common.manager import StateManager
-from astoria.common.messages.astdiskd import (
-    DiskInfo,
-    DiskManagerMessage,
-    DiskType,
-    DiskUUID,
-)
+from astoria.common.messages.astdiskd import DiskInfo, DiskType, DiskUUID
 from astoria.common.messages.astprocd import CodeStatus, ProcessManagerMessage
+
+from .mixins.disk_handler import DiskHandlerMixin
 
 LOGGER = logging.getLogger(__name__)
 
@@ -34,7 +30,7 @@ def main(*, verbose: bool, config_file: IO[str]) -> None:
     loop.run_until_complete(testd.run())
 
 
-class ProcessManager(StateManager[ProcessManagerMessage]):
+class ProcessManager(DiskHandlerMixin, StateManager[ProcessManagerMessage]):
     """Astoria Process State Manager."""
 
     name = "astprocd"
@@ -66,32 +62,6 @@ class ProcessManager(StateManager[ProcessManagerMessage]):
 
         for uuid, info in self._cur_disks.items():
             asyncio.ensure_future(self.handle_disk_removal(uuid, info))
-
-    async def handle_astdiskd_disk_info_message(
-        self,
-        match: Match[str],
-        payload: str,
-    ) -> None:
-        """Handle disk info messages."""
-        if payload:
-            message = DiskManagerMessage(**loads(payload))
-
-            new_set = set(message.disks.keys())
-            old_set = set(self._cur_disks.keys())
-
-            added_disks = new_set - old_set
-            removed_disks = old_set - new_set
-
-            for uuid in removed_disks:
-                info = self._cur_disks.pop(uuid)
-                asyncio.ensure_future(self.handle_disk_removal(uuid, info))
-
-            for uuid in added_disks:
-                info = message.disks[uuid]
-                self._cur_disks[uuid] = info
-                asyncio.ensure_future(self.handle_disk_insertion(uuid, info))
-        else:
-            LOGGER.warning("Received empty disk manager message.")
 
     async def handle_disk_insertion(self, uuid: DiskUUID, disk_info: DiskInfo) -> None:
         """Handle a disk insertion."""

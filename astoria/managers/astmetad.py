@@ -8,7 +8,7 @@ from typing import IO
 import click
 
 from astoria.common.manager import StateManager
-from astoria.common.messages.astmetad import MetadataManagerMessage, Metadata
+from astoria.common.messages.astmetad import Metadata, MetadataManagerMessage
 
 LOGGER = logging.getLogger(__name__)
 
@@ -43,14 +43,14 @@ class MetadataManager(StateManager[MetadataManagerMessage]):
         """
         return MetadataManagerMessage(
             status=MetadataManagerMessage.Status.STOPPED,
-            metadata=Metadata.init(self.config)
+            metadata=Metadata.init(self.config),
         )
 
     async def main(self) -> None:
         """Main routine for astmetad."""
         self.status = MetadataManagerMessage(
             status=MetadataManagerMessage.Status.RUNNING,
-            metadata=Metadata.init(self.config)
+            metadata=Metadata.init(self.config),
         )
 
         # Wait whilst the program is running.
