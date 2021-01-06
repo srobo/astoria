@@ -3,7 +3,7 @@
 CMD:=poetry run
 PYMODULE:=astoria
 TESTS:=tests
-EXTRACODE:=
+EXTRACODE:=docs/_code
 
 all: type test lint
 
