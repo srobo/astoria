@@ -42,8 +42,8 @@ sphinx_autodoc_typehints = "^1.11.1"
 sphinx-pydantic = "^0.1.1"
 sphinx-jsonschema = "1.15"  # Pinned for sphinx-pydantic
 sphinx-autobuild = "^2020.9.1"
-m2r2 = "^0.2.7"
 sphinx-click = "^2.5.0"
+m2r2 = "^0.2.7"
 
 [build-system]
 requires = ["poetry>=0.12"]
