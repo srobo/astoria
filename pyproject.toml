@@ -40,6 +40,7 @@ sphinx-rtd-theme = "^0.5.0"
 sphinx_autodoc_typehints = "^1.11.1"
 sphinx-pydantic = "^0.1.1"
 sphinx-jsonschema = "1.15"  # Pinned for sphinx-pydantic
+sphinx-autobuild = "^2020.9.1"
 pytest-asyncio = "^0.14.0"
 
 [build-system]
