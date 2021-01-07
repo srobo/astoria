@@ -71,7 +71,7 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
             LOGGER.info(f"Metadata disk {uuid} is mounted at {disk_info.mount_path}")
             if self._lifecycle is None:
                 LOGGER.debug(f"Starting metadata lifecycle for {uuid}")
-                self._lifecycle = MetadataDiskLifecycle(uuid, disk_info)  # TODO: Handle error
+                self._lifecycle = MetadataDiskLifecycle(uuid, disk_info)
                 self.update_status()
             else:
                 LOGGER.warn("Cannot use metadata, there is already a lifecycle present.")
@@ -102,7 +102,10 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
         if self._lifecycle is not None:
             # Add mutations from the metadata usb, if it is present.
             MUTATION_SOURCES.append(
-                ({"arena", "zone", "mode", "game_timeout", "wifi_enabled"}, self._lifecycle.diff_data),
+                (
+                    {"arena", "zone", "mode", "game_timeout", "wifi_enabled"},
+                    self._lifecycle.diff_data,
+                ),
             )
 
         metadata = Metadata.init(self.config)
@@ -112,7 +115,9 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
                 if k in permitted_attrs:
                     metadata.__setattr__(k, v)
                 else:
-                    LOGGER.warning(f"There was an attempt to mutate {k}, but it was not permitted.")
+                    LOGGER.warning(
+                        f"There was an attempt to mutate {k}, but it was not permitted.",
+                    )
         return metadata
 
     def update_status(self) -> None:
@@ -133,12 +138,7 @@ class MetadataDiskLifecycle:
         self._metadata_file_path = disk_info.mount_path / "astoria.json"
 
         with self._metadata_file_path.open("r") as fh:
-            disk_data: Dict[str, str] = loads(fh.read())  # TODO: try catch
-
-        self._diff: Dict[str, str] = disk_data  # TODO: not this
-
-        # TODO: Validate the data.
-        # TODO: Check is dict of str to str
+            self._diff: Dict[str, str] = loads(fh.read())
 
     @property
     def diff_data(self) -> Dict[str, str]:

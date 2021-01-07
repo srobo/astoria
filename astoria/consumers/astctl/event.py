@@ -1,6 +1,6 @@
 """Command to display astoria events."""
 import asyncio
-from json import loads
+from json import JSONDecodeError, loads
 from pathlib import Path
 from pprint import pprint
 from typing import IO, Match
@@ -53,4 +53,7 @@ class EventCommand(StateConsumer):
             print(data)
         else:
             print("Received message from " + match.group(0))
-            pprint(loads(payload))  # TODO: Handle error
+            try:
+                pprint(loads(payload))
+            except JSONDecodeError:
+                print("Could not decode JSON data.")

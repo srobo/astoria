@@ -2,8 +2,8 @@
 
 import asyncio
 import logging
-from json import loads
-from typing import Any, Callable, Coroutine, Dict, List, Match, Optional
+from json import JSONDecodeError, loads
+from typing import Any, Callable, Coroutine, Dict, List, Match, Optional, Set
 
 import gmqtt
 from pydantic import BaseModel
@@ -223,15 +223,18 @@ class MQTTWrapper:
     ) -> None:
         """Handle status messages from state managers."""
         manager = match.group(1)
-        info = ManagerMessage(**loads(payload))  # TODO: Handle error
-        LOGGER.debug(f"Status update from {manager}: {info.status}")
-        if info.status is ManagerMessage.Status.RUNNING:
-            try:
-                self._dependency_events[manager].set()
-            except KeyError:
-                pass
-        else:
-            if self.has_dependencies and manager in self._dependency_events:
-                LOGGER.warning(f"{manager} is unavailable!")
-                if self._no_dependency_event is not None:
-                    self._no_dependency_event.set()
+        try:
+            info = ManagerMessage(**loads(payload))
+            LOGGER.debug(f"Status update from {manager}: {info.status}")
+            if info.status is ManagerMessage.Status.RUNNING:
+                try:
+                    self._dependency_events[manager].set()
+                except KeyError:
+                    pass
+            else:
+                if self.has_dependencies and manager in self._dependency_events:
+                    LOGGER.warning(f"{manager} is unavailable!")
+                    if self._no_dependency_event is not None:
+                        self._no_dependency_event.set()
+        except JSONDecodeError:
+            pass

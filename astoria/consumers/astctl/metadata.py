@@ -1,6 +1,6 @@
 """Command to show metadata."""
 import asyncio
-from json import loads
+from json import JSONDecodeError, loads
 from pathlib import Path
 from typing import IO, Match
 
@@ -40,10 +40,13 @@ class ShowMetadataCommand(StateConsumer):
         payload: str,
     ) -> None:
         """Handle astmetad status messages."""
-        message = MetadataManagerMessage(**loads(payload))  # TODO: Handle error
-        if message.status == MetadataManagerMessage.Status.RUNNING:
-            for i, v in message.metadata.__dict__.items():
-                print(f"{i}: {v}")
-        else:
-            print("astmetad is not running")
+        try:
+            message = MetadataManagerMessage(**loads(payload))
+            if message.status == MetadataManagerMessage.Status.RUNNING:
+                for i, v in message.metadata.__dict__.items():
+                    print(f"{i}: {v}")
+            else:
+                print("astmetad is not running")
+        except JSONDecodeError:
+            print("Could not decode JSON data.")
         self.halt(silent=True)

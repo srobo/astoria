@@ -1,6 +1,6 @@
 """Command to list information about mounted disks."""
 import asyncio
-from json import loads
+from json import JSONDecodeError, loads
 from pathlib import Path
 from typing import IO, Match
 
@@ -40,13 +40,16 @@ class ListDisksCommand(StateConsumer):
         payload: str,
     ) -> None:
         """Handle astdiskd status messages."""
-        message = DiskManagerMessage(**loads(payload))  # TODO: Handle error
-        if message.status == DiskManagerMessage.Status.RUNNING:
-            print(f"{len(message.disks)} disks found")
-            for uuid, disk in message.disks.items():
-                print(f"\tUUID: {uuid}")
-                print(f"\t\tMounted at: {disk.mount_path}")
-                print(f"\t\tDisk Type: {disk.disk_type.name}")
-        else:
-            print("astdiskd is not running")
+        try:
+            message = DiskManagerMessage(**loads(payload))
+            if message.status == DiskManagerMessage.Status.RUNNING:
+                print(f"{len(message.disks)} disks found")
+                for uuid, disk in message.disks.items():
+                    print(f"\tUUID: {uuid}")
+                    print(f"\t\tMounted at: {disk.mount_path}")
+                    print(f"\t\tDisk Type: {disk.disk_type.name}")
+            else:
+                print("astdiskd is not running")
+        except JSONDecodeError:
+            print("Could not decode JSON data.")
         self.halt(silent=True)

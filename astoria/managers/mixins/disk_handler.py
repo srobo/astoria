@@ -2,7 +2,7 @@
 
 import asyncio
 import logging
-from json import loads
+from json import JSONDecodeError, loads
 from typing import Dict, Match
 
 from astoria.common.messages.astdiskd import (
@@ -26,22 +26,25 @@ class DiskHandlerMixin:
     ) -> None:
         """Handle disk info messages."""
         if payload:
-            message = DiskManagerMessage(**loads(payload))  # TODO: Handle error
+            try:
+                message = DiskManagerMessage(**loads(payload))
 
-            new_set = set(message.disks.keys())
-            old_set = set(self._cur_disks.keys())
+                new_set = set(message.disks.keys())
+                old_set = set(self._cur_disks.keys())
 
-            added_disks = new_set - old_set
-            removed_disks = old_set - new_set
+                added_disks = new_set - old_set
+                removed_disks = old_set - new_set
 
-            for uuid in removed_disks:
-                info = self._cur_disks.pop(uuid)
-                asyncio.ensure_future(self.handle_disk_removal(uuid, info))
+                for uuid in removed_disks:
+                    info = self._cur_disks.pop(uuid)
+                    asyncio.ensure_future(self.handle_disk_removal(uuid, info))
 
-            for uuid in added_disks:
-                info = message.disks[uuid]
-                self._cur_disks[uuid] = info
-                asyncio.ensure_future(self.handle_disk_insertion(uuid, info))
+                for uuid in added_disks:
+                    info = message.disks[uuid]
+                    self._cur_disks[uuid] = info
+                    asyncio.ensure_future(self.handle_disk_insertion(uuid, info))
+            except JSONDecodeError:
+                LOGGER.warning("Received bad JSON in disk manager message.")
         else:
             LOGGER.warning("Received empty disk manager message.")
 

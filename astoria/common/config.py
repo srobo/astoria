@@ -53,4 +53,4 @@ class AstoriaConfig(BaseModel):
     @classmethod
     def load_from_file(cls, fh: IO[str]) -> 'AstoriaConfig':
         """Load the config from a file."""
-        return cls(**load(fh))  # TODO: Handle error
+        return cls(**load(fh))
