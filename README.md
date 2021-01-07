@@ -17,6 +17,7 @@ Robot Management System for Student Robotics 2022 kit.
 
 - `astctl` - Command-line interface
 - `astdiskd` - Detects and manages disk drives. It requires Udiskie to detect new drives.
+- `astmetad` - Handle and mutate metadata. Loads metadata from drives.
 - `astprocd` - Runs code found in `robot.zip` files on the disk drives
 
 ### Configuration
