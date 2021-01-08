@@ -1,12 +1,6 @@
 Development
 ===========
 
-.. toctree::
-   :maxdepth: 1
-   :caption: Development:
-
-   manager
-
 Astoria is developed on GitHub_ and pull requests should be submitted there. If you have write access to the repository,
 you optionally can develop your changes on a branch within the main repository. Alternatively, please fork the Astoria
 repository and pull request from there.
