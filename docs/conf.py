@@ -15,8 +15,10 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx.ext.viewcode",
     "sphinx.ext.githubpages",
+    'sphinx.ext.autosectionlabel',
     "sphinx_rtd_theme",
     "sphinx-pydantic",
+    "m2r2",
 ]
 
 templates_path = []  # type: List[str]
@@ -39,3 +41,5 @@ autodoc_default_options = {
 }
 
 autodoc_mock_imports = []
+
+source_suffix = [".rst", ".md"]
