@@ -34,7 +34,7 @@ class MQTTWrapper:
         client_name: str,
         broker_info: MQTTBrokerInfo,
         *,
-        last_will: Optional[BaseModel],
+        last_will: Optional[BaseModel] = None,
         dependencies: List[str] = [],
         no_dependency_event: Optional[asyncio.Event] = None,
     ) -> None:

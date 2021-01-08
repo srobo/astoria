@@ -121,6 +121,7 @@ def test_subscribe() -> None:
     assert wr._topic_handlers[Topic(["astoria", "bees", "+"])] == stub_message_handler
 
 
+@pytest.mark.filterwarnings("ignore")
 @pytest.mark.asyncio
 async def test_connect_disconnect() -> None:
     """Test that the wrapper can connect and disconnect from the broker."""
