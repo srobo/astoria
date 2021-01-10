@@ -10,3 +10,9 @@ A state consumer is a program that does not publish persistent data.
 
 -  A state manager can subscribe to state information from state managers.
 -  A state manager can make a mutation request to a state manager.
+
+.. toctree::
+   :maxdepth: 1
+   :caption: List of State Consumers:
+
+   astctl

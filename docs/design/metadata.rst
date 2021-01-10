@@ -1,5 +1,5 @@
-Metadata
-========
+Metadatas
+=========
 
 Astoria introduces the concept of 'metadata', used here as a specific technical term.
 
