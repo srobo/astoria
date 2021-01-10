@@ -19,6 +19,7 @@ extensions = [
     'sphinx.ext.graphviz',
     "sphinx_rtd_theme",
     "sphinx-pydantic",
+    "sphinx_click",
     "m2r2",
 ]
 

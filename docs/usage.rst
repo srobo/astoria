@@ -34,7 +34,12 @@ For the recommended setup, you will need to run at least ``astdiskd``, ``astmeta
 
 The state managers should be managed using systemd in a proper deployment, although that is outside of the scope of this documentation. ``tmux`` is good for testing.
 
-You can run ``astctl event`` to see what data is currently published.
+Command Line Usage
+------------------
+
+.. click:: astoria.consumers.astctl:main
+   :prog: astctl
+   :nested: full
 
 Metadata USBs
 -------------
