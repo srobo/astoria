@@ -16,6 +16,7 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx.ext.githubpages",
     'sphinx.ext.autosectionlabel',
+    'sphinx.ext.graphviz',
     "sphinx_rtd_theme",
     "sphinx-pydantic",
     "m2r2",
