@@ -29,6 +29,7 @@ You will need the following installed on your machine:
 - poetry_
 - Optionally: Udisks2, Udiskie and DBus for astdiskd
 - Optionally: Mosquitto MQTT broker, although a public broker can also be used. A local broker is required for tests.
+- Optionally: graphviz, required for building the Sphinx documentation
 
 Now clone the repository from GitHub_ into a folder on your local machine.
 
