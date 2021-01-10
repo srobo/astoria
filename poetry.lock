@@ -859,11 +859,7 @@ testing = ["pytest (>=3.5,<3.7.3 || >3.7.3)", "pytest-checkdocs (>=1.2.3)", "pyt
 [metadata]
 lock-version = "1.0"
 python-versions = "^3.6"
-<<<<<<< HEAD
 content-hash = "88a898a67e8a9c4ca3f74590e6b043a0c82bf00e76626c60a3966b3c8fc7576b"
-=======
-content-hash = "903355d4ba05603d29b0e314596ac75eab095e303eff8171dffdad311a4073a8"
->>>>>>> 7d481c0 (docs: Build index page from repo README file.)
 
 [metadata.files]
 alabaster = [
