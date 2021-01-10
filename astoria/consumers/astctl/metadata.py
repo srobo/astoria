@@ -12,7 +12,7 @@ from astoria.common.messages.astmetad import MetadataManagerMessage
 loop = asyncio.get_event_loop()
 
 
-@click.command("metadata")
+@click.command("show-metadata")
 @click.option("-v", "--verbose", is_flag=True)
 @click.option("-c", "--config-file", type=click.File('r'), default=Path("astoria.toml"))
 def show_metadata(*, verbose: bool, config_file: IO[str]) -> None:
