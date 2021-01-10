@@ -7,12 +7,12 @@ Metadata is a specific set of mutable and immutable data that defines the enviro
 
 Examples of metadata include: robot starting zone, development mode indicator
 
-Metadata is managed by the ``astmetad`` state manager.
+Metadata is managed by the :ref:`astmetad` state manager. Metadata must conform to the schema, which is defined in :class:`astoria.common.messages.astmetad.Metadata`.
 
 Metadata Resolution
 -------------------
 
-Metadata is 'resolved' during runtime by overlaying a number of metadata sources.
+Metadata is 'resolved' during runtime by overlaying a number of :ref:`metadata sources <metadata source>`.
 
 All metadata attributes must be present, even if the value of an attribute is ``None``.
 
