@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "astoria"
 version = "0.1.0"
-description = "Robot Management Daemon"
-authors = ["Dan Trickey <dan@trickey.io>"]
+description = "Robot Management System for Student Robotics 2022 kit"
+authors = ["Dan Trickey <srobo-astoria@trickey.io>"]
 license = "MIT"
 readme = "README.md"
-repository = "https://github.com/trickeydan/astoria"
-homepage = "https://github.com/trickeydan/astoria"
-documentation = "https://astoria.readthedocs.io"
+repository = "https://github.com/srobo/astoria"
+homepage = "https://github.com/srobo/astoria"
+documentation = "https://srobo.github.io/astoria"
 classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Typing :: Typed",
