@@ -13,6 +13,11 @@ import click
 from astoria.common.manager import StateManager
 from astoria.common.messages.astdiskd import DiskInfo, DiskType, DiskUUID
 from astoria.common.messages.astprocd import CodeStatus, ProcessManagerMessage
+from astoria.common.mutation_requests import (
+    MutationResponse,
+    UsercodeKillMutationRequest,
+    UsercodeRestartMutationRequest,
+)
 
 from .mixins.disk_handler import DiskHandlerMixin
 
@@ -41,6 +46,17 @@ class ProcessManager(DiskHandlerMixin, StateManager[ProcessManagerMessage]):
         self._cur_disks: Dict[DiskUUID, DiskInfo] = {}
 
         self._mqtt.subscribe("astdiskd", self.handle_astdiskd_disk_info_message)
+
+        self._register_request(
+            "restart",
+            UsercodeRestartMutationRequest,
+            self.handle_restart_request,
+        )
+        self._register_request(
+            "kill",
+            UsercodeKillMutationRequest,
+            self.handle_kill_request,
+        )
 
     @property
     def offline_status(self) -> ProcessManagerMessage:
@@ -91,6 +107,44 @@ class ProcessManager(DiskHandlerMixin, StateManager[ProcessManagerMessage]):
                 self.update_status()
             else:
                 LOGGER.warning("Disk removed, but no code lifecycle available")
+
+    async def handle_kill_request(
+        self,
+        request: UsercodeKillMutationRequest,
+    ) -> MutationResponse:
+        """Handle a request to kill running usercode."""
+        if self._lifecycle is None:
+            return MutationResponse(
+                uuid=request.uuid,
+                success=False,
+                reason="No active usercode lifecycle",
+            )
+        else:
+            LOGGER.info("Kill request received.")
+            await self._lifecycle.kill_process()
+            return MutationResponse(
+                uuid=request.uuid,
+                success=True,
+            )
+
+    async def handle_restart_request(
+        self,
+        request: UsercodeRestartMutationRequest,
+    ) -> MutationResponse:
+        """Handle a request to restart usercode."""
+        if self._lifecycle is None:
+            return MutationResponse(
+                uuid=request.uuid,
+                success=False,
+                reason="No active usercode lifecycle",
+            )
+        else:
+            LOGGER.info("Restart request received.")
+            asyncio.ensure_future(self._lifecycle.run_process())
+            return MutationResponse(
+                uuid=request.uuid,
+                success=True,
+            )
 
     def update_status(self, code_status: Optional[CodeStatus] = None) -> None:
         """
@@ -269,8 +323,9 @@ class UsercodeLifecycle:
             try:
                 await asyncio.wait_for(self._process.communicate(), timeout=5.0)
             except asyncio.TimeoutError:
-                LOGGER.info(f"Sent SIGKILL to pid {self._process.pid}")
-                self._process.send_signal(SIGKILL)
+                if self._process is not None:
+                    LOGGER.info(f"Sent SIGKILL to pid {self._process.pid}")
+                    self._process.send_signal(SIGKILL)
             except AttributeError:
                 # Under some circumstances, there is a race condition such that
                 # _process becomes None whilst the communicate timeout is running.
