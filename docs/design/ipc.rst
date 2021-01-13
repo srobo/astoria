@@ -37,4 +37,20 @@ so that clients are alerted to the disconnection. The state should also be clear
 Mutation Requests
 ~~~~~~~~~~~~~~~~~
 
-Mutation requests have not yet been implemented or formally defined.
+A *Mutation Request* is a message sent to a single, specific :ref:`state manager <state managers>` to request a single specific change of information.
+
+A :class:`MutationRequest <astoria.common.mutation_requests.MutationRequest>` is published to ``astoria/[manager_name]/request/[request]`` by the requesting component.
+
+A request must contain a UUID that is unique to the request.
+
+A request can also contain additional information related to that request.
+
+After a state manager receives a request, it must reply with a :class:`MutationResponse <astoria.common.mutation_requests.MutationResponse>`. The UUID in the response must match the UUID of the request.
+
+Mutation responses are published to ``astoria/[manager_name]/request/[request]/[uuid]``
+
+.. autoclass:: astoria.common.mutation_requests.MutationRequest
+    :members:
+
+.. autoclass:: astoria.common.mutation_requests.MutationResponse
+    :members:
