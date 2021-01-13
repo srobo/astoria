@@ -1,5 +1,4 @@
 """Schema definitions for mutation requests."""
-from typing import Optional
 from uuid import UUID, uuid4
 
 from pydantic import BaseModel, Field
@@ -17,7 +16,7 @@ class MutationResponse(BaseModel):
 
     uuid: UUID
     success: bool
-    reason: Optional[str] = ""
+    reason: str = ""
 
 
 class MetadataMutationRequest(MutationRequest):
