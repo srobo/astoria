@@ -7,6 +7,7 @@ zip file containing:
 
 - ``main.py`` - code entrypoint
 - ``bundle.toml``
+
     - ``bundle version``- SemVer of bundle specification
     - ``target kit name`` - String identifying the kit image name
     - ``target kit version`` - SemVer with Epoch identifying the kit image version. See below
@@ -48,6 +49,7 @@ The capture groups in the regex are named as follows:
 - ``branch``- Git branch of the commit that the kit image was built from
 
 - The version in the code bundle is compared to ``kit.version`` in ``astoria.toml``
+
     - If epoch different, refuse to run.
     - If major different, only run in competition mode.
     - If minor different, warn that the robot needs updating, and is out of support. Always run code.
