@@ -3,7 +3,7 @@
 import asyncio
 import logging
 from json import JSONDecodeError, loads
-from typing import Any, Callable, Coroutine, Dict, List, Match, Optional, Set
+from typing import Any, Callable, Coroutine, Dict, List, Match, Optional
 
 import gmqtt
 from pydantic import BaseModel
