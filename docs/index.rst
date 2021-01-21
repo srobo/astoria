@@ -8,7 +8,8 @@ Robot Management System for Student Robotics 2022 kit.
    :caption: Documentation:
 
    design/index
-   development
+   usage
+   development/index
 
 System Requirements
 -------------------

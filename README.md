@@ -1,5 +1,10 @@
 # Astoria
 
+![Tests](https://github.com/srobo/astoria/workflows/Tests/badge.svg)
+[![PyPI version](https://badge.fury.io/py/astoria.svg)](https://badge.fury.io/py/astoria)
+[![MIT license](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](https://opensource.org/licenses/MIT)
+![Bees](https://img.shields.io/badge/bees-110%25-yellow.svg)
+
 Robot Management System for Student Robotics 2022 kit.
 
 ## Usage
@@ -10,9 +15,10 @@ Robot Management System for Student Robotics 2022 kit.
 
 ### Available Programs
 
+- `astctl` - Command-line interface
 - `astdiskd` - Detects and manages disk drives. It requires Udiskie to detect new drives.
+- `astmetad` - Handle and mutate metadata. Loads metadata from drives.
 - `astprocd` - Runs code found in `robot.zip` files on the disk drives
-- `asttestd` - Test state manager
 
 ### Configuration
 

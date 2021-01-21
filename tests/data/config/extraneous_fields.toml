@@ -7,3 +7,7 @@ force_protocol_version_3_1 = false
 topic_prefix = "/astoria"
 
 bees = "yes"
+
+[kit]
+name = "Astoria Development"
+version = "0.0.0.0dev"

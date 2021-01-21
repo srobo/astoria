@@ -24,10 +24,26 @@ class MQTTBrokerInfo(BaseModel):
         extra = "forbid"
 
 
+KIT_VERSION_REGEX = r"^(\d+)\.(\d+)\.(\d+)\.(\d+)(dev)?(?::([0-9a-f]{5,40})(?:@(\w+))?)?$"
+
+
+class KitInfo(BaseModel):
+    """Kit Information."""
+
+    name: str
+    version: str
+
+    class Config:
+        """Pydantic config."""
+
+        extra = "forbid"
+
+
 class AstoriaConfig(BaseModel):
     """Config schema for Astoria."""
 
     mqtt: MQTTBrokerInfo
+    kit: KitInfo
 
     class Config:
         """Pydantic config."""
