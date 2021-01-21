@@ -11,7 +11,7 @@ State Managers
 
 A state manager is a process that stores and mutates some state.
 
--  A state manager must publish it’s state to MQTT when the state
+-  A state manager must publish its state to MQTT when the state
    changes.
 -  A state manager must publish the status of the state manager.
 -  A state manager should be run as a daemon process.

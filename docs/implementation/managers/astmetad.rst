@@ -15,7 +15,7 @@ When a :ref:`metadata drive <metadata usbs>` is inserted, it follows a lifecycle
 
 There can only be one metadata drive at any given time. Additional drives are ignored.
 
-Once the drive has had it's data loaded and validated, it will be added as a high priority :ref:`metadata source`.
+Once the drive has had its data loaded and validated, it will be added as a high priority :ref:`metadata source`.
 
 Astmetad Data Structures and Classes
 ------------------------------------
