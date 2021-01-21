@@ -4,14 +4,15 @@ CMD:=poetry run
 PYMODULE:=astoria
 TESTS:=tests
 EXTRACODE:=docs/_code
+SPHINX_ARGS:=docs/ docs/_build -nWE
 
 all: type test lint
 
 docs:
-	$(CMD) sphinx-build docs/ docs/_build -nWE
+	$(CMD) sphinx-build $(SPHINX_ARGS)
 
-docs-serve: docs
-	$(CMD) python3 -m http.server --directory docs/_build
+docs-serve:
+	$(CMD) sphinx-autobuild $(SPHINX_ARGS)
 
 lint:
 	$(CMD) flake8 $(PYMODULE) $(TESTS) $(EXTRACODE)

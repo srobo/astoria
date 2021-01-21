@@ -1,32 +1,14 @@
 # Astoria
 
 ![Tests](https://github.com/srobo/astoria/workflows/Tests/badge.svg)
+![Build and Publish docs](https://github.com/srobo/astoria/workflows/Build%20and%20Publish%20docs/badge.svg)
 [![PyPI version](https://badge.fury.io/py/astoria.svg)](https://badge.fury.io/py/astoria)
 [![MIT license](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](https://opensource.org/licenses/MIT)
 ![Bees](https://img.shields.io/badge/bees-110%25-yellow.svg)
 
 Robot Management System for Student Robotics 2022 kit.
 
-## Usage
-
-- Install Poetry and Python 3.6+
-- `poetry install`
-- `poetry shell`
-
-### Available Programs
-
-- `astctl` - Command-line interface
-- `astdiskd` - Detects and manages disk drives. It requires Udiskie to detect new drives.
-- `astmetad` - Handle and mutate metadata. Loads metadata from drives.
-- `astprocd` - Runs code found in `robot.zip` files on the disk drives
-
-### Configuration
-
-All programs take a `-c` argument for the location of the `astoria.toml` config file.
-
-If no config file is supplied, it will look for one in the working directory.
-
-The MQTT broker is configured in the config file. By default it uses `test.mosquitto.org`, which is a public broker and no sensitive information should be published there.
+For more information, please see the [documentation](https://srobo.github.io/astoria).
 
 ## Contributions
 

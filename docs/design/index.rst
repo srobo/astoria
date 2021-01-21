@@ -9,6 +9,6 @@ This section contains a high-level overview of the design of Astoria.
 
    history
    requirements
-   state_managers_consumers
    ipc
    code_format
+   metadata

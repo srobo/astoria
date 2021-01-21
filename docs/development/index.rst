@@ -1,12 +1,6 @@
 Development
 ===========
 
-.. toctree::
-   :maxdepth: 1
-   :caption: Development:
-
-   manager
-
 Astoria is developed on GitHub_ and pull requests should be submitted there. If you have write access to the repository,
 you optionally can develop your changes on a branch within the main repository. Alternatively, please fork the Astoria
 repository and pull request from there.
@@ -35,6 +29,7 @@ You will need the following installed on your machine:
 - poetry_
 - Optionally: Udisks2, Udiskie and DBus for astdiskd
 - Optionally: Mosquitto MQTT broker, although a public broker can also be used. A local broker is required for tests.
+- Optionally: graphviz, required for building the Sphinx documentation
 
 Now clone the repository from GitHub_ into a folder on your local machine.
 

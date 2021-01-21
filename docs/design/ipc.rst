@@ -1,5 +1,5 @@
-IPC
-===
+Inter-Process Communication
+===========================
 
 Astoria uses Inter-Process Communications (IPC) to communicate events and data between components.
 
@@ -22,7 +22,7 @@ There are currently two classes of message.
 Manager Messages
 ~~~~~~~~~~~~~~~~
 
-A manager message contains information about the status of a manager and it's current state.
+A manager message contains information about the status of a :ref:`state manager <state managers>` and it's current state.
 
 Published on ``astoria/[manager_name]``
 
