@@ -7,12 +7,13 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>IPC &mdash; Astoria 0.1.0 documentation</title>
+  <title>Inter-Process Communication &mdash; Astoria 0.1.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
 
   
   
@@ -39,7 +40,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Code Bundle Format" href="code_format.html" />
-    <link rel="prev" title="State Managers and Consumers" href="state_managers_consumers.html" /> 
+    <link rel="prev" title="Design Requirements" href="requirements.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -88,9 +89,8 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Design</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="history.html">Background</a></li>
-<li class="toctree-l2"><a class="reference internal" href="requirements.html">Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="state_managers_consumers.html">State Managers and Consumers</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">IPC</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="requirements.html">Design Requirements</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Inter-Process Communication</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#communications">Communications</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#message-types">Message Types</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#manager-messages">Manager Messages</a></li>
@@ -100,10 +100,12 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="code_format.html">Code Bundle Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metadata.html">Metadatas</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../implementation/index.html">Implementation</a></li>
 </ul>
 
             
@@ -154,7 +156,7 @@
         
           <li><a href="index.html">Design</a> &raquo;</li>
         
-      <li>IPC</li>
+      <li>Inter-Process Communication</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -173,8 +175,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="ipc">
-<h1>IPC<a class="headerlink" href="#ipc" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="inter-process-communication">
+<h1>Inter-Process Communication<a class="headerlink" href="#inter-process-communication" title="Permalink to this headline">¶</a></h1>
 <p>Astoria uses Inter-Process Communications (IPC) to communicate events and data between components.</p>
 <div class="section" id="communications">
 <h2>Communications<a class="headerlink" href="#communications" title="Permalink to this headline">¶</a></h2>
@@ -189,7 +191,7 @@ the broker. This means that subscribers do not need to wait for the next publica
 <p>There are currently two classes of message.</p>
 <div class="section" id="manager-messages">
 <h3>Manager Messages<a class="headerlink" href="#manager-messages" title="Permalink to this headline">¶</a></h3>
-<p>A manager message contains information about the status of a manager and it’s current state.</p>
+<p>A manager message contains information about the status of a <a class="reference internal" href="../implementation/managers/index.html#state-managers"><span class="std std-ref">state manager</span></a> and it’s current state.</p>
 <p>Published on <code class="docutils literal notranslate"><span class="pre">astoria/[manager_name]</span></code></p>
 <p>Based on the <code class="docutils literal notranslate"><span class="pre">ManagerMessage</span></code> class, must contain at least:</p>
 <ul class="simple">
@@ -213,7 +215,7 @@ so that clients are alerted to the disconnection. The state should also be clear
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
         <a href="code_format.html" class="btn btn-neutral float-right" title="Code Bundle Format" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="state_managers_consumers.html" class="btn btn-neutral float-left" title="State Managers and Consumers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="requirements.html" class="btn btn-neutral float-left" title="Design Requirements" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

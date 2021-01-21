@@ -13,6 +13,7 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
 
   
   
@@ -87,6 +88,7 @@
 <li class="toctree-l1"><a class="reference internal" href="design/index.html">Design</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="implementation/index.html">Implementation</a></li>
 </ul>
 
             
@@ -156,8 +158,414 @@
 <h1 id="index">Index</h1>
 
 <div class="genindex-jumpbox">
+ <a href="#Symbols"><strong>Symbols</strong></a>
+ | <a href="#A"><strong>A</strong></a>
+ | <a href="#C"><strong>C</strong></a>
+ | <a href="#D"><strong>D</strong></a>
+ | <a href="#F"><strong>F</strong></a>
+ | <a href="#G"><strong>G</strong></a>
+ | <a href="#H"><strong>H</strong></a>
+ | <a href="#I"><strong>I</strong></a>
+ | <a href="#K"><strong>K</strong></a>
+ | <a href="#L"><strong>L</strong></a>
+ | <a href="#M"><strong>M</strong></a>
+ | <a href="#N"><strong>N</strong></a>
+ | <a href="#O"><strong>O</strong></a>
+ | <a href="#P"><strong>P</strong></a>
+ | <a href="#R"><strong>R</strong></a>
+ | <a href="#S"><strong>S</strong></a>
+ | <a href="#U"><strong>U</strong></a>
+ | <a href="#V"><strong>V</strong></a>
+ | <a href="#W"><strong>W</strong></a>
+ | <a href="#Z"><strong>Z</strong></a>
  
 </div>
+<h2 id="Symbols">Symbols</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    --config-file &lt;config_file&gt;
+
+      <ul>
+        <li><a href="usage.html#cmdoption-astctl-event-c">astctl-event command line option</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-list-disks-c">astctl-list-disks command line option</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-show-metadata-c">astctl-show-metadata command line option</a>
+</li>
+      </ul></li>
+      <li>
+    --json
+
+      <ul>
+        <li><a href="usage.html#cmdoption-astctl-event-json">astctl-event command line option</a>
+</li>
+      </ul></li>
+      <li>
+    --verbose
+
+      <ul>
+        <li><a href="usage.html#cmdoption-astctl-event-v">astctl-event command line option</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-list-disks-v">astctl-list-disks command line option</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-show-metadata-v">astctl-show-metadata command line option</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    -c
+
+      <ul>
+        <li><a href="usage.html#cmdoption-astctl-event-c">astctl-event command line option</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-list-disks-c">astctl-list-disks command line option</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-show-metadata-c">astctl-show-metadata command line option</a>
+</li>
+      </ul></li>
+      <li>
+    -v
+
+      <ul>
+        <li><a href="usage.html#cmdoption-astctl-event-v">astctl-event command line option</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-list-disks-v">astctl-list-disks command line option</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-show-metadata-v">astctl-show-metadata command line option</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="A">A</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.Metadata.arch">arch (astoria.common.messages.astmetad.Metadata attribute)</a>
+</li>
+      <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.Metadata.arena">arena (astoria.common.messages.astmetad.Metadata attribute)</a>
+</li>
+      <li>
+    astctl-event command line option
+
+      <ul>
+        <li><a href="usage.html#cmdoption-astctl-event-c">--config-file &lt;config_file&gt;</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-event-json">--json</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-event-v">--verbose</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-event-c">-c</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-event-v">-v</a>
+</li>
+      </ul></li>
+      <li>
+    astctl-list-disks command line option
+
+      <ul>
+        <li><a href="usage.html#cmdoption-astctl-list-disks-c">--config-file &lt;config_file&gt;</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-list-disks-v">--verbose</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-list-disks-c">-c</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-list-disks-v">-v</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    astctl-show-metadata command line option
+
+      <ul>
+        <li><a href="usage.html#cmdoption-astctl-show-metadata-c">--config-file &lt;config_file&gt;</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-show-metadata-v">--verbose</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-show-metadata-c">-c</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-show-metadata-v">-v</a>
+</li>
+      </ul></li>
+      <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.Metadata.astoria_version">astoria_version (astoria.common.messages.astmetad.Metadata attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="C">C</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astprocd.html#astoria.common.messages.astprocd.ProcessManagerMessage.code_status">code_status (astoria.common.messages.astprocd.ProcessManagerMessage attribute)</a>
+</li>
+      <li><a href="implementation/managers/astprocd.html#astoria.common.messages.astprocd.CodeStatus">CodeStatus (class in astoria.common.messages.astprocd)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.RobotMode.COMP">COMP (astoria.common.messages.astmetad.RobotMode attribute)</a>
+</li>
+      <li><a href="implementation/managers/astprocd.html#astoria.common.messages.astprocd.CodeStatus.CRASHED">CRASHED (astoria.common.messages.astprocd.CodeStatus attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="D">D</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astmetad.html#astoria.managers.astmetad.MetadataManager.dependencies">dependencies (astoria.managers.astmetad.MetadataManager attribute)</a>
+
+      <ul>
+        <li><a href="implementation/managers/astprocd.html#astoria.managers.astprocd.ProcessManager.dependencies">(astoria.managers.astprocd.ProcessManager attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="implementation/managers/astdiskd.html#astoria.common.messages.astdiskd.DiskType.determine_disk_type">determine_disk_type() (astoria.common.messages.astdiskd.DiskType class method)</a>
+</li>
+      <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.RobotMode.DEV">DEV (astoria.common.messages.astmetad.RobotMode attribute)</a>
+</li>
+      <li><a href="implementation/managers/astprocd.html#astoria.common.messages.astprocd.ProcessManagerMessage.disk_info">disk_info (astoria.common.messages.astprocd.ProcessManagerMessage attribute)</a>
+</li>
+      <li><a href="implementation/managers/astdiskd.html#astoria.common.messages.astdiskd.DiskInfo.disk_type">disk_type (astoria.common.messages.astdiskd.DiskInfo attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astdiskd.html#astoria.common.messages.astdiskd.DiskInfo">DiskInfo (class in astoria.common.messages.astdiskd)</a>
+</li>
+      <li><a href="implementation/managers/astdiskd.html#astoria.managers.astdiskd.DiskManager">DiskManager (class in astoria.managers.astdiskd)</a>
+</li>
+      <li><a href="implementation/managers/astdiskd.html#astoria.common.messages.astdiskd.DiskManagerMessage">DiskManagerMessage (class in astoria.common.messages.astdiskd)</a>
+</li>
+      <li><a href="implementation/managers/astdiskd.html#astoria.common.messages.astdiskd.DiskManagerMessage.disks">disks (astoria.common.messages.astdiskd.DiskManagerMessage attribute)</a>
+</li>
+      <li><a href="implementation/managers/astdiskd.html#astoria.common.messages.astdiskd.DiskType">DiskType (class in astoria.common.messages.astdiskd)</a>
+</li>
+      <li><a href="implementation/managers/astdiskd.html#astoria.common.messages.astdiskd.DiskUUID">DiskUUID (class in astoria.common.messages.astdiskd)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="F">F</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astprocd.html#astoria.common.messages.astprocd.CodeStatus.FINISHED">FINISHED (astoria.common.messages.astprocd.CodeStatus attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="G">G</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.Metadata.game_timeout">game_timeout (astoria.common.messages.astmetad.Metadata attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astmetad.html#astoria.managers.astmetad.MetadataManager.get_current_metadata">get_current_metadata() (astoria.managers.astmetad.MetadataManager method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="H">H</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astmetad.html#astoria.managers.astmetad.MetadataManager.handle_disk_insertion">handle_disk_insertion() (astoria.managers.astmetad.MetadataManager method)</a>
+
+      <ul>
+        <li><a href="implementation/managers/astprocd.html#astoria.managers.astprocd.ProcessManager.handle_disk_insertion">(astoria.managers.astprocd.ProcessManager method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astmetad.html#astoria.managers.astmetad.MetadataManager.handle_disk_removal">handle_disk_removal() (astoria.managers.astmetad.MetadataManager method)</a>
+
+      <ul>
+        <li><a href="implementation/managers/astprocd.html#astoria.managers.astprocd.ProcessManager.handle_disk_removal">(astoria.managers.astprocd.ProcessManager method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="I">I</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.Metadata.init">init() (astoria.common.messages.astmetad.Metadata class method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="K">K</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.Metadata.kernel_version">kernel_version (astoria.common.messages.astmetad.Metadata attribute)</a>
+</li>
+      <li><a href="implementation/managers/astprocd.html#astoria.common.messages.astprocd.CodeStatus.KILLED">KILLED (astoria.common.messages.astprocd.CodeStatus attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.Metadata.kit_name">kit_name (astoria.common.messages.astmetad.Metadata attribute)</a>
+</li>
+      <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.Metadata.kit_version">kit_version (astoria.common.messages.astmetad.Metadata attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="L">L</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.Metadata.libc_ver">libc_ver (astoria.common.messages.astmetad.Metadata attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="M">M</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astdiskd.html#astoria.managers.astdiskd.DiskManager.main">main() (astoria.managers.astdiskd.DiskManager method)</a>
+
+      <ul>
+        <li><a href="implementation/managers/astmetad.html#astoria.managers.astmetad.MetadataManager.main">(astoria.managers.astmetad.MetadataManager method)</a>
+</li>
+        <li><a href="implementation/managers/astprocd.html#astoria.managers.astprocd.ProcessManager.main">(astoria.managers.astprocd.ProcessManager method)</a>
+</li>
+      </ul></li>
+      <li><a href="implementation/managers/astdiskd.html#astoria.common.messages.astdiskd.DiskType.METADATA">METADATA (astoria.common.messages.astdiskd.DiskType attribute)</a>
+</li>
+      <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.MetadataManagerMessage.metadata">metadata (astoria.common.messages.astmetad.MetadataManagerMessage attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.Metadata">Metadata (class in astoria.common.messages.astmetad)</a>
+</li>
+      <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.Metadata.Config">Metadata.Config (class in astoria.common.messages.astmetad)</a>
+</li>
+      <li><a href="implementation/managers/astmetad.html#astoria.managers.astmetad.MetadataManager">MetadataManager (class in astoria.managers.astmetad)</a>
+</li>
+      <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.MetadataManagerMessage">MetadataManagerMessage (class in astoria.common.messages.astmetad)</a>
+</li>
+      <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.Metadata.mode">mode (astoria.common.messages.astmetad.Metadata attribute)</a>
+</li>
+      <li><a href="implementation/managers/astdiskd.html#astoria.common.messages.astdiskd.DiskInfo.mount_path">mount_path (astoria.common.messages.astdiskd.DiskInfo attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="N">N</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astdiskd.html#astoria.managers.astdiskd.DiskManager.name">name (astoria.managers.astdiskd.DiskManager attribute)</a>
+
+      <ul>
+        <li><a href="implementation/managers/astmetad.html#astoria.managers.astmetad.MetadataManager.name">(astoria.managers.astmetad.MetadataManager attribute)</a>
+</li>
+        <li><a href="implementation/managers/astprocd.html#astoria.managers.astprocd.ProcessManager.name">(astoria.managers.astprocd.ProcessManager attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astdiskd.html#astoria.common.messages.astdiskd.DiskType.NOACTION">NOACTION (astoria.common.messages.astdiskd.DiskType attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="O">O</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astdiskd.html#astoria.managers.astdiskd.DiskManager.offline_status">offline_status() (astoria.managers.astdiskd.DiskManager property)</a>
+
+      <ul>
+        <li><a href="implementation/managers/astmetad.html#astoria.managers.astmetad.MetadataManager.offline_status">(astoria.managers.astmetad.MetadataManager property)</a>
+</li>
+        <li><a href="implementation/managers/astprocd.html#astoria.managers.astprocd.ProcessManager.offline_status">(astoria.managers.astprocd.ProcessManager property)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="P">P</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astprocd.html#astoria.managers.astprocd.ProcessManager">ProcessManager (class in astoria.managers.astprocd)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astprocd.html#astoria.common.messages.astprocd.ProcessManagerMessage">ProcessManagerMessage (class in astoria.common.messages.astprocd)</a>
+</li>
+      <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.Metadata.python_version">python_version (astoria.common.messages.astmetad.Metadata attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="R">R</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.RobotMode">RobotMode (class in astoria.common.messages.astmetad)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astprocd.html#astoria.common.messages.astprocd.CodeStatus.RUNNING">RUNNING (astoria.common.messages.astprocd.CodeStatus attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="S">S</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astprocd.html#astoria.common.messages.astprocd.CodeStatus.STARTING">STARTING (astoria.common.messages.astprocd.CodeStatus attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="U">U</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astdiskd.html#astoria.common.messages.astdiskd.DiskType.UPDATE">UPDATE (astoria.common.messages.astdiskd.DiskType attribute)</a>
+</li>
+      <li><a href="implementation/managers/astdiskd.html#astoria.managers.astdiskd.DiskManager.update_state">update_state() (astoria.managers.astdiskd.DiskManager method)</a>
+</li>
+      <li><a href="implementation/managers/astmetad.html#astoria.managers.astmetad.MetadataManager.update_status">update_status() (astoria.managers.astmetad.MetadataManager method)</a>
+
+      <ul>
+        <li><a href="implementation/managers/astprocd.html#astoria.managers.astprocd.ProcessManager.update_status">(astoria.managers.astprocd.ProcessManager method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astdiskd.html#astoria.common.messages.astdiskd.DiskType.USERCODE">USERCODE (astoria.common.messages.astdiskd.DiskType attribute)</a>
+</li>
+      <li><a href="implementation/managers/astdiskd.html#astoria.common.messages.astdiskd.DiskInfo.uuid">uuid (astoria.common.messages.astdiskd.DiskInfo attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="V">V</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.Metadata.Config.validate_assignment">validate_assignment (astoria.common.messages.astmetad.Metadata.Config attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="W">W</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.Metadata.wifi_enabled">wifi_enabled (astoria.common.messages.astmetad.Metadata attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.Metadata.wifi_password">wifi_password (astoria.common.messages.astmetad.Metadata attribute)</a>
+</li>
+      <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.Metadata.wifi_ssid">wifi_ssid (astoria.common.messages.astmetad.Metadata attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="Z">Z</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.Metadata.zone">zone (astoria.common.messages.astmetad.Metadata attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 
 
            </div>

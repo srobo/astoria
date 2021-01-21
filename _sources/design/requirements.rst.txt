@@ -1,5 +1,5 @@
-Requirements
-============
+Design Requirements
+===================
 
 The following requirements were set out for the development of Astoria.
 

@@ -13,6 +13,7 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
 
   
   
@@ -39,7 +40,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Development" href="development/index.html" />
-    <link rel="prev" title="Code Bundle Format" href="design/code_format.html" /> 
+    <link rel="prev" title="Metadatas" href="design/metadata.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -88,10 +89,23 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="design/index.html">Design</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#system-requirements">System Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running">Running</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#command-line-usage">Command Line Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#astctl">astctl</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#astctl-event">event</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#astctl-list-disks">list-disks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#astctl-show-metadata">show-metadata</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#metadata-usbs">Metadata USBs</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="implementation/index.html">Implementation</a></li>
 </ul>
 
             
@@ -161,12 +175,129 @@
             
   <div class="section" id="usage">
 <h1>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h1>
-<p>This page is a work in progress and details the usage of Astoria.</p>
+<p>Astoria is designed to be deployed on robots that do not have a traditional keyboard or mouse interface. This page describes
+the requirements for it to be deployed on such a system. Reference to packages available in Debian Buster will be made,
+although it is possible for Astoria to be deployed on any Linux system.</p>
+<div class="section" id="system-requirements">
+<h2>System Requirements<a class="headerlink" href="#system-requirements" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Python 3.6 + library Requirements</p></li>
+<li><p>DBus</p></li>
+<li><p>UDisks 2</p></li>
+<li><dl class="simple">
+<dt>UDiskie (should be run as the same user as Astoria)</dt><dd><ul>
+<li><p>It is possible to use other automounting programs, as long as they are compatible with UDisks</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>MQTT Broker supporting MQTT 3 or later. Mosquitto is recommended</p></li>
+</ul>
+<p>Astoria is targeted for Linux-based OSes, although it may be possible to run on other POSIX-compatible operating systems.</p>
+</div>
+<div class="section" id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<p>Astoria is configured using the <code class="docutils literal notranslate"><span class="pre">astoria.toml</span></code> config file. All components will look for this config file and the location can be specified using the <code class="docutils literal notranslate"><span class="pre">-c</span></code> command line option.</p>
+<div class="highlight-TOML notranslate"><div class="highlight"><pre><span></span><span class="c1"># Astoria Default Config File</span>
+
+<span class="k">[mqtt]</span>
+<span class="n">host</span> <span class="o">=</span> <span class="s">&quot;test.mosquitto.org&quot;</span>
+<span class="n">port</span> <span class="o">=</span> <span class="mi">1883</span>
+<span class="n">enable_tls</span> <span class="o">=</span> <span class="kc">false</span>
+<span class="n">force_protocol_version_3_1</span> <span class="o">=</span> <span class="kc">false</span>
+
+<span class="n">topic_prefix</span> <span class="o">=</span> <span class="s">&quot;astoria&quot;</span>
+
+<span class="k">[kit]</span>
+<span class="n">name</span> <span class="o">=</span> <span class="s">&quot;Astoria Development&quot;</span>
+<span class="n">version</span> <span class="o">=</span> <span class="s">&quot;0.0.0.0dev&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="running">
+<h2>Running<a class="headerlink" href="#running" title="Permalink to this headline">¶</a></h2>
+<p>State Managers should be installed in the path once the package is installed.</p>
+<p>For the recommended setup, you will need to run at least <code class="docutils literal notranslate"><span class="pre">astdiskd</span></code>, <code class="docutils literal notranslate"><span class="pre">astmetad</span></code> and <code class="docutils literal notranslate"><span class="pre">astprocd</span></code>.</p>
+<p>The state managers should be managed using systemd in a proper deployment, although that is outside of the scope of this documentation. <code class="docutils literal notranslate"><span class="pre">tmux</span></code> is good for testing.</p>
+</div>
+<div class="section" id="command-line-usage">
+<h2>Command Line Usage<a class="headerlink" href="#command-line-usage" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="astctl">
+<h3>astctl<a class="headerlink" href="#astctl" title="Permalink to this headline">¶</a></h3>
+<p>Astoria Command Line Utility.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>astctl <span class="o">[</span>OPTIONS<span class="o">]</span> COMMAND <span class="o">[</span>ARGS<span class="o">]</span>...
+</pre></div>
+</div>
+<div class="section" id="astctl-event">
+<h4>event<a class="headerlink" href="#astctl-event" title="Permalink to this headline">¶</a></h4>
+<p>Show Astoria events in real time.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>astctl event <span class="o">[</span>OPTIONS<span class="o">]</span>
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="std option">
+<dt id="cmdoption-astctl-event-v">
+<span id="cmdoption-astctl-event-verbose"></span><code class="sig-name descname">-v</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--verbose</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-astctl-event-v" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="std option">
+<dt id="cmdoption-astctl-event-c">
+<span id="cmdoption-astctl-event-config-file"></span><code class="sig-name descname">-c</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--config-file</code><code class="sig-prename descclassname"> &lt;config_file&gt;</code><a class="headerlink" href="#cmdoption-astctl-event-c" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="std option">
+<dt id="cmdoption-astctl-event-json">
+<code class="sig-name descname">--json</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-astctl-event-json" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="astctl-list-disks">
+<h4>list-disks<a class="headerlink" href="#astctl-list-disks" title="Permalink to this headline">¶</a></h4>
+<p>List information about mounted disks.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>astctl list-disks <span class="o">[</span>OPTIONS<span class="o">]</span>
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="std option">
+<dt id="cmdoption-astctl-list-disks-v">
+<span id="cmdoption-astctl-list-disks-verbose"></span><code class="sig-name descname">-v</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--verbose</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-astctl-list-disks-v" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="std option">
+<dt id="cmdoption-astctl-list-disks-c">
+<span id="cmdoption-astctl-list-disks-config-file"></span><code class="sig-name descname">-c</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--config-file</code><code class="sig-prename descclassname"> &lt;config_file&gt;</code><a class="headerlink" href="#cmdoption-astctl-list-disks-c" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="astctl-show-metadata">
+<h4>show-metadata<a class="headerlink" href="#astctl-show-metadata" title="Permalink to this headline">¶</a></h4>
+<p>Show current metadata.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>astctl show-metadata <span class="o">[</span>OPTIONS<span class="o">]</span>
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="std option">
+<dt id="cmdoption-astctl-show-metadata-v">
+<span id="cmdoption-astctl-show-metadata-verbose"></span><code class="sig-name descname">-v</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--verbose</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-astctl-show-metadata-v" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="std option">
+<dt id="cmdoption-astctl-show-metadata-c">
+<span id="cmdoption-astctl-show-metadata-config-file"></span><code class="sig-name descname">-c</code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname">, </code><code class="sig-name descname">--config-file</code><code class="sig-prename descclassname"> &lt;config_file&gt;</code><a class="headerlink" href="#cmdoption-astctl-show-metadata-c" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+</div>
 <div class="section" id="metadata-usbs">
 <h2>Metadata USBs<a class="headerlink" href="#metadata-usbs" title="Permalink to this headline">¶</a></h2>
-<p>Metadata USBs contain overrides for the metadata.</p>
-<p>The override data should be stored in a file called <code class="docutils literal notranslate"><span class="pre">astoria.json</span></code> in JSON format.</p>
-<p>There should ideally not be any other files on the Metadata USB. If a <code class="docutils literal notranslate"><span class="pre">robot.zip</span></code> is placed on the USB, it will cause interference.</p>
+<p>Metadata USBs contain a high priority <a class="reference internal" href="design/metadata.html#metadata-source"><span class="std std-ref">Metadata Source</span></a>.</p>
+<p>The source data should be stored in a file called <code class="docutils literal notranslate"><span class="pre">astoria.json</span></code> in JSON format.</p>
+<p>There should ideally not be any other files on the Metadata USB.</p>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>If a <code class="docutils literal notranslate"><span class="pre">robot.zip</span></code> is placed on the Metadata USB, the robot will not recognise the Metadata USB.</p>
+</div>
 <p>Example override file:</p>
 <div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;arena&quot;</span><span class="p">:</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="nt">&quot;zone&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="nt">&quot;mode&quot;</span><span class="p">:</span> <span class="s2">&quot;COMP&quot;</span><span class="p">,</span> <span class="nt">&quot;game_timeout&quot;</span><span class="p">:</span> <span class="mi">120</span><span class="p">,</span> <span class="nt">&quot;wifi_enabled&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">}</span>
 </pre></div>
@@ -181,7 +312,7 @@
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
         <a href="development/index.html" class="btn btn-neutral float-right" title="Development" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="design/code_format.html" class="btn btn-neutral float-left" title="Code Bundle Format" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="design/metadata.html" class="btn btn-neutral float-left" title="Metadatas" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>
