@@ -19,15 +19,15 @@ import gmqtt
 from pydantic import BaseModel
 
 from astoria.common.config import MQTTBrokerInfo
+from astoria.common.manager_requests import ManagerRequest, RequestResponse
 from astoria.common.messages.base import ManagerMessage
-from astoria.common.mutation_requests import MutationRequest, MutationResponse
 
 from .topic import Topic
 
 LOGGER = logging.getLogger(__name__)
 
 Handler = Callable[[Match[str], str], Coroutine[Any, Any, None]]  # type: ignore
-RequestT = TypeVar("RequestT", bound=MutationRequest)
+RequestT = TypeVar("RequestT", bound=ManagerRequest)
 
 
 class MQTTWrapper:
@@ -75,14 +75,14 @@ class MQTTWrapper:
 
         self.subscribe("+", self._dependency_message_handler)
 
-        # Subscribe to mutation response from dependent managers
+        # Subscribe to request response from dependent managers
         for manager in self._dependencies:
             self.subscribe(
                 f"{manager}/request/+/+",
-                self._mutation_response_message_handler,
+                self._request_response_message_handler,
             )
-        self._mutation_request_response_events: Dict[UUID, asyncio.Event] = {}
-        self._mutation_request_response_data: Dict[UUID, MutationResponse] = {}
+        self._request_response_events: Dict[UUID, asyncio.Event] = {}
+        self._request_response_data: Dict[UUID, RequestResponse] = {}
 
     @property
     def is_connected(self) -> bool:
@@ -265,54 +265,54 @@ class MQTTWrapper:
         except JSONDecodeError:
             pass
 
-    async def mutation_request(
+    async def manager_request(
         self,
         manager: str,
         request_name: str,
         request: RequestT,
         *,
         response_timeout: float = 1,
-    ) -> MutationResponse:
+    ) -> RequestResponse:
         """
-        Perform a mutation request.
+        Perform a manager request.
 
         Raises exception if not dependent on manager, or if request fails.
         """
         if manager not in self._dependencies:
             raise ValueError(
-                f"{manager} must be listed as dependency to make mutation request",
+                f"{manager} must be listed as dependency to make manager request",
             )
 
         topic = f"{self._broker_info.topic_prefix}/{manager}/request/{request_name}"
 
-        self._mutation_request_response_events[request.uuid] = asyncio.Event()
+        self._request_response_events[request.uuid] = asyncio.Event()
 
         self.publish(topic, request, auto_prefix_topic=False)
 
-        await self._mutation_request_response_events[request.uuid].wait()
-        if request.uuid not in self._mutation_request_response_data:
-            raise RuntimeError("Mutation Request Response not available.")
+        await self._request_response_events[request.uuid].wait()
+        if request.uuid not in self._request_response_data:
+            raise RuntimeError("Request Response not available.")
         else:
-            self._mutation_request_response_events.pop(request.uuid)
-            return self._mutation_request_response_data.pop(request.uuid)
+            self._request_response_events.pop(request.uuid)
+            return self._request_response_data.pop(request.uuid)
 
-    async def _mutation_response_message_handler(
+    async def _request_response_message_handler(
         self,
         match: Match[str],
         payload: str,
     ) -> None:
-        """Handle mutation response messages."""
+        """Handle request response messages."""
         uuid = UUID(match.group(2))
         # If uuid not recognised, probably a response for another client
-        if uuid in self._mutation_request_response_events:
+        if uuid in self._request_response_events:
             try:
-                self._mutation_request_response_data[uuid] = MutationResponse(
+                self._request_response_data[uuid] = RequestResponse(
                     **loads(payload),
                 )
             except JSONDecodeError:
-                self._mutation_request_response_data[uuid] = MutationResponse(
+                self._request_response_data[uuid] = RequestResponse(
                     uuid=uuid,
                     success=False,
-                    reason="Unable to decode mutation response.",
+                    reason="Unable to decode request response.",
                 )
-            self._mutation_request_response_events[uuid].set()
+            self._request_response_events[uuid].set()

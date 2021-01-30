@@ -6,15 +6,15 @@ from json import JSONDecodeError, loads
 from typing import Callable, Coroutine, Generic, Match, Type, TypeVar
 
 from .data_component import DataComponent
+from .manager_requests import ManagerRequest, RequestResponse
 from .messages.base import ManagerMessage
-from .mutation_requests import MutationRequest, MutationResponse
 
 LOGGER = logging.getLogger(__name__)
 
 loop = asyncio.get_event_loop()
 
 T = TypeVar("T", bound=ManagerMessage)
-RequestT = TypeVar("RequestT", bound=MutationRequest)
+RequestT = TypeVar("RequestT", bound=ManagerRequest)
 
 
 class StateManager(DataComponent, Generic[T], metaclass=ABCMeta):
@@ -66,7 +66,7 @@ class StateManager(DataComponent, Generic[T], metaclass=ABCMeta):
         self,
         name: str,
         typ: Type[RequestT],
-        handler: Callable[[RequestT], Coroutine[None, None, MutationResponse]],
+        handler: Callable[[RequestT], Coroutine[None, None, RequestResponse]],
     ) -> None:
         LOGGER.debug(f"Registering {name} request for {self.name} component")
 

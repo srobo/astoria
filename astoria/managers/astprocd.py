@@ -11,13 +11,13 @@ from zipfile import BadZipFile, ZipFile
 import click
 
 from astoria.common.manager import StateManager
+from astoria.common.manager_requests import (
+    RequestResponse,
+    UsercodeKillManagerRequest,
+    UsercodeRestartManagerRequest,
+)
 from astoria.common.messages.astdiskd import DiskInfo, DiskType, DiskUUID
 from astoria.common.messages.astprocd import CodeStatus, ProcessManagerMessage
-from astoria.common.mutation_requests import (
-    MutationResponse,
-    UsercodeKillMutationRequest,
-    UsercodeRestartMutationRequest,
-)
 
 from .mixins.disk_handler import DiskHandlerMixin
 
@@ -49,12 +49,12 @@ class ProcessManager(DiskHandlerMixin, StateManager[ProcessManagerMessage]):
 
         self._register_request(
             "restart",
-            UsercodeRestartMutationRequest,
+            UsercodeRestartManagerRequest,
             self.handle_restart_request,
         )
         self._register_request(
             "kill",
-            UsercodeKillMutationRequest,
+            UsercodeKillManagerRequest,
             self.handle_kill_request,
         )
 
@@ -110,11 +110,11 @@ class ProcessManager(DiskHandlerMixin, StateManager[ProcessManagerMessage]):
 
     async def handle_kill_request(
         self,
-        request: UsercodeKillMutationRequest,
-    ) -> MutationResponse:
+        request: UsercodeKillManagerRequest,
+    ) -> RequestResponse:
         """Handle a request to kill running usercode."""
         if self._lifecycle is None:
-            return MutationResponse(
+            return RequestResponse(
                 uuid=request.uuid,
                 success=False,
                 reason="No active usercode lifecycle",
@@ -122,33 +122,33 @@ class ProcessManager(DiskHandlerMixin, StateManager[ProcessManagerMessage]):
         else:
             LOGGER.info("Kill request received.")
             await self._lifecycle.kill_process()
-            return MutationResponse(
+            return RequestResponse(
                 uuid=request.uuid,
                 success=True,
             )
 
     async def handle_restart_request(
         self,
-        request: UsercodeRestartMutationRequest,
-    ) -> MutationResponse:
+        request: UsercodeRestartManagerRequest,
+    ) -> RequestResponse:
         """Handle a request to restart usercode."""
         LOGGER.info("Restart request received.")
         if self._lifecycle is None:
-            return MutationResponse(
+            return RequestResponse(
                 uuid=request.uuid,
                 success=False,
                 reason="No active usercode lifecycle",
             )
         else:
             if self._lifecycle.status is CodeStatus.RUNNING:
-                return MutationResponse(
+                return RequestResponse(
                     uuid=request.uuid,
                     success=False,
                     reason="Code is already running.",
                 )
             else:
                 asyncio.ensure_future(self._lifecycle.run_process())
-                return MutationResponse(
+                return RequestResponse(
                     uuid=request.uuid,
                     success=True,
                 )

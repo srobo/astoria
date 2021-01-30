@@ -6,7 +6,7 @@ from typing import IO
 import click
 
 from astoria.common.consumer import StateConsumer
-from astoria.common.mutation_requests import MutationRequest
+from astoria.common.manager_requests import ManagerRequest
 
 loop = asyncio.get_event_loop()
 
@@ -28,10 +28,10 @@ class RestartUsercodeCommand(StateConsumer):
 
     async def main(self) -> None:
         """Main method of the command."""
-        res = await self._mqtt.mutation_request(
+        res = await self._mqtt.manager_request(
             "astprocd",
             "restart",
-            MutationRequest(sender_name=self.name),
+            ManagerRequest(sender_name=self.name),
         )
         if res.success:
             print("Successfully restarted code.")

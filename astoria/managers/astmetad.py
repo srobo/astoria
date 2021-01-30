@@ -9,12 +9,12 @@ from typing import IO, Dict, List, Optional, Set, Tuple
 import click
 
 from astoria.common.manager import StateManager
+from astoria.common.manager_requests import (
+    MetadataSetManagerRequest,
+    RequestResponse,
+)
 from astoria.common.messages.astdiskd import DiskInfo, DiskType, DiskUUID
 from astoria.common.messages.astmetad import Metadata, MetadataManagerMessage
-from astoria.common.mutation_requests import (
-    MetadataMutationRequest,
-    MutationResponse,
-)
 
 from .mixins.disk_handler import DiskHandlerMixin
 
@@ -48,7 +48,7 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
         self._allowed_mutations_by_request: Set[str] = {"arena", "zone", "mode"}
         self._register_request(
             "mutate",
-            MetadataMutationRequest,
+            MetadataSetManagerRequest,
             self.handle_mutation_request,
         )
 
@@ -98,11 +98,11 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
 
     async def handle_mutation_request(
         self,
-        request: MetadataMutationRequest,
-    ) -> MutationResponse:
+        request: MetadataSetManagerRequest,
+    ) -> RequestResponse:
         """Handle a request to mutate metadata."""
         if request.attr not in self._allowed_mutations_by_request:
-            return MutationResponse(
+            return RequestResponse(
                 uuid=request.uuid,
                 success=False,
                 reason=f"{request.attr} is not a mutable attribute",
@@ -122,7 +122,7 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
                 f"{request.attr} has been overriden to {request.value} by request",
             )
             self.update_status()
-        return MutationResponse(
+        return RequestResponse(
             uuid=request.uuid,
             success=True,
         )
