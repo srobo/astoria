@@ -75,7 +75,7 @@ class StateManager(DataComponent, Generic[T], metaclass=ABCMeta):
                 req = typ(**loads(payload))
                 response = await handler(req)
                 self._mqtt.publish(
-                    f"{self.name}/request/{name}/{req.uuid}",
+                    f"request/{name}/{req.uuid}",
                     response,
                 )
             except JSONDecodeError:

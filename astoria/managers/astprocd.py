@@ -132,6 +132,7 @@ class ProcessManager(DiskHandlerMixin, StateManager[ProcessManagerMessage]):
         request: UsercodeRestartMutationRequest,
     ) -> MutationResponse:
         """Handle a request to restart usercode."""
+        LOGGER.info("Restart request received.")
         if self._lifecycle is None:
             return MutationResponse(
                 uuid=request.uuid,
@@ -139,12 +140,18 @@ class ProcessManager(DiskHandlerMixin, StateManager[ProcessManagerMessage]):
                 reason="No active usercode lifecycle",
             )
         else:
-            LOGGER.info("Restart request received.")
-            asyncio.ensure_future(self._lifecycle.run_process())
-            return MutationResponse(
-                uuid=request.uuid,
-                success=True,
-            )
+            if self._lifecycle.status is CodeStatus.RUNNING:
+                return MutationResponse(
+                    uuid=request.uuid,
+                    success=False,
+                    reason="Code is already running.",
+                )
+            else:
+                asyncio.ensure_future(self._lifecycle.run_process())
+                return MutationResponse(
+                    uuid=request.uuid,
+                    success=True,
+                )
 
     def update_status(self, code_status: Optional[CodeStatus] = None) -> None:
         """
