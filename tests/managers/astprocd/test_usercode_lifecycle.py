@@ -14,12 +14,14 @@ EXECUTE_CODE_DATA = Path("tests/data/execute_code")
 
 
 class StatusInformTestHelper:
+    """Helper class for mocking the inform callback."""
 
     def __init__(self) -> None:
         self.times_called = 0
         self.called_queue: List[CodeStatus] = []
 
     def callback(self, status: CodeStatus) -> None:
+        """Mock inform callback."""
         self.times_called += 1
         self.called_queue.append(status)
 
@@ -28,6 +30,7 @@ class StatusInformTestHelper:
         cls,
         mount_path: Path = Path(),
     ) -> Tuple[UsercodeLifecycle, 'StatusInformTestHelper']:
+        """Setup a lifecycle and helper for testing."""
         sith = cls()
         ucl = UsercodeLifecycle(
             uuid=DiskUUID("foo"),
@@ -52,6 +55,7 @@ def test_usercode_lifecycle_init() -> None:
 
 
 def test_usercode_lifecycle_properties() -> None:
+    """Test that the properties on the lifecycle work."""
     ucl, _ = StatusInformTestHelper.setup()
 
     assert ucl.uuid == "foo"
@@ -60,6 +64,7 @@ def test_usercode_lifecycle_properties() -> None:
 
 
 def test_usercode_lifecycle_inform_callback_called_on_status_change() -> None:
+    """Test that the inform callback is called in the correct order."""
     ucl, sith = StatusInformTestHelper.setup()
 
     ucl.status = CodeStatus.RUNNING
@@ -77,6 +82,7 @@ def test_usercode_lifecycle_inform_callback_called_on_status_change() -> None:
 
 
 def test_extract_and_validate_no_zip() -> None:
+    """Test that a disk with no zip is handled."""
     ucl, sith = StatusInformTestHelper.setup(EXTRACT_ZIP_DATA / "no_zip")
     assert not ucl._extract_and_validate_zip_file()
 
@@ -88,6 +94,7 @@ def test_extract_and_validate_no_zip() -> None:
 
 
 def test_bad_zip() -> None:
+    """Test that an invalid zip is handled."""
     ucl, sith = StatusInformTestHelper.setup(EXTRACT_ZIP_DATA / "bad_zip")
     assert not ucl._extract_and_validate_zip_file()
 
@@ -99,6 +106,7 @@ def test_bad_zip() -> None:
 
 
 def test_no_main_zip() -> None:
+    """Test that a zip with no main is handled."""
     ucl, sith = StatusInformTestHelper.setup(EXTRACT_ZIP_DATA / "no_main_zip")
     assert not ucl._extract_and_validate_zip_file()
 
@@ -110,6 +118,7 @@ def test_no_main_zip() -> None:
 
 
 def test_good_zip() -> None:
+    """Test that a valid zip is successfully extracted."""
     ucl, sith = StatusInformTestHelper.setup(EXTRACT_ZIP_DATA / "good_zip")
     assert ucl._extract_and_validate_zip_file()
 
@@ -120,6 +129,12 @@ def test_good_zip() -> None:
 
 @pytest.mark.asyncio
 async def test_existing_process_on_run() -> None:
+    """
+    Test that only one process can exist.
+
+    Checks that:
+    - The code doesn't run twice
+    """
     ucl, sith = StatusInformTestHelper.setup()
     ucl._process = "HACK. Easier than creating a process object."  # type: ignore
     await ucl.run_process()
@@ -128,6 +143,13 @@ async def test_existing_process_on_run() -> None:
 
 @pytest.mark.asyncio
 async def test_run_with_bad_zip() -> None:
+    """
+    Test that a bad zip is handled.
+
+    Checks that:
+    - Status message is written to the log file
+    - The correct status is passed to the state manager
+    """
     ucl, sith = StatusInformTestHelper.setup(EXTRACT_ZIP_DATA / "bad_zip")
     await ucl.run_process()
     assert sith.called_queue == [
@@ -138,6 +160,14 @@ async def test_run_with_bad_zip() -> None:
 
 @pytest.mark.asyncio
 async def test_run_with_not_python() -> None:
+    """
+    Test that non-python code is handled.
+
+    Checks that:
+    - Zip file is extracted and main.py is run
+    - Output is written to the log file
+    - The correct status is passed to the state manager
+    """
     ucl, sith = StatusInformTestHelper.setup(EXECUTE_CODE_DATA / "not_python")
     await ucl.run_process()
     await asyncio.sleep(0.05)  # Wait for logger to flush
@@ -158,6 +188,14 @@ async def test_run_with_not_python() -> None:
 
 @pytest.mark.asyncio
 async def test_run_with_syntax_error() -> None:
+    """
+    Test that bad python code is handled.
+
+    Checks that:
+    - Zip file is extracted and main.py is run
+    - Output is written to the log file
+    - The correct status is passed to the state manager
+    """
     ucl, sith = StatusInformTestHelper.setup(EXECUTE_CODE_DATA / "syntax_error")
     await ucl.run_process()
     await asyncio.sleep(0.05)  # Wait for logger to flush
@@ -178,6 +216,14 @@ async def test_run_with_syntax_error() -> None:
 
 @pytest.mark.asyncio
 async def test_run_with_valid_python_wait_finish() -> None:
+    """
+    Test that valid python code is successfully executed.
+
+    Checks that:
+    - Zip file is extracted and main.py is run
+    - Output is written to the log file
+    - The correct status is passed to the state manager
+    """
     ucl, sith = StatusInformTestHelper.setup(EXECUTE_CODE_DATA / "valid_python_short")
     await ucl.run_process()
     await asyncio.sleep(0.05)  # Wait for logger to flush
