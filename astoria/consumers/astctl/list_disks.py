@@ -1,8 +1,7 @@
 """Command to list information about mounted disks."""
 import asyncio
 from json import JSONDecodeError, loads
-from pathlib import Path
-from typing import IO, Match
+from typing import Match, Optional
 
 import click
 
@@ -14,8 +13,8 @@ loop = asyncio.get_event_loop()
 
 @click.command("list-disks")
 @click.option("-v", "--verbose", is_flag=True)
-@click.option("-c", "--config-file", type=click.File('r'), default=Path("astoria.toml"))
-def list_disks(*, verbose: bool, config_file: IO[str]) -> None:
+@click.option("-c", "--config-file", type=click.Path(exists=True))
+def list_disks(*, verbose: bool, config_file: Optional[str]) -> None:
     """List information about mounted disks."""
     command = ListDisksCommand(verbose, config_file)
     loop.run_until_complete(command.run())

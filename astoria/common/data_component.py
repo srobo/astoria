@@ -9,7 +9,7 @@ import asyncio
 import logging
 from abc import ABCMeta, abstractmethod
 from signal import SIGHUP, SIGINT, SIGTERM
-from typing import IO, List, Optional
+from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -32,9 +32,16 @@ class DataComponent(metaclass=ABCMeta):
     and managing the event loop.
     """
 
-    def __init__(self, verbose: bool, config_file: IO[str]) -> None:
-        self.config = AstoriaConfig.load_from_file(config_file)
+    def __init__(self, verbose: bool, config_file: Optional[str]) -> None:
+        self.config = AstoriaConfig.load(config_file)
 
+        self._setup_logging(verbose)
+        self._setup_event_loop()
+        self._setup_mqtt()
+
+        self._init()
+
+    def _setup_logging(self, verbose: bool, *, welcome_message: bool = True) -> None:
         if verbose:
             logging.basicConfig(
                 level=logging.DEBUG,
@@ -51,14 +58,17 @@ class DataComponent(metaclass=ABCMeta):
             # Suppress INFO messages from gmqtt
             logging.getLogger("gmqtt").setLevel(logging.WARNING)
 
-        LOGGER.info(f"{self.name} v{__version__} - {self.__doc__}")
+        if welcome_message:
+            LOGGER.info(f"{self.name} v{__version__} - {self.__doc__}")
 
+    def _setup_event_loop(self) -> None:
         self._stop_event = asyncio.Event()
 
         loop.add_signal_handler(SIGHUP, self.halt)
         loop.add_signal_handler(SIGINT, self.halt)
         loop.add_signal_handler(SIGTERM, self.halt)
 
+    def _setup_mqtt(self) -> None:
         self._mqtt = MQTTWrapper(
             self.name,
             self.config.mqtt,
@@ -66,8 +76,6 @@ class DataComponent(metaclass=ABCMeta):
             dependencies=self.dependencies,
             no_dependency_event=self._stop_event,
         )
-
-        self._init()
 
     def _init(self) -> None:
         """

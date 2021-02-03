@@ -3,7 +3,7 @@
 import asyncio
 import logging
 from pathlib import Path
-from typing import IO, Callable, Coroutine, Dict, List
+from typing import Callable, Coroutine, Dict, List, Optional
 
 import click
 from dbus_next.aio import MessageBus
@@ -27,8 +27,8 @@ loop = asyncio.get_event_loop()
 
 @click.command("astdiskd")
 @click.option("-v", "--verbose", is_flag=True)
-@click.option("-c", "--config-file", type=click.File('r'), default=Path("astoria.toml"))
-def main(*, verbose: bool, config_file: IO[str]) -> None:
+@click.option("-c", "--config-file", type=click.Path(exists=True))
+def main(*, verbose: bool, config_file: Optional[str]) -> None:
     """Disk Manager Application Entrypoint."""
     diskd = DiskManager(verbose, config_file)
     loop.run_until_complete(diskd.run())
