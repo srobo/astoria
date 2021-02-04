@@ -4,8 +4,8 @@ from typing import Optional
 
 import click
 
-from astoria.common.consumer import StateConsumer
 from astoria.common.manager_requests import ManagerRequest
+from astoria.consumers.astctl.command import Command
 
 loop = asyncio.get_event_loop()
 
@@ -19,10 +19,9 @@ def kill(*, verbose: bool, config_file: Optional[str]) -> None:
     loop.run_until_complete(command.run())
 
 
-class KillUsercodeCommand(StateConsumer):
+class KillUsercodeCommand(Command):
     """Kill running usercode."""
 
-    name_prefix = "astctl"
     dependencies = ["astprocd"]
 
     async def main(self) -> None:

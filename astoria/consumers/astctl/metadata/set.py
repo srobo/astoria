@@ -4,8 +4,8 @@ from typing import Optional
 
 import click
 
-from astoria.common.consumer import StateConsumer
 from astoria.common.manager_requests import MetadataSetManagerRequest
+from astoria.consumers.astctl.command import Command
 
 loop = asyncio.get_event_loop()
 
@@ -21,7 +21,7 @@ def set(attribute: str, value: str, *, verbose: bool, config_file: Optional[str]
     loop.run_until_complete(command.run())
 
 
-class SetMetadataCommand(StateConsumer):
+class SetMetadataCommand(Command):
     """Set a metadata attribute."""
 
     name_prefix = "astctl"

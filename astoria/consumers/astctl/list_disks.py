@@ -5,8 +5,9 @@ from typing import Match, Optional
 
 import click
 
-from astoria.common.consumer import StateConsumer
 from astoria.common.messages.astdiskd import DiskManagerMessage
+
+from .command import Command
 
 loop = asyncio.get_event_loop()
 
@@ -20,10 +21,8 @@ def list_disks(*, verbose: bool, config_file: Optional[str]) -> None:
     loop.run_until_complete(command.run())
 
 
-class ListDisksCommand(StateConsumer):
+class ListDisksCommand(Command):
     """List disk information."""
-
-    name_prefix = "astctl"
 
     def _init(self) -> None:
         """Initialise consumer."""

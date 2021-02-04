@@ -5,8 +5,8 @@ from typing import Match, Optional
 
 import click
 
-from astoria.common.consumer import StateConsumer
 from astoria.common.messages.astmetad import MetadataManagerMessage
+from astoria.consumers.astctl.command import Command
 
 loop = asyncio.get_event_loop()
 
@@ -20,10 +20,8 @@ def show(*, verbose: bool, config_file: Optional[str]) -> None:
     loop.run_until_complete(command.run())
 
 
-class ShowMetadataCommand(StateConsumer):
+class ShowMetadataCommand(Command):
     """Show current metadata."""
-
-    name_prefix = "astctl"
 
     def _init(self) -> None:
         """Initialise consumer."""
