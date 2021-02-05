@@ -24,7 +24,6 @@ def set(attribute: str, value: str, *, verbose: bool, config_file: Optional[str]
 class SetMetadataCommand(Command):
     """Set a metadata attribute."""
 
-    name_prefix = "astctl"
     dependencies = ["astmetad"]
 
     def __init__(
