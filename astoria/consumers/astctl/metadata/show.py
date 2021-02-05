@@ -1,12 +1,11 @@
 """Command to show metadata."""
 import asyncio
-from json import JSONDecodeError, loads
-from typing import Match, Optional
+from typing import Optional
 
 import click
 
 from astoria.common.messages.astmetad import MetadataManagerMessage
-from astoria.consumers.astctl.command import Command
+from astoria.consumers.astctl.command import SingleManagerMessageCommand
 
 loop = asyncio.get_event_loop()
 
@@ -20,30 +19,17 @@ def show(*, verbose: bool, config_file: Optional[str]) -> None:
     loop.run_until_complete(command.run())
 
 
-class ShowMetadataCommand(Command):
+class ShowMetadataCommand(SingleManagerMessageCommand[MetadataManagerMessage]):
     """Show current metadata."""
 
-    def _init(self) -> None:
-        """Initialise consumer."""
-        self._mqtt.subscribe("astmetad", self.handle_message)
+    manager = "astmetad"
+    message_schema = MetadataManagerMessage
 
-    async def main(self) -> None:
-        """Main method of the command."""
-        await self.wait_loop()
-
-    async def handle_message(
+    def handle_message(
         self,
-        match: Match[str],
-        payload: str,
+        message: MetadataManagerMessage,
     ) -> None:
-        """Handle astmetad status messages."""
-        try:
-            message = MetadataManagerMessage(**loads(payload))
-            if message.status == MetadataManagerMessage.Status.RUNNING:
-                for i, v in message.metadata.__dict__.items():
-                    print(f"{i}: {v}")
-            else:
-                print("astmetad is not running")
-        except JSONDecodeError:
-            print("Could not decode JSON data.")
-        self.halt(silent=True)
+        """Print the metadata."""
+        print("Current Astoria Metadata is:")
+        for i, v in message.metadata.__dict__.items():
+            print(f"\t{i}: {v}")
