@@ -25,23 +25,20 @@ jobs:
         run: pip install poetry
       - name: Use in-project virtualenv
         run: poetry config virtualenvs.in-project true
-      # - uses: actions/cache@v2
-      #   with:
-      #     path: .venv/
-      #     key: ${{ runner.os }}-${{ matrix.python }}-pip-${{ hashFiles('poetry.lock') }}-${{ hashFiles('pyproject.toml') }}
       - name: Install dependencies
         run: poetry install
       - name: Start Mosquitto MQTT broker
         uses: namoshek/mosquitto-github-action@v0.1.0
       - name: Build Debian package
         run: make debian
+      - run: cp ../*.dev ../*.dsc ../*.changes ../*.tar.* ../*.buildinfo ../*.build .
       - uses: actions/upload-artifact@v2
         with:
           name: debian
           path: |
-            ../*.dev
-            ../*.dsc
-            ../*.changes
-            ../*.tar.*
-            ../*.buildinfo
-            ../*.build
+            *.dev
+            *.dsc
+            *.changes
+            *.tar.*
+            *.buildinfo
+            *.build
