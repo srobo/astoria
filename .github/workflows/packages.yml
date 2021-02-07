@@ -8,20 +8,30 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python: [3.8]
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python 3.8
+      - name: Set up Python ${{ matrix.python }}
         uses: actions/setup-python@v1
         with:
-          python-version: 3.8
+          python-version: ${{ matrix.python }}
       - name: Install APT dependencies
         run: sudo apt install build-essential devscripts debhelper equivs
-      - name: Install Pip dependencies
-        run: pip install dephell
-      - name: Generate setup.py
-        run: dephell deps convert --from pypriject.toml --to setup.py
-      - name: Install build dependencies
-        run: sudo mk-build-deps -ir
-      - name: Build unsigned package
-        run: debuild -uc -us
+      - name: Install Poetry
+        run: pip install poetry
+      - name: Use in-project virtualenv
+        run: poetry config virtualenvs.in-project true
+      - uses: actions/cache@v2
+        with:
+          path: .venv/
+          key: ${{ runner.os }}-${{ matrix.python }}-pip-${{ hashFiles('poetry.lock') }}-${{ hashFiles('pyproject.toml') }}
+      - name: Install dependencies
+        run: poetry install
+      - name: Start Mosquitto MQTT broker
+        uses: namoshek/mosquitto-github-action@v0.1.0
+      - name: Build Debian package
+        run: make debian
