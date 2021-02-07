@@ -1,7 +1,8 @@
 """Test the usercode lifecycle code used by astprocd."""
 import asyncio
+from contextlib import AbstractContextManager
 from pathlib import Path
-from typing import List, Tuple
+from typing import IO, List, Optional, Tuple
 
 import pytest
 
@@ -11,6 +12,23 @@ from astoria.managers.astprocd import UsercodeLifecycle
 
 EXTRACT_ZIP_DATA = Path("tests/data/extract_zip")
 EXECUTE_CODE_DATA = Path("tests/data/execute_code")
+
+
+class ReadAndCleanupFile(AbstractContextManager):
+    """Read a file and clean it up."""
+
+    def __init__(self, file_path: Path) -> None:
+        self._file_path = file_path
+        self._fh: Optional[IO[str]] = None
+
+    def __enter__(self) -> IO[str]:
+        self._fh = self._file_path.open("r")
+        return self._fh
+
+    def __exit__(self, exc_type, exc_value, exc_traceback) -> None:
+        if self._fh is not None:
+            self._fh.close()
+        self._file_path.unlink()
 
 
 class StatusInformTestHelper:
@@ -88,9 +106,8 @@ def test_extract_and_validate_no_zip() -> None:
 
     # Check that the log file contains the right text
     log_file = EXTRACT_ZIP_DATA / "no_zip" / "log.txt"
-    with log_file.open("r") as fh:
+    with ReadAndCleanupFile(log_file) as fh:
         assert fh.read() == "Unable to start code.\nUnable to find robot.zip file.\n"
-    log_file.unlink()  # clean up log file
 
 
 def test_bad_zip() -> None:
@@ -100,9 +117,8 @@ def test_bad_zip() -> None:
 
     # Check that the log file contains the right text
     log_file = EXTRACT_ZIP_DATA / "bad_zip" / "log.txt"
-    with log_file.open("r") as fh:
+    with ReadAndCleanupFile(log_file) as fh:
         assert fh.read() == "Unable to start code.\nThe provided robot.zip is not a valid ZIP archive.\n"  # noqa: E501
-    log_file.unlink()  # clean up log file
 
 
 def test_no_main_zip() -> None:
@@ -112,9 +128,8 @@ def test_no_main_zip() -> None:
 
     # Check that the log file contains the right text
     log_file = EXTRACT_ZIP_DATA / "no_main_zip" / "log.txt"
-    with log_file.open("r") as fh:
+    with ReadAndCleanupFile(log_file) as fh:
         assert fh.read() == "Unable to start code.\nThe provided robot.zip did not contain a main.py.\n"  # noqa: E501
-    log_file.unlink()  # clean up log file
 
 
 def test_good_zip() -> None:
@@ -178,12 +193,11 @@ async def test_run_with_not_python() -> None:
     ]
     # Check that the log file contains the right text
     log_file = EXECUTE_CODE_DATA / "not_python" / "log.txt"
-    with log_file.open("r") as fh:
+    with ReadAndCleanupFile(log_file) as fh:
         lines = fh.read().splitlines()
     assert lines[0] == "=== LOG STARTED ==="
     assert "This is not a python program" in lines[2]
     assert lines[-1] == "=== LOG FINISHED ==="
-    log_file.unlink()  # clean up log file
 
 
 @pytest.mark.asyncio
@@ -206,12 +220,11 @@ async def test_run_with_syntax_error() -> None:
     ]
     # Check that the log file contains the right text
     log_file = EXECUTE_CODE_DATA / "syntax_error" / "log.txt"
-    with log_file.open("r") as fh:
+    with ReadAndCleanupFile(log_file) as fh:
         lines = fh.read().splitlines()
     assert lines[0] == "=== LOG STARTED ==="
     assert "SyntaxError" in lines[4]
     assert lines[-1] == "=== LOG FINISHED ==="
-    log_file.unlink()  # clean up log file
 
 
 @pytest.mark.asyncio
@@ -234,9 +247,8 @@ async def test_run_with_valid_python_wait_finish() -> None:
     ]
     # Check that the log file contains the right text
     log_file = EXECUTE_CODE_DATA / "valid_python_short" / "log.txt"
-    with log_file.open("r") as fh:
+    with ReadAndCleanupFile(log_file) as fh:
         lines = fh.read().splitlines()
     assert lines[0] == "=== LOG STARTED ==="
     assert lines[1] == "Hello World"
     assert lines[-1] == "=== LOG FINISHED ==="
-    log_file.unlink()  # clean up log file
