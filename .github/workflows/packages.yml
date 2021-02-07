@@ -23,8 +23,6 @@ jobs:
           python-version: ${{ matrix.python }}
       - name: Install APT dependencies
         run: sudo apt install build-essential devscripts debhelper equivs
-      - name: Start Mosquitto MQTT broker
-        uses: namoshek/mosquitto-github-action@v0.1.0
       - name: Install Poetry
         run: pip install poetry
       - name: Use in-project virtualenv
@@ -39,7 +37,7 @@ jobs:
         with:
           name: debian
           path: |
-            *.dev
+            *.deb
             *.dsc
             *.changes
             *.tar.*
