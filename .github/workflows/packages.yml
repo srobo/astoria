@@ -1,0 +1,26 @@
+name: Build source and binary packages
+
+on:
+  push:
+    branches:
+      - "master"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+      - name: Install APT dependencies
+        run: sudo apt install build-essential devscripts debhelper equivs
+      - name: Install Pip dependencies
+        run: pip install dephell
+      - name: Generate setup.py
+        run: dephell deps convert --from pypriject.toml --to setup.py
+      - name: Install build dependencies
+        run: sudo mk-build-deps -ir
+      - name: Build unsigned package
+        run: debuild -uc -us
