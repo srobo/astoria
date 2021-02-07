@@ -35,3 +35,13 @@ jobs:
         uses: namoshek/mosquitto-github-action@v0.1.0
       - name: Build Debian package
         run: make debian
+      - uses: actions/upload-artifact@v2
+        with:
+          name: debian
+          path: |
+            ../*.dev
+            ../*.dsc
+            ../*.changes
+            ../*.tar.*
+            ../*.buildinfo
+            ../*.build
