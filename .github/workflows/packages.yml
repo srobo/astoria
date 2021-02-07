@@ -3,7 +3,8 @@ name: Build source and binary packages
 on:
   push:
     branches:
-      - "master"
+      - "*"
+  pull_request:
 
 jobs:
   build:
