@@ -1,0 +1,5 @@
+astoria (0.0.0) unstable; urgency=medium
+
+  * Initial release of Debian package.
+
+ -- Dan Trickey <dtrickey@studentrobotics.org>  Sun, 07 Feb 2021 13:42:25 +0000
