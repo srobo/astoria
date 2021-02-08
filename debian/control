@@ -1,0 +1,20 @@
+Source: astoria
+Section: python
+Priority: optional
+Maintainer: SR Brain Team <kit-brain@studentrobotics.org>
+Build-Depends: debhelper-compat (= 10),
+               dh-python,
+               python3-all-dev (>= 3.6),
+               python3-setuptools,
+Standards-Version: 4.5.1
+X-Python3-Version: >= 3.6
+Homepage: https://github.com/srobo/astoria
+
+Package: python3-astoria
+Architecture: all
+Section: python
+Depends: ${misc:Depends},
+         ${python3:Depends},
+         ${shlibs:Depends},
+Description: Robot Management System
+ Student Robotics Robot Management System.

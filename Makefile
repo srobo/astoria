@@ -1,4 +1,4 @@
-.PHONY: all clean docs docs-serve lint type test test-cov
+.PHONY: all clean docs docs-serve lint type test test-cov debian
 
 CMD:=poetry run
 PYMODULE:=astoria
@@ -29,6 +29,13 @@ test-cov:
 
 isort:
 	$(CMD) isort $(PYMODULE) $(TESTS) $(EXTRACODE)
+
+setup.py:
+	$(CMD) dephell deps convert --from pyproject.toml --to setup.py
+
+debian: setup.py
+	sudo mk-build-deps -ir
+	debuild -uc -us
 
 clean:
 	git clean -Xdf # Delete all files in .gitignore

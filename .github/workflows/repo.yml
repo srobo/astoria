@@ -1,0 +1,40 @@
+name: Upload to Debian repo
+
+on:
+  release:
+    types: [published]
+
+
+jobs:
+  repo:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python: [3.8]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          path: repo
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install APT dependencies
+        run: sudo apt install build-essential devscripts debhelper equivs rubygems
+      - name: Install PackageCloud CLI
+        run: sudo gem install package_cloud
+      - name: Install Poetry
+        run: pip install poetry
+      - name: Use in-project virtualenv
+        run: poetry config virtualenvs.in-project true
+      - name: Install dependencies
+        run: poetry install
+        working-directory: repo
+      - name: Build Debian package
+        run: make debian
+        working-directory: repo
+      - name: Push package
+        run: package_cloud push srobo/kit/debian/bullseye *.deb
+        env:
+          PACKAGECLOUD_TOKEN: ${{ secrets.PACKAGECLOUD_TOKEN }}
