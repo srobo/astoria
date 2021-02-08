@@ -356,6 +356,12 @@
             <span class="n">_handle_error</span><span class="p">(</span><span class="s2">&quot;The provided robot.zip is not a valid ZIP archive&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">False</span>
 
+        <span class="c1"># Check that main.py is present</span>
+        <span class="n">exe_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dir_path</span> <span class="o">/</span> <span class="s2">&quot;main.py&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">exe_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="n">_handle_error</span><span class="p">(</span><span class="s2">&quot;The provided robot.zip did not contain a main.py&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
         <span class="c1"># Check for metadata etc here in future</span>
 
         <span class="k">return</span> <span class="kc">True</span>
@@ -409,13 +415,13 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">_dir</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>  <span class="c1"># Reset directory</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_setup_temp_dir</span><span class="p">()</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">LOGGER</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;robot.zip was invalid. Unable to start code.&quot;</span><span class="p">)</span>
+                    <span class="n">LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;robot.zip was invalid. Unable to start code.&quot;</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">CodeStatus</span><span class="o">.</span><span class="n">CRASHED</span>  <span class="c1"># Close enough to indicate error</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">LOGGER</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Tried to start process, but failed.&quot;</span><span class="p">)</span>
+                <span class="n">LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Tried to start process, but failed.&quot;</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">CodeStatus</span><span class="o">.</span><span class="n">CRASHED</span>  <span class="c1"># Close enough to indicate error</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">LOGGER</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Tried to start process, but one is already running.&quot;</span><span class="p">)</span>
+            <span class="n">LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Tried to start process, but one is already running.&quot;</span><span class="p">)</span>
 
     <span class="k">async</span> <span class="k">def</span> <span class="nf">kill_process</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Kill the process, if one is running.&quot;&quot;&quot;</span>
@@ -444,14 +450,14 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">log_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_disk_info</span><span class="o">.</span><span class="n">mount_path</span> <span class="o">/</span> <span class="s2">&quot;log.txt&quot;</span>
         <span class="k">with</span> <span class="n">log_path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
-            <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;=== LOG STARTED === </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;=== LOG STARTED ===</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">fh</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
             <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">proc_output</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
             <span class="k">while</span> <span class="n">data</span> <span class="o">!=</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">:</span>
                 <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
                 <span class="n">fh</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
                 <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">proc_output</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
-            <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;=== LOG FINISHED === </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;=== LOG FINISHED ===</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">fh</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
 
 
