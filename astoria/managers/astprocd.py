@@ -333,7 +333,7 @@ class UsercodeLifecycle:
 
     async def kill_process(self) -> None:
         """Kill the process, if one is running."""
-        if self._process is not None:
+        if self._process is not None and self._process_lock.locked():
             LOGGER.info("Attempting to kill process.")
             LOGGER.info(f"Sent SIGTERM to pid {self._process.pid}")
             self._process.send_signal(SIGTERM)
