@@ -5,6 +5,7 @@ PYMODULE:=astoria
 TESTS:=tests
 EXTRACODE:=docs/_code
 SPHINX_ARGS:=docs/ docs/_build -nWE
+PYTEST_FLAGS:=-vv
 
 all: type test lint
 
@@ -21,10 +22,10 @@ type:
 	$(CMD) mypy $(PYMODULE) $(TESTS) $(EXTRACODE)
 
 test:
-	$(CMD) pytest --cov=$(PYMODULE) $(TESTS)
+	$(CMD) pytest $(PYTEST_FLAGS) --cov=$(PYMODULE) $(TESTS)
 
 test-cov:
-	$(CMD) pytest --cov=$(PYMODULE) $(TESTS) --cov-report html
+	$(CMD) pytest $(PYTEST_FLAGS) --cov=$(PYMODULE) $(TESTS) --cov-report html
 
 isort:
 	$(CMD) isort $(PYMODULE) $(TESTS) $(EXTRACODE)
