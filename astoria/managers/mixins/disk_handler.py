@@ -50,8 +50,8 @@ class DiskHandlerMixin:
 
     async def handle_disk_insertion(self, uuid: DiskUUID, disk_info: DiskInfo) -> None:
         """Handle a disk insertion."""
-        LOGGER.debug(f"Disk inserted: {uuid} ({disk_info.disk_type})")
+        LOGGER.debug(f"Disk inserted: {uuid} ({disk_info.disk_type})")  # pragma: nocover
 
     async def handle_disk_removal(self, uuid: DiskUUID, disk_info: DiskInfo) -> None:
         """Handle a disk removal."""
-        LOGGER.debug(f"Disk removed: {uuid} ({disk_info.disk_type})")
+        LOGGER.debug(f"Disk removed: {uuid} ({disk_info.disk_type})")  # pragma: nocover
