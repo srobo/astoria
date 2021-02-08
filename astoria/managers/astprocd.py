@@ -260,6 +260,12 @@ class UsercodeLifecycle:
             _handle_error("The provided robot.zip is not a valid ZIP archive")
             return False
 
+        # Check that main.py is present
+        exe_path = self._dir_path / "main.py"
+        if not exe_path.exists():
+            _handle_error("The provided robot.zip did not contain a main.py")
+            return False
+
         # Check for metadata etc here in future
 
         return True
@@ -313,13 +319,13 @@ class UsercodeLifecycle:
                     self._dir.cleanup()  # Reset directory
                     self._setup_temp_dir()
                 else:
-                    LOGGER.warn("robot.zip was invalid. Unable to start code.")
+                    LOGGER.warning("robot.zip was invalid. Unable to start code.")
                     self.status = CodeStatus.CRASHED  # Close enough to indicate error
             else:
-                LOGGER.warn("Tried to start process, but failed.")
+                LOGGER.warning("Tried to start process, but failed.")
                 self.status = CodeStatus.CRASHED  # Close enough to indicate error
         else:
-            LOGGER.warn("Tried to start process, but one is already running.")
+            LOGGER.warning("Tried to start process, but one is already running.")
 
     async def kill_process(self) -> None:
         """Kill the process, if one is running."""
@@ -349,14 +355,14 @@ class UsercodeLifecycle:
         """
         log_path = self._disk_info.mount_path / "log.txt"
         with log_path.open("w") as fh:
-            fh.write("=== LOG STARTED === \n")
+            fh.write("=== LOG STARTED ===\n")
             fh.flush()
             data = await proc_output.readline()
             while data != b"":
                 fh.write(data.decode('utf-8'))
                 fh.flush()
                 data = await proc_output.readline()
-            fh.write("=== LOG FINISHED === \n")
+            fh.write("=== LOG FINISHED ===\n")
             fh.flush()
 
 
