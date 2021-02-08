@@ -1,4 +1,4 @@
-name: Tests
+name: Build source and binary packages
 
 on:
   push:
@@ -12,30 +12,34 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        python: [3.6, 3.7, 3.8, 3.9]
+        python: [3.8]
     steps:
       - uses: actions/checkout@v2
+        with:
+          path: repo
       - name: Set up Python ${{ matrix.python }}
         uses: actions/setup-python@v1
         with:
           python-version: ${{ matrix.python }}
       - name: Install APT dependencies
-        run: sudo apt install graphviz mosquitto
+        run: sudo apt install build-essential devscripts debhelper equivs
       - name: Install Poetry
         run: pip install poetry
       - name: Use in-project virtualenv
         run: poetry config virtualenvs.in-project true
-      - uses: actions/cache@v2
-        with:
-          path: .venv/
-          key: ${{ runner.os }}-${{ matrix.python }}-pip-${{ hashFiles('poetry.lock') }}-${{ hashFiles('pyproject.toml') }}
       - name: Install dependencies
         run: poetry install
-      - name: Lint
-        run: make lint
-      - name: Static type checking
-        run: make type
-      - name: Unit tests
-        run: make test-cov
-      - name: Build Docs
-        run: make docs
+        working-directory: repo
+      - name: Build Debian package
+        run: make debian
+        working-directory: repo
+      - uses: actions/upload-artifact@v2
+        with:
+          name: debian
+          path: |
+            *.deb
+            *.dsc
+            *.changes
+            *.tar.*
+            *.buildinfo
+            *.build

@@ -39,7 +39,7 @@ Command Line Usage
 
 .. click:: astoria.consumers.astctl:main
    :prog: astctl
-   :nested: full
+   :nested: short
 
 Metadata USBs
 -------------
@@ -50,7 +50,8 @@ The source data should be stored in a file called ``astoria.json`` in JSON forma
 
 There should ideally not be any other files on the Metadata USB. 
 
-.. Caution:: If a ``robot.zip`` is placed on the Metadata USB, the robot will not recognise the Metadata USB.
+.. Caution:: If a ``robot.zip`` is placed on the Metadata USB, the robot will not recognise the Metadata USB as Astdiskd will
+   recognise it as a usercode disk. See :ref:`Disk Identification` for an explanation of this process.
 
 Example override file:
 
