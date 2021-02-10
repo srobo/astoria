@@ -1,29 +1,27 @@
 """Command to restart running usercode."""
 import asyncio
-from pathlib import Path
-from typing import IO
+from typing import Optional
 
 import click
 
-from astoria.common.consumer import StateConsumer
 from astoria.common.manager_requests import ManagerRequest
+from astoria.consumers.astctl.command import Command
 
 loop = asyncio.get_event_loop()
 
 
 @click.command("kill")
 @click.option("-v", "--verbose", is_flag=True)
-@click.option("-c", "--config-file", type=click.File('r'), default=Path("astoria.toml"))
-def kill(*, verbose: bool, config_file: IO[str]) -> None:
+@click.option("-c", "--config-file", type=click.Path(exists=True))
+def kill(*, verbose: bool, config_file: Optional[str]) -> None:
     """Kill running usercode."""
     command = KillUsercodeCommand(verbose, config_file)
     loop.run_until_complete(command.run())
 
 
-class KillUsercodeCommand(StateConsumer):
+class KillUsercodeCommand(Command):
     """Kill running usercode."""
 
-    name_prefix = "astctl"
     dependencies = ["astprocd"]
 
     async def main(self) -> None:

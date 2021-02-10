@@ -3,8 +3,7 @@
 import asyncio
 import logging
 from json import loads
-from pathlib import Path
-from typing import IO, Dict, List, Optional, Set, Tuple
+from typing import Dict, List, Optional, Set, Tuple
 
 import click
 
@@ -25,8 +24,8 @@ loop = asyncio.get_event_loop()
 
 @click.command("astmetad")
 @click.option("-v", "--verbose", is_flag=True)
-@click.option("-c", "--config-file", type=click.File('r'), default=Path("astoria.toml"))
-def main(*, verbose: bool, config_file: IO[str]) -> None:
+@click.option("-c", "--config-file", type=click.Path(exists=True))
+def main(*, verbose: bool, config_file: Optional[str]) -> None:
     """Metadata Manager Application Entrypoint."""
     metad = MetadataManager(verbose, config_file)
     loop.run_until_complete(metad.run())

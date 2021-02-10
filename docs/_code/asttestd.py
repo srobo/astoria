@@ -2,8 +2,7 @@
 
 import asyncio
 import logging
-from pathlib import Path
-from typing import IO
+from typing import Optional
 
 import click
 
@@ -17,8 +16,8 @@ loop = asyncio.get_event_loop()
 
 @click.command("asttestd")
 @click.option("-v", "--verbose", is_flag=True)
-@click.option("-c", "--config-file", type=click.File('r'), default=Path("astoria.toml"))
-def main(*, verbose: bool, config_file: IO[str]) -> None:
+@click.option("-c", "--config-file", type=click.Path(exists=True))
+def main(*, verbose: bool, config_file: Optional[str]) -> None:
     """Test Manager Application Entrypoint."""
     testd = TestManager(verbose, config_file)
     loop.run_until_complete(testd.run())
