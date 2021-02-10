@@ -2,6 +2,7 @@
 from uuid import UUID, uuid4
 
 from pydantic import BaseModel, Field
+from typing_extensions import final
 
 
 class ManagerRequest(BaseModel):
@@ -11,12 +12,9 @@ class ManagerRequest(BaseModel):
     sender_name: str  # client name of component that sent the request
 
 
+@final
 class RequestResponse(BaseModel):
-    """
-    Schema definition for the response to a Manager Request.
-
-    Do not extend or subclass. The response should always be of identical format.
-    """
+    """Schema definition for the response to a Manager Request."""
 
     uuid: UUID
     success: bool

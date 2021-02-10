@@ -20,6 +20,7 @@ click = "^7.1.2"
 dbus-next = "^0.2.1"
 gmqtt = "^0.6.8"
 toml = "^0.10.2"
+typing-extensions = "^3.7.4"
 
 [tool.poetry.dev-dependencies]
 flake8 = "*"

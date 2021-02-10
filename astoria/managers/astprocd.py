@@ -195,6 +195,7 @@ class UsercodeLifecycle:
         self._status_inform_callback = status_inform_callback
 
         self._process: Optional[asyncio.subprocess.Process] = None
+        self._process_lock = asyncio.Lock()
         self._setup_temp_dir()
 
         self.status = CodeStatus.STARTING
@@ -280,47 +281,50 @@ class UsercodeLifecycle:
 
             if self._extract_and_validate_zip_file():
 
-                self._process = await asyncio.create_subprocess_exec(
-                    "python",
-                    "-u",
-                    "main.py",
-                    stdin=asyncio.subprocess.DEVNULL,
-                    stdout=asyncio.subprocess.PIPE,
-                    stderr=asyncio.subprocess.STDOUT,
-                    cwd=self._dir_path,
-                    start_new_session=True,
-                )
-                if self._process is not None:
-                    if self._process.stdout is not None:
-                        asyncio.ensure_future(self.logger(self._process.stdout))
+                async with self._process_lock:
+                    self._process = await asyncio.create_subprocess_exec(
+                        "python3",
+                        "-u",
+                        "main.py",
+                        stdin=asyncio.subprocess.DEVNULL,
+                        stdout=asyncio.subprocess.PIPE,
+                        stderr=asyncio.subprocess.STDOUT,
+                        cwd=self._dir_path,
+                        start_new_session=True,
+                    )
+                    if self._process is not None:
+                        if self._process.stdout is not None:
+                            asyncio.ensure_future(self.logger(self._process.stdout))
+                        else:
+                            LOGGER.warning("Unable to start logger task.")
+                        self.status = CodeStatus.RUNNING
+                        LOGGER.info(
+                            f"Usercode pid {self._process.pid} "
+                            f"started in {self._dir_path}",
+                        )
+
+                        # Wait for the subprocess to exit.
+                        # This may include if it is killed.
+                        rc = await self._process.wait()
+
+                        if rc == 0:
+                            self.status = CodeStatus.FINISHED
+                        elif rc < 0:
+                            self.status = CodeStatus.KILLED
+                        elif rc > 0:
+                            self.status = CodeStatus.CRASHED
+                        LOGGER.info(
+                            f"Usercode process exited with code {rc} "
+                            f"({self.status.name})",
+                        )
+
+                        self._process = None
+
+                        self._dir.cleanup()  # Reset directory
+                        self._setup_temp_dir()
                     else:
-                        LOGGER.warning("Unable to start logger task.")
-                    self.status = CodeStatus.RUNNING
-                    LOGGER.info(
-                        f"Usercode pid {self._process.pid} started in {self._dir_path}",
-                    )
-
-                    # Wait for the subprocess to exit.
-                    # This may include if it is killed.
-                    rc = await self._process.wait()
-
-                    if rc == 0:
-                        self.status = CodeStatus.FINISHED
-                    elif rc < 0:
-                        self.status = CodeStatus.KILLED
-                    elif rc > 0:
-                        self.status = CodeStatus.CRASHED
-                    LOGGER.info(
-                        f"Usercode process exited with code {rc} ({self.status.name})",
-                    )
-
-                    self._process = None
-
-                    self._dir.cleanup()  # Reset directory
-                    self._setup_temp_dir()
-                else:
-                    LOGGER.warning("robot.zip was invalid. Unable to start code.")
-                    self.status = CodeStatus.CRASHED  # Close enough to indicate error
+                        LOGGER.warning("robot.zip was invalid. Unable to start code.")
+                        self.status = CodeStatus.CRASHED  # Close enough to indicate error
             else:
                 LOGGER.warning("Tried to start process, but failed.")
                 self.status = CodeStatus.CRASHED  # Close enough to indicate error
@@ -329,7 +333,7 @@ class UsercodeLifecycle:
 
     async def kill_process(self) -> None:
         """Kill the process, if one is running."""
-        if self._process is not None:
+        if self._process is not None and self._process_lock.locked():
             LOGGER.info("Attempting to kill process.")
             LOGGER.info(f"Sent SIGTERM to pid {self._process.pid}")
             self._process.send_signal(SIGTERM)
