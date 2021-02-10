@@ -189,29 +189,30 @@
     --config-file &lt;config_file&gt;
 
       <ul>
-        <li><a href="usage.html#cmdoption-astctl-event-c">astctl-event command line option</a>
-</li>
         <li><a href="usage.html#cmdoption-astctl-list-disks-c">astctl-list-disks command line option</a>
 </li>
-        <li><a href="usage.html#cmdoption-astctl-show-metadata-c">astctl-show-metadata command line option</a>
+        <li><a href="usage.html#cmdoption-astctl-metadata-set-c">astctl-metadata-set command line option</a>
 </li>
-      </ul></li>
-      <li>
-    --json
-
-      <ul>
-        <li><a href="usage.html#cmdoption-astctl-event-json">astctl-event command line option</a>
+        <li><a href="usage.html#cmdoption-astctl-metadata-show-c">astctl-metadata-show command line option</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-usercode-kill-c">astctl-usercode-kill command line option</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-usercode-restart-c">astctl-usercode-restart command line option</a>
 </li>
       </ul></li>
       <li>
     --verbose
 
       <ul>
-        <li><a href="usage.html#cmdoption-astctl-event-v">astctl-event command line option</a>
-</li>
         <li><a href="usage.html#cmdoption-astctl-list-disks-v">astctl-list-disks command line option</a>
 </li>
-        <li><a href="usage.html#cmdoption-astctl-show-metadata-v">astctl-show-metadata command line option</a>
+        <li><a href="usage.html#cmdoption-astctl-metadata-set-v">astctl-metadata-set command line option</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-metadata-show-v">astctl-metadata-show command line option</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-usercode-kill-v">astctl-usercode-kill command line option</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-usercode-restart-v">astctl-usercode-restart command line option</a>
 </li>
       </ul></li>
   </ul></td>
@@ -220,22 +221,30 @@
     -c
 
       <ul>
-        <li><a href="usage.html#cmdoption-astctl-event-c">astctl-event command line option</a>
-</li>
         <li><a href="usage.html#cmdoption-astctl-list-disks-c">astctl-list-disks command line option</a>
 </li>
-        <li><a href="usage.html#cmdoption-astctl-show-metadata-c">astctl-show-metadata command line option</a>
+        <li><a href="usage.html#cmdoption-astctl-metadata-set-c">astctl-metadata-set command line option</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-metadata-show-c">astctl-metadata-show command line option</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-usercode-kill-c">astctl-usercode-kill command line option</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-usercode-restart-c">astctl-usercode-restart command line option</a>
 </li>
       </ul></li>
       <li>
     -v
 
       <ul>
-        <li><a href="usage.html#cmdoption-astctl-event-v">astctl-event command line option</a>
-</li>
         <li><a href="usage.html#cmdoption-astctl-list-disks-v">astctl-list-disks command line option</a>
 </li>
-        <li><a href="usage.html#cmdoption-astctl-show-metadata-v">astctl-show-metadata command line option</a>
+        <li><a href="usage.html#cmdoption-astctl-metadata-set-v">astctl-metadata-set command line option</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-metadata-show-v">astctl-metadata-show command line option</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-usercode-kill-v">astctl-usercode-kill command line option</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-usercode-restart-v">astctl-usercode-restart command line option</a>
 </li>
       </ul></li>
   </ul></td>
@@ -269,21 +278,6 @@
       <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.Metadata.arena">arena (astoria.common.messages.astmetad.Metadata attribute)</a>
 </li>
       <li>
-    astctl-event command line option
-
-      <ul>
-        <li><a href="usage.html#cmdoption-astctl-event-c">--config-file &lt;config_file&gt;</a>
-</li>
-        <li><a href="usage.html#cmdoption-astctl-event-json">--json</a>
-</li>
-        <li><a href="usage.html#cmdoption-astctl-event-v">--verbose</a>
-</li>
-        <li><a href="usage.html#cmdoption-astctl-event-c">-c</a>
-</li>
-        <li><a href="usage.html#cmdoption-astctl-event-v">-v</a>
-</li>
-      </ul></li>
-      <li>
     astctl-list-disks command line option
 
       <ul>
@@ -296,23 +290,73 @@
         <li><a href="usage.html#cmdoption-astctl-list-disks-v">-v</a>
 </li>
       </ul></li>
+      <li>
+    astctl-metadata-set command line option
+
+      <ul>
+        <li><a href="usage.html#cmdoption-astctl-metadata-set-c">--config-file &lt;config_file&gt;</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-metadata-set-v">--verbose</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-metadata-set-c">-c</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-metadata-set-v">-v</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-metadata-set-arg-ATTRIBUTE">ATTRIBUTE</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-metadata-set-arg-VALUE">VALUE</a>
+</li>
+      </ul></li>
+      <li>
+    astctl-metadata-show command line option
+
+      <ul>
+        <li><a href="usage.html#cmdoption-astctl-metadata-show-c">--config-file &lt;config_file&gt;</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-metadata-show-v">--verbose</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-metadata-show-c">-c</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-metadata-show-v">-v</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li>
-    astctl-show-metadata command line option
+    astctl-usercode-kill command line option
 
       <ul>
-        <li><a href="usage.html#cmdoption-astctl-show-metadata-c">--config-file &lt;config_file&gt;</a>
+        <li><a href="usage.html#cmdoption-astctl-usercode-kill-c">--config-file &lt;config_file&gt;</a>
 </li>
-        <li><a href="usage.html#cmdoption-astctl-show-metadata-v">--verbose</a>
+        <li><a href="usage.html#cmdoption-astctl-usercode-kill-v">--verbose</a>
 </li>
-        <li><a href="usage.html#cmdoption-astctl-show-metadata-c">-c</a>
+        <li><a href="usage.html#cmdoption-astctl-usercode-kill-c">-c</a>
 </li>
-        <li><a href="usage.html#cmdoption-astctl-show-metadata-v">-v</a>
+        <li><a href="usage.html#cmdoption-astctl-usercode-kill-v">-v</a>
+</li>
+      </ul></li>
+      <li>
+    astctl-usercode-restart command line option
+
+      <ul>
+        <li><a href="usage.html#cmdoption-astctl-usercode-restart-c">--config-file &lt;config_file&gt;</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-usercode-restart-v">--verbose</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-usercode-restart-c">-c</a>
+</li>
+        <li><a href="usage.html#cmdoption-astctl-usercode-restart-v">-v</a>
 </li>
       </ul></li>
       <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.Metadata.astoria_version">astoria_version (astoria.common.messages.astmetad.Metadata attribute)</a>
 </li>
+      <li>
+    ATTRIBUTE
+
+      <ul>
+        <li><a href="usage.html#cmdoption-astctl-metadata-set-arg-ATTRIBUTE">astctl-metadata-set command line option</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -403,14 +447,20 @@
         <li><a href="implementation/managers/astprocd.html#astoria.managers.astprocd.ProcessManager.handle_disk_insertion">(astoria.managers.astprocd.ProcessManager method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="implementation/managers/astmetad.html#astoria.managers.astmetad.MetadataManager.handle_disk_removal">handle_disk_removal() (astoria.managers.astmetad.MetadataManager method)</a>
 
       <ul>
         <li><a href="implementation/managers/astprocd.html#astoria.managers.astprocd.ProcessManager.handle_disk_removal">(astoria.managers.astprocd.ProcessManager method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astprocd.html#astoria.managers.astprocd.ProcessManager.handle_kill_request">handle_kill_request() (astoria.managers.astprocd.ProcessManager method)</a>
+</li>
+      <li><a href="implementation/managers/astmetad.html#astoria.managers.astmetad.MetadataManager.handle_mutation_request">handle_mutation_request() (astoria.managers.astmetad.MetadataManager method)</a>
+</li>
+      <li><a href="implementation/managers/astprocd.html#astoria.managers.astprocd.ProcessManager.handle_restart_request">handle_restart_request() (astoria.managers.astprocd.ProcessManager method)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -457,6 +507,8 @@
         <li><a href="implementation/managers/astprocd.html#astoria.managers.astprocd.ProcessManager.main">(astoria.managers.astprocd.ProcessManager method)</a>
 </li>
       </ul></li>
+      <li><a href="design/ipc.html#astoria.common.manager_requests.ManagerRequest">ManagerRequest (class in astoria.common.manager_requests)</a>
+</li>
       <li><a href="implementation/managers/astdiskd.html#astoria.common.disk_constraints.AndConstraint.matches">matches() (astoria.common.disk_constraints.AndConstraint method)</a>
 
       <ul>
@@ -553,10 +605,14 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.RobotMode">RobotMode (class in astoria.common.messages.astmetad)</a>
+      <li><a href="design/ipc.html#astoria.common.manager_requests.RequestResponse.reason">reason (astoria.common.manager_requests.RequestResponse attribute)</a>
+</li>
+      <li><a href="design/ipc.html#astoria.common.manager_requests.RequestResponse">RequestResponse (class in astoria.common.manager_requests)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.RobotMode">RobotMode (class in astoria.common.messages.astmetad)</a>
+</li>
       <li><a href="implementation/managers/astprocd.html#astoria.common.messages.astprocd.CodeStatus.RUNNING">RUNNING (astoria.common.messages.astprocd.CodeStatus attribute)</a>
 </li>
   </ul></td>
@@ -565,7 +621,13 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="design/ipc.html#astoria.common.manager_requests.ManagerRequest.sender_name">sender_name (astoria.common.manager_requests.ManagerRequest attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="implementation/managers/astprocd.html#astoria.common.messages.astprocd.CodeStatus.STARTING">STARTING (astoria.common.messages.astprocd.CodeStatus attribute)</a>
+</li>
+      <li><a href="design/ipc.html#astoria.common.manager_requests.RequestResponse.success">success (astoria.common.manager_requests.RequestResponse attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -595,8 +657,14 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="implementation/managers/astdiskd.html#astoria.common.messages.astdiskd.DiskType.USERCODE">USERCODE (astoria.common.messages.astdiskd.DiskType attribute)</a>
 </li>
-      <li><a href="implementation/managers/astdiskd.html#astoria.common.messages.astdiskd.DiskInfo.uuid">uuid (astoria.common.messages.astdiskd.DiskInfo attribute)</a>
+      <li><a href="design/ipc.html#astoria.common.manager_requests.ManagerRequest.uuid">uuid (astoria.common.manager_requests.ManagerRequest attribute)</a>
+
+      <ul>
+        <li><a href="design/ipc.html#astoria.common.manager_requests.RequestResponse.uuid">(astoria.common.manager_requests.RequestResponse attribute)</a>
 </li>
+        <li><a href="implementation/managers/astdiskd.html#astoria.common.messages.astdiskd.DiskInfo.uuid">(astoria.common.messages.astdiskd.DiskInfo attribute)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -605,6 +673,15 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.Metadata.Config.validate_assignment">validate_assignment (astoria.common.messages.astmetad.Metadata.Config attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    VALUE
+
+      <ul>
+        <li><a href="usage.html#cmdoption-astctl-metadata-set-arg-VALUE">astctl-metadata-set command line option</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 

@@ -94,7 +94,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#communications">Communications</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#message-types">Message Types</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#manager-messages">Manager Messages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#mutation-requests">Mutation Requests</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#manager-requests">Manager Requests</a></li>
 </ul>
 </li>
 </ul>
@@ -201,9 +201,51 @@ the broker. This means that subscribers do not need to wait for the next publica
 <p>It should be ensured that the last will and testament of the client is used to change the status to “STOPPED”
 so that clients are alerted to the disconnection. The state should also be cleared to a safe state.</p>
 </div>
-<div class="section" id="mutation-requests">
-<h3>Mutation Requests<a class="headerlink" href="#mutation-requests" title="Permalink to this headline">¶</a></h3>
-<p>Mutation requests have not yet been implemented or formally defined.</p>
+<div class="section" id="manager-requests">
+<h3>Manager Requests<a class="headerlink" href="#manager-requests" title="Permalink to this headline">¶</a></h3>
+<p>A <em>Manager Request</em> is a message sent to a single, specific <a class="reference internal" href="../implementation/managers/index.html#state-managers"><span class="std std-ref">state manager</span></a> to request a single specific action.</p>
+<p>A <a class="reference internal" href="#astoria.common.manager_requests.ManagerRequest" title="astoria.common.manager_requests.ManagerRequest"><code class="xref py py-class docutils literal notranslate"><span class="pre">ManagerRequest</span></code></a> is published to <code class="docutils literal notranslate"><span class="pre">astoria/[manager_name]/request/[request]</span></code> by the requesting component.</p>
+<p>A request must contain a UUID that is unique to the request.</p>
+<p>A request can also contain additional information related to that request.</p>
+<p>After a state manager receives a request, it must reply with a <a class="reference internal" href="#astoria.common.manager_requests.RequestResponse" title="astoria.common.manager_requests.RequestResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">RequestResponse</span></code></a>. The UUID in the response must match the UUID of the request.</p>
+<p>Mutation responses are published to <code class="docutils literal notranslate"><span class="pre">astoria/[manager_name]/request/[request]/[uuid]</span></code></p>
+<dl class="py class">
+<dt id="astoria.common.manager_requests.ManagerRequest">
+<em class="property">class </em><code class="sig-prename descclassname">astoria.common.manager_requests.</code><code class="sig-name descname">ManagerRequest</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/astoria/common/manager_requests.html#ManagerRequest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.common.manager_requests.ManagerRequest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Schema definition for a Manager Request.</p>
+<dl class="py attribute">
+<dt id="astoria.common.manager_requests.ManagerRequest.sender_name">
+<code class="sig-name descname">sender_name</code><em class="property">: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></em><a class="headerlink" href="#astoria.common.manager_requests.ManagerRequest.sender_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="astoria.common.manager_requests.ManagerRequest.uuid">
+<code class="sig-name descname">uuid</code><em class="property">: <a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.9)">uuid.UUID</a></em><a class="headerlink" href="#astoria.common.manager_requests.ManagerRequest.uuid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="astoria.common.manager_requests.RequestResponse">
+<em class="property">class </em><code class="sig-prename descclassname">astoria.common.manager_requests.</code><code class="sig-name descname">RequestResponse</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/astoria/common/manager_requests.html#RequestResponse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.common.manager_requests.RequestResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Schema definition for the response to a Manager Request.</p>
+<dl class="py attribute">
+<dt id="astoria.common.manager_requests.RequestResponse.reason">
+<code class="sig-name descname">reason</code><em class="property">: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></em><a class="headerlink" href="#astoria.common.manager_requests.RequestResponse.reason" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="astoria.common.manager_requests.RequestResponse.success">
+<code class="sig-name descname">success</code><em class="property">: <a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></em><a class="headerlink" href="#astoria.common.manager_requests.RequestResponse.success" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="astoria.common.manager_requests.RequestResponse.uuid">
+<code class="sig-name descname">uuid</code><em class="property">: <a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.9)">uuid.UUID</a></em><a class="headerlink" href="#astoria.common.manager_requests.RequestResponse.uuid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
 </div>
 </div>

@@ -8,4 +8,3 @@
    usage
    development/index
    implementation/index
-

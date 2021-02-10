@@ -185,7 +185,7 @@
 <li><p>Waiting for <a class="reference internal" href="../../usage.html#metadata-usbs"><span class="std std-ref">metadata drive</span></a> information from <a class="reference internal" href="astdiskd.html#astdiskd"><span class="std std-ref">Astdiskd</span></a></p></li>
 <li><p><a class="reference internal" href="../../design/metadata.html#metadata-resolution"><span class="std std-ref">Resolving</span></a> metadata from <a class="reference internal" href="../../design/metadata.html#metadata-source"><span class="std std-ref">metadata sources</span></a></p></li>
 </ul>
-<p>See <a class="reference external" href="https://docs.python.org/3/library/importlib.metadata.html#metadata" title="(in Python v3.9)"><span>Distribution metadata</span></a> for more information on this state manager.</p>
+<p>See <a class="reference internal" href="../../usage.html#astctl-metadata"><span class="std std-ref">metadata</span></a> for more information on this state manager.</p>
 <div class="section" id="metadata-disk-lifecycle">
 <h2>Metadata Disk Lifecycle<a class="headerlink" href="#metadata-disk-lifecycle" title="Permalink to this headline">¶</a></h2>
 <p>When a <a class="reference internal" href="../../usage.html#metadata-usbs"><span class="std std-ref">metadata drive</span></a> is inserted, it follows a lifecycle.</p>
@@ -236,6 +236,17 @@ can be overriden.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="astoria.managers.astmetad.MetadataManager.handle_mutation_request">
+<em class="property">async </em><code class="sig-name descname">handle_mutation_request</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/managers/astmetad.html#MetadataManager.handle_mutation_request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.managers.astmetad.MetadataManager.handle_mutation_request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle a request to mutate metadata.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../design/ipc.html#astoria.common.manager_requests.RequestResponse" title="astoria.common.manager_requests.RequestResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">RequestResponse</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
