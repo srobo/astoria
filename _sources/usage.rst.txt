@@ -39,7 +39,7 @@ Command Line Usage
 
 .. click:: astoria.consumers.astctl:main
    :prog: astctl
-   :nested: full
+   :nested: short
 
 Metadata USBs
 -------------
