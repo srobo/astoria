@@ -34,7 +34,23 @@ Based on the ``ManagerMessage`` class, must contain at least:
 It should be ensured that the last will and testament of the client is used to change the status to "STOPPED" 
 so that clients are alerted to the disconnection. The state should also be cleared to a safe state. 
 
-Mutation Requests
+Manager Requests
 ~~~~~~~~~~~~~~~~~
 
-Mutation requests have not yet been implemented or formally defined.
+A *Manager Request* is a message sent to a single, specific :ref:`state manager <state managers>` to request a single specific action.
+
+A :class:`ManagerRequest <astoria.common.manager_requests.ManagerRequest>` is published to ``astoria/[manager_name]/request/[request]`` by the requesting component.
+
+A request must contain a UUID that is unique to the request.
+
+A request can also contain additional information related to that request.
+
+After a state manager receives a request, it must reply with a :class:`RequestResponse <astoria.common.manager_requests.RequestResponse>`. The UUID in the response must match the UUID of the request.
+
+Mutation responses are published to ``astoria/[manager_name]/request/[request]/[uuid]``
+
+.. autoclass:: astoria.common.manager_requests.ManagerRequest
+    :members:
+
+.. autoclass:: astoria.common.manager_requests.RequestResponse
+    :members:

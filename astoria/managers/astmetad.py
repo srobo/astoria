@@ -9,6 +9,10 @@ from typing import IO, Dict, List, Optional, Set, Tuple
 import click
 
 from astoria.common.manager import StateManager
+from astoria.common.manager_requests import (
+    MetadataSetManagerRequest,
+    RequestResponse,
+)
 from astoria.common.messages.astdiskd import DiskInfo, DiskType, DiskUUID
 from astoria.common.messages.astmetad import Metadata, MetadataManagerMessage
 
@@ -36,10 +40,17 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
 
     def _init(self) -> None:
         self._lifecycle: Optional[MetadataDiskLifecycle] = None
-        self._requested_data: Dict[str, str] = {}
 
         self._cur_disks: Dict[DiskUUID, DiskInfo] = {}
         self._mqtt.subscribe("astdiskd", self.handle_astdiskd_disk_info_message)
+
+        self._requested_data: Dict[str, str] = {}
+        self._allowed_mutations_by_request: Set[str] = {"arena", "zone", "mode"}
+        self._register_request(
+            "mutate",
+            MetadataSetManagerRequest,
+            self.handle_mutation_request,
+        )
 
     @property
     def offline_status(self) -> MetadataManagerMessage:
@@ -84,6 +95,37 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
             if self._lifecycle is not None and self._lifecycle._uuid == disk_info.uuid:
                 self._lifecycle = None
                 self.update_status()
+
+    async def handle_mutation_request(
+        self,
+        request: MetadataSetManagerRequest,
+    ) -> RequestResponse:
+        """Handle a request to mutate metadata."""
+        if request.attr not in self._allowed_mutations_by_request:
+            return RequestResponse(
+                uuid=request.uuid,
+                success=False,
+                reason=f"{request.attr} is not a mutable attribute",
+            )
+
+        if len(request.value) == 0:
+            # Stop mutating the attr if it is empty.
+            try:
+                del self._requested_data[request.attr]
+                LOGGER.info(f"{request.attr} override has been removed by request")
+                self.update_status()
+            except KeyError:
+                pass
+        else:
+            self._requested_data[request.attr] = request.value
+            LOGGER.info(
+                f"{request.attr} has been overriden to {request.value} by request",
+            )
+            self.update_status()
+        return RequestResponse(
+            uuid=request.uuid,
+            success=True,
+        )
 
     def get_current_metadata(self) -> Metadata:
         """

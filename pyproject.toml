@@ -20,6 +20,7 @@ click = "^7.1.2"
 dbus-next = "^0.2.1"
 gmqtt = "^0.6.8"
 toml = "^0.10.2"
+typing-extensions = "^3.7.4"
 
 [tool.poetry.dev-dependencies]
 flake8 = "*"
@@ -42,8 +43,8 @@ sphinx_autodoc_typehints = "^1.11.1"
 sphinx-pydantic = "^0.1.1"
 sphinx-jsonschema = "1.15"  # Pinned for sphinx-pydantic
 sphinx-autobuild = "^2020.9.1"
-m2r2 = "^0.2.7"
 sphinx-click = "^2.5.0"
+m2r2 = "^0.2.7"
 dephell = "^0.8.3"
 
 [build-system]

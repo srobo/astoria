@@ -11,6 +11,11 @@ from zipfile import BadZipFile, ZipFile
 import click
 
 from astoria.common.manager import StateManager
+from astoria.common.manager_requests import (
+    RequestResponse,
+    UsercodeKillManagerRequest,
+    UsercodeRestartManagerRequest,
+)
 from astoria.common.messages.astdiskd import DiskInfo, DiskType, DiskUUID
 from astoria.common.messages.astprocd import CodeStatus, ProcessManagerMessage
 
@@ -41,6 +46,17 @@ class ProcessManager(DiskHandlerMixin, StateManager[ProcessManagerMessage]):
         self._cur_disks: Dict[DiskUUID, DiskInfo] = {}
 
         self._mqtt.subscribe("astdiskd", self.handle_astdiskd_disk_info_message)
+
+        self._register_request(
+            "restart",
+            UsercodeRestartManagerRequest,
+            self.handle_restart_request,
+        )
+        self._register_request(
+            "kill",
+            UsercodeKillManagerRequest,
+            self.handle_kill_request,
+        )
 
     @property
     def offline_status(self) -> ProcessManagerMessage:
@@ -92,6 +108,51 @@ class ProcessManager(DiskHandlerMixin, StateManager[ProcessManagerMessage]):
             else:
                 LOGGER.warning("Disk removed, but no code lifecycle available")
 
+    async def handle_kill_request(
+        self,
+        request: UsercodeKillManagerRequest,
+    ) -> RequestResponse:
+        """Handle a request to kill running usercode."""
+        if self._lifecycle is None:
+            return RequestResponse(
+                uuid=request.uuid,
+                success=False,
+                reason="No active usercode lifecycle",
+            )
+        else:
+            LOGGER.info("Kill request received.")
+            await self._lifecycle.kill_process()
+            return RequestResponse(
+                uuid=request.uuid,
+                success=True,
+            )
+
+    async def handle_restart_request(
+        self,
+        request: UsercodeRestartManagerRequest,
+    ) -> RequestResponse:
+        """Handle a request to restart usercode."""
+        LOGGER.info("Restart request received.")
+        if self._lifecycle is None:
+            return RequestResponse(
+                uuid=request.uuid,
+                success=False,
+                reason="No active usercode lifecycle",
+            )
+        else:
+            if self._lifecycle.status is CodeStatus.RUNNING:
+                return RequestResponse(
+                    uuid=request.uuid,
+                    success=False,
+                    reason="Code is already running.",
+                )
+            else:
+                asyncio.ensure_future(self._lifecycle.run_process())
+                return RequestResponse(
+                    uuid=request.uuid,
+                    success=True,
+                )
+
     def update_status(self, code_status: Optional[CodeStatus] = None) -> None:
         """
         Calculate and update the status of this manager.
@@ -134,6 +195,7 @@ class UsercodeLifecycle:
         self._status_inform_callback = status_inform_callback
 
         self._process: Optional[asyncio.subprocess.Process] = None
+        self._process_lock = asyncio.Lock()
         self._setup_temp_dir()
 
         self.status = CodeStatus.STARTING
@@ -219,47 +281,50 @@ class UsercodeLifecycle:
 
             if self._extract_and_validate_zip_file():
 
-                self._process = await asyncio.create_subprocess_exec(
-                    "python",
-                    "-u",
-                    "main.py",
-                    stdin=asyncio.subprocess.DEVNULL,
-                    stdout=asyncio.subprocess.PIPE,
-                    stderr=asyncio.subprocess.STDOUT,
-                    cwd=self._dir_path,
-                    start_new_session=True,
-                )
-                if self._process is not None:
-                    if self._process.stdout is not None:
-                        asyncio.ensure_future(self.logger(self._process.stdout))
+                async with self._process_lock:
+                    self._process = await asyncio.create_subprocess_exec(
+                        "python3",
+                        "-u",
+                        "main.py",
+                        stdin=asyncio.subprocess.DEVNULL,
+                        stdout=asyncio.subprocess.PIPE,
+                        stderr=asyncio.subprocess.STDOUT,
+                        cwd=self._dir_path,
+                        start_new_session=True,
+                    )
+                    if self._process is not None:
+                        if self._process.stdout is not None:
+                            asyncio.ensure_future(self.logger(self._process.stdout))
+                        else:
+                            LOGGER.warning("Unable to start logger task.")
+                        self.status = CodeStatus.RUNNING
+                        LOGGER.info(
+                            f"Usercode pid {self._process.pid} "
+                            f"started in {self._dir_path}",
+                        )
+
+                        # Wait for the subprocess to exit.
+                        # This may include if it is killed.
+                        rc = await self._process.wait()
+
+                        if rc == 0:
+                            self.status = CodeStatus.FINISHED
+                        elif rc < 0:
+                            self.status = CodeStatus.KILLED
+                        elif rc > 0:
+                            self.status = CodeStatus.CRASHED
+                        LOGGER.info(
+                            f"Usercode process exited with code {rc} "
+                            f"({self.status.name})",
+                        )
+
+                        self._process = None
+
+                        self._dir.cleanup()  # Reset directory
+                        self._setup_temp_dir()
                     else:
-                        LOGGER.warning("Unable to start logger task.")
-                    self.status = CodeStatus.RUNNING
-                    LOGGER.info(
-                        f"Usercode pid {self._process.pid} started in {self._dir_path}",
-                    )
-
-                    # Wait for the subprocess to exit.
-                    # This may include if it is killed.
-                    rc = await self._process.wait()
-
-                    if rc == 0:
-                        self.status = CodeStatus.FINISHED
-                    elif rc < 0:
-                        self.status = CodeStatus.KILLED
-                    elif rc > 0:
-                        self.status = CodeStatus.CRASHED
-                    LOGGER.info(
-                        f"Usercode process exited with code {rc} ({self.status.name})",
-                    )
-
-                    self._process = None
-
-                    self._dir.cleanup()  # Reset directory
-                    self._setup_temp_dir()
-                else:
-                    LOGGER.warning("robot.zip was invalid. Unable to start code.")
-                    self.status = CodeStatus.CRASHED  # Close enough to indicate error
+                        LOGGER.warning("robot.zip was invalid. Unable to start code.")
+                        self.status = CodeStatus.CRASHED  # Close enough to indicate error
             else:
                 LOGGER.warning("Tried to start process, but failed.")
                 self.status = CodeStatus.CRASHED  # Close enough to indicate error
@@ -268,15 +333,16 @@ class UsercodeLifecycle:
 
     async def kill_process(self) -> None:
         """Kill the process, if one is running."""
-        if self._process is not None:
+        if self._process is not None and self._process_lock.locked():
             LOGGER.info("Attempting to kill process.")
             LOGGER.info(f"Sent SIGTERM to pid {self._process.pid}")
             self._process.send_signal(SIGTERM)
             try:
                 await asyncio.wait_for(self._process.communicate(), timeout=5.0)
             except asyncio.TimeoutError:
-                LOGGER.info(f"Sent SIGKILL to pid {self._process.pid}")
-                self._process.send_signal(SIGKILL)
+                if self._process is not None:
+                    LOGGER.info(f"Sent SIGKILL to pid {self._process.pid}")
+                    self._process.send_signal(SIGKILL)
             except AttributeError:
                 # Under some circumstances, there is a race condition such that
                 # _process becomes None whilst the communicate timeout is running.

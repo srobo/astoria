@@ -2,9 +2,11 @@
 import asyncio
 import logging
 from abc import ABCMeta, abstractmethod
-from typing import Generic, TypeVar
+from json import JSONDecodeError, loads
+from typing import Callable, Coroutine, Generic, Match, Type, TypeVar
 
 from .data_component import DataComponent
+from .manager_requests import ManagerRequest, RequestResponse
 from .messages.base import ManagerMessage
 
 LOGGER = logging.getLogger(__name__)
@@ -12,6 +14,7 @@ LOGGER = logging.getLogger(__name__)
 loop = asyncio.get_event_loop()
 
 T = TypeVar("T", bound=ManagerMessage)
+RequestT = TypeVar("RequestT", bound=ManagerRequest)
 
 
 class StateManager(DataComponent, Generic[T], metaclass=ABCMeta):
@@ -58,3 +61,24 @@ class StateManager(DataComponent, Generic[T], metaclass=ABCMeta):
     async def _pre_disconnect(self) -> None:
         """Change status to offline before disconnecting from the broker."""
         self.status = self.offline_status
+
+    def _register_request(
+        self,
+        name: str,
+        typ: Type[RequestT],
+        handler: Callable[[RequestT], Coroutine[None, None, RequestResponse]],
+    ) -> None:
+        LOGGER.debug(f"Registering {name} request for {self.name} component")
+
+        async def _handler(match: Match[str], payload: str) -> None:
+            try:
+                req = typ(**loads(payload))
+                response = await handler(req)
+                self._mqtt.publish(
+                    f"request/{name}/{req.uuid}",
+                    response,
+                )
+            except JSONDecodeError:
+                LOGGER.warning(f"Received {name} request, but unable to decode JSON")
+
+        self._mqtt.subscribe(f"{self.name}/request/{name}", _handler)

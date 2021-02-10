@@ -3,12 +3,23 @@
 import asyncio
 import logging
 from json import JSONDecodeError, loads
-from typing import Any, Callable, Coroutine, Dict, List, Match, Optional
+from typing import (
+    Any,
+    Callable,
+    Coroutine,
+    Dict,
+    List,
+    Match,
+    Optional,
+    TypeVar,
+)
+from uuid import UUID
 
 import gmqtt
 from pydantic import BaseModel
 
 from astoria.common.config import MQTTBrokerInfo
+from astoria.common.manager_requests import ManagerRequest, RequestResponse
 from astoria.common.messages.base import ManagerMessage
 
 from .topic import Topic
@@ -16,6 +27,7 @@ from .topic import Topic
 LOGGER = logging.getLogger(__name__)
 
 Handler = Callable[[Match[str], str], Coroutine[Any, Any, None]]  # type: ignore
+RequestT = TypeVar("RequestT", bound=ManagerRequest)
 
 
 class MQTTWrapper:
@@ -62,6 +74,15 @@ class MQTTWrapper:
         self._client.on_disconnect = self.on_disconnect
 
         self.subscribe("+", self._dependency_message_handler)
+
+        # Subscribe to request response from dependent managers
+        for manager in self._dependencies:
+            self.subscribe(
+                f"{manager}/request/+/+",
+                self._request_response_message_handler,
+            )
+        self._request_response_events: Dict[UUID, asyncio.Event] = {}
+        self._request_response_data: Dict[UUID, RequestResponse] = {}
 
     @property
     def is_connected(self) -> bool:
@@ -155,6 +176,7 @@ class MQTTWrapper:
         payload: BaseModel,
         *,
         retain: bool = False,
+        auto_prefix_topic: bool = True,
     ) -> None:
         """Publish a payload to the broker."""
         if not self.is_connected:
@@ -164,10 +186,14 @@ class MQTTWrapper:
 
         if len(topic) == 0:
             topic_complete = Topic.parse(self.mqtt_prefix)
-        else:
+        elif auto_prefix_topic:
             topic_complete = Topic.parse(f"{self.mqtt_prefix}/{topic}")
+        else:
+            topic_complete = Topic.parse(topic)
+
         if not topic_complete.is_publishable:
             raise ValueError(f"Cannot public to MQTT topic: {topic_complete}")
+
         self._client.publish(
             str(topic_complete),
             payload.json(),
@@ -238,3 +264,55 @@ class MQTTWrapper:
                         self._no_dependency_event.set()
         except JSONDecodeError:
             pass
+
+    async def manager_request(
+        self,
+        manager: str,
+        request_name: str,
+        request: RequestT,
+        *,
+        response_timeout: float = 1,
+    ) -> RequestResponse:
+        """
+        Perform a manager request.
+
+        Raises exception if not dependent on manager, or if request fails.
+        """
+        if manager not in self._dependencies:
+            raise ValueError(
+                f"{manager} must be listed as dependency to make manager request",
+            )
+
+        topic = f"{self._broker_info.topic_prefix}/{manager}/request/{request_name}"
+
+        self._request_response_events[request.uuid] = asyncio.Event()
+
+        self.publish(topic, request, auto_prefix_topic=False)
+
+        await self._request_response_events[request.uuid].wait()
+        if request.uuid not in self._request_response_data:
+            raise RuntimeError("Request Response not available.")
+        else:
+            self._request_response_events.pop(request.uuid)
+            return self._request_response_data.pop(request.uuid)
+
+    async def _request_response_message_handler(
+        self,
+        match: Match[str],
+        payload: str,
+    ) -> None:
+        """Handle request response messages."""
+        uuid = UUID(match.group(2))
+        # If uuid not recognised, probably a response for another client
+        if uuid in self._request_response_events:
+            try:
+                self._request_response_data[uuid] = RequestResponse(
+                    **loads(payload),
+                )
+            except JSONDecodeError:
+                self._request_response_data[uuid] = RequestResponse(
+                    uuid=uuid,
+                    success=False,
+                    reason="Unable to decode request response.",
+                )
+            self._request_response_events[uuid].set()
