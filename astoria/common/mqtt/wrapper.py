@@ -22,6 +22,7 @@ from astoria.common.config import MQTTBrokerInfo
 from astoria.common.manager_requests import ManagerRequest, RequestResponse
 from astoria.common.messages.base import ManagerMessage
 
+from .broadcast_helper import BroadcastHelper
 from .topic import Topic
 
 LOGGER = logging.getLogger(__name__)
@@ -83,6 +84,9 @@ class MQTTWrapper:
             )
         self._request_response_events: Dict[UUID, asyncio.Event] = {}
         self._request_response_data: Dict[UUID, RequestResponse] = {}
+
+        # Subscribe to and handle broadcast events
+        self.broadcast = BroadcastHelper(self)
 
     @property
     def is_connected(self) -> bool:
