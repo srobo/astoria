@@ -1,5 +1,5 @@
 """Broadcast Event Schemas."""
-from typing import Dict, Type
+from typing import ClassVar
 
 from pydantic import BaseModel
 
@@ -7,12 +7,26 @@ from pydantic import BaseModel
 class BroadcastEvent(BaseModel):
     """Schema for a broadcast event."""
 
+    name: ClassVar[str]
+
     event_name: str
     sender_name: str
     priority: int = 0
 
     def __gt__(self, other: 'BroadcastEvent') -> bool:
         return self.priority > other.priority
+
+
+class StartButtonBroadcastEvent(BroadcastEvent):
+    """
+    Schema for a remote start event.
+
+    Trigger the robot code if it is waiting for the start button to be
+    pressed. Does not affect or interact with the physical button as that
+    is handled by the usercode driver.
+    """
+
+    name = "start_button"
 
 
 class UsercodeLogBroadcastEvent(BroadcastEvent):
@@ -24,11 +38,7 @@ class UsercodeLogBroadcastEvent(BroadcastEvent):
     Content should be a single log line from the process, without a new line.
     """
 
+    name = "usercode_log"
+
     pid: int
     content: str
-
-
-EVENTS: Dict[str, Type[BroadcastEvent]] = {
-    "start_button": BroadcastEvent,
-    "usercode_log": UsercodeLogBroadcastEvent,
-}
