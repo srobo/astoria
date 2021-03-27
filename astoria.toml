@@ -1,10 +1,10 @@
 # Astoria Default Config File
 
 [mqtt]
-host = "test.mosquitto.org"
+host = "::1"
 port = 1883
 enable_tls = false
-force_protocol_version_3_1 = false
+force_protocol_version_3_1 = true
 
 topic_prefix = "astoria"
 
