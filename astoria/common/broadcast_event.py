@@ -26,7 +26,7 @@ class StartButtonBroadcastEvent(BroadcastEvent):
     is handled by the usercode driver.
     """
 
-    name = "start_button"
+    name: ClassVar[str] = "start_button"
 
 
 class UsercodeLogBroadcastEvent(BroadcastEvent):
@@ -38,7 +38,7 @@ class UsercodeLogBroadcastEvent(BroadcastEvent):
     Content should be a single log line from the process, without a new line.
     """
 
-    name = "usercode_log"
+    name: ClassVar[str] = "usercode_log"
 
     pid: int
     content: str
