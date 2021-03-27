@@ -135,14 +135,14 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
         whereby each source has a set of permitted attributes in the metadata that
         can be overriden.
         """
-        # Mutation data sources in priority order.
-        mutation_sources: List[Tuple[Set[str], Dict[str, str]]] = [
+        # Metadata sources in priority order.
+        metadata_sources: List[Tuple[Set[str], Dict[str, str]]] = [
             ({"arena", "zone", "mode"}, self._requested_data),
         ]
 
         if self._lifecycle is not None:
-            # Add mutations from the metadata usb, if it is present.
-            mutation_sources.append(
+            # Add metadata source from the metadata usb, if it is present.
+            metadata_sources.append(
                 (
                     {"arena", "zone", "mode", "game_timeout", "wifi_enabled"},
                     self._lifecycle.diff_data,
@@ -151,7 +151,7 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
 
         metadata = Metadata.init(self.config)
 
-        for permitted_attrs, diff_data in mutation_sources:
+        for permitted_attrs, diff_data in metadata_sources:
             for k, v in diff_data.items():
                 if k in permitted_attrs:
                     metadata.__setattr__(k, v)
