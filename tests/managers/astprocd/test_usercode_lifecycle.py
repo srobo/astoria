@@ -20,21 +20,29 @@ class MockBroadcastHelper(BroadcastHelper[T]):
     """Mock BroadcastHelper class to help with tests."""
 
     def __init__(self, name: str, schema: Type[T]) -> None:
+        self._name = name
+        self._schema = schema
+
         self._event_queue: asyncio.PriorityQueue[T] = asyncio.PriorityQueue()
+        self._sent: List[T] = []
 
     @classmethod
     def get_helper(cls, schema: Type[T]) -> 'MockBroadcastHelper[T]':
         """Get the broadcast helper for a given event."""
         return cls[T](schema.name, schema)
 
+    def get_lines(self) -> List[str]:
+        """Get lines in the same format as the file."""
+        return "".join(a.content for a in self._sent).splitlines()
+
     def send(self, **kwargs: Any) -> None:  # type: ignore
         """Send an event."""
         data = self._schema(  # noqa: F841
             event_name=self._schema.name,
-            sender_name=self._mqtt._client_name,
+            sender_name="mock",
             **kwargs,
         )
-        pass
+        self._sent.append(data)
 
 
 class ReadAndCleanupFile(AbstractContextManager):
@@ -59,6 +67,7 @@ class StatusInformTestHelper:
 
     def __init__(self) -> None:
         self.times_called = 0
+        self.log_helper = MockBroadcastHelper.get_helper(UsercodeLogBroadcastEvent)
         self.called_queue: List[CodeStatus] = []
 
     def callback(self, status: CodeStatus) -> None:
@@ -81,7 +90,7 @@ class StatusInformTestHelper:
                 disk_type=DiskType.USERCODE,
             ),
             status_inform_callback=sith.callback,
-            log_helper=MockBroadcastHelper.get_helper(UsercodeLogBroadcastEvent),
+            log_helper=sith.log_helper,
         )
         return ucl, sith
 
@@ -223,6 +232,8 @@ async def test_run_with_not_python() -> None:
     assert "This is not a python program" in lines[2]
     assert lines[-1] == "=== LOG FINISHED ==="
 
+    assert lines == sith.log_helper.get_lines()
+
 
 @pytest.mark.asyncio
 async def test_run_with_syntax_error() -> None:
@@ -250,6 +261,8 @@ async def test_run_with_syntax_error() -> None:
     assert "SyntaxError" in lines[4]
     assert lines[-1] == "=== LOG FINISHED ==="
 
+    assert lines == sith.log_helper.get_lines()
+
 
 @pytest.mark.asyncio
 async def test_run_with_valid_python_wait_finish() -> None:
@@ -276,3 +289,5 @@ async def test_run_with_valid_python_wait_finish() -> None:
     assert lines[0] == "=== LOG STARTED ==="
     assert lines[1] == "Hello World"
     assert lines[-1] == "=== LOG FINISHED ==="
+
+    assert lines == sith.log_helper.get_lines()

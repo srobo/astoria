@@ -371,16 +371,31 @@ class UsercodeLifecycle:
         Logs the output of the process to log.txt
         """
         log_path = self._disk_info.mount_path / "log.txt"
-        with log_path.open("w") as fh:
-            fh.write("=== LOG STARTED ===\n")
+
+        if self._process is not None:
+            pid = self._process.pid
+        else:
+            pid = -1  # Use -1 if unknown
+
+        def log(data: str, log_line: int) -> None:
+            fh.write(data)
             fh.flush()
+            self._log_helper.send(
+                pid=pid,
+                priority=log_line,
+                content=data,
+            )
+
+        with log_path.open("w") as fh:
+            log_line = 0
+            log("=== LOG STARTED ===\n", log_line)
+            log_line += 1
             data = await proc_output.readline()
             while data != b"":
-                fh.write(data.decode('utf-8'))
-                fh.flush()
+                log(data.decode('utf-8'), log_line)
                 data = await proc_output.readline()
-            fh.write("=== LOG FINISHED ===\n")
-            fh.flush()
+                log_line += 1
+            log("=== LOG FINISHED ===\n", log_line)
 
 
 if __name__ == "__main__":
