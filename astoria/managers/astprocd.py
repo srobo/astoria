@@ -103,7 +103,7 @@ class ProcessManager(DiskHandlerMixin, StateManager[ProcessManagerMessage]):
                 LOGGER.warn("Cannot run usercode, there is already a lifecycle present.")
                 with disk_info.mount_path.joinpath("log.txt").open("w") as fh:
                     fh.write("Unable to start code.\n")
-                    fh.write("It is not safe to run multiple code drives at once.\n")
+                    fh.write("It is not safe to run multiple code disks at once.\n")
 
     async def handle_disk_removal(self, uuid: DiskUUID, disk_info: DiskInfo) -> None:
         """Handle a disk removal."""
@@ -254,7 +254,7 @@ class UsercodeLifecycle:
             Handle an error with the zip file.
 
             Logs to the astprocd logger and also writes
-            a log file to the usercode drive.
+            a log file to the usercode disk.
             """
             with self._disk_info.mount_path.joinpath("log.txt").open("w") as fh:
                 LOGGER.warning(error)

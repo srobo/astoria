@@ -65,7 +65,7 @@ class DiskManager(StateManager[DiskManagerMessage]):
     async def update_state(self) -> None:
         """Update the status of astdiskd when disks are changed."""
         disks = {}
-        for uuid, mount_path in self._udisks.drives.items():
+        for uuid, mount_path in self._udisks.disks.items():
             disks[uuid] = DiskInfo(
                 uuid=uuid,
                 mount_path=mount_path,
@@ -88,13 +88,13 @@ class UdisksConnection:
         *,
         notify_coro: Callable[[], Coroutine[None, None, None]],
     ) -> None:
-        self._drives: Dict[DiskUUID, Path] = {}
+        self._disks: Dict[DiskUUID, Path] = {}
         self._notify_coro = notify_coro
 
     @property
-    def drives(self) -> Dict[DiskUUID, Path]:
-        """Currently mounted drives."""
-        return self._drives
+    def disks(self) -> Dict[DiskUUID, Path]:
+        """Currently mounted disks."""
+        return self._disks
 
     async def main(self) -> None:
         """Setup the message bus and task dispatcher."""
@@ -113,7 +113,7 @@ class UdisksConnection:
         )
         udisks_obj_manager.on_interfaces_added(self._disk_signal)
 
-        await self._detect_initial_drives(udisks_obj_manager)
+        await self._detect_initial_disks(udisks_obj_manager)
 
     def _bytes_to_path(self, data: List[int]) -> Path:
         """Convert a null terminated int array to a path."""
@@ -153,7 +153,7 @@ class UdisksConnection:
                             asyncio.ensure_future(self.mount_task(disk_bus_path))
                         else:
                             LOGGER.warning(
-                                f"No information available on drive at {path}, aborting.",
+                                f"No information available on disk at {path}, aborting.",
                             )
 
                     if event_data["Operation"].value == "cleanup":
@@ -189,18 +189,18 @@ class UdisksConnection:
                     uuid: DiskUUID = DiskUUID(
                         await drive_block.get_id_uuid(),
                     )
-                    if uuid not in self._drives.keys():
-                        LOGGER.info(f"Drive {uuid} mounted ({mount_path})")
-                        self._drives[uuid] = mount_path
+                    if uuid not in self._disks.keys():
+                        LOGGER.info(f"Disk {uuid} mounted ({mount_path})")
+                        self._disks[uuid] = mount_path
 
                         if notify:
                             asyncio.ensure_future(self._notify_coro())
                     else:
-                        LOGGER.error(f"Drive UUID collision! uuid={uuid}")
+                        LOGGER.error(f"Disk UUID collision! uuid={uuid}")
                 else:
                     LOGGER.warning(f"Invalid mount path: {mount_path}")
             except IndexError:
-                LOGGER.warning(f"No mount points available for drive at {disk_bus_path}")
+                LOGGER.warning(f"No mount points available for disk at {disk_bus_path}")
 
         except InterfaceNotFoundError:
             # Object doesn't have a Filesystem interface
@@ -210,27 +210,27 @@ class UdisksConnection:
         """Handle a cleanup event."""
         await asyncio.sleep(0.3)  # Allow enough time for the unmount to occur.
 
-        # We have no information to tell which drive left.
+        # We have no information to tell which disk(s) left.
         # Thus we need to check all of them.
-        removed_drives: List[DiskUUID] = []
-        for uuid, path in self._drives.items():
+        removed_disks: List[DiskUUID] = []
+        for uuid, path in self._disks.items():
             if not path.exists():
-                LOGGER.info(f"Drive {uuid} removed ({path})")
-                removed_drives.append(uuid)
+                LOGGER.info(f"Disks {uuid} removed ({path})")
+                removed_disks.append(uuid)
 
-        # We have to remove the drives here as we cannot modify
+        # We have to remove the disks here as we cannot modify
         # a dictionary as we are iterating over it.
         # Equally, we cannot break the previous loop in case a
-        # drive had multiple partitions that were mounted.
-        for uuid in removed_drives:
-            self._drives.pop(uuid)
+        # disk had multiple partitions that were mounted.
+        for uuid in removed_disks:
+            self._disks.pop(uuid)
 
         if notify:
             asyncio.ensure_future(self._notify_coro())
 
-    async def _detect_initial_drives(self, udisks_obj_manager: ProxyInterface) -> None:
-        """Detect and register drives as startup."""
-        LOGGER.info("Checking for initial drives at startup.")
+    async def _detect_initial_disks(self, udisks_obj_manager: ProxyInterface) -> None:
+        """Detect and register disks as startup."""
+        LOGGER.info("Checking for initial disks at startup.")
 
         # The block devices are dbus objects managed by Udisks
         # We have to fetch them all unless we already know what they are.
