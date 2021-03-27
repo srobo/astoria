@@ -49,7 +49,7 @@ class BroadcastHelper(Generic[T]):
         except JSONDecodeError:
             LOGGER.warning(f"Broadcast event {self._name} contained invalid JSON")
 
-    async def send(self, **kwargs: Any) -> None:  # type: ignore
+    def send(self, **kwargs: Any) -> None:  # type: ignore
         """Send an event."""
         data = self._schema(
             event_name=self._schema.name,
@@ -58,7 +58,7 @@ class BroadcastHelper(Generic[T]):
         )
         self._mqtt.publish(f"broadcast/{self._schema.name}", data)
 
-    async def wait_broadcast(self, broadcast_name: str) -> T:
+    async def wait_broadcast(self) -> T:
         """
         Wait for an event on the given broadcast.
 

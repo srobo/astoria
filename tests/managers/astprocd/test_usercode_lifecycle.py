@@ -2,16 +2,39 @@
 import asyncio
 from contextlib import AbstractContextManager
 from pathlib import Path
-from typing import IO, List, Optional, Tuple
+from typing import IO, Any, List, Optional, Tuple, Type
 
 import pytest
 
+from astoria.common.broadcast_event import UsercodeLogBroadcastEvent
 from astoria.common.messages.astdiskd import DiskInfo, DiskType, DiskUUID
 from astoria.common.messages.astprocd import CodeStatus
+from astoria.common.mqtt.broadcast_helper import BroadcastHelper, T
 from astoria.managers.astprocd import UsercodeLifecycle
 
 EXTRACT_ZIP_DATA = Path("tests/data/extract_zip")
 EXECUTE_CODE_DATA = Path("tests/data/execute_code")
+
+
+class MockBroadcastHelper(BroadcastHelper[T]):
+    """Mock BroadcastHelper class to help with tests."""
+
+    def __init__(self, name: str, schema: Type[T]) -> None:
+        self._event_queue: asyncio.PriorityQueue[T] = asyncio.PriorityQueue()
+
+    @classmethod
+    def get_helper(cls, schema: Type[T]) -> 'MockBroadcastHelper[T]':
+        """Get the broadcast helper for a given event."""
+        return cls[T](schema.name, schema)
+
+    def send(self, **kwargs: Any) -> None:  # type: ignore
+        """Send an event."""
+        data = self._schema(  # noqa: F841
+            event_name=self._schema.name,
+            sender_name=self._mqtt._client_name,
+            **kwargs,
+        )
+        pass
 
 
 class ReadAndCleanupFile(AbstractContextManager):
@@ -58,6 +81,7 @@ class StatusInformTestHelper:
                 disk_type=DiskType.USERCODE,
             ),
             status_inform_callback=sith.callback,
+            log_helper=MockBroadcastHelper.get_helper(UsercodeLogBroadcastEvent),
         )
         return ucl, sith
 
