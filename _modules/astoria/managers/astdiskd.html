@@ -222,7 +222,7 @@
 <div class="viewcode-block" id="DiskManager.update_state"><a class="viewcode-back" href="../../../implementation/managers/astdiskd.html#astoria.managers.astdiskd.DiskManager.update_state">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">update_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Update the status of astdiskd when disks are changed.&quot;&quot;&quot;</span>
         <span class="n">disks</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">mount_path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_udisks</span><span class="o">.</span><span class="n">drives</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">mount_path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_udisks</span><span class="o">.</span><span class="n">disks</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">disks</span><span class="p">[</span><span class="n">uuid</span><span class="p">]</span> <span class="o">=</span> <span class="n">DiskInfo</span><span class="p">(</span>
                 <span class="n">uuid</span><span class="o">=</span><span class="n">uuid</span><span class="p">,</span>
                 <span class="n">mount_path</span><span class="o">=</span><span class="n">mount_path</span><span class="p">,</span>
@@ -245,13 +245,13 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">notify_coro</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">Coroutine</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_drives</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">DiskUUID</span><span class="p">,</span> <span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_disks</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">DiskUUID</span><span class="p">,</span> <span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_notify_coro</span> <span class="o">=</span> <span class="n">notify_coro</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">drives</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">DiskUUID</span><span class="p">,</span> <span class="n">Path</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Currently mounted drives.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_drives</span>
+    <span class="k">def</span> <span class="nf">disks</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">DiskUUID</span><span class="p">,</span> <span class="n">Path</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Currently mounted disks.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_disks</span>
 
     <span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Setup the message bus and task dispatcher.&quot;&quot;&quot;</span>
@@ -270,7 +270,7 @@
         <span class="p">)</span>
         <span class="n">udisks_obj_manager</span><span class="o">.</span><span class="n">on_interfaces_added</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_disk_signal</span><span class="p">)</span>
 
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_detect_initial_drives</span><span class="p">(</span><span class="n">udisks_obj_manager</span><span class="p">)</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_detect_initial_disks</span><span class="p">(</span><span class="n">udisks_obj_manager</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_bytes_to_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Convert a null terminated int array to a path.&quot;&quot;&quot;</span>
@@ -310,7 +310,7 @@
                             <span class="n">asyncio</span><span class="o">.</span><span class="n">ensure_future</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mount_task</span><span class="p">(</span><span class="n">disk_bus_path</span><span class="p">))</span>
                         <span class="k">else</span><span class="p">:</span>
                             <span class="n">LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                                <span class="sa">f</span><span class="s2">&quot;No information available on drive at </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">, aborting.&quot;</span><span class="p">,</span>
+                                <span class="sa">f</span><span class="s2">&quot;No information available on disk at </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">, aborting.&quot;</span><span class="p">,</span>
                             <span class="p">)</span>
 
                     <span class="k">if</span> <span class="n">event_data</span><span class="p">[</span><span class="s2">&quot;Operation&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;cleanup&quot;</span><span class="p">:</span>
@@ -346,18 +346,18 @@
                     <span class="n">uuid</span><span class="p">:</span> <span class="n">DiskUUID</span> <span class="o">=</span> <span class="n">DiskUUID</span><span class="p">(</span>
                         <span class="k">await</span> <span class="n">drive_block</span><span class="o">.</span><span class="n">get_id_uuid</span><span class="p">(),</span>
                     <span class="p">)</span>
-                    <span class="k">if</span> <span class="n">uuid</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_drives</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                        <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Drive </span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s2"> mounted (</span><span class="si">{</span><span class="n">mount_path</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_drives</span><span class="p">[</span><span class="n">uuid</span><span class="p">]</span> <span class="o">=</span> <span class="n">mount_path</span>
+                    <span class="k">if</span> <span class="n">uuid</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_disks</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                        <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Disk </span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s2"> mounted (</span><span class="si">{</span><span class="n">mount_path</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_disks</span><span class="p">[</span><span class="n">uuid</span><span class="p">]</span> <span class="o">=</span> <span class="n">mount_path</span>
 
                         <span class="k">if</span> <span class="n">notify</span><span class="p">:</span>
                             <span class="n">asyncio</span><span class="o">.</span><span class="n">ensure_future</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_notify_coro</span><span class="p">())</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="n">LOGGER</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Drive UUID collision! uuid=</span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                        <span class="n">LOGGER</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Disk UUID collision! uuid=</span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid mount path: </span><span class="si">{</span><span class="n">mount_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
-                <span class="n">LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No mount points available for drive at </span><span class="si">{</span><span class="n">disk_bus_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No mount points available for disk at </span><span class="si">{</span><span class="n">disk_bus_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="k">except</span> <span class="n">InterfaceNotFoundError</span><span class="p">:</span>
             <span class="c1"># Object doesn&#39;t have a Filesystem interface</span>
@@ -367,27 +367,27 @@
         <span class="sd">&quot;&quot;&quot;Handle a cleanup event.&quot;&quot;&quot;</span>
         <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.3</span><span class="p">)</span>  <span class="c1"># Allow enough time for the unmount to occur.</span>
 
-        <span class="c1"># We have no information to tell which drive left.</span>
+        <span class="c1"># We have no information to tell which disk(s) left.</span>
         <span class="c1"># Thus we need to check all of them.</span>
-        <span class="n">removed_drives</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">DiskUUID</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_drives</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">removed_disks</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">DiskUUID</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_disks</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-                <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Drive </span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s2"> removed (</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
-                <span class="n">removed_drives</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">uuid</span><span class="p">)</span>
+                <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Disks </span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s2"> removed (</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+                <span class="n">removed_disks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">uuid</span><span class="p">)</span>
 
-        <span class="c1"># We have to remove the drives here as we cannot modify</span>
+        <span class="c1"># We have to remove the disks here as we cannot modify</span>
         <span class="c1"># a dictionary as we are iterating over it.</span>
         <span class="c1"># Equally, we cannot break the previous loop in case a</span>
-        <span class="c1"># drive had multiple partitions that were mounted.</span>
-        <span class="k">for</span> <span class="n">uuid</span> <span class="ow">in</span> <span class="n">removed_drives</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_drives</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">uuid</span><span class="p">)</span>
+        <span class="c1"># disk had multiple partitions that were mounted.</span>
+        <span class="k">for</span> <span class="n">uuid</span> <span class="ow">in</span> <span class="n">removed_disks</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_disks</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">uuid</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">notify</span><span class="p">:</span>
             <span class="n">asyncio</span><span class="o">.</span><span class="n">ensure_future</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_notify_coro</span><span class="p">())</span>
 
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">_detect_initial_drives</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">udisks_obj_manager</span><span class="p">:</span> <span class="n">ProxyInterface</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Detect and register drives as startup.&quot;&quot;&quot;</span>
-        <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Checking for initial drives at startup.&quot;</span><span class="p">)</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_detect_initial_disks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">udisks_obj_manager</span><span class="p">:</span> <span class="n">ProxyInterface</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Detect and register disks as startup.&quot;&quot;&quot;</span>
+        <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Checking for initial disks at startup.&quot;</span><span class="p">)</span>
 
         <span class="c1"># The block devices are dbus objects managed by Udisks</span>
         <span class="c1"># We have to fetch them all unless we already know what they are.</span>

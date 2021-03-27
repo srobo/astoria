@@ -260,7 +260,7 @@
                 <span class="n">LOGGER</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Cannot run usercode, there is already a lifecycle present.&quot;</span><span class="p">)</span>
                 <span class="k">with</span> <span class="n">disk_info</span><span class="o">.</span><span class="n">mount_path</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;log.txt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
                     <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Unable to start code.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-                    <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;It is not safe to run multiple code drives at once.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+                    <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;It is not safe to run multiple code disks at once.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ProcessManager.handle_disk_removal"><a class="viewcode-back" href="../../../implementation/managers/astprocd.html#astoria.managers.astprocd.ProcessManager.handle_disk_removal">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">handle_disk_removal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">:</span> <span class="n">DiskUUID</span><span class="p">,</span> <span class="n">disk_info</span><span class="p">:</span> <span class="n">DiskInfo</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Handle a disk removal.&quot;&quot;&quot;</span>
@@ -411,7 +411,7 @@
 <span class="sd">            Handle an error with the zip file.</span>
 
 <span class="sd">            Logs to the astprocd logger and also writes</span>
-<span class="sd">            a log file to the usercode drive.</span>
+<span class="sd">            a log file to the usercode disk.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_disk_info</span><span class="o">.</span><span class="n">mount_path</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;log.txt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
                 <span class="n">LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
