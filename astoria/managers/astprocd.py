@@ -10,6 +10,7 @@ from zipfile import BadZipFile, ZipFile
 
 import click
 
+from astoria.common.broadcast_event import UsercodeLogBroadcastEvent
 from astoria.common.manager import StateManager
 from astoria.common.manager_requests import (
     RequestResponse,
@@ -18,6 +19,7 @@ from astoria.common.manager_requests import (
 )
 from astoria.common.messages.astdiskd import DiskInfo, DiskType, DiskUUID
 from astoria.common.messages.astprocd import CodeStatus, ProcessManagerMessage
+from astoria.common.mqtt import BroadcastHelper
 
 from .mixins.disk_handler import DiskHandlerMixin
 
@@ -57,6 +59,10 @@ class ProcessManager(DiskHandlerMixin, StateManager[ProcessManagerMessage]):
             UsercodeKillManagerRequest,
             self.handle_kill_request,
         )
+        self._log_helper = BroadcastHelper.get_helper(
+            self._mqtt,
+            UsercodeLogBroadcastEvent,
+        )
 
     @property
     def offline_status(self) -> ProcessManagerMessage:
@@ -86,7 +92,12 @@ class ProcessManager(DiskHandlerMixin, StateManager[ProcessManagerMessage]):
             LOGGER.info(f"Usercode disk {uuid} is mounted at {disk_info.mount_path}")
             if self._lifecycle is None:
                 LOGGER.debug(f"Starting usercode lifecycle for {uuid}")
-                self._lifecycle = UsercodeLifecycle(uuid, disk_info, self.update_status)
+                self._lifecycle = UsercodeLifecycle(
+                    uuid,
+                    disk_info,
+                    self.update_status,
+                    self._log_helper,
+                )
                 asyncio.ensure_future(self._lifecycle.run_process())
             else:
                 LOGGER.warn("Cannot run usercode, there is already a lifecycle present.")
@@ -189,10 +200,12 @@ class UsercodeLifecycle:
         uuid: DiskUUID,
         disk_info: DiskInfo,
         status_inform_callback: Callable[[CodeStatus], None],
+        log_helper: BroadcastHelper[UsercodeLogBroadcastEvent],
     ) -> None:
         self._uuid = uuid
         self._disk_info = disk_info
         self._status_inform_callback = status_inform_callback
+        self._log_helper = log_helper
 
         self._process: Optional[asyncio.subprocess.Process] = None
         self._process_lock = asyncio.Lock()
@@ -358,16 +371,31 @@ class UsercodeLifecycle:
         Logs the output of the process to log.txt
         """
         log_path = self._disk_info.mount_path / "log.txt"
-        with log_path.open("w") as fh:
-            fh.write("=== LOG STARTED ===\n")
+
+        if self._process is not None:
+            pid = self._process.pid
+        else:
+            pid = -1  # Use -1 if unknown
+
+        def log(data: str, log_line: int) -> None:
+            fh.write(data)
             fh.flush()
+            self._log_helper.send(
+                pid=pid,
+                priority=log_line,
+                content=data,
+            )
+
+        with log_path.open("w") as fh:
+            log_line = 0
+            log("=== LOG STARTED ===\n", log_line)
+            log_line += 1
             data = await proc_output.readline()
             while data != b"":
-                fh.write(data.decode('utf-8'))
-                fh.flush()
+                log(data.decode('utf-8'), log_line)
                 data = await proc_output.readline()
-            fh.write("=== LOG FINISHED ===\n")
-            fh.flush()
+                log_line += 1
+            log("=== LOG FINISHED ===\n", log_line)
 
 
 if __name__ == "__main__":
