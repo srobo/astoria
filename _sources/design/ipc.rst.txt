@@ -17,7 +17,7 @@ the broker. This means that subscribers do not need to wait for the next publica
 Message Types
 -------------
 
-There are currently two classes of message.
+There are currently three classes of message.
 
 Manager Messages
 ~~~~~~~~~~~~~~~~
@@ -54,3 +54,16 @@ Mutation responses are published to ``astoria/[manager_name]/request/[request]/[
 
 .. autoclass:: astoria.common.manager_requests.RequestResponse
     :members:
+
+Broadcast Events
+~~~~~~~~~~~~~~~~
+
+A *Broadcast Event* is a message sent to all components to signify an event occuring.
+
+A BroadcastEvent is published to ``astoria/broadcast_event/[event_name]``. It can be published by any component and multiple components can broadcast the same event simultaneously.
+
+Every *Broadcast Event* must have a unique ``event_name`` that identifies the event and its purpose.
+
+A *Broadcast Event* must also contain a priority and the compenent that originated the event.
+
+Broadcast Events can be sent using the BroadcastHelper class.

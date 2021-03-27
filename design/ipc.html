@@ -95,6 +95,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#message-types">Message Types</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#manager-messages">Manager Messages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#manager-requests">Manager Requests</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#broadcast-events">Broadcast Events</a></li>
 </ul>
 </li>
 </ul>
@@ -188,7 +189,7 @@ the broker. This means that subscribers do not need to wait for the next publica
 </div>
 <div class="section" id="message-types">
 <h2>Message Types<a class="headerlink" href="#message-types" title="Permalink to this headline">¶</a></h2>
-<p>There are currently two classes of message.</p>
+<p>There are currently three classes of message.</p>
 <div class="section" id="manager-messages">
 <h3>Manager Messages<a class="headerlink" href="#manager-messages" title="Permalink to this headline">¶</a></h3>
 <p>A manager message contains information about the status of a <a class="reference internal" href="../implementation/managers/index.html#state-managers"><span class="std std-ref">state manager</span></a> and it’s current state.</p>
@@ -246,6 +247,14 @@ so that clients are alerted to the disconnection. The state should also be clear
 
 </dd></dl>
 
+</div>
+<div class="section" id="broadcast-events">
+<h3>Broadcast Events<a class="headerlink" href="#broadcast-events" title="Permalink to this headline">¶</a></h3>
+<p>A <em>Broadcast Event</em> is a message sent to all components to signify an event occuring.</p>
+<p>A BroadcastEvent is published to <code class="docutils literal notranslate"><span class="pre">astoria/broadcast_event/[event_name]</span></code>. It can be published by any component and multiple components can broadcast the same event simultaneously.</p>
+<p>Every <em>Broadcast Event</em> must have a unique <code class="docutils literal notranslate"><span class="pre">event_name</span></code> that identifies the event and its purpose.</p>
+<p>A <em>Broadcast Event</em> must also contain a priority and the compenent that originated the event.</p>
+<p>Broadcast Events can be sent using the BroadcastHelper class.</p>
 </div>
 </div>
 </div>

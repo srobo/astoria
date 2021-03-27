@@ -167,6 +167,7 @@
 
 <span class="kn">import</span> <span class="nn">click</span>
 
+<span class="kn">from</span> <span class="nn">astoria.common.broadcast_event</span> <span class="kn">import</span> <span class="n">UsercodeLogBroadcastEvent</span>
 <span class="kn">from</span> <span class="nn">astoria.common.manager</span> <span class="kn">import</span> <span class="n">StateManager</span>
 <span class="kn">from</span> <span class="nn">astoria.common.manager_requests</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">RequestResponse</span><span class="p">,</span>
@@ -175,6 +176,7 @@
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">astoria.common.messages.astdiskd</span> <span class="kn">import</span> <span class="n">DiskInfo</span><span class="p">,</span> <span class="n">DiskType</span><span class="p">,</span> <span class="n">DiskUUID</span>
 <span class="kn">from</span> <span class="nn">astoria.common.messages.astprocd</span> <span class="kn">import</span> <span class="n">CodeStatus</span><span class="p">,</span> <span class="n">ProcessManagerMessage</span>
+<span class="kn">from</span> <span class="nn">astoria.common.mqtt</span> <span class="kn">import</span> <span class="n">BroadcastHelper</span>
 
 <span class="kn">from</span> <span class="nn">.mixins.disk_handler</span> <span class="kn">import</span> <span class="n">DiskHandlerMixin</span>
 
@@ -214,6 +216,10 @@
             <span class="n">UsercodeKillManagerRequest</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">handle_kill_request</span><span class="p">,</span>
         <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log_helper</span> <span class="o">=</span> <span class="n">BroadcastHelper</span><span class="o">.</span><span class="n">get_helper</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_mqtt</span><span class="p">,</span>
+            <span class="n">UsercodeLogBroadcastEvent</span><span class="p">,</span>
+        <span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">offline_status</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ProcessManagerMessage</span><span class="p">:</span>
@@ -243,7 +249,12 @@
             <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Usercode disk </span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s2"> is mounted at </span><span class="si">{</span><span class="n">disk_info</span><span class="o">.</span><span class="n">mount_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lifecycle</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting usercode lifecycle for </span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_lifecycle</span> <span class="o">=</span> <span class="n">UsercodeLifecycle</span><span class="p">(</span><span class="n">uuid</span><span class="p">,</span> <span class="n">disk_info</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_status</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_lifecycle</span> <span class="o">=</span> <span class="n">UsercodeLifecycle</span><span class="p">(</span>
+                    <span class="n">uuid</span><span class="p">,</span>
+                    <span class="n">disk_info</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">update_status</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_log_helper</span><span class="p">,</span>
+                <span class="p">)</span>
                 <span class="n">asyncio</span><span class="o">.</span><span class="n">ensure_future</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_lifecycle</span><span class="o">.</span><span class="n">run_process</span><span class="p">())</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">LOGGER</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Cannot run usercode, there is already a lifecycle present.&quot;</span><span class="p">)</span>
@@ -346,10 +357,12 @@
         <span class="n">uuid</span><span class="p">:</span> <span class="n">DiskUUID</span><span class="p">,</span>
         <span class="n">disk_info</span><span class="p">:</span> <span class="n">DiskInfo</span><span class="p">,</span>
         <span class="n">status_inform_callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">CodeStatus</span><span class="p">],</span> <span class="kc">None</span><span class="p">],</span>
+        <span class="n">log_helper</span><span class="p">:</span> <span class="n">BroadcastHelper</span><span class="p">[</span><span class="n">UsercodeLogBroadcastEvent</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_uuid</span> <span class="o">=</span> <span class="n">uuid</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_disk_info</span> <span class="o">=</span> <span class="n">disk_info</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_status_inform_callback</span> <span class="o">=</span> <span class="n">status_inform_callback</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log_helper</span> <span class="o">=</span> <span class="n">log_helper</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_process</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">asyncio</span><span class="o">.</span><span class="n">subprocess</span><span class="o">.</span><span class="n">Process</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_process_lock</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
@@ -515,16 +528,31 @@
 <span class="sd">        Logs the output of the process to log.txt</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">log_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_disk_info</span><span class="o">.</span><span class="n">mount_path</span> <span class="o">/</span> <span class="s2">&quot;log.txt&quot;</span>
-        <span class="k">with</span> <span class="n">log_path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
-            <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;=== LOG STARTED ===</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">pid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process</span><span class="o">.</span><span class="n">pid</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pid</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>  <span class="c1"># Use -1 if unknown</span>
+
+        <span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">log_line</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
             <span class="n">fh</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log_helper</span><span class="o">.</span><span class="n">send</span><span class="p">(</span>
+                <span class="n">pid</span><span class="o">=</span><span class="n">pid</span><span class="p">,</span>
+                <span class="n">priority</span><span class="o">=</span><span class="n">log_line</span><span class="p">,</span>
+                <span class="n">content</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">log_path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+            <span class="n">log_line</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">log</span><span class="p">(</span><span class="s2">&quot;=== LOG STARTED ===</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">log_line</span><span class="p">)</span>
+            <span class="n">log_line</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">proc_output</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
             <span class="k">while</span> <span class="n">data</span> <span class="o">!=</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">:</span>
-                <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
-                <span class="n">fh</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+                <span class="n">log</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">),</span> <span class="n">log_line</span><span class="p">)</span>
                 <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">proc_output</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
-            <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;=== LOG FINISHED ===</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="n">fh</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+                <span class="n">log_line</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">log</span><span class="p">(</span><span class="s2">&quot;=== LOG FINISHED ===</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">log_line</span><span class="p">)</span>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
