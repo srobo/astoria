@@ -25,7 +25,8 @@ def test_manager_status_fields() -> None:
     assert message.status == ManagerMessage.Status.STOPPED
     assert message.astoria_version == __version__
 
-    assert message.json() == '{"status": "STOPPED", "astoria_version": "0.1.0"}'
+    assert message.json() == \
+        f'{{"status": "STOPPED", "astoria_version": "{__version__}"}}'
 
 
 def test_manager_status_subclass():
@@ -44,7 +45,7 @@ def test_manager_status_subclass():
     assert message.custom_field == 12
 
     assert message.json() == \
-        '{"status": "RUNNING", "astoria_version": "0.1.0", "custom_field": 12}'
+        f'{{"status": "RUNNING", "astoria_version": "{__version__}", "custom_field": 12}}'
 
     # Check for Validation Error
     with pytest.raises(ValidationError):

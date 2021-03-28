@@ -1,3 +1,11 @@
+astoria (0.2.0) unstable; urgency=medium
+
+  * Minimum Viable Release of astoria.
+  * Feature complete to specifications.
+
+ -- Dan Trickey <dtrickey@studentrobotics.org>  Sun, 28 Mar 2021 11:56:00 +0000
+
+
 astoria (0.1.0) unstable; urgency=medium
 
   * Initial release of Debian package.

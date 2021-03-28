@@ -1,6 +1,7 @@
 """Tests for astprocd message definitions."""
 from pathlib import Path
 
+from astoria import __version__
 from astoria.common.messages.astdiskd import DiskInfo, DiskType, DiskUUID
 from astoria.common.messages.astprocd import CodeStatus, ProcessManagerMessage
 
@@ -29,4 +30,4 @@ def test_proc_manager_fields() -> None:
         status=ProcessManagerMessage.Status.RUNNING,
     )
 
-    assert pmm.json() == '{"status": "RUNNING", "astoria_version": "0.1.0", "code_status": "code_running", "disk_info": {"uuid": "foobar", "mount_path": "/mnt", "disk_type": "NOACTION"}}'  # noqa: E501
+    assert pmm.json() == f'{{"status": "RUNNING", "astoria_version": "{__version__}", "code_status": "code_running", "disk_info": {{"uuid": "foobar", "mount_path": "/mnt", "disk_type": "NOACTION"}}}}'  # noqa: E501
