@@ -1,0 +1,13 @@
+#!/bin/sh
+
+set -e
+
+case "$1" in
+  purge)
+    userdel astoria >/dev/null 2>&1 || true
+    rmdir -- /var/lib/astoria || true
+  ;;
+esac
+
+#DEBHELPER#
+

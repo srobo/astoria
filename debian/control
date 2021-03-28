@@ -15,6 +15,10 @@ Architecture: all
 Section: python
 Depends: ${misc:Depends},
          ${python3:Depends},
-         ${shlibs:Depends},
+         adduser,
+Recommends: ntfs-3g,
+            mosquitto,
+            udiskie,
+            udisks2,
 Description: Robot Management System
  Student Robotics Robot Management System.

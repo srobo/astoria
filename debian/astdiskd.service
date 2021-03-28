@@ -1,0 +1,10 @@
+[Unit]
+Description=Astoria Disk Manager Daemon
+After=mosquitto.service udisks2.service
+
+[Service]
+ExecStart=/usr/bin/astdiskd
+User=astoria
+
+[Install]
+WantedBy=multi-user.target

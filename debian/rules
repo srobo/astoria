@@ -5,7 +5,17 @@
 # export DH_VERBOSE=1
 
 %:
-	dh $@ --with=python3 --buildsystem=pybuild
+	dh $@ --with=python3 --with=systemd --buildsystem=pybuild
 
 override_dh_auto_test:
     :
+
+override_dh_systemd_enable:
+	dh_systemd_enable --name=astdiskd
+	dh_systemd_enable --name=astmetad
+	dh_systemd_enable --name=astprocd
+
+override_dh_systemd_start:
+	dh_systemd_start --name=astdiskd
+	dh_systemd_start --name=astmetad
+	dh_systemd_start --name=astprocd
