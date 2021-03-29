@@ -1,0 +1,3 @@
+dbus_next python3-dbus-next
+gmqtt python3-gmqtt
+pydantic python3-pydantic
