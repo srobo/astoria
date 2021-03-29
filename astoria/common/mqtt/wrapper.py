@@ -177,6 +177,7 @@ class MQTTWrapper:
         *,
         retain: bool = False,
         auto_prefix_topic: bool = True,
+        auto_prefix_client_name: bool = True,
     ) -> None:
         """Publish a payload to the broker."""
         if not self.is_connected:
@@ -184,15 +185,20 @@ class MQTTWrapper:
                 "Attempted to publish message, but client is not connected.",
             )
 
+        if auto_prefix_client_name:
+            prefix = self.mqtt_prefix
+        else:
+            prefix = self._broker_info.topic_prefix
+
         if len(topic) == 0:
-            topic_complete = Topic.parse(self.mqtt_prefix)
+            topic_complete = Topic.parse(prefix)
         elif auto_prefix_topic:
-            topic_complete = Topic.parse(f"{self.mqtt_prefix}/{topic}")
+            topic_complete = Topic.parse(f"{prefix}/{topic}")
         else:
             topic_complete = Topic.parse(topic)
 
         if not topic_complete.is_publishable:
-            raise ValueError(f"Cannot public to MQTT topic: {topic_complete}")
+            raise ValueError(f"Cannot publish to MQTT topic: {topic_complete}")
 
         self._client.publish(
             str(topic_complete),

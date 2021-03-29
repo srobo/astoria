@@ -56,7 +56,11 @@ class BroadcastHelper(Generic[T]):
             sender_name=self._mqtt._client_name,
             **kwargs,
         )
-        self._mqtt.publish(f"broadcast/{self._schema.name}", data)
+        self._mqtt.publish(
+            f"broadcast/{self._schema.name}",
+            data,
+            auto_prefix_client_name=False,
+        )
 
     async def wait_broadcast(self) -> T:
         """
