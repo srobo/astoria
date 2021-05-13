@@ -1,0 +1,16 @@
+[bundle]
+version = "2.0.0"
+
+[kit]
+name = "Astoria Development"
+version = "0.0.0.0dev"
+
+[wifi]
+ssid = "bees"
+psk = "bees"
+enabled = true
+region = "gb"
+winner = "idk"
+
+[bees]
+are_there_bees = "yes"
