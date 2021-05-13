@@ -118,7 +118,7 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
         else:
             self._requested_data[request.attr] = request.value
             LOGGER.info(
-                f"{request.attr} has been overriden to {request.value} by request",
+                f"{request.attr} has been overridden to {request.value} by request",
             )
             self.update_status()
         return RequestResponse(
@@ -133,7 +133,7 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
         Takes the default, static metadata based on the config and system
         information. It then overlays data from other sources in a priority order,
         whereby each source has a set of permitted attributes in the metadata that
-        can be overriden.
+        can be overridden.
         """
         # Metadata sources in priority order.
         metadata_sources: List[Tuple[Set[str], Dict[str, str]]] = [
