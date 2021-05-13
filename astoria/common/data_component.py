@@ -32,6 +32,8 @@ class DataComponent(metaclass=ABCMeta):
     and managing the event loop.
     """
 
+    config: AstoriaConfig
+
     def __init__(self, verbose: bool, config_file: Optional[str]) -> None:
         self.config = AstoriaConfig.load(config_file)
 

@@ -3,10 +3,11 @@ Configuration schema for Astoria.
 
 Common to all components.
 """
+import re
 from pathlib import Path
 from typing import IO, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 from toml import load
 
 
@@ -25,7 +26,7 @@ class MQTTBrokerInfo(BaseModel):
         extra = "forbid"
 
 
-KIT_VERSION_REGEX = r"^(\d+)\.(\d+)\.(\d+)\.(\d+)(dev)?(?::([0-9a-f]{5,40})(?:@(\w+))?)?$"
+KIT_VERSION_REGEX = re.compile(r'^(?P<epoch>\d+)\.(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)(?P<dev>dev)?(?::(?P<hash>[0-9a-f]{5,40})(?:@(?P<branch>\w+))?)?$')  # noqa: E501
 
 
 class KitInfo(BaseModel):
@@ -33,6 +34,13 @@ class KitInfo(BaseModel):
 
     name: str
     version: str
+
+    @validator('version')
+    def version_must_match_regex(cls, v: str) -> str:
+        """Validate that the version matches the regex."""
+        if not KIT_VERSION_REGEX.match(v):
+            raise ValueError("version does not match format")
+        return v
 
     class Config:
         """Pydantic config."""

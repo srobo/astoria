@@ -7,6 +7,7 @@ from typing import IO, Any, List, Optional, Tuple, Type
 import pytest
 
 from astoria.common.broadcast_event import UsercodeLogBroadcastEvent
+from astoria.common.config import AstoriaConfig
 from astoria.common.messages.astdiskd import DiskInfo, DiskType, DiskUUID
 from astoria.common.messages.astprocd import CodeStatus
 from astoria.common.mqtt.broadcast_helper import BroadcastHelper, T
@@ -14,6 +15,9 @@ from astoria.managers.astprocd import UsercodeLifecycle
 
 EXTRACT_ZIP_DATA = Path("tests/data/extract_zip")
 EXECUTE_CODE_DATA = Path("tests/data/execute_code")
+
+with Path("tests/data/config/valid.toml").open("r") as fh:
+    CONFIG = AstoriaConfig.load_from_file(fh)
 
 
 class MockBroadcastHelper(BroadcastHelper[T]):
@@ -91,6 +95,7 @@ class StatusInformTestHelper:
             ),
             status_inform_callback=sith.callback,
             log_helper=sith.log_helper,
+            config=CONFIG,
         )
         return ucl, sith
 
