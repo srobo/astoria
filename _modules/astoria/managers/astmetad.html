@@ -275,7 +275,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_requested_data</span><span class="p">[</span><span class="n">request</span><span class="o">.</span><span class="n">attr</span><span class="p">]</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">value</span>
             <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">attr</span><span class="si">}</span><span class="s2"> has been overriden to </span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2"> by request&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">attr</span><span class="si">}</span><span class="s2"> has been overridden to </span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2"> by request&quot;</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">update_status</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">RequestResponse</span><span class="p">(</span>
@@ -290,7 +290,7 @@
 <span class="sd">        Takes the default, static metadata based on the config and system</span>
 <span class="sd">        information. It then overlays data from other sources in a priority order,</span>
 <span class="sd">        whereby each source has a set of permitted attributes in the metadata that</span>
-<span class="sd">        can be overriden.</span>
+<span class="sd">        can be overridden.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Metadata sources in priority order.</span>
         <span class="n">metadata_sources</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">[</span>
