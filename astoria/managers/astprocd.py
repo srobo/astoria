@@ -5,12 +5,16 @@ import logging
 from pathlib import Path
 from signal import SIGKILL, SIGTERM
 from tempfile import TemporaryDirectory
-from typing import Callable, Dict, Optional
+from typing import Callable, Dict, Optional, Set
 from zipfile import BadZipFile, ZipFile
 
 import click
+import toml
+from pydantic import ValidationError
 
 from astoria.common.broadcast_event import UsercodeLogBroadcastEvent
+from astoria.common.bundle import CodeBundle, IncompatibleKitVersionException
+from astoria.common.config import AstoriaConfig
 from astoria.common.manager import StateManager
 from astoria.common.manager_requests import (
     RequestResponse,
@@ -97,6 +101,7 @@ class ProcessManager(DiskHandlerMixin, StateManager[ProcessManagerMessage]):
                     disk_info,
                     self.update_status,
                     self._log_helper,
+                    self.config,
                 )
                 asyncio.ensure_future(self._lifecycle.run_process())
             else:
@@ -120,8 +125,8 @@ class ProcessManager(DiskHandlerMixin, StateManager[ProcessManagerMessage]):
                 LOGGER.warning("Disk removed, but no code lifecycle available")
 
     async def handle_kill_request(
-        self,
-        request: UsercodeKillManagerRequest,
+            self,
+            request: UsercodeKillManagerRequest,
     ) -> RequestResponse:
         """Handle a request to kill running usercode."""
         if self._lifecycle is None:
@@ -172,7 +177,7 @@ class ProcessManager(DiskHandlerMixin, StateManager[ProcessManagerMessage]):
         """
         if self._lifecycle is None:
             # When the status is updated in the lifecycle constructor, we
-            # are left with a situtation where there is no lifecycle object,
+            # are left with a situation where there is no lifecycle object,
             # but the code is starting. Thus we want to inform anyway.
             #
             # This section also updates the status when the lifecycle is cleaned up.
@@ -196,16 +201,18 @@ class UsercodeLifecycle:
     """
 
     def __init__(
-        self,
-        uuid: DiskUUID,
-        disk_info: DiskInfo,
-        status_inform_callback: Callable[[CodeStatus], None],
-        log_helper: BroadcastHelper[UsercodeLogBroadcastEvent],
+            self,
+            uuid: DiskUUID,
+            disk_info: DiskInfo,
+            status_inform_callback: Callable[[CodeStatus], None],
+            log_helper: BroadcastHelper[UsercodeLogBroadcastEvent],
+            config: AstoriaConfig,
     ) -> None:
         self._uuid = uuid
         self._disk_info = disk_info
         self._status_inform_callback = status_inform_callback
         self._log_helper = log_helper
+        self._config = config
 
         self._process: Optional[asyncio.subprocess.Process] = None
         self._process_lock = asyncio.Lock()
@@ -280,7 +287,43 @@ class UsercodeLifecycle:
             _handle_error("The provided robot.zip did not contain a main.py")
             return False
 
-        # Check for metadata etc here in future
+        LEGACY_FILES: Set[str] = {"info.yaml", "info.yml", "wifi.yaml", "wifi.yml"}
+
+        for legacy_file in LEGACY_FILES:
+            legacy_info_path = self._dir_path / legacy_file
+            if legacy_info_path.exists():
+                _handle_error(
+                    "This is an old robot code package and"
+                    "will not work with this version of the kit.",
+                )
+                return False
+
+        # Check for code bundle info
+        bundle_meta_path = self._dir_path / "bundle.toml"
+        if not bundle_meta_path.exists():
+            _handle_error("The provided robot.zip did not contain a bundle.toml")
+            return False
+        else:
+            # Validate code bundle info
+            try:
+                bundle_contents = toml.loads(bundle_meta_path.read_text())
+            except toml.TomlDecodeError as e:
+                _handle_error(f"The code bundle was invalid.\n{e}")
+                return False
+
+            try:
+                bundle = CodeBundle(**bundle_contents)
+            except ValidationError as e:
+                _handle_error(f"The code bundle was invalid.\n{e}")
+                return False
+
+            try:
+                message = bundle.check_kit_version_is_compatible(self._config.kit)
+                if message is not None:
+                    print(message)
+            except IncompatibleKitVersionException as e:
+                _handle_error(f"Invalid code bundle: {e}")
+                return False
 
         return True
 
