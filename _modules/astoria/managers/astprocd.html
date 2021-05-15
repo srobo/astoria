@@ -162,12 +162,16 @@
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">signal</span> <span class="kn">import</span> <span class="n">SIGKILL</span><span class="p">,</span> <span class="n">SIGTERM</span>
 <span class="kn">from</span> <span class="nn">tempfile</span> <span class="kn">import</span> <span class="n">TemporaryDirectory</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span>
 <span class="kn">from</span> <span class="nn">zipfile</span> <span class="kn">import</span> <span class="n">BadZipFile</span><span class="p">,</span> <span class="n">ZipFile</span>
 
 <span class="kn">import</span> <span class="nn">click</span>
+<span class="kn">import</span> <span class="nn">toml</span>
+<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">ValidationError</span>
 
 <span class="kn">from</span> <span class="nn">astoria.common.broadcast_event</span> <span class="kn">import</span> <span class="n">UsercodeLogBroadcastEvent</span>
+<span class="kn">from</span> <span class="nn">astoria.common.bundle</span> <span class="kn">import</span> <span class="n">CodeBundle</span><span class="p">,</span> <span class="n">IncompatibleKitVersionException</span>
+<span class="kn">from</span> <span class="nn">astoria.common.config</span> <span class="kn">import</span> <span class="n">AstoriaConfig</span>
 <span class="kn">from</span> <span class="nn">astoria.common.manager</span> <span class="kn">import</span> <span class="n">StateManager</span>
 <span class="kn">from</span> <span class="nn">astoria.common.manager_requests</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">RequestResponse</span><span class="p">,</span>
@@ -254,6 +258,7 @@
                     <span class="n">disk_info</span><span class="p">,</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">update_status</span><span class="p">,</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_log_helper</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
                 <span class="p">)</span>
                 <span class="n">asyncio</span><span class="o">.</span><span class="n">ensure_future</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_lifecycle</span><span class="o">.</span><span class="n">run_process</span><span class="p">())</span>
             <span class="k">else</span><span class="p">:</span>
@@ -277,8 +282,8 @@
                 <span class="n">LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Disk removed, but no code lifecycle available&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ProcessManager.handle_kill_request"><a class="viewcode-back" href="../../../implementation/managers/astprocd.html#astoria.managers.astprocd.ProcessManager.handle_kill_request">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">handle_kill_request</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">request</span><span class="p">:</span> <span class="n">UsercodeKillManagerRequest</span><span class="p">,</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">request</span><span class="p">:</span> <span class="n">UsercodeKillManagerRequest</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RequestResponse</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Handle a request to kill running usercode.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lifecycle</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -329,7 +334,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lifecycle</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># When the status is updated in the lifecycle constructor, we</span>
-            <span class="c1"># are left with a situtation where there is no lifecycle object,</span>
+            <span class="c1"># are left with a situation where there is no lifecycle object,</span>
             <span class="c1"># but the code is starting. Thus we want to inform anyway.</span>
             <span class="c1">#</span>
             <span class="c1"># This section also updates the status when the lifecycle is cleaned up.</span>
@@ -353,16 +358,18 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">uuid</span><span class="p">:</span> <span class="n">DiskUUID</span><span class="p">,</span>
-        <span class="n">disk_info</span><span class="p">:</span> <span class="n">DiskInfo</span><span class="p">,</span>
-        <span class="n">status_inform_callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">CodeStatus</span><span class="p">],</span> <span class="kc">None</span><span class="p">],</span>
-        <span class="n">log_helper</span><span class="p">:</span> <span class="n">BroadcastHelper</span><span class="p">[</span><span class="n">UsercodeLogBroadcastEvent</span><span class="p">],</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">uuid</span><span class="p">:</span> <span class="n">DiskUUID</span><span class="p">,</span>
+            <span class="n">disk_info</span><span class="p">:</span> <span class="n">DiskInfo</span><span class="p">,</span>
+            <span class="n">status_inform_callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">CodeStatus</span><span class="p">],</span> <span class="kc">None</span><span class="p">],</span>
+            <span class="n">log_helper</span><span class="p">:</span> <span class="n">BroadcastHelper</span><span class="p">[</span><span class="n">UsercodeLogBroadcastEvent</span><span class="p">],</span>
+            <span class="n">config</span><span class="p">:</span> <span class="n">AstoriaConfig</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_uuid</span> <span class="o">=</span> <span class="n">uuid</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_disk_info</span> <span class="o">=</span> <span class="n">disk_info</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_status_inform_callback</span> <span class="o">=</span> <span class="n">status_inform_callback</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_log_helper</span> <span class="o">=</span> <span class="n">log_helper</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="n">config</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_process</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">asyncio</span><span class="o">.</span><span class="n">subprocess</span><span class="o">.</span><span class="n">Process</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_process_lock</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
@@ -437,7 +444,43 @@
             <span class="n">_handle_error</span><span class="p">(</span><span class="s2">&quot;The provided robot.zip did not contain a main.py&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">False</span>
 
-        <span class="c1"># Check for metadata etc here in future</span>
+        <span class="n">LEGACY_FILES</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;info.yaml&quot;</span><span class="p">,</span> <span class="s2">&quot;info.yml&quot;</span><span class="p">,</span> <span class="s2">&quot;wifi.yaml&quot;</span><span class="p">,</span> <span class="s2">&quot;wifi.yml&quot;</span><span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">legacy_file</span> <span class="ow">in</span> <span class="n">LEGACY_FILES</span><span class="p">:</span>
+            <span class="n">legacy_info_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dir_path</span> <span class="o">/</span> <span class="n">legacy_file</span>
+            <span class="k">if</span> <span class="n">legacy_info_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                <span class="n">_handle_error</span><span class="p">(</span>
+                    <span class="s2">&quot;This is an old robot code package and&quot;</span>
+                    <span class="s2">&quot;will not work with this version of the kit.&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># Check for code bundle info</span>
+        <span class="n">bundle_meta_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dir_path</span> <span class="o">/</span> <span class="s2">&quot;bundle.toml&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">bundle_meta_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="n">_handle_error</span><span class="p">(</span><span class="s2">&quot;The provided robot.zip did not contain a bundle.toml&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Validate code bundle info</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">bundle_contents</span> <span class="o">=</span> <span class="n">toml</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">bundle_meta_path</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span>
+            <span class="k">except</span> <span class="n">toml</span><span class="o">.</span><span class="n">TomlDecodeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">_handle_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The code bundle was invalid.</span><span class="se">\n</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">bundle</span> <span class="o">=</span> <span class="n">CodeBundle</span><span class="p">(</span><span class="o">**</span><span class="n">bundle_contents</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">_handle_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The code bundle was invalid.</span><span class="se">\n</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">message</span> <span class="o">=</span> <span class="n">bundle</span><span class="o">.</span><span class="n">check_kit_version_is_compatible</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">kit</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">message</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">IncompatibleKitVersionException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">_handle_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid code bundle: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">False</span>
 
         <span class="k">return</span> <span class="kc">True</span>
 
