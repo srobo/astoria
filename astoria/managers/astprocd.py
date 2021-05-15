@@ -5,7 +5,7 @@ import logging
 from pathlib import Path
 from signal import SIGKILL, SIGTERM
 from tempfile import TemporaryDirectory
-from typing import Callable, Dict, Optional
+from typing import Callable, Dict, Optional, Set
 from zipfile import BadZipFile, ZipFile
 
 import click
@@ -144,8 +144,8 @@ class ProcessManager(DiskHandlerMixin, StateManager[ProcessManagerMessage]):
             )
 
     async def handle_restart_request(
-            self,
-            request: UsercodeRestartManagerRequest,
+        self,
+        request: UsercodeRestartManagerRequest,
     ) -> RequestResponse:
         """Handle a request to restart usercode."""
         LOGGER.info("Restart request received.")
@@ -287,7 +287,7 @@ class UsercodeLifecycle:
             _handle_error("The provided robot.zip did not contain a main.py")
             return False
 
-        LEGACY_FILES = ["info.yaml", "info.yml", "wifi.yaml", "wifi.yml"]
+        LEGACY_FILES: Set[str] = {"info.yaml", "info.yml", "wifi.yaml", "wifi.yml"}
 
         for legacy_file in LEGACY_FILES:
             legacy_info_path = self._dir_path / legacy_file
@@ -318,7 +318,9 @@ class UsercodeLifecycle:
                 return False
 
             try:
-                bundle.check_kit_version_is_compatible(self._config.kit)
+                message = bundle.check_kit_version_is_compatible(self._config.kit)
+                if message is not None:
+                    print(message)
             except IncompatibleKitVersionException as e:
                 _handle_error(f"Invalid code bundle: {e}")
                 return False

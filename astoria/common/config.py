@@ -26,7 +26,7 @@ class MQTTBrokerInfo(BaseModel):
         extra = "forbid"
 
 
-KIT_VERSION_REGEX = re.compile(r'^(?P<epoch>\d+)\.(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)(?P<dev>dev)?(?::(?P<hash>[0-9a-f]{5,40})(?:@(?P<branch>\w+))?)?$')  # noqa: E501
+KIT_VERSION_REGEX = re.compile(r"^(?P<epoch>\d+)\.(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)(?P<dev>dev)?(?::(?P<hash>[0-9a-f]{5,40})(?:@(?P<branch>\w+))?)?$")  # noqa: E501
 
 
 class KitInfo(BaseModel):

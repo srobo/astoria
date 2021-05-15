@@ -22,11 +22,11 @@ class WiFiInfo(BaseModel):
     ssid: str
     psk: str
     enabled: bool
-    region: str  # Might want to make this some kind of enum
+    region: str
 
 
 class CodeBundle(BaseModel):
-    """Schema for bundle.toml."""
+    """Schema for code bundle information."""
 
     bundle: BundleInfo
     kit: KitInfo
