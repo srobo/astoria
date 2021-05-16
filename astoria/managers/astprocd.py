@@ -5,7 +5,7 @@ import logging
 from pathlib import Path
 from signal import SIGKILL, SIGTERM
 from tempfile import TemporaryDirectory
-from typing import Callable, Dict, Optional, Set
+from typing import Callable, Dict, List, Optional, Set
 from zipfile import BadZipFile, ZipFile
 
 import click
@@ -250,7 +250,7 @@ class UsercodeLifecycle:
         self._dir = TemporaryDirectory(prefix="astprocd-")
         self._dir_path = Path(self._dir.name)
 
-    def _extract_and_validate_zip_file(self) -> Optional[str]:
+    def _extract_and_validate_zip_file(self) -> List[str]:
         """
         Extract and validate a robot.zip file.
 
@@ -259,7 +259,7 @@ class UsercodeLifecycle:
         of the usercode lifecycle, and should not be called multiple
         times.
 
-        :returns: optional message to print in the log file
+        :returns: messages to put in the log file
         """
         zip_path = self._disk_info.mount_path / "robot.zip"
 
@@ -339,7 +339,7 @@ class UsercodeLifecycle:
                             asyncio.ensure_future(
                                 self.logger(
                                     self._process.stdout,
-                                    initial_message=log_message,
+                                    initial_messages=log_message,
                                 ),
                             )
                         else:
@@ -408,7 +408,7 @@ class UsercodeLifecycle:
         self,
         proc_output: asyncio.StreamReader,
         *,
-        initial_message: Optional[str] = None,
+        initial_messages: List[str] = [],
     ) -> None:
         """
         Logger task.
@@ -435,14 +435,12 @@ class UsercodeLifecycle:
             )
 
         with log_path.open("w") as fh:
+            log_line = 0
 
-            # Print the initial message if there is one
-            # Also setup the counter for this log.
-            if initial_message is not None:
-                log_line = initial_message.count("\n") + 1
-                log(initial_message, 0)
-            else:
-                log_line = 0
+            # Print any initial messages
+            for message in initial_messages:
+                log(f"{message}\n", log_line)
+                log_line += 1
 
             log("=== LOG STARTED ===\n", log_line)
             log_line += 1
