@@ -11,7 +11,10 @@ from astoria.common.config import AstoriaConfig
 from astoria.common.messages.astdiskd import DiskInfo, DiskType, DiskUUID
 from astoria.common.messages.astprocd import CodeStatus
 from astoria.common.mqtt.broadcast_helper import BroadcastHelper, T
-from astoria.managers.astprocd import UsercodeLifecycle
+from astoria.managers.astprocd import (
+    InvalidCodeBundleException,
+    UsercodeLifecycle,
+)
 
 EXTRACT_ZIP_DATA = Path("tests/data/extract_zip")
 EXECUTE_CODE_DATA = Path("tests/data/execute_code")
@@ -139,41 +142,39 @@ def test_usercode_lifecycle_inform_callback_called_on_status_change() -> None:
 
 def test_extract_and_validate_no_zip() -> None:
     """Test that a disk with no zip is handled."""
-    ucl, sith = StatusInformTestHelper.setup(EXTRACT_ZIP_DATA / "no_zip")
-    assert not ucl._extract_and_validate_zip_file()
+    ucl, _ = StatusInformTestHelper.setup(EXTRACT_ZIP_DATA / "no_zip")
 
-    # Check that the log file contains the right text
-    log_file = EXTRACT_ZIP_DATA / "no_zip" / "log.txt"
-    with ReadAndCleanupFile(log_file) as fh:
-        assert fh.read() == "Unable to start code.\nUnable to find robot.zip file.\n"
+    with pytest.raises(InvalidCodeBundleException) as e:
+        ucl._extract_and_validate_zip_file()
+
+    assert e.match("Unable to find robot.zip file")
 
 
 def test_bad_zip() -> None:
     """Test that an invalid zip is handled."""
     ucl, sith = StatusInformTestHelper.setup(EXTRACT_ZIP_DATA / "bad_zip")
-    assert not ucl._extract_and_validate_zip_file()
 
-    # Check that the log file contains the right text
-    log_file = EXTRACT_ZIP_DATA / "bad_zip" / "log.txt"
-    with ReadAndCleanupFile(log_file) as fh:
-        assert fh.read() == "Unable to start code.\nThe provided robot.zip is not a valid ZIP archive.\n"  # noqa: E501
+    with pytest.raises(InvalidCodeBundleException) as e:
+        ucl._extract_and_validate_zip_file()
+
+    assert e.match("The provided robot.zip is not a valid ZIP archive")
 
 
 def test_no_main_zip() -> None:
     """Test that a zip with no main is handled."""
     ucl, sith = StatusInformTestHelper.setup(EXTRACT_ZIP_DATA / "no_main_zip")
-    assert not ucl._extract_and_validate_zip_file()
 
-    # Check that the log file contains the right text
-    log_file = EXTRACT_ZIP_DATA / "no_main_zip" / "log.txt"
-    with ReadAndCleanupFile(log_file) as fh:
-        assert fh.read() == "Unable to start code.\nThe provided robot.zip did not contain a main.py.\n"  # noqa: E501
+    with pytest.raises(InvalidCodeBundleException) as e:
+        ucl._extract_and_validate_zip_file()
+
+    assert e.match("The provided robot.zip did not contain a main.py")
 
 
 def test_good_zip() -> None:
     """Test that a valid zip is successfully extracted."""
     ucl, sith = StatusInformTestHelper.setup(EXTRACT_ZIP_DATA / "good_zip")
-    assert ucl._extract_and_validate_zip_file()
+
+    ucl._extract_and_validate_zip_file()
 
     # Check that the log file does not yet exist
     log_file = EXTRACT_ZIP_DATA / "good_zip" / "log.txt"
