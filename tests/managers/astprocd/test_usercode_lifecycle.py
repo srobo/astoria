@@ -203,6 +203,7 @@ async def test_run_with_bad_zip() -> None:
     Checks that:
     - Status message is written to the log file
     - The correct status is passed to the state manager
+    - Development indicator is printed
     """
     ucl, sith = StatusInformTestHelper.setup(EXTRACT_ZIP_DATA / "bad_zip")
     await ucl.run_process()
@@ -221,6 +222,7 @@ async def test_run_with_not_python() -> None:
     - Zip file is extracted and main.py is run
     - Output is written to the log file
     - The correct status is passed to the state manager
+    - Development indicator is printed
     """
     ucl, sith = StatusInformTestHelper.setup(EXECUTE_CODE_DATA / "not_python")
     await ucl.run_process()
@@ -234,8 +236,9 @@ async def test_run_with_not_python() -> None:
     log_file = EXECUTE_CODE_DATA / "not_python" / "log.txt"
     with ReadAndCleanupFile(log_file) as fh:
         lines = fh.read().splitlines()
-    assert lines[0] == "=== LOG STARTED ==="
-    assert "This is not a python program" in lines[2]
+    assert lines[0] == "WARNING: Running on DEVELOPMENT BUILD"
+    assert lines[1] == "=== LOG STARTED ==="
+    assert "This is not a python program" in lines[3]
     assert lines[-1] == "=== LOG FINISHED ==="
 
     assert lines == sith.log_helper.get_lines()
@@ -250,6 +253,7 @@ async def test_run_with_syntax_error() -> None:
     - Zip file is extracted and main.py is run
     - Output is written to the log file
     - The correct status is passed to the state manager
+    - Development indicator is printed
     """
     ucl, sith = StatusInformTestHelper.setup(EXECUTE_CODE_DATA / "syntax_error")
     await ucl.run_process()
@@ -263,8 +267,9 @@ async def test_run_with_syntax_error() -> None:
     log_file = EXECUTE_CODE_DATA / "syntax_error" / "log.txt"
     with ReadAndCleanupFile(log_file) as fh:
         lines = fh.read().splitlines()
-    assert lines[0] == "=== LOG STARTED ==="
-    assert "SyntaxError" in lines[4]
+    assert lines[0] == "WARNING: Running on DEVELOPMENT BUILD"
+    assert lines[1] == "=== LOG STARTED ==="
+    assert "SyntaxError" in lines[5]
     assert lines[-1] == "=== LOG FINISHED ==="
 
     assert lines == sith.log_helper.get_lines()
@@ -292,8 +297,9 @@ async def test_run_with_valid_python_wait_finish() -> None:
     log_file = EXECUTE_CODE_DATA / "valid_python_short" / "log.txt"
     with ReadAndCleanupFile(log_file) as fh:
         lines = fh.read().splitlines()
-    assert lines[0] == "=== LOG STARTED ==="
-    assert lines[1] == "Hello World"
+    assert lines[0] == "WARNING: Running on DEVELOPMENT BUILD"
+    assert lines[1] == "=== LOG STARTED ==="
+    assert lines[2] == "Hello World"
     assert lines[-1] == "=== LOG FINISHED ==="
 
     assert lines == sith.log_helper.get_lines()

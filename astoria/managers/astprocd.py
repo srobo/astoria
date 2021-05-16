@@ -336,7 +336,12 @@ class UsercodeLifecycle:
                     )
                     if self._process is not None:
                         if self._process.stdout is not None:
-                            asyncio.ensure_future(self.logger(self._process.stdout))
+                            asyncio.ensure_future(
+                                self.logger(
+                                    self._process.stdout,
+                                    initial_message=log_message,
+                                ),
+                            )
                         else:
                             LOGGER.warning("Unable to start logger task.")
                         self.status = CodeStatus.RUNNING
@@ -399,11 +404,19 @@ class UsercodeLifecycle:
         else:
             LOGGER.debug("Tried to kill process, but no process is running.")
 
-    async def logger(self, proc_output: asyncio.StreamReader) -> None:
+    async def logger(
+        self,
+        proc_output: asyncio.StreamReader,
+        *,
+        initial_message: Optional[str] = None,
+    ) -> None:
         """
         Logger task.
 
-        Logs the output of the process to log.txt
+        Logs the output of the process to a log file and MQTT
+
+        :param proc_output: stream of data from the usercode process
+        :param initial_message: optional message to add at the start of the log
         """
         log_path = self._disk_info.mount_path / "log.txt"
 
@@ -422,7 +435,15 @@ class UsercodeLifecycle:
             )
 
         with log_path.open("w") as fh:
-            log_line = 0
+
+            # Print the initial message if there is one
+            # Also setup the counter for this log.
+            if initial_message is not None:
+                log_line = initial_message.count("\n") + 1
+                log(initial_message, 0)
+            else:
+                log_line = 0
+
             log("=== LOG STARTED ===\n", log_line)
             log_line += 1
             data = await proc_output.readline()
