@@ -86,6 +86,8 @@ class StatusInformTestHelper:
     def setup(
         cls,
         mount_path: Path = Path(),
+        *,
+        config: AstoriaConfig = CONFIG,
     ) -> Tuple[UsercodeLifecycle, 'StatusInformTestHelper']:
         """Setup a lifecycle and helper for testing."""
         sith = cls()
@@ -98,7 +100,7 @@ class StatusInformTestHelper:
             ),
             status_inform_callback=sith.callback,
             log_helper=sith.log_helper,
-            config=CONFIG,
+            config=config,
         )
         return ucl, sith
 
@@ -300,6 +302,76 @@ async def test_run_with_valid_python_wait_finish() -> None:
     assert lines[0] == "WARNING: Running on DEVELOPMENT BUILD"
     assert lines[1] == "=== LOG STARTED ==="
     assert lines[2] == "Hello World"
+    assert lines[-1] == "=== LOG FINISHED ==="
+
+    assert lines == sith.log_helper.get_lines()
+
+ALLOWED_SYSTEM_VERSIONS: List[Tuple[str, List[str]]] = [
+    ("0.0.0.0", []),
+    ("0.0.0.0dev", ["WARNING: Running on DEVELOPMENT BUILD"]),
+    ("0.0.0.1", ["kit software which is different than the current version."]),
+    (
+        "0.0.0.1dev",
+        [
+            "WARNING: Running on DEVELOPMENT BUILD",
+            "kit software which is different than the current version.",
+        ],
+    ),
+    ("0.0.1.0", ["kit software is unsupported"]),
+    (
+        "0.0.1.0dev",
+        [
+            "WARNING: Running on DEVELOPMENT BUILD",
+            "kit software is unsupported",
+        ],
+    ),
+    ("0.1.0.1", ["kit software is unsupported"]),
+    (
+        "0.1.0.1dev",
+        [
+            "WARNING: Running on DEVELOPMENT BUILD",
+            "kit software is unsupported",
+        ],
+    ),
+]
+
+
+@pytest.mark.parametrize("version_data", ALLOWED_SYSTEM_VERSIONS)
+@pytest.mark.asyncio
+async def test_run_with_allowed_system_version(
+    version_data: Tuple[str, List[str]],
+) -> None:
+    """
+    Test that a suitable warning is given to about system versions.
+
+    The robot.zip used for this test has a version of 0.0.0.0dev.
+    """
+    version, warning_strings = version_data
+    CONFIG.kit.version = version
+    ucl, sith = StatusInformTestHelper.setup(
+        EXECUTE_CODE_DATA / "valid_python_short",
+        config=CONFIG,
+    )
+    await ucl.run_process()
+    await asyncio.sleep(0.05)  # Wait for logger to flush
+    assert sith.called_queue == [
+        CodeStatus.STARTING,
+        CodeStatus.RUNNING,
+        CodeStatus.FINISHED,
+    ]
+    # Check that the log file contains the right text
+    log_file = EXECUTE_CODE_DATA / "valid_python_short" / "log.txt"
+    with ReadAndCleanupFile(log_file) as fh:
+        lines = fh.read().splitlines()
+
+    # Check that the warning strings are at the start
+    for index, warning_string in enumerate(warning_strings):
+        assert warning_string in lines[index]
+
+    # Check the rest of the file is okay too
+    offset = len(warning_strings)
+    assert lines[offset] == "=== LOG STARTED ==="
+    assert lines[offset + 1] == "Hello World"
     assert lines[-1] == "=== LOG FINISHED ==="
 
     assert lines == sith.log_helper.get_lines()

@@ -85,7 +85,7 @@ def test_valid_versions_are_accepted(system, bundle) -> None:
     bundle_info = load_bundle("valid.toml")
     bundle_info.kit.version = bundle
 
-    assert bundle_info.check_kit_version_is_compatible(system_info) is None
+    assert len(bundle_info.check_kit_version_is_compatible(system_info)) == 0
 
 
 INCOMPATIBLE_SYSTEM_BUNDLE_VERSION_PAIRS = [
@@ -120,9 +120,9 @@ def test_kit_dev_message_is_added_when_dev_build() -> None:
     system_info = KitInfo(name="Astoria Development", version="0.0.0.0dev")
     bundle_info = load_bundle("valid.toml")
 
-    message = bundle_info.check_kit_version_is_compatible(system_info)
-    assert message is not None
-    assert "DEVELOPMENT BUILD" in message
+    messages = bundle_info.check_kit_version_is_compatible(system_info)
+    assert len(messages) == 1
+    assert "DEVELOPMENT BUILD" in messages[0]
 
 
 def test_kit_dev_message_is_not_added_on_prod_build() -> None:
@@ -130,8 +130,8 @@ def test_kit_dev_message_is_not_added_on_prod_build() -> None:
     system_info = KitInfo(name="Astoria Development", version="0.0.0.0")
     bundle_info = load_bundle("valid.toml")
 
-    message = bundle_info.check_kit_version_is_compatible(system_info)
-    assert message is None
+    messages = bundle_info.check_kit_version_is_compatible(system_info)
+    assert len(messages) == 0
 
 
 VERSION_DIFF_MESSAGES = [
@@ -159,5 +159,5 @@ def test_kit_warns_on_version_diff(system, bundle, expected_message) -> None:
     bundle_info = load_bundle("valid.toml")
     bundle_info.kit.version = bundle
 
-    message = bundle_info.check_kit_version_is_compatible(system_info)
-    assert expected_message in message
+    messages = bundle_info.check_kit_version_is_compatible(system_info)
+    assert expected_message in "\n".join(messages)
