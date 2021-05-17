@@ -3,6 +3,7 @@ import asyncio
 from abc import abstractmethod
 from json import JSONDecodeError, loads
 from typing import Generic, Match, Type, TypeVar
+from uuid import uuid4
 
 from astoria.common.consumer import StateConsumer
 from astoria.common.messages.base import ManagerMessage
@@ -19,7 +20,14 @@ class Command(StateConsumer):
     Disables the welcome message from the logger.
     """
 
-    name_prefix = "astctl"
+    @property
+    def name(self) -> str:
+        """
+        MQTT client name of the data component.
+
+        This should be unique, as clashes will cause unexpected disconnections.
+        """
+        return f"astctl-{uuid4()}"
 
     def _setup_logging(self, verbose: bool, *, welcome_message: bool = True) -> None:
         super()._setup_logging(verbose, welcome_message=False)
