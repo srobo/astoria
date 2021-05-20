@@ -162,7 +162,7 @@
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">signal</span> <span class="kn">import</span> <span class="n">SIGKILL</span><span class="p">,</span> <span class="n">SIGTERM</span>
 <span class="kn">from</span> <span class="nn">tempfile</span> <span class="kn">import</span> <span class="n">TemporaryDirectory</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span>
 <span class="kn">from</span> <span class="nn">zipfile</span> <span class="kn">import</span> <span class="n">BadZipFile</span><span class="p">,</span> <span class="n">ZipFile</span>
 
 <span class="kn">import</span> <span class="nn">click</span>
@@ -350,6 +350,10 @@
             <span class="p">)</span></div></div>
 
 
+<span class="k">class</span> <span class="nc">InvalidCodeBundleException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The code bundle was not valid.&quot;&quot;&quot;</span>
+
+
 <span class="k">class</span> <span class="nc">UsercodeLifecycle</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Manages the lifecycle of usercode.</span>
@@ -403,7 +407,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_dir</span> <span class="o">=</span> <span class="n">TemporaryDirectory</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;astprocd-&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_dir_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dir</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_extract_and_validate_zip_file</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_extract_and_validate_zip_file</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Extract and validate a robot.zip file.</span>
 
@@ -411,78 +415,61 @@
 <span class="sd">        robot.zip file. It will overwrite the current temporary dir</span>
 <span class="sd">        of the usercode lifecycle, and should not be called multiple</span>
 <span class="sd">        times.</span>
+
+<span class="sd">        :returns: messages to put in the log file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">def</span> <span class="nf">_handle_error</span><span class="p">(</span><span class="n">error</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Handle an error with the zip file.</span>
-
-<span class="sd">            Logs to the astprocd logger and also writes</span>
-<span class="sd">            a log file to the usercode disk.</span>
-<span class="sd">            &quot;&quot;&quot;</span>
-            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_disk_info</span><span class="o">.</span><span class="n">mount_path</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;log.txt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
-                <span class="n">LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-                <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Unable to start code.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-
         <span class="n">zip_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_disk_info</span><span class="o">.</span><span class="n">mount_path</span> <span class="o">/</span> <span class="s2">&quot;robot.zip&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">zip_path</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">and</span> <span class="n">zip_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">()):</span>
-            <span class="n">_handle_error</span><span class="p">(</span><span class="s2">&quot;Unable to find robot.zip file&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">raise</span> <span class="n">InvalidCodeBundleException</span><span class="p">(</span><span class="s2">&quot;Unable to find robot.zip file&quot;</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="k">with</span> <span class="n">ZipFile</span><span class="p">(</span><span class="n">zip_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">zf</span><span class="p">:</span>
                 <span class="n">zf</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dir_path</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">BadZipFile</span><span class="p">:</span>
-            <span class="n">_handle_error</span><span class="p">(</span><span class="s2">&quot;The provided robot.zip is not a valid ZIP archive&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">raise</span> <span class="n">InvalidCodeBundleException</span><span class="p">(</span>
+                <span class="s2">&quot;The provided robot.zip is not a valid ZIP archive&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
 
         <span class="c1"># Check that main.py is present</span>
         <span class="n">exe_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dir_path</span> <span class="o">/</span> <span class="s2">&quot;main.py&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">exe_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-            <span class="n">_handle_error</span><span class="p">(</span><span class="s2">&quot;The provided robot.zip did not contain a main.py&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">raise</span> <span class="n">InvalidCodeBundleException</span><span class="p">(</span>
+                <span class="s2">&quot;The provided robot.zip did not contain a main.py&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
 
         <span class="n">LEGACY_FILES</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;info.yaml&quot;</span><span class="p">,</span> <span class="s2">&quot;info.yml&quot;</span><span class="p">,</span> <span class="s2">&quot;wifi.yaml&quot;</span><span class="p">,</span> <span class="s2">&quot;wifi.yml&quot;</span><span class="p">}</span>
 
         <span class="k">for</span> <span class="n">legacy_file</span> <span class="ow">in</span> <span class="n">LEGACY_FILES</span><span class="p">:</span>
             <span class="n">legacy_info_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dir_path</span> <span class="o">/</span> <span class="n">legacy_file</span>
             <span class="k">if</span> <span class="n">legacy_info_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-                <span class="n">_handle_error</span><span class="p">(</span>
-                    <span class="s2">&quot;This is an old robot code package and&quot;</span>
-                    <span class="s2">&quot;will not work with this version of the kit.&quot;</span><span class="p">,</span>
+                <span class="k">raise</span> <span class="n">InvalidCodeBundleException</span><span class="p">(</span>
+                    <span class="s2">&quot;This is an old robot code package and </span><span class="se">\</span>
+<span class="s2">                    will not work with this version of the kit.&quot;</span><span class="p">,</span>
                 <span class="p">)</span>
-                <span class="k">return</span> <span class="kc">False</span>
 
         <span class="c1"># Check for code bundle info</span>
         <span class="n">bundle_meta_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dir_path</span> <span class="o">/</span> <span class="s2">&quot;bundle.toml&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">bundle_meta_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-            <span class="n">_handle_error</span><span class="p">(</span><span class="s2">&quot;The provided robot.zip did not contain a bundle.toml&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">raise</span> <span class="n">InvalidCodeBundleException</span><span class="p">(</span>
+                <span class="s2">&quot;The provided robot.zip did not contain a bundle.toml&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># Validate code bundle info</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">bundle_contents</span> <span class="o">=</span> <span class="n">toml</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">bundle_meta_path</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span>
             <span class="k">except</span> <span class="n">toml</span><span class="o">.</span><span class="n">TomlDecodeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="n">_handle_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The code bundle was invalid.</span><span class="se">\n</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="kc">False</span>
+                <span class="k">raise</span> <span class="n">InvalidCodeBundleException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The code bundle was invalid.</span><span class="se">\n</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">bundle</span> <span class="o">=</span> <span class="n">CodeBundle</span><span class="p">(</span><span class="o">**</span><span class="n">bundle_contents</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="n">_handle_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The code bundle was invalid.</span><span class="se">\n</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="kc">False</span>
+                <span class="k">raise</span> <span class="n">InvalidCodeBundleException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The code bundle was invalid.</span><span class="se">\n</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">message</span> <span class="o">=</span> <span class="n">bundle</span><span class="o">.</span><span class="n">check_kit_version_is_compatible</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">kit</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">message</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">bundle</span><span class="o">.</span><span class="n">check_kit_version_is_compatible</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">kit</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">IncompatibleKitVersionException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="n">_handle_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid code bundle: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="kc">False</span>
-
-        <span class="k">return</span> <span class="kc">True</span>
+                <span class="k">raise</span> <span class="n">InvalidCodeBundleException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid code bundle: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">async</span> <span class="k">def</span> <span class="nf">run_process</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -491,9 +478,8 @@
 <span class="sd">        This function will not return until the code has exited.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_and_validate_zip_file</span><span class="p">():</span>
-
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">log_message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_and_validate_zip_file</span><span class="p">()</span>
                 <span class="k">async</span> <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_lock</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_process</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_subprocess_exec</span><span class="p">(</span>
                         <span class="s2">&quot;python3&quot;</span><span class="p">,</span>
@@ -507,7 +493,12 @@
                     <span class="p">)</span>
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process</span><span class="o">.</span><span class="n">stdout</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                            <span class="n">asyncio</span><span class="o">.</span><span class="n">ensure_future</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_process</span><span class="o">.</span><span class="n">stdout</span><span class="p">))</span>
+                            <span class="n">asyncio</span><span class="o">.</span><span class="n">ensure_future</span><span class="p">(</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">(</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">_process</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span>
+                                    <span class="n">initial_messages</span><span class="o">=</span><span class="n">log_message</span><span class="p">,</span>
+                                <span class="p">),</span>
+                            <span class="p">)</span>
                         <span class="k">else</span><span class="p">:</span>
                             <span class="n">LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Unable to start logger task.&quot;</span><span class="p">)</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">CodeStatus</span><span class="o">.</span><span class="n">RUNNING</span>
@@ -536,10 +527,16 @@
                         <span class="bp">self</span><span class="o">.</span><span class="n">_dir</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>  <span class="c1"># Reset directory</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">_setup_temp_dir</span><span class="p">()</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="n">LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;robot.zip was invalid. Unable to start code.&quot;</span><span class="p">)</span>
+                        <span class="n">LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Tried to start process, but failed.&quot;</span><span class="p">)</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">CodeStatus</span><span class="o">.</span><span class="n">CRASHED</span>  <span class="c1"># Close enough to indicate error</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Tried to start process, but failed.&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">InvalidCodeBundleException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;robot.zip was invalid. Unable to start code.&quot;</span><span class="p">)</span>
+                <span class="c1"># Write error message to the log file.</span>
+                <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_disk_info</span><span class="o">.</span><span class="n">mount_path</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;log.txt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+                    <span class="n">LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+                    <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Unable to start code.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
                 <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">CodeStatus</span><span class="o">.</span><span class="n">CRASHED</span>  <span class="c1"># Close enough to indicate error</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Tried to start process, but one is already running.&quot;</span><span class="p">)</span>
@@ -564,11 +561,19 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Tried to kill process, but no process is running.&quot;</span><span class="p">)</span>
 
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">logger</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proc_output</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">StreamReader</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">logger</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">proc_output</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">StreamReader</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">initial_messages</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Logger task.</span>
 
-<span class="sd">        Logs the output of the process to log.txt</span>
+<span class="sd">        Logs the output of the process to a log file and MQTT</span>
+
+<span class="sd">        :param proc_output: stream of data from the usercode process</span>
+<span class="sd">        :param initial_message: optional message to add at the start of the log</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">log_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_disk_info</span><span class="o">.</span><span class="n">mount_path</span> <span class="o">/</span> <span class="s2">&quot;log.txt&quot;</span>
 
@@ -588,6 +593,12 @@
 
         <span class="k">with</span> <span class="n">log_path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
             <span class="n">log_line</span> <span class="o">=</span> <span class="mi">0</span>
+
+            <span class="c1"># Print any initial messages</span>
+            <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">initial_messages</span><span class="p">:</span>
+                <span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">log_line</span><span class="p">)</span>
+                <span class="n">log_line</span> <span class="o">+=</span> <span class="mi">1</span>
+
             <span class="n">log</span><span class="p">(</span><span class="s2">&quot;=== LOG STARTED ===</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">log_line</span><span class="p">)</span>
             <span class="n">log_line</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">proc_output</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
