@@ -2,6 +2,7 @@
 
 import asyncio
 import logging
+from datetime import datetime
 from pathlib import Path
 from signal import SIGKILL, SIGTERM
 from tempfile import TemporaryDirectory
@@ -437,19 +438,26 @@ class UsercodeLifecycle:
         with log_path.open("w") as fh:
             log_line = 0
 
+            start_time = datetime.now()
+
             # Print any initial messages
             for message in initial_messages:
-                log(f"{message}\n", log_line)
+                time_passed = datetime.now() - start_time
+                log(f"[{time_passed}] {message}\n", log_line)
                 log_line += 1
 
-            log("=== LOG STARTED ===\n", log_line)
+            time_passed = datetime.now() - start_time
+            log(f"[{time_passed}] === LOG STARTED ===\n", log_line)
             log_line += 1
+
             data = await proc_output.readline()
             while data != b"":
-                log(data.decode('utf-8'), log_line)
+                data_str = data.decode('utf-8')
+                time_passed = datetime.now() - start_time
+                log(f"[{time_passed}] {data_str}", log_line)
                 data = await proc_output.readline()
                 log_line += 1
-            log("=== LOG FINISHED ===\n", log_line)
+            log(f"[{time_passed}] === LOG FINISHED ===\n", log_line)
 
 
 if __name__ == "__main__":
