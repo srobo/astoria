@@ -11,7 +11,10 @@ from astoria.common.config import AstoriaConfig
 from astoria.common.messages.astdiskd import DiskInfo, DiskType, DiskUUID
 from astoria.common.messages.astprocd import CodeStatus
 from astoria.common.mqtt.broadcast_helper import BroadcastHelper, T
-from astoria.managers.astprocd import UsercodeLifecycle
+from astoria.managers.astprocd import (
+    InvalidCodeBundleException,
+    UsercodeLifecycle,
+)
 
 EXTRACT_ZIP_DATA = Path("tests/data/extract_zip")
 EXECUTE_CODE_DATA = Path("tests/data/execute_code")
@@ -83,6 +86,8 @@ class StatusInformTestHelper:
     def setup(
         cls,
         mount_path: Path = Path(),
+        *,
+        config: AstoriaConfig = CONFIG,
     ) -> Tuple[UsercodeLifecycle, 'StatusInformTestHelper']:
         """Setup a lifecycle and helper for testing."""
         sith = cls()
@@ -95,7 +100,7 @@ class StatusInformTestHelper:
             ),
             status_inform_callback=sith.callback,
             log_helper=sith.log_helper,
-            config=CONFIG,
+            config=config,
         )
         return ucl, sith
 
@@ -139,41 +144,39 @@ def test_usercode_lifecycle_inform_callback_called_on_status_change() -> None:
 
 def test_extract_and_validate_no_zip() -> None:
     """Test that a disk with no zip is handled."""
-    ucl, sith = StatusInformTestHelper.setup(EXTRACT_ZIP_DATA / "no_zip")
-    assert not ucl._extract_and_validate_zip_file()
+    ucl, _ = StatusInformTestHelper.setup(EXTRACT_ZIP_DATA / "no_zip")
 
-    # Check that the log file contains the right text
-    log_file = EXTRACT_ZIP_DATA / "no_zip" / "log.txt"
-    with ReadAndCleanupFile(log_file) as fh:
-        assert fh.read() == "Unable to start code.\nUnable to find robot.zip file.\n"
+    with pytest.raises(InvalidCodeBundleException) as e:
+        ucl._extract_and_validate_zip_file()
+
+    assert e.match("Unable to find robot.zip file")
 
 
 def test_bad_zip() -> None:
     """Test that an invalid zip is handled."""
     ucl, sith = StatusInformTestHelper.setup(EXTRACT_ZIP_DATA / "bad_zip")
-    assert not ucl._extract_and_validate_zip_file()
 
-    # Check that the log file contains the right text
-    log_file = EXTRACT_ZIP_DATA / "bad_zip" / "log.txt"
-    with ReadAndCleanupFile(log_file) as fh:
-        assert fh.read() == "Unable to start code.\nThe provided robot.zip is not a valid ZIP archive.\n"  # noqa: E501
+    with pytest.raises(InvalidCodeBundleException) as e:
+        ucl._extract_and_validate_zip_file()
+
+    assert e.match("The provided robot.zip is not a valid ZIP archive")
 
 
 def test_no_main_zip() -> None:
     """Test that a zip with no main is handled."""
     ucl, sith = StatusInformTestHelper.setup(EXTRACT_ZIP_DATA / "no_main_zip")
-    assert not ucl._extract_and_validate_zip_file()
 
-    # Check that the log file contains the right text
-    log_file = EXTRACT_ZIP_DATA / "no_main_zip" / "log.txt"
-    with ReadAndCleanupFile(log_file) as fh:
-        assert fh.read() == "Unable to start code.\nThe provided robot.zip did not contain a main.py.\n"  # noqa: E501
+    with pytest.raises(InvalidCodeBundleException) as e:
+        ucl._extract_and_validate_zip_file()
+
+    assert e.match("The provided robot.zip did not contain a main.py")
 
 
 def test_good_zip() -> None:
     """Test that a valid zip is successfully extracted."""
     ucl, sith = StatusInformTestHelper.setup(EXTRACT_ZIP_DATA / "good_zip")
-    assert ucl._extract_and_validate_zip_file()
+
+    ucl._extract_and_validate_zip_file()
 
     # Check that the log file does not yet exist
     log_file = EXTRACT_ZIP_DATA / "good_zip" / "log.txt"
@@ -202,6 +205,7 @@ async def test_run_with_bad_zip() -> None:
     Checks that:
     - Status message is written to the log file
     - The correct status is passed to the state manager
+    - Development indicator is printed
     """
     ucl, sith = StatusInformTestHelper.setup(EXTRACT_ZIP_DATA / "bad_zip")
     await ucl.run_process()
@@ -220,6 +224,7 @@ async def test_run_with_not_python() -> None:
     - Zip file is extracted and main.py is run
     - Output is written to the log file
     - The correct status is passed to the state manager
+    - Development indicator is printed
     """
     ucl, sith = StatusInformTestHelper.setup(EXECUTE_CODE_DATA / "not_python")
     await ucl.run_process()
@@ -233,8 +238,9 @@ async def test_run_with_not_python() -> None:
     log_file = EXECUTE_CODE_DATA / "not_python" / "log.txt"
     with ReadAndCleanupFile(log_file) as fh:
         lines = fh.read().splitlines()
-    assert lines[0] == "=== LOG STARTED ==="
-    assert "This is not a python program" in lines[2]
+    assert lines[0] == "WARNING: Running on DEVELOPMENT BUILD"
+    assert lines[1] == "=== LOG STARTED ==="
+    assert "This is not a python program" in lines[3]
     assert lines[-1] == "=== LOG FINISHED ==="
 
     assert lines == sith.log_helper.get_lines()
@@ -249,6 +255,7 @@ async def test_run_with_syntax_error() -> None:
     - Zip file is extracted and main.py is run
     - Output is written to the log file
     - The correct status is passed to the state manager
+    - Development indicator is printed
     """
     ucl, sith = StatusInformTestHelper.setup(EXECUTE_CODE_DATA / "syntax_error")
     await ucl.run_process()
@@ -262,8 +269,9 @@ async def test_run_with_syntax_error() -> None:
     log_file = EXECUTE_CODE_DATA / "syntax_error" / "log.txt"
     with ReadAndCleanupFile(log_file) as fh:
         lines = fh.read().splitlines()
-    assert lines[0] == "=== LOG STARTED ==="
-    assert "SyntaxError" in lines[4]
+    assert lines[0] == "WARNING: Running on DEVELOPMENT BUILD"
+    assert lines[1] == "=== LOG STARTED ==="
+    assert "SyntaxError" in lines[5]
     assert lines[-1] == "=== LOG FINISHED ==="
 
     assert lines == sith.log_helper.get_lines()
@@ -291,8 +299,79 @@ async def test_run_with_valid_python_wait_finish() -> None:
     log_file = EXECUTE_CODE_DATA / "valid_python_short" / "log.txt"
     with ReadAndCleanupFile(log_file) as fh:
         lines = fh.read().splitlines()
-    assert lines[0] == "=== LOG STARTED ==="
-    assert lines[1] == "Hello World"
+    assert lines[0] == "WARNING: Running on DEVELOPMENT BUILD"
+    assert lines[1] == "=== LOG STARTED ==="
+    assert lines[2] == "Hello World"
+    assert lines[-1] == "=== LOG FINISHED ==="
+
+    assert lines == sith.log_helper.get_lines()
+
+ALLOWED_SYSTEM_VERSIONS: List[Tuple[str, List[str]]] = [
+    ("0.0.0.0", []),
+    ("0.0.0.0dev", ["WARNING: Running on DEVELOPMENT BUILD"]),
+    ("0.0.0.1", ["kit software which is different than the current version."]),
+    (
+        "0.0.0.1dev",
+        [
+            "WARNING: Running on DEVELOPMENT BUILD",
+            "kit software which is different than the current version.",
+        ],
+    ),
+    ("0.0.1.0", ["kit software is unsupported"]),
+    (
+        "0.0.1.0dev",
+        [
+            "WARNING: Running on DEVELOPMENT BUILD",
+            "kit software is unsupported",
+        ],
+    ),
+    ("0.1.0.1", ["kit software is unsupported"]),
+    (
+        "0.1.0.1dev",
+        [
+            "WARNING: Running on DEVELOPMENT BUILD",
+            "kit software is unsupported",
+        ],
+    ),
+]
+
+
+@pytest.mark.parametrize("version_data", ALLOWED_SYSTEM_VERSIONS)
+@pytest.mark.asyncio
+async def test_run_with_allowed_system_version(
+    version_data: Tuple[str, List[str]],
+) -> None:
+    """
+    Test that a suitable warning is given to about system versions.
+
+    The robot.zip used for this test has a version of 0.0.0.0dev.
+    """
+    version, warning_strings = version_data
+    CONFIG.kit.version = version
+    ucl, sith = StatusInformTestHelper.setup(
+        EXECUTE_CODE_DATA / "valid_python_short",
+        config=CONFIG,
+    )
+    await ucl.run_process()
+    await asyncio.sleep(0.05)  # Wait for logger to flush
+    assert sith.called_queue == [
+        CodeStatus.STARTING,
+        CodeStatus.RUNNING,
+        CodeStatus.FINISHED,
+    ]
+    # Check that the log file contains the right text
+    log_file = EXECUTE_CODE_DATA / "valid_python_short" / "log.txt"
+    with ReadAndCleanupFile(log_file) as fh:
+        lines = fh.read().splitlines()
+
+    # Check that the warning strings are at the start
+    for index, warning_string in enumerate(warning_strings):
+        assert warning_string in lines[index]
+
+    # Check the rest of the file is okay too
+    offset = len(warning_strings)
+    assert lines[offset] == "=== LOG STARTED ==="
+    assert lines[offset + 1] == "Hello World"
     assert lines[-1] == "=== LOG FINISHED ==="
 
     assert lines == sith.log_helper.get_lines()

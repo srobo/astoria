@@ -1,5 +1,5 @@
 """Schema, validation and comparison for Kit Bundle files."""
-from typing import Optional
+from typing import List
 
 from pydantic import BaseModel
 
@@ -37,7 +37,7 @@ class CodeBundle(BaseModel):
 
         extra = "forbid"
 
-    def check_kit_version_is_compatible(self, system_kit_info: KitInfo) -> Optional[str]:
+    def check_kit_version_is_compatible(self, system_kit_info: KitInfo) -> List[str]:
         """
         Check that the kit version is compatible.
 
@@ -54,6 +54,8 @@ class CodeBundle(BaseModel):
         system_match = KIT_VERSION_REGEX.match(system_kit_info.version)
         bundle_match = KIT_VERSION_REGEX.match(self.kit.version)
 
+        bundle_warnings: List[str] = []
+
         # These are technically unreachable as we are already validating that
         # the version strings match the regex in the schema. Thus these two
         # checks existing mainly for satisfying the type checker and can be
@@ -69,17 +71,17 @@ class CodeBundle(BaseModel):
             )
 
         if system_match['dev']:
-            user_message = "WARNING: Running on DEVELOPMENT BUILD\n"
-        else:
-            user_message = ""
+            bundle_warnings.append("WARNING: Running on DEVELOPMENT BUILD")
 
         if system_match['major'] != bundle_match['major'] or \
                 system_match['minor'] != bundle_match['minor']:
-            user_message += "⚠ Your kit software is unsupported and requires an " \
-                            "update. Please update the kit software."
-            return user_message
-
-        if system_match['patch'] != bundle_match['patch']:
-            user_message += "⚠ Code Bundle was made for a version of the kit software" \
-                            " which is different than the current version."
-        return user_message or None
+            bundle_warnings.append(
+                "⚠ Your kit software is unsupported and requires an "
+                "update. Please update the kit software.",
+            )
+        elif system_match['patch'] != bundle_match['patch']:
+            bundle_warnings.append(
+                "⚠ Code Bundle was made for a version of the kit software"
+                " which is different than the current version.",
+            )
+        return bundle_warnings

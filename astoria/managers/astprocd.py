@@ -5,7 +5,7 @@ import logging
 from pathlib import Path
 from signal import SIGKILL, SIGTERM
 from tempfile import TemporaryDirectory
-from typing import Callable, Dict, Optional, Set
+from typing import Callable, Dict, List, Optional, Set
 from zipfile import BadZipFile, ZipFile
 
 import click
@@ -193,6 +193,10 @@ class ProcessManager(DiskHandlerMixin, StateManager[ProcessManagerMessage]):
             )
 
 
+class InvalidCodeBundleException(Exception):
+    """The code bundle was not valid."""
+
+
 class UsercodeLifecycle:
     """
     Manages the lifecycle of usercode.
@@ -246,7 +250,7 @@ class UsercodeLifecycle:
         self._dir = TemporaryDirectory(prefix="astprocd-")
         self._dir_path = Path(self._dir.name)
 
-    def _extract_and_validate_zip_file(self) -> bool:
+    def _extract_and_validate_zip_file(self) -> List[str]:
         """
         Extract and validate a robot.zip file.
 
@@ -254,78 +258,61 @@ class UsercodeLifecycle:
         robot.zip file. It will overwrite the current temporary dir
         of the usercode lifecycle, and should not be called multiple
         times.
+
+        :returns: messages to put in the log file
         """
-
-        def _handle_error(error: str) -> None:
-            """
-            Handle an error with the zip file.
-
-            Logs to the astprocd logger and also writes
-            a log file to the usercode disk.
-            """
-            with self._disk_info.mount_path.joinpath("log.txt").open("w") as fh:
-                LOGGER.warning(error)
-                fh.write("Unable to start code.\n")
-                fh.write(f"{error}.\n")
-
         zip_path = self._disk_info.mount_path / "robot.zip"
 
         if not (zip_path.exists() and zip_path.is_file()):
-            _handle_error("Unable to find robot.zip file")
-            return False
+            raise InvalidCodeBundleException("Unable to find robot.zip file")
 
         try:
             with ZipFile(zip_path, "r") as zf:
                 zf.extractall(self._dir_path)
         except BadZipFile:
-            _handle_error("The provided robot.zip is not a valid ZIP archive")
-            return False
+            raise InvalidCodeBundleException(
+                "The provided robot.zip is not a valid ZIP archive",
+            )
 
         # Check that main.py is present
         exe_path = self._dir_path / "main.py"
         if not exe_path.exists():
-            _handle_error("The provided robot.zip did not contain a main.py")
-            return False
+            raise InvalidCodeBundleException(
+                "The provided robot.zip did not contain a main.py",
+            )
 
         LEGACY_FILES: Set[str] = {"info.yaml", "info.yml", "wifi.yaml", "wifi.yml"}
 
         for legacy_file in LEGACY_FILES:
             legacy_info_path = self._dir_path / legacy_file
             if legacy_info_path.exists():
-                _handle_error(
-                    "This is an old robot code package and"
-                    "will not work with this version of the kit.",
+                raise InvalidCodeBundleException(
+                    "This is an old robot code package and \
+                    will not work with this version of the kit.",
                 )
-                return False
 
         # Check for code bundle info
         bundle_meta_path = self._dir_path / "bundle.toml"
         if not bundle_meta_path.exists():
-            _handle_error("The provided robot.zip did not contain a bundle.toml")
-            return False
+            raise InvalidCodeBundleException(
+                "The provided robot.zip did not contain a bundle.toml",
+            )
         else:
             # Validate code bundle info
             try:
                 bundle_contents = toml.loads(bundle_meta_path.read_text())
             except toml.TomlDecodeError as e:
-                _handle_error(f"The code bundle was invalid.\n{e}")
-                return False
+                raise InvalidCodeBundleException(f"The code bundle was invalid.\n{e}")
 
             try:
                 bundle = CodeBundle(**bundle_contents)
             except ValidationError as e:
-                _handle_error(f"The code bundle was invalid.\n{e}")
-                return False
+                raise InvalidCodeBundleException(f"The code bundle was invalid.\n{e}")
 
             try:
-                message = bundle.check_kit_version_is_compatible(self._config.kit)
-                if message is not None:
-                    print(message)
+                return bundle.check_kit_version_is_compatible(self._config.kit)
             except IncompatibleKitVersionException as e:
-                _handle_error(f"Invalid code bundle: {e}")
-                return False
-
-        return True
+                raise InvalidCodeBundleException(f"Invalid code bundle: {e}")
 
     async def run_process(self) -> None:
         """
@@ -334,9 +321,8 @@ class UsercodeLifecycle:
         This function will not return until the code has exited.
         """
         if self._process is None:
-
-            if self._extract_and_validate_zip_file():
-
+            try:
+                log_message = self._extract_and_validate_zip_file()
                 async with self._process_lock:
                     self._process = await asyncio.create_subprocess_exec(
                         "python3",
@@ -350,7 +336,12 @@ class UsercodeLifecycle:
                     )
                     if self._process is not None:
                         if self._process.stdout is not None:
-                            asyncio.ensure_future(self.logger(self._process.stdout))
+                            asyncio.ensure_future(
+                                self.logger(
+                                    self._process.stdout,
+                                    initial_messages=log_message,
+                                ),
+                            )
                         else:
                             LOGGER.warning("Unable to start logger task.")
                         self.status = CodeStatus.RUNNING
@@ -379,10 +370,16 @@ class UsercodeLifecycle:
                         self._dir.cleanup()  # Reset directory
                         self._setup_temp_dir()
                     else:
-                        LOGGER.warning("robot.zip was invalid. Unable to start code.")
+                        LOGGER.warning("Tried to start process, but failed.")
                         self.status = CodeStatus.CRASHED  # Close enough to indicate error
-            else:
-                LOGGER.warning("Tried to start process, but failed.")
+            except InvalidCodeBundleException as e:
+                LOGGER.warning("robot.zip was invalid. Unable to start code.")
+                # Write error message to the log file.
+                with self._disk_info.mount_path.joinpath("log.txt").open("w") as fh:
+                    LOGGER.warning(str(e))
+                    fh.write("Unable to start code.\n")
+                    fh.write(f"{e}.\n")
+
                 self.status = CodeStatus.CRASHED  # Close enough to indicate error
         else:
             LOGGER.warning("Tried to start process, but one is already running.")
@@ -407,11 +404,19 @@ class UsercodeLifecycle:
         else:
             LOGGER.debug("Tried to kill process, but no process is running.")
 
-    async def logger(self, proc_output: asyncio.StreamReader) -> None:
+    async def logger(
+        self,
+        proc_output: asyncio.StreamReader,
+        *,
+        initial_messages: List[str] = [],
+    ) -> None:
         """
         Logger task.
 
-        Logs the output of the process to log.txt
+        Logs the output of the process to a log file and MQTT
+
+        :param proc_output: stream of data from the usercode process
+        :param initial_message: optional message to add at the start of the log
         """
         log_path = self._disk_info.mount_path / "log.txt"
 
@@ -431,6 +436,12 @@ class UsercodeLifecycle:
 
         with log_path.open("w") as fh:
             log_line = 0
+
+            # Print any initial messages
+            for message in initial_messages:
+                log(f"{message}\n", log_line)
+                log_line += 1
+
             log("=== LOG STARTED ===\n", log_line)
             log_line += 1
             data = await proc_output.readline()
