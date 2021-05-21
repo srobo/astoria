@@ -31,5 +31,5 @@ class ShowMetadataCommand(SingleManagerMessageCommand[MetadataManagerMessage]):
     ) -> None:
         """Print the metadata."""
         print("Current Astoria Metadata is:")
-        for i, v in message.metadata.__dict__.items():
+        for i, v in sorted(message.metadata.__dict__.items()):
             print(f"\t{i}: {v}")
