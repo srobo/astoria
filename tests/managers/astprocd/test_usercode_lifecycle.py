@@ -2,6 +2,7 @@
 import asyncio
 from contextlib import AbstractContextManager
 from pathlib import Path
+from re import compile
 from typing import IO, Any, List, Optional, Tuple, Type
 
 import pytest
@@ -18,9 +19,24 @@ from astoria.managers.astprocd import (
 
 EXTRACT_ZIP_DATA = Path("tests/data/extract_zip")
 EXECUTE_CODE_DATA = Path("tests/data/execute_code")
+TIMESTAMP_REGEX = compile(r"^(\[.*\]) (.*)$")
 
 with Path("tests/data/config/valid.toml").open("r") as fh:
     CONFIG = AstoriaConfig.load_from_file(fh)
+
+
+def _strip_timestamp(line: str) -> str:
+    """
+    Strip the timestamp from a log line.
+
+    Also checks that the line has a timestamp and errors if not.
+    """
+    match = TIMESTAMP_REGEX.match(line)
+    if match:
+        ts, line = match.groups()
+        return line
+    else:
+        assert False, f"{line} Line did not have timestamp"
 
 
 class MockBroadcastHelper(BroadcastHelper[T]):
@@ -66,7 +82,7 @@ class ReadAndCleanupFile(AbstractContextManager):
     def __exit__(self, exc_type, exc_value, exc_traceback) -> None:
         if self._fh is not None:
             self._fh.close()
-        self._file_path.unlink()
+        # self._file_path.unlink()
 
 
 class StatusInformTestHelper:
@@ -238,10 +254,10 @@ async def test_run_with_not_python() -> None:
     log_file = EXECUTE_CODE_DATA / "not_python" / "log.txt"
     with ReadAndCleanupFile(log_file) as fh:
         lines = fh.read().splitlines()
-    assert lines[0] == "WARNING: Running on DEVELOPMENT BUILD"
-    assert lines[1] == "=== LOG STARTED ==="
-    assert "This is not a python program" in lines[3]
-    assert lines[-1] == "=== LOG FINISHED ==="
+    assert _strip_timestamp(lines[0]) == "WARNING: Running on DEVELOPMENT BUILD"
+    assert _strip_timestamp(lines[1]) == "=== LOG STARTED ==="
+    assert "This is not a python program" in _strip_timestamp(lines[3])
+    assert _strip_timestamp(lines[-1]) == "=== LOG FINISHED ==="
 
     assert lines == sith.log_helper.get_lines()
 
@@ -269,10 +285,10 @@ async def test_run_with_syntax_error() -> None:
     log_file = EXECUTE_CODE_DATA / "syntax_error" / "log.txt"
     with ReadAndCleanupFile(log_file) as fh:
         lines = fh.read().splitlines()
-    assert lines[0] == "WARNING: Running on DEVELOPMENT BUILD"
-    assert lines[1] == "=== LOG STARTED ==="
-    assert "SyntaxError" in lines[5]
-    assert lines[-1] == "=== LOG FINISHED ==="
+    assert _strip_timestamp(lines[0]) == "WARNING: Running on DEVELOPMENT BUILD"
+    assert _strip_timestamp(lines[1]) == "=== LOG STARTED ==="
+    assert "SyntaxError" in _strip_timestamp(lines[5])
+    assert _strip_timestamp(lines[-1]) == "=== LOG FINISHED ==="
 
     assert lines == sith.log_helper.get_lines()
 
@@ -299,10 +315,10 @@ async def test_run_with_valid_python_wait_finish() -> None:
     log_file = EXECUTE_CODE_DATA / "valid_python_short" / "log.txt"
     with ReadAndCleanupFile(log_file) as fh:
         lines = fh.read().splitlines()
-    assert lines[0] == "WARNING: Running on DEVELOPMENT BUILD"
-    assert lines[1] == "=== LOG STARTED ==="
-    assert lines[2] == "Hello World"
-    assert lines[-1] == "=== LOG FINISHED ==="
+    assert _strip_timestamp(lines[0]) == "WARNING: Running on DEVELOPMENT BUILD"
+    assert _strip_timestamp(lines[1]) == "=== LOG STARTED ==="
+    assert _strip_timestamp(lines[2]) == "Hello World"
+    assert _strip_timestamp(lines[-1]) == "=== LOG FINISHED ==="
 
     assert lines == sith.log_helper.get_lines()
 
@@ -370,8 +386,8 @@ async def test_run_with_allowed_system_version(
 
     # Check the rest of the file is okay too
     offset = len(warning_strings)
-    assert lines[offset] == "=== LOG STARTED ==="
-    assert lines[offset + 1] == "Hello World"
-    assert lines[-1] == "=== LOG FINISHED ==="
+    assert _strip_timestamp(lines[offset]) == "=== LOG STARTED ==="
+    assert _strip_timestamp(lines[offset + 1]) == "Hello World"
+    assert _strip_timestamp(lines[-1]) == "=== LOG FINISHED ==="
 
     assert lines == sith.log_helper.get_lines()
