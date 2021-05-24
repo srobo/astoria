@@ -42,6 +42,10 @@ class Metadata(BaseModel):
             libc_ver="".join(platform.libc_ver()),
             kit_name=config.kit.name,
             kit_version=config.kit.version,
+            wifi_ssid=config.wifi.ssid,
+            wifi_psk=config.wifi.psk,
+            wifi_region=config.wifi.region,
+            wifi_interface=config.wifi.interface,
         )
 
     # From Meta USB
@@ -62,7 +66,9 @@ class Metadata(BaseModel):
     kit_name: str
     kit_version: str
     wifi_ssid: Optional[str] = None
-    wifi_password: Optional[str] = None
+    wifi_psk: Optional[str] = None
+    wifi_region: Optional[str] = None
+    wifi_interface: str = "wlan0"
 
 
 class MetadataManagerMessage(ManagerMessage):

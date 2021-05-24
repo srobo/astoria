@@ -48,11 +48,27 @@ class KitInfo(BaseModel):
         extra = "forbid"
 
 
+class WiFiInfo(BaseModel):
+    """"WiFI credentials"""
+
+    enabled: bool = True
+    ssid: Optional[str]
+    psk: Optional[str]
+    region: Optional[str]
+    interface: str = "wlan0"
+
+    class Config:
+        """Pydantic config."""
+
+        extra = "forbid"
+
+
 class AstoriaConfig(BaseModel):
     """Config schema for Astoria."""
 
     mqtt: MQTTBrokerInfo
     kit: KitInfo
+    wifi: WiFiInfo
 
     class Config:
         """Pydantic config."""
