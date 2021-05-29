@@ -49,13 +49,9 @@ class KitInfo(BaseModel):
 
 
 class WiFiInfo(BaseModel):
-    """"WiFI credentials"""
+    """System settings for WiFi."""
 
-    enabled: bool = True
-    ssid: Optional[str]
-    psk: Optional[str]
-    region: Optional[str]
-    interface: str = "wlan0"
+    interface: str
 
     class Config:
         """Pydantic config."""

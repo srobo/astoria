@@ -42,11 +42,21 @@ class Metadata(BaseModel):
             libc_ver="".join(platform.libc_ver()),
             kit_name=config.kit.name,
             kit_version=config.kit.version,
-            wifi_ssid=config.wifi.ssid,
-            wifi_psk=config.wifi.psk,
-            wifi_region=config.wifi.region,
-            wifi_interface=config.wifi.interface,
         )
+
+    def is_wifi_valid(self) -> bool:
+        """
+        Check if the WiFi configuration is valid to be turned on.
+
+        Checks that the WiFi is enabled and that the config params are set.Optional
+        :return: boolean indicating whether the WiFi can be turned on.
+        """
+        return all([
+            self.wifi_enabled,
+            self.wifi_ssid is not None,
+            self.wifi_psk is not None,
+            self.wifi_region is not None,
+        ])
 
     # From Meta USB
     arena: str = "A"
@@ -68,7 +78,6 @@ class Metadata(BaseModel):
     wifi_ssid: Optional[str] = None
     wifi_psk: Optional[str] = None
     wifi_region: Optional[str] = None
-    wifi_interface: str = "wlan0"
 
 
 class MetadataManagerMessage(ManagerMessage):

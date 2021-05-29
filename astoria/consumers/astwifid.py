@@ -5,11 +5,11 @@ Manages a WiFi hotspot for the robot.
 """
 import asyncio
 import logging
-import subprocess
-from subprocess import check_output, Popen
-from json import loads, JSONDecodeError
-from pathlib import Path
-from typing import Match, Optional
+import os
+import signal
+import tempfile
+from json import JSONDecodeError, loads
+from typing import IO, Match, Optional
 
 import click
 from pydantic import ValidationError
@@ -26,12 +26,18 @@ loop = asyncio.get_event_loop()
 @click.option("-v", "--verbose", is_flag=True)
 @click.option("-c", "--config-file", type=click.Path(exists=True))
 def main(*, verbose: bool, config_file: Optional[str]) -> None:
-    """WiFi Daemon Application Entrypoint."""
+    """The WiFi Daemon Application Entrypoint."""
     wifid = WiFiHotspotDaemon(verbose, config_file)
     loop.run_until_complete(wifid.run())
 
 
 class WiFiHotspotDaemon(StateConsumer):
+    """
+    Hotspot management daemon.
+
+    Receives metadata information from astmetad and manages the WiFi hotspot.
+    """
+
     name = "astwifid"
 
     dependencies = ["astmetad"]
@@ -50,15 +56,12 @@ class WiFiHotspotDaemon(StateConsumer):
         if self._lifecycle:
             await self._lifecycle.stop_hotspot()
 
-    @property
-    def name_prefix(self) -> str:
-        return "astwifid"
-
     async def handle_astmetad_message(
             self,
             match: Match[str],
             payload: str,
     ) -> None:
+        """Event handler for metadata changes."""
         if payload:
             try:
                 metadata_manager_message = MetadataManagerMessage(**loads(payload))
@@ -71,68 +74,99 @@ class WiFiHotspotDaemon(StateConsumer):
             LOGGER.warning("Received empty metadata manager message.")
 
     async def handle_metadata(self, metadata: Metadata) -> None:
+        """
+        Update the state of the hotspot based on the current metadata.
 
+        :param metadata: The metadata included in the update.
+        """
         if self._lifecycle:
-            if metadata.wifi_enabled:
-                # Check if creds match
-                pass
+            if metadata.is_wifi_valid():
+                if not self._lifecycle.has_metadata_changed(metadata):
+                    await self._lifecycle.stop_hotspot()
+                    self._lifecycle = WiFiHotspotLifeCycle(
+                        # The types here are checked by is_wifi_valid
+                        metadata.wifi_ssid,  # type: ignore
+                        metadata.wifi_psk,  # type: ignore
+                        metadata.wifi_region,  # type: ignore
+                        self.config.wifi.interface,
+                    )
+                    asyncio.ensure_future(self._lifecycle.run_hotspot())
             else:
                 # Turn it off!
                 await self._lifecycle.stop_hotspot()
                 self._lifecycle = None
         else:
-            if metadata.wifi_enabled:
+            if metadata.is_wifi_valid():
                 # Turn it on!
                 self._lifecycle = WiFiHotspotLifeCycle(
-                    metadata.wifi_ssid,
-                    metadata.wifi_psk,
-                    metadata.wifi_region,
-                    metadata.wifi_interface,
+                    # The types here are checked by is_wifi_valid
+                    metadata.wifi_ssid,  # type: ignore
+                    metadata.wifi_psk,  # type: ignore
+                    metadata.wifi_region,  # type: ignore
+                    self.config.wifi.interface,
                 )
                 asyncio.ensure_future(self._lifecycle.run_hotspot())
 
 
 class WiFiHotspotLifeCycle:
-    ssid: str
-    psk: str
-    region: str
-    interface: str
-    config_file_path: Path = Path("/tmp/astwifid_hostapd_config")
-    proc: Optional[Popen] = None
-    running = True
+    """Manages the lifecycle of the hostapd process."""
 
     def __init__(self, ssid: str, psk: str, region: str, interface: str) -> None:
-        print("Starting WiFi Hotspot lifecycle")
-        self.ssid = ssid
-        self.psk = psk
-        self.region = region
-        self.interface = interface
+        LOGGER.info("Starting WiFi Hotspot lifecycle")
+        self._ssid: str = ssid
+        self._psk: str = psk
+        self._region: str = region
+        self._interface: str = interface
+
+        self._config_file: Optional[IO[bytes]] = None
+        self._proc: Optional[asyncio.subprocess.Process] = None
+        self._running: bool = False
+
+    def has_metadata_changed(self, metadata: Metadata) -> bool:
+        """Checks if the hotspot's properties match that of a set of metadata."""
+        return all(
+            [
+                self._ssid == metadata.wifi_ssid,
+                self._psk == metadata.wifi_psk,
+                self._region == metadata.wifi_region,
+            ],
+        )
 
     async def run_hotspot(self) -> None:
-        self.running = True
-        LOGGER.info(f"Starting WiFi Hotspot \"{self.ssid}\" on {self.interface}")
+        """Starts the hostapd process."""
+        self._running = True
+        LOGGER.info(f"Starting WiFi Hotspot \"{self._ssid}\" on {self._interface}")
         self.gen_hostapd_config()
-        self.proc = Popen(["hostapd", self.config_file_path])
+        if self._config_file is not None:
+            self._proc = await asyncio.create_subprocess_exec(
+                "hostapd",
+                self._config_file.name,
+            )
 
-        while self.running:
-            sc = self.proc.poll()
-            if sc is None:
-                continue
+            while self._running:
+                sc = await self._proc.wait()
+                if sc is None:
+                    continue
 
-            LOGGER.info(f"hostapd terminated with status code {sc}, restarting...")
-            self.proc = Popen(["hostapd", self.config_file_path])
-            LOGGER.info(f"hostapd started wth PID: {self.proc.pid}")
+                LOGGER.info(f"hostapd terminated with status code {sc}, restarting...")
+                self._proc = await asyncio.create_subprocess_exec(
+                    "hostapd",
+                    self._config_file.name,
+                )
+                LOGGER.info(f"hostapd started wth PID: {self._proc.pid}")
+        else:
+            raise RuntimeError("Arghh no config file wut")
 
-
-    def gen_hostapd_config(self):
-        self.config_file_path = Path(check_output(["mktemp"]).decode().strip())
-        LOGGER.debug(f"Writing hostapd configuration to {self.config_file_path}")
+    def gen_hostapd_config(self) -> None:
+        """Generates a configuration file for hostapd based on the current metadata."""
+        self._config_file = tempfile.NamedTemporaryFile(delete=False)
+        LOGGER.debug(f"Writing hostapd configuration to {self._config_file.name}")
         config = {
-            "interface": self.interface,
+            "interface": self._interface,
             # "bridge": "br0",
-            "ssid": self.ssid,
+            "ssid": self._ssid,
             # "driver": "nl80211",
-            "country_code": self.region,
+            "country_code": self._region,
             "channel": 7,
             "hw_mode": "g",
             # Bit field: bit0 = WPA, bit1 = WPA2
@@ -142,22 +176,34 @@ class WiFiHotspotLifeCycle:
             # Set of accepted cipher suites; disabling insecure TKIP
             "wpa_pairwise": "CCMP",
             # Set of accepted key management algorithms
-            "wpa_key_mgmt": "WPA-PSK",
-            "wpa_passphrase": self.psk,
+            "wpa_key_mgmt": "SAE WPA-PSK",  # SAE = WPA3, WPA-PSK = WPA2
+            "wpa_passphrase": self._psk,
         }
-        contents = "\n".join([f"{k}={config.get(k)}" for k in config])
+        contents = "\n".join(f"{k}={v}" for k, v in config.items())
 
-        self.config_file_path.write_text(contents)
-
-    def cleanup_config_file(self):
-        self.config_file_path.unlink(missing_ok=True)
+        self._config_file.write(contents.encode())
+        self._config_file.close()
 
     async def stop_hotspot(self) -> None:
-        self.running = False
+        """Stops the hostapd process."""
+        self._running = False
         LOGGER.info("Stopping WiFi Hotspot")
-        if self.proc is not None:
-            self.proc.send_signal(2)  # SIGINT - equivalent of ^C
-        self.cleanup_config_file()
+        if self._proc is not None:
+            self._proc.send_signal(signal.SIGINT)
+            try:
+                await asyncio.wait_for(self._proc.communicate(), timeout=5.0)
+            except asyncio.TimeoutError:
+                if self._proc is not None:
+                    LOGGER.info(f"Sent SIGKILL to pid {self._proc.pid}")
+                    self._proc.send_signal(signal.SIGKILL)
+            except AttributeError:
+                # Under some circumstances, there is a race condition such that
+                # _proc becomes None whilst the communicate timeout is running.
+                # We want to catch and discard this error.
+                pass
+
+        if self._config_file:
+            os.unlink(self._config_file.name)
 
 
 if __name__ == "__main__":

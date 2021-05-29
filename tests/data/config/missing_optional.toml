@@ -5,3 +5,6 @@ port = 1883
 [kit]
 name = "Astoria Development"
 version = "0.0.0.0dev"
+
+[wifi]
+interface = "wlan0"
