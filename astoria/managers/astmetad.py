@@ -3,8 +3,8 @@
 import asyncio
 import logging
 from abc import ABCMeta, abstractmethod
-from json import loads, JSONDecodeError
-from typing import Dict, List, Optional, Set, Tuple
+from json import JSONDecodeError, loads
+from typing import Dict, List, Optional, Set, Tuple, Type
 
 import click
 
@@ -32,14 +32,66 @@ def main(*, verbose: bool, config_file: Optional[str]) -> None:
     loop.run_until_complete(metad.run())
 
 
+class AbstractMetadataDiskLifecycle(metaclass=ABCMeta):
+    """Load and validate metadata from a disk."""
+
+    def __init__(self, uuid: DiskUUID, disk_info: DiskInfo) -> None:
+        self._uuid = uuid
+        self._disk_info = disk_info
+
+        self._diff = self.extract_diff_data()
+
+    @abstractmethod
+    def extract_diff_data(self) -> Dict[str, str]:
+        """Extract the diff data from the disk."""
+        raise NotImplementedError
+
+    @property
+    def diff_data(self) -> Dict[str, str]:
+        """The data to be used as override."""
+        return self._diff
+
+
+class MetadataDiskLifecycle(AbstractMetadataDiskLifecycle):
+    """Load and validate metadata from a JSON file on the disk."""
+
+    def extract_diff_data(self) -> Dict[str, str]:
+        """
+        Extract the diff data from the disk.
+
+        Loads astoria.json from the disk and parses it as JSON.
+        """
+        metadata_file_path = self._disk_info.mount_path / "astoria.json"
+
+        try:
+            with metadata_file_path.open("r") as fh:
+                return loads(fh.read())  # type: ignore
+        except FileNotFoundError:
+            LOGGER.warning("Unable to find metadata.json.")
+        except JSONDecodeError:
+            LOGGER.warning("Invalid JSON in astoria.json")
+        return {}
+
+
 class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
     """Astoria Metadata State Manager."""
 
     name = "astmetad"
     dependencies = ["astdiskd"]
 
+    DISK_TYPE_LIFECYCLE_MAP: Dict[DiskType, Type[AbstractMetadataDiskLifecycle]] = {
+        DiskType.METADATA: MetadataDiskLifecycle,
+    }
+
+    DISK_TYPE_OVERRIDE_MAP: Dict[DiskType, Set[str]] = {
+        DiskType.METADATA: {"arena", "zone", "mode", "game_timeout", "wifi_enabled"},
+    }
+
     def _init(self) -> None:
-        self._metadisk_lifecycle: Optional[MetadataDiskLifecycle] = None
+        self._lifecycles: Dict[DiskType, Optional[AbstractMetadataDiskLifecycle]] = {
+            disk_type: None
+            for disk_type in self.DISK_TYPE_LIFECYCLE_MAP
+        }
 
         self._cur_disks: Dict[DiskUUID, DiskInfo] = {}
         self._mqtt.subscribe("astdiskd", self.handle_astdiskd_disk_info_message)
@@ -78,24 +130,31 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
     async def handle_disk_insertion(self, uuid: DiskUUID, disk_info: DiskInfo) -> None:
         """Handle a disk insertion."""
         LOGGER.debug(f"Disk inserted: {uuid} ({disk_info.disk_type})")
-        if disk_info.disk_type is DiskType.METADATA:
-            LOGGER.info(f"Metadata disk {uuid} is mounted at {disk_info.mount_path}")
-            if self._metadisk_lifecycle is None:
-                LOGGER.debug(f"Starting metadata lifecycle for {uuid}")
-                self._metadisk_lifecycle = MetadataDiskLifecycle(uuid, disk_info)
-                self.update_status()
-            else:
-                LOGGER.warn("Cannot use metadata, there is already a lifecycle present.")
+        for disk_type, lifecycle_class in self.DISK_TYPE_LIFECYCLE_MAP.items():
+            if disk_info.disk_type is disk_type:
+                LOGGER.info(
+                    f"{disk_type.name} disk {uuid} is mounted"
+                    f" at {disk_info.mount_path}",
+                )
+                if self._lifecycles[disk_type] is not None:
+                    LOGGER.debug(f"Starting lifecycle for {uuid}")
+                    self._lifecycles[disk_type] = lifecycle_class(uuid, disk_info)
+                    self.update_status()
+                else:
+                    LOGGER.warn(
+                        "Cannot use metadata, there is already a lifecycle present.",
+                    )
 
     async def handle_disk_removal(self, uuid: DiskUUID, disk_info: DiskInfo) -> None:
         """Handle a disk removal."""
         LOGGER.debug(f"Disk removed: {uuid} ({disk_info.disk_type})")
-        if disk_info.disk_type is DiskType.METADATA:
-            LOGGER.info(f"Metadata disk {uuid} removed ({disk_info.mount_path})")
-            if self._metadisk_lifecycle is not None \
-                    and self._metadisk_lifecycle._uuid == disk_info.uuid:
-                self._metadisk_lifecycle = None
-                self.update_status()
+        for disk_type, lifecycle_class in self.DISK_TYPE_LIFECYCLE_MAP.items():
+            if disk_info.disk_type is disk_type:
+                LOGGER.info(f"Metadata disk {uuid} removed ({disk_info.mount_path})")
+                lifecycle = self._lifecycles[disk_type]
+                if lifecycle is not None and lifecycle._uuid == disk_info.uuid:
+                    self._lifecycles[disk_type] = None
+                    self.update_status()
 
     async def handle_mutation_request(
         self,
@@ -142,14 +201,15 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
             (self._allowed_mutations_by_request, self._requested_data),
         ]
 
-        if self._metadisk_lifecycle is not None:
-            # Add metadata source from the metadata usb, if it is present.
-            metadata_sources.append(
-                (
-                    {"arena", "zone", "mode", "game_timeout", "wifi_enabled"},
-                    self._metadisk_lifecycle.diff_data,
-                ),
-            )
+        for disk_type, val in self._lifecycles.items():
+            if val is not None:
+                # Add disk-based metadata source if it is present.
+                metadata_sources.append(
+                    (
+                        self.DISK_TYPE_OVERRIDE_MAP[disk_type],
+                        val.diff_data,
+                    ),
+                )
 
         metadata = Metadata.init(self.config)
 
@@ -169,47 +229,6 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
             status=MetadataManagerMessage.Status.RUNNING,
             metadata=self.get_current_metadata(),
         )
-
-
-class AbstractMetadataDiskLifecycle(metaclass=ABCMeta):
-    """Load and validate metadata from a disk."""
-
-    def __init__(self, uuid: DiskUUID, disk_info: DiskInfo) -> None:
-        self._uuid = uuid
-        self._disk_info = disk_info
-
-        self._diff = self.extract_diff_data()
-
-    @abstractmethod
-    def extract_diff_data(self) -> Dict[str, str]:
-        """Extract the diff data from the disk."""
-        raise NotImplementedError
-
-    @property
-    def diff_data(self) -> Dict[str, str]:
-        """The data to be used as override."""
-        return self._diff
-
-
-class MetadataDiskLifecycle(AbstractMetadataDiskLifecycle):
-    """Load and validate metadata from a JSON file on the disk."""
-
-    def extract_diff_data(self) -> Dict[str, str]:
-        """
-        Extract the diff data from the disk.
-
-        Loads astoria.json from the disk and parses it as JSON.
-        """
-        metadata_file_path = self._disk_info.mount_path / "astoria.json"
-
-        try:
-            with metadata_file_path.open("r") as fh:
-                return loads(fh.read())  # type: ignore
-        except FileNotFoundError:
-            LOGGER.warning("Unable to find metadata.json.")
-        except JSONDecodeError:
-            LOGGER.warning("Invalid JSON in astoria.json")
-        return {}
 
 
 if __name__ == "__main__":
