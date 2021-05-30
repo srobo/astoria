@@ -5,9 +5,13 @@ import logging
 from abc import ABCMeta, abstractmethod
 from json import JSONDecodeError, loads
 from typing import Dict, List, Optional, Set, Tuple, Type
+from zipfile import BadZipFile, ZipFile
 
 import click
+import toml
+from pydantic import ValidationError
 
+from astoria.common.bundle import CodeBundle
 from astoria.common.manager import StateManager
 from astoria.common.manager_requests import (
     MetadataSetManagerRequest,
@@ -73,6 +77,40 @@ class MetadataDiskLifecycle(AbstractMetadataDiskLifecycle):
         return {}
 
 
+class BundleDiskLifecycle(AbstractMetadataDiskLifecycle):
+    """Load and validate metadata from a usercode bundle on the disk."""
+
+    def extract_diff_data(self) -> Dict[str, str]:
+        """
+        Extract the diff data from the disk.
+
+        Loads bundle.toml fron inside the robot.zip
+        """
+        bundle_path = self._disk_info.mount_path / "robot.zip"
+
+        try:
+            with ZipFile(bundle_path) as zf:
+                bundle_file = zf.read("bundle.toml")
+            bundle_contents = toml.loads(bundle_file.decode())
+            bundle = CodeBundle(**bundle_contents)
+
+            return {
+                "wifi_ssid": bundle.wifi.ssid,
+                "wifi_psk": bundle.wifi.psk,
+                "wifi_region": bundle.wifi.region,
+                "wifi_enabled": str(bundle.wifi.enabled),
+            }
+        except FileNotFoundError:
+            LOGGER.warning("Unable to find metadata.json.")
+        except BadZipFile:
+            LOGGER.warning("Bad robot.zip")
+        except toml.TomlDecodeError:
+            LOGGER.warning("Invalid code bundle.toml")
+        except ValidationError:
+            LOGGER.warning("Invalid code bundle.toml")
+        return {}
+
+
 class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
     """Astoria Metadata State Manager."""
 
@@ -80,10 +118,12 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
     dependencies = ["astdiskd"]
 
     DISK_TYPE_LIFECYCLE_MAP: Dict[DiskType, Type[AbstractMetadataDiskLifecycle]] = {
+        DiskType.USERCODE: BundleDiskLifecycle,
         DiskType.METADATA: MetadataDiskLifecycle,
     }
 
     DISK_TYPE_OVERRIDE_MAP: Dict[DiskType, Set[str]] = {
+        DiskType.USERCODE: {"wifi_ssid", "wifi_psk", "wifi_region", "wifi_enabled"},
         DiskType.METADATA: {"arena", "zone", "mode", "game_timeout", "wifi_enabled"},
     }
 
