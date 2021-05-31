@@ -5,7 +5,7 @@ Code Bundle Format
 
 zip file containing:
 
-- ``main.py`` - code entrypoint
+- ``robot.py`` - code entrypoint
 - ``bundle.toml`` - code bundle information file
 
 **Check if info.yaml or wifi.yaml are present. If so, reject.**
