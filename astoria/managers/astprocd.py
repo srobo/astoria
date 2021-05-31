@@ -275,11 +275,11 @@ class UsercodeLifecycle:
                 "The provided robot.zip is not a valid ZIP archive",
             )
 
-        # Check that main.py is present
-        exe_path = self._dir_path / "main.py"
+        # Check that robot.py is present
+        exe_path = self._dir_path / "robot.py"
         if not exe_path.exists():
             raise InvalidCodeBundleException(
-                "The provided robot.zip did not contain a main.py",
+                "The provided robot.zip did not contain a robot.py",
             )
 
         LEGACY_FILES: Set[str] = {"info.yaml", "info.yml", "wifi.yaml", "wifi.yml"}
@@ -328,7 +328,7 @@ class UsercodeLifecycle:
                     self._process = await asyncio.create_subprocess_exec(
                         "python3",
                         "-u",
-                        "main.py",
+                        "robot.py",
                         stdin=asyncio.subprocess.DEVNULL,
                         stdout=asyncio.subprocess.PIPE,
                         stderr=asyncio.subprocess.STDOUT,

@@ -185,7 +185,7 @@ def test_no_main_zip() -> None:
     with pytest.raises(InvalidCodeBundleException) as e:
         ucl._extract_and_validate_zip_file()
 
-    assert e.match("The provided robot.zip did not contain a main.py")
+    assert e.match("The provided robot.zip did not contain a robot.py")
 
 
 def test_good_zip() -> None:
@@ -237,7 +237,7 @@ async def test_run_with_not_python() -> None:
     Test that non-python code is handled.
 
     Checks that:
-    - Zip file is extracted and main.py is run
+    - Zip file is extracted and robot.py is run
     - Output is written to the log file
     - The correct status is passed to the state manager
     - Development indicator is printed
@@ -268,7 +268,7 @@ async def test_run_with_syntax_error() -> None:
     Test that bad python code is handled.
 
     Checks that:
-    - Zip file is extracted and main.py is run
+    - Zip file is extracted and robot.py is run
     - Output is written to the log file
     - The correct status is passed to the state manager
     - Development indicator is printed
@@ -299,7 +299,7 @@ async def test_run_with_valid_python_wait_finish() -> None:
     Test that valid python code is successfully executed.
 
     Checks that:
-    - Zip file is extracted and main.py is run
+    - Zip file is extracted and robot.py is run
     - Output is written to the log file
     - The correct status is passed to the state manager
     """
