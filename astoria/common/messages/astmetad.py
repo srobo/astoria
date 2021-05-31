@@ -44,6 +44,20 @@ class Metadata(BaseModel):
             kit_version=config.kit.version,
         )
 
+    def is_wifi_valid(self) -> bool:
+        """
+        Check if the WiFi configuration is valid to be turned on.
+
+        Checks that the WiFi is enabled and that the config params are set.Optional
+        :return: boolean indicating whether the WiFi can be turned on.
+        """
+        return all([
+            self.wifi_enabled,
+            self.wifi_ssid is not None,
+            self.wifi_psk is not None,
+            self.wifi_region is not None,
+        ])
+
     # From Meta USB
     arena: str = "A"
     zone: int = 0
@@ -62,7 +76,8 @@ class Metadata(BaseModel):
     kit_name: str
     kit_version: str
     wifi_ssid: Optional[str] = None
-    wifi_password: Optional[str] = None
+    wifi_psk: Optional[str] = None
+    wifi_region: Optional[str] = None
 
 
 class MetadataManagerMessage(ManagerMessage):

@@ -2,7 +2,10 @@
 name = "astoria"
 version = "0.2.0"
 description = "Robot Management System for Student Robotics Kit"
-authors = ["Dan Trickey <srobo-astoria@trickey.io>"]
+authors = [
+    "Dan Trickey <srobo-astoria@trickey.io>",
+    "Karina Kwiatek <kkwiatek@studentrobotics.org>",
+]
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/srobo/astoria"
@@ -56,3 +59,4 @@ astdiskd = 'astoria.managers.astdiskd:main'
 astmetad = 'astoria.managers.astmetad:main'
 astprocd = 'astoria.managers.astprocd:main'
 astctl = 'astoria.consumers.astctl:main'
+astwifid = 'astoria.consumers.astwifid:main'

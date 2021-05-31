@@ -48,11 +48,23 @@ class KitInfo(BaseModel):
         extra = "forbid"
 
 
+class WiFiInfo(BaseModel):
+    """System settings for WiFi."""
+
+    interface: str
+
+    class Config:
+        """Pydantic config."""
+
+        extra = "forbid"
+
+
 class AstoriaConfig(BaseModel):
     """Config schema for Astoria."""
 
     mqtt: MQTTBrokerInfo
     kit: KitInfo
+    wifi: WiFiInfo
 
     class Config:
         """Pydantic config."""

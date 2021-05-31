@@ -11,3 +11,6 @@ topic_prefix = "astoria"
 [kit]
 name = "Astoria Development"
 version = "0.0.0.0dev"
+
+[wifi]
+interface = "wlan0"
