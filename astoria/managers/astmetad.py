@@ -176,7 +176,7 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
                     f"{disk_type.name} disk {uuid} is mounted"
                     f" at {disk_info.mount_path}",
                 )
-                if self._lifecycles[disk_type] is not None:
+                if self._lifecycles[disk_type] is None:
                     LOGGER.debug(f"Starting lifecycle for {uuid}")
                     self._lifecycles[disk_type] = lifecycle_class(uuid, disk_info)
                     self.update_status()
