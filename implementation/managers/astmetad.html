@@ -195,105 +195,6 @@
 <div class="section" id="astmetad-data-structures-and-classes">
 <h2>Astmetad Data Structures and Classes<a class="headerlink" href="#astmetad-data-structures-and-classes" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt id="astoria.managers.astmetad.MetadataManager">
-<em class="property">class </em><code class="sig-prename descclassname">astoria.managers.astmetad.</code><code class="sig-name descname">MetadataManager</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">verbose</span></em>, <em class="sig-param"><span class="n">config_file</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/managers/astmetad.html#MetadataManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.managers.astmetad.MetadataManager" title="Permalink to this definition">¶</a></dt>
-<dd><p>Astoria Metadata State Manager.</p>
-<dl class="py attribute">
-<dt id="astoria.managers.astmetad.MetadataManager.dependencies">
-<code class="sig-name descname">dependencies</code><em class="property"> = ['astdiskd']</em><a class="headerlink" href="#astoria.managers.astmetad.MetadataManager.dependencies" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="astoria.managers.astmetad.MetadataManager.get_current_metadata">
-<code class="sig-name descname">get_current_metadata</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/managers/astmetad.html#MetadataManager.get_current_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.managers.astmetad.MetadataManager.get_current_metadata" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate the current metadata.</p>
-<p>Takes the default, static metadata based on the config and system
-information. It then overlays data from other sources in a priority order,
-whereby each source has a set of permitted attributes in the metadata that
-can be overridden.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#astoria.common.messages.astmetad.Metadata" title="astoria.common.messages.astmetad.Metadata"><code class="xref py py-class docutils literal notranslate"><span class="pre">Metadata</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="astoria.managers.astmetad.MetadataManager.handle_disk_insertion">
-<em class="property">async </em><code class="sig-name descname">handle_disk_insertion</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uuid</span></em>, <em class="sig-param"><span class="n">disk_info</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/managers/astmetad.html#MetadataManager.handle_disk_insertion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.managers.astmetad.MetadataManager.handle_disk_insertion" title="Permalink to this definition">¶</a></dt>
-<dd><p>Handle a disk insertion.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="astoria.managers.astmetad.MetadataManager.handle_disk_removal">
-<em class="property">async </em><code class="sig-name descname">handle_disk_removal</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uuid</span></em>, <em class="sig-param"><span class="n">disk_info</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/managers/astmetad.html#MetadataManager.handle_disk_removal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.managers.astmetad.MetadataManager.handle_disk_removal" title="Permalink to this definition">¶</a></dt>
-<dd><p>Handle a disk removal.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="astoria.managers.astmetad.MetadataManager.handle_mutation_request">
-<em class="property">async </em><code class="sig-name descname">handle_mutation_request</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/managers/astmetad.html#MetadataManager.handle_mutation_request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.managers.astmetad.MetadataManager.handle_mutation_request" title="Permalink to this definition">¶</a></dt>
-<dd><p>Handle a request to mutate metadata.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="../../design/ipc.html#astoria.common.manager_requests.RequestResponse" title="astoria.common.manager_requests.RequestResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">RequestResponse</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="astoria.managers.astmetad.MetadataManager.main">
-<em class="property">async </em><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/managers/astmetad.html#MetadataManager.main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.managers.astmetad.MetadataManager.main" title="Permalink to this definition">¶</a></dt>
-<dd><p>Main routine for astmetad.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt id="astoria.managers.astmetad.MetadataManager.name">
-<code class="sig-name descname">name</code><em class="property"> = 'astmetad'</em><a class="headerlink" href="#astoria.managers.astmetad.MetadataManager.name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="astoria.managers.astmetad.MetadataManager.offline_status">
-<em class="property">property </em><code class="sig-name descname">offline_status</code><a class="headerlink" href="#astoria.managers.astmetad.MetadataManager.offline_status" title="Permalink to this definition">¶</a></dt>
-<dd><p>Status to publish when the manager goes offline.</p>
-<p>This status should ensure that any other components relying
-on this data go into a safe state.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#astoria.common.messages.astmetad.MetadataManagerMessage" title="astoria.common.messages.astmetad.MetadataManagerMessage"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetadataManagerMessage</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="astoria.managers.astmetad.MetadataManager.update_status">
-<code class="sig-name descname">update_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/managers/astmetad.html#MetadataManager.update_status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.managers.astmetad.MetadataManager.update_status" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the status of the manager.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
 <dt id="astoria.common.messages.astmetad.MetadataManagerMessage">
 <em class="property">class </em><code class="sig-prename descclassname">astoria.common.messages.astmetad.</code><code class="sig-name descname">MetadataManagerMessage</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/messages/astmetad.html#MetadataManagerMessage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.common.messages.astmetad.MetadataManagerMessage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Status message for Metadata Manager.</p>
@@ -352,6 +253,15 @@ on this data go into a safe state.</p>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt id="astoria.common.messages.astmetad.Metadata.is_wifi_valid">
+<code class="sig-name descname">is_wifi_valid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/messages/astmetad.html#Metadata.is_wifi_valid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.common.messages.astmetad.Metadata.is_wifi_valid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the WiFi configuration is valid to be turned on.</p>
+<p>Checks that the WiFi is enabled and that the config params are set.Optional
+:rtype: <a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>
+:return: boolean indicating whether the WiFi can be turned on.</p>
+</dd></dl>
+
 <dl class="py attribute">
 <dt id="astoria.common.messages.astmetad.Metadata.kernel_version">
 <code class="sig-name descname">kernel_version</code><em class="property">: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></em><a class="headerlink" href="#astoria.common.messages.astmetad.Metadata.kernel_version" title="Permalink to this definition">¶</a></dt>
@@ -388,8 +298,13 @@ on this data go into a safe state.</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="astoria.common.messages.astmetad.Metadata.wifi_password">
-<code class="sig-name descname">wifi_password</code><em class="property">: Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></em><a class="headerlink" href="#astoria.common.messages.astmetad.Metadata.wifi_password" title="Permalink to this definition">¶</a></dt>
+<dt id="astoria.common.messages.astmetad.Metadata.wifi_psk">
+<code class="sig-name descname">wifi_psk</code><em class="property">: Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></em><a class="headerlink" href="#astoria.common.messages.astmetad.Metadata.wifi_psk" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="astoria.common.messages.astmetad.Metadata.wifi_region">
+<code class="sig-name descname">wifi_region</code><em class="property">: Optional<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></em><a class="headerlink" href="#astoria.common.messages.astmetad.Metadata.wifi_region" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">

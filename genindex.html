@@ -195,6 +195,8 @@
 </li>
         <li><a href="implementation/managers/astdiskd.html#astoria.common.disk_constraints.OrConstraint.__init__">(astoria.common.disk_constraints.OrConstraint method)</a>
 </li>
+        <li><a href="implementation/consumers/astwifid.html#astoria.consumers.astwifid.WiFiHotspotLifeCycle.__init__">(astoria.consumers.astwifid.WiFiHotspotLifeCycle method)</a>
+</li>
       </ul></li>
   </ul></td>
 </tr></table>
@@ -236,12 +238,8 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="implementation/managers/astmetad.html#astoria.managers.astmetad.MetadataManager.dependencies">dependencies (astoria.managers.astmetad.MetadataManager attribute)</a>
-
-      <ul>
-        <li><a href="implementation/managers/astprocd.html#astoria.managers.astprocd.ProcessManager.dependencies">(astoria.managers.astprocd.ProcessManager attribute)</a>
+      <li><a href="implementation/managers/astprocd.html#astoria.managers.astprocd.ProcessManager.dependencies">dependencies (astoria.managers.astprocd.ProcessManager attribute)</a>
 </li>
-      </ul></li>
       <li><a href="implementation/managers/astdiskd.html#astoria.common.messages.astdiskd.DiskType.determine_disk_type">determine_disk_type() (astoria.common.messages.astdiskd.DiskType class method)</a>
 </li>
       <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.RobotMode.DEV">DEV (astoria.common.messages.astmetad.RobotMode attribute)</a>
@@ -288,7 +286,7 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="implementation/managers/astmetad.html#astoria.managers.astmetad.MetadataManager.get_current_metadata">get_current_metadata() (astoria.managers.astmetad.MetadataManager method)</a>
+      <li><a href="implementation/consumers/astwifid.html#astoria.consumers.astwifid.WiFiHotspotLifeCycle.generate_hostapd_config">generate_hostapd_config() (astoria.consumers.astwifid.WiFiHotspotLifeCycle method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -296,25 +294,19 @@
 <h2 id="H">H</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="implementation/managers/astmetad.html#astoria.managers.astmetad.MetadataManager.handle_disk_insertion">handle_disk_insertion() (astoria.managers.astmetad.MetadataManager method)</a>
-
-      <ul>
-        <li><a href="implementation/managers/astprocd.html#astoria.managers.astprocd.ProcessManager.handle_disk_insertion">(astoria.managers.astprocd.ProcessManager method)</a>
+      <li><a href="implementation/managers/astprocd.html#astoria.managers.astprocd.ProcessManager.handle_disk_insertion">handle_disk_insertion() (astoria.managers.astprocd.ProcessManager method)</a>
 </li>
-      </ul></li>
-      <li><a href="implementation/managers/astmetad.html#astoria.managers.astmetad.MetadataManager.handle_disk_removal">handle_disk_removal() (astoria.managers.astmetad.MetadataManager method)</a>
-
-      <ul>
-        <li><a href="implementation/managers/astprocd.html#astoria.managers.astprocd.ProcessManager.handle_disk_removal">(astoria.managers.astprocd.ProcessManager method)</a>
+      <li><a href="implementation/managers/astprocd.html#astoria.managers.astprocd.ProcessManager.handle_disk_removal">handle_disk_removal() (astoria.managers.astprocd.ProcessManager method)</a>
 </li>
-      </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="implementation/managers/astprocd.html#astoria.managers.astprocd.ProcessManager.handle_kill_request">handle_kill_request() (astoria.managers.astprocd.ProcessManager method)</a>
 </li>
-      <li><a href="implementation/managers/astmetad.html#astoria.managers.astmetad.MetadataManager.handle_mutation_request">handle_mutation_request() (astoria.managers.astmetad.MetadataManager method)</a>
-</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="implementation/managers/astprocd.html#astoria.managers.astprocd.ProcessManager.handle_restart_request">handle_restart_request() (astoria.managers.astprocd.ProcessManager method)</a>
+</li>
+      <li><a href="implementation/consumers/astwifid.html#astoria.consumers.astwifid.WiFiHotspotLifeCycle.has_metadata_changed">has_metadata_changed() (astoria.consumers.astwifid.WiFiHotspotLifeCycle method)</a>
+</li>
+      <li><a href="implementation/consumers/astwifid.html#astoria.consumers.astwifid.WiFiHotspotLifeCycle.HOSTAPD_BINARY">HOSTAPD_BINARY (astoria.consumers.astwifid.WiFiHotspotLifeCycle attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -323,6 +315,10 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.Metadata.init">init() (astoria.common.messages.astmetad.Metadata class method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.Metadata.is_wifi_valid">is_wifi_valid() (astoria.common.messages.astmetad.Metadata method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -357,8 +353,6 @@
       <li><a href="implementation/managers/astdiskd.html#astoria.managers.astdiskd.DiskManager.main">main() (astoria.managers.astdiskd.DiskManager method)</a>
 
       <ul>
-        <li><a href="implementation/managers/astmetad.html#astoria.managers.astmetad.MetadataManager.main">(astoria.managers.astmetad.MetadataManager method)</a>
-</li>
         <li><a href="implementation/managers/astprocd.html#astoria.managers.astprocd.ProcessManager.main">(astoria.managers.astprocd.ProcessManager method)</a>
 </li>
       </ul></li>
@@ -392,8 +386,6 @@
 </li>
       <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.Metadata.Config">Metadata.Config (class in astoria.common.messages.astmetad)</a>
 </li>
-      <li><a href="implementation/managers/astmetad.html#astoria.managers.astmetad.MetadataManager">MetadataManager (class in astoria.managers.astmetad)</a>
-</li>
       <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.MetadataManagerMessage">MetadataManagerMessage (class in astoria.common.messages.astmetad)</a>
 </li>
       <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.Metadata.mode">mode (astoria.common.messages.astmetad.Metadata attribute)</a>
@@ -409,8 +401,6 @@
       <li><a href="implementation/managers/astdiskd.html#astoria.managers.astdiskd.DiskManager.name">name (astoria.managers.astdiskd.DiskManager attribute)</a>
 
       <ul>
-        <li><a href="implementation/managers/astmetad.html#astoria.managers.astmetad.MetadataManager.name">(astoria.managers.astmetad.MetadataManager attribute)</a>
-</li>
         <li><a href="implementation/managers/astprocd.html#astoria.managers.astprocd.ProcessManager.name">(astoria.managers.astprocd.ProcessManager attribute)</a>
 </li>
       </ul></li>
@@ -431,8 +421,6 @@
       <li><a href="implementation/managers/astdiskd.html#astoria.managers.astdiskd.DiskManager.offline_status">offline_status() (astoria.managers.astdiskd.DiskManager property)</a>
 
       <ul>
-        <li><a href="implementation/managers/astmetad.html#astoria.managers.astmetad.MetadataManager.offline_status">(astoria.managers.astmetad.MetadataManager property)</a>
-</li>
         <li><a href="implementation/managers/astprocd.html#astoria.managers.astprocd.ProcessManager.offline_status">(astoria.managers.astprocd.ProcessManager property)</a>
 </li>
       </ul></li>
@@ -468,6 +456,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.RobotMode">RobotMode (class in astoria.common.messages.astmetad)</a>
 </li>
+      <li><a href="implementation/consumers/astwifid.html#astoria.consumers.astwifid.WiFiHotspotLifeCycle.run_hotspot">run_hotspot() (astoria.consumers.astwifid.WiFiHotspotLifeCycle method)</a>
+</li>
       <li><a href="implementation/managers/astprocd.html#astoria.common.messages.astprocd.CodeStatus.RUNNING">RUNNING (astoria.common.messages.astprocd.CodeStatus attribute)</a>
 </li>
   </ul></td>
@@ -478,9 +468,11 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="design/ipc.html#astoria.common.manager_requests.ManagerRequest.sender_name">sender_name (astoria.common.manager_requests.ManagerRequest attribute)</a>
 </li>
+      <li><a href="implementation/managers/astprocd.html#astoria.common.messages.astprocd.CodeStatus.STARTING">STARTING (astoria.common.messages.astprocd.CodeStatus attribute)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="implementation/managers/astprocd.html#astoria.common.messages.astprocd.CodeStatus.STARTING">STARTING (astoria.common.messages.astprocd.CodeStatus attribute)</a>
+      <li><a href="implementation/consumers/astwifid.html#astoria.consumers.astwifid.WiFiHotspotLifeCycle.stop_hotspot">stop_hotspot() (astoria.consumers.astwifid.WiFiHotspotLifeCycle method)</a>
 </li>
       <li><a href="design/ipc.html#astoria.common.manager_requests.RequestResponse.success">success (astoria.common.manager_requests.RequestResponse attribute)</a>
 </li>
@@ -502,12 +494,8 @@
 </li>
       <li><a href="implementation/managers/astdiskd.html#astoria.managers.astdiskd.DiskManager.update_state">update_state() (astoria.managers.astdiskd.DiskManager method)</a>
 </li>
-      <li><a href="implementation/managers/astmetad.html#astoria.managers.astmetad.MetadataManager.update_status">update_status() (astoria.managers.astmetad.MetadataManager method)</a>
-
-      <ul>
-        <li><a href="implementation/managers/astprocd.html#astoria.managers.astprocd.ProcessManager.update_status">(astoria.managers.astprocd.ProcessManager method)</a>
+      <li><a href="implementation/managers/astprocd.html#astoria.managers.astprocd.ProcessManager.update_status">update_status() (astoria.managers.astprocd.ProcessManager method)</a>
 </li>
-      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="implementation/managers/astdiskd.html#astoria.common.messages.astdiskd.DiskType.USERCODE">USERCODE (astoria.common.messages.astdiskd.DiskType attribute)</a>
@@ -536,11 +524,15 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.Metadata.wifi_enabled">wifi_enabled (astoria.common.messages.astmetad.Metadata attribute)</a>
 </li>
+      <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.Metadata.wifi_psk">wifi_psk (astoria.common.messages.astmetad.Metadata attribute)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.Metadata.wifi_password">wifi_password (astoria.common.messages.astmetad.Metadata attribute)</a>
+      <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.Metadata.wifi_region">wifi_region (astoria.common.messages.astmetad.Metadata attribute)</a>
 </li>
       <li><a href="implementation/managers/astmetad.html#astoria.common.messages.astmetad.Metadata.wifi_ssid">wifi_ssid (astoria.common.messages.astmetad.Metadata attribute)</a>
+</li>
+      <li><a href="implementation/consumers/astwifid.html#astoria.consumers.astwifid.WiFiHotspotLifeCycle">WiFiHotspotLifeCycle (class in astoria.consumers.astwifid)</a>
 </li>
   </ul></td>
 </tr></table>
