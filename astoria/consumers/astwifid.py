@@ -188,6 +188,8 @@ class WiFiHotspotLifeCycle:
             # Set of accepted key management algorithms
             "wpa_key_mgmt": "SAE WPA-PSK",  # SAE = WPA3, WPA-PSK = WPA2
             "wpa_passphrase": self._psk,
+            "ieee80211w": 2,
+            "sae_require_mfp": 1,
         }
         contents = "\n".join(f"{k}={v}" for k, v in config.items())
 
