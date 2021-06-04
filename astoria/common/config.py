@@ -52,6 +52,7 @@ class WiFiInfo(BaseModel):
     """System settings for WiFi."""
 
     interface: str
+    bridge: str
 
     class Config:
         """Pydantic config."""
