@@ -8,3 +8,4 @@ version = "0.0.0.0dev"
 
 [wifi]
 interface = "wlan0"
+bridge = "br0"

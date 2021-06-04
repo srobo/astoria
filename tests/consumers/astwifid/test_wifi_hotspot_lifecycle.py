@@ -33,6 +33,7 @@ def lifecycle() -> WiFiHotspotLifeCycle:
         "pskpskpskpsk",
         "region",
         "interface",
+        "bridge",
     )
 
 

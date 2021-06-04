@@ -89,6 +89,7 @@ class WiFiHotspotDaemon(StateConsumer):
                         metadata.wifi_psk,  # type: ignore
                         metadata.wifi_region,  # type: ignore
                         self.config.wifi.interface,
+                        self.config.wifi.bridge,
                     )
                     asyncio.ensure_future(self._lifecycle.run_hotspot())
             else:
@@ -104,6 +105,7 @@ class WiFiHotspotDaemon(StateConsumer):
                     metadata.wifi_psk,  # type: ignore
                     metadata.wifi_region,  # type: ignore
                     self.config.wifi.interface,
+                    self.config.wifi.bridge,
                 )
                 asyncio.ensure_future(self._lifecycle.run_hotspot())
 
@@ -113,12 +115,20 @@ class WiFiHotspotLifeCycle:
 
     HOSTAPD_BINARY: str = "hostapd"
 
-    def __init__(self, ssid: str, psk: str, region: str, interface: str) -> None:
+    def __init__(
+            self,
+            ssid: str,
+            psk: str,
+            region: str,
+            interface: str,
+            bridge: str,
+    ) -> None:
         LOGGER.info("Starting WiFi Hotspot lifecycle")
         self._ssid: str = ssid
         self._psk: str = psk
         self._region: str = region
         self._interface: str = interface
+        self._bridge: str = bridge
 
         self._config_file: Optional[IO[bytes]] = None
         self._proc: Optional[asyncio.subprocess.Process] = None
@@ -164,9 +174,8 @@ class WiFiHotspotLifeCycle:
         )
         config = {
             "interface": self._interface,
-            # "bridge": "br0",
+            "bridge": self._bridge,
             "ssid": self._ssid,
-            # "driver": "nl80211",
             "country_code": self._region,
             "channel": 7,
             "hw_mode": "g",
