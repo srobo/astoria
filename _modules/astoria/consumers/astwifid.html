@@ -345,6 +345,8 @@
             <span class="c1"># Set of accepted key management algorithms</span>
             <span class="s2">&quot;wpa_key_mgmt&quot;</span><span class="p">:</span> <span class="s2">&quot;SAE WPA-PSK&quot;</span><span class="p">,</span>  <span class="c1"># SAE = WPA3, WPA-PSK = WPA2</span>
             <span class="s2">&quot;wpa_passphrase&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_psk</span><span class="p">,</span>
+            <span class="s2">&quot;ieee80211w&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s2">&quot;sae_require_mfp&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="n">contents</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
 
