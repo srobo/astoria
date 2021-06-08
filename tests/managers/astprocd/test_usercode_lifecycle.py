@@ -12,7 +12,7 @@ from astoria.common.config import AstoriaConfig
 from astoria.common.messages.astdiskd import DiskInfo, DiskType, DiskUUID
 from astoria.common.messages.astprocd import CodeStatus
 from astoria.common.mqtt.broadcast_helper import BroadcastHelper, T
-from astoria.managers.astprocd import (
+from astoria.managers.astprocd.usercode_lifecycle import (
     InvalidCodeBundleException,
     UsercodeLifecycle,
 )
