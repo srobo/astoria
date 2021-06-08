@@ -348,7 +348,7 @@ class UsercodeLifecycle:
                                     initial_messages=log_message,
                                 ),
                             )
-                        if not all([self._process.stdout, self._process.stderr]):
+                        else:
                             LOGGER.warning("Unable to start logger task.")
                         self.status = CodeStatus.RUNNING
                         LOGGER.info(
