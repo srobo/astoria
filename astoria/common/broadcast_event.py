@@ -1,5 +1,5 @@
 """Broadcast Event Schemas."""
-from typing import ClassVar
+from typing import ClassVar, Optional
 
 from pydantic import BaseModel
 
@@ -42,3 +42,4 @@ class UsercodeLogBroadcastEvent(BroadcastEvent):
 
     pid: int
     content: str
+    source: Optional[str]
