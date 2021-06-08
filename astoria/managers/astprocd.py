@@ -13,7 +13,7 @@ import click
 import toml
 from pydantic import ValidationError
 
-from astoria.common.broadcast_event import UsercodeLogBroadcastEvent
+from astoria.common.broadcast_event import UsercodeLogBroadcastEvent, LogEventSource
 from astoria.common.bundle import CodeBundle, IncompatibleKitVersionException
 from astoria.common.config import AstoriaConfig
 from astoria.common.manager import StateManager
@@ -336,12 +336,11 @@ class UsercodeLifecycle:
                         start_new_session=True,
                     )
                     if self._process is not None:
-                        if self._process.stdout is not None:
-                            print("registering stdout")
+                        if self._process.stdout is not None and self._process.stderr is not None:
                             asyncio.ensure_future(
                                 self.logger(
-                                    {"stdout": self._process.stdout,
-                                     "stderr": self._process.stderr},
+                                    {LogEventSource.STDOUT: self._process.stdout,
+                                     LogEventSource.STDERR: self._process.stderr},
                                     initial_messages=log_message,
                                 ),
                             )
@@ -409,7 +408,7 @@ class UsercodeLifecycle:
 
     async def logger(
         self,
-        proc_outputs: Dict[str, Optional[asyncio.StreamReader]],
+        proc_outputs: Dict[LogEventSource, asyncio.StreamReader],
         *,
         initial_messages: List[str] = [],
     ) -> None:
@@ -428,7 +427,7 @@ class UsercodeLifecycle:
         else:
             pid = -1  # Use -1 if unknown
 
-        def log(data: str, log_line_idx: int, source: Optional[str]) -> None:
+        def log(data: str, log_line_idx: int, source: LogEventSource = LogEventSource.ASTORIA) -> None:
             fh.write(data)
             fh.flush()
             self._log_helper.send(
@@ -444,12 +443,11 @@ class UsercodeLifecycle:
             start_time = datetime.now()
 
             async def read_from_stream(
-                    output: Optional[asyncio.StreamReader],
-                    source: str,
+                    outputs: Dict[LogEventSource, asyncio.StreamReader],
+                    source: LogEventSource,
                     log_line_idx: int,
             ) -> None:
-                if output is None:
-                    return
+                output = outputs[source]
 
                 data = await output.readline()
                 while data != b"":
@@ -462,18 +460,18 @@ class UsercodeLifecycle:
             # Print any initial messages
             for message in initial_messages:
                 time_passed = datetime.now() - start_time
-                log(f"[{time_passed}] {message}\n", log_line, None)
+                log(f"[{time_passed}] {message}\n", log_line)
                 log_line += 1
 
             time_passed = datetime.now() - start_time
-            log(f"[{time_passed}] === LOG STARTED ===\n", log_line, None)
+            log(f"[{time_passed}] === LOG STARTED ===\n", log_line)
             log_line += 1
 
             await asyncio.gather(
-                read_from_stream(proc_outputs['stdout'], 'stdout', log_line),
-                read_from_stream(proc_outputs['stderr'], 'stderr', log_line),
+                read_from_stream(proc_outputs, LogEventSource.STDOUT, log_line),
+                read_from_stream(proc_outputs, LogEventSource.STDERR, log_line),
             )
-            log(f"[{time_passed}] === LOG FINISHED ===\n", log_line, None)
+            log(f"[{time_passed}] === LOG FINISHED ===\n", log_line)
 
 
 if __name__ == "__main__":
