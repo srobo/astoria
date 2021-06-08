@@ -1,80 +1,18 @@
-"""Disk Manager Application."""
-
+"""Communicate with UDisks2 over DBus."""
 import asyncio
 import logging
 from pathlib import Path
-from typing import Callable, Coroutine, Dict, List, Optional
+from typing import Callable, Coroutine, Dict, List
 
-import click
 from dbus_next.aio import MessageBus
 from dbus_next.aio.proxy_object import ProxyInterface
 from dbus_next.constants import BusType
 from dbus_next.errors import InterfaceNotFoundError
 from dbus_next.signature import Variant
 
-from astoria.common.manager import StateManager
-from astoria.common.messages.astdiskd import (
-    DiskInfo,
-    DiskManagerMessage,
-    DiskType,
-    DiskUUID,
-)
+from astoria.common.messages.astdiskd import DiskUUID
 
 LOGGER = logging.getLogger(__name__)
-
-loop = asyncio.get_event_loop()
-
-
-@click.command("astdiskd")
-@click.option("-v", "--verbose", is_flag=True)
-@click.option("-c", "--config-file", type=click.Path(exists=True))
-def main(*, verbose: bool, config_file: Optional[str]) -> None:
-    """Disk Manager Application Entrypoint."""
-    diskd = DiskManager(verbose, config_file)
-    loop.run_until_complete(diskd.run())
-
-
-class DiskManager(StateManager[DiskManagerMessage]):
-    """Astoria Disk Manager."""
-
-    name = "astdiskd"
-
-    def _init(self) -> None:
-        self._udisks = UdisksConnection(notify_coro=self.update_state)
-
-    @property
-    def offline_status(self) -> DiskManagerMessage:
-        """
-        Status to publish when the manager goes offline.
-
-        This status should ensure that any other components relying
-        on this data go into a safe state.
-        """
-        return DiskManagerMessage(
-            status=DiskManagerMessage.Status.STOPPED,
-            disks={},
-        )
-
-    async def main(self) -> None:
-        """Main routine for astdiskd."""
-        asyncio.ensure_future(self._udisks.main())
-
-        # Wait whilst the program is running.
-        await self.wait_loop()
-
-    async def update_state(self) -> None:
-        """Update the status of astdiskd when disks are changed."""
-        disks = {}
-        for uuid, mount_path in self._udisks.disks.items():
-            disks[uuid] = DiskInfo(
-                uuid=uuid,
-                mount_path=mount_path,
-                disk_type=DiskType.determine_disk_type(mount_path),
-            )
-        self.status = DiskManagerMessage(
-            status=DiskManagerMessage.Status.RUNNING,
-            disks=disks,
-        )
 
 
 class UdisksConnection:
@@ -248,7 +186,3 @@ class UdisksConnection:
 
         # Send one notify
         asyncio.ensure_future(self._notify_coro())
-
-
-if __name__ == "__main__":
-    main()
