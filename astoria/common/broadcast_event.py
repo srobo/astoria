@@ -1,4 +1,5 @@
 """Broadcast Event Schemas."""
+from enum import Enum
 from typing import ClassVar
 
 from pydantic import BaseModel
@@ -29,6 +30,14 @@ class StartButtonBroadcastEvent(BroadcastEvent):
     name: ClassVar[str] = "start_button"
 
 
+class LogEventSource(Enum):
+    """The source of a line of log output."""
+
+    ASTORIA = "astoria"
+    STDOUT = "stdout"
+    STDERR = "stderr"
+
+
 class UsercodeLogBroadcastEvent(BroadcastEvent):
     """
     Schema for a log event from a usercode process.
@@ -42,3 +51,4 @@ class UsercodeLogBroadcastEvent(BroadcastEvent):
 
     pid: int
     content: str
+    source: LogEventSource
