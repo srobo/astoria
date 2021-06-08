@@ -34,6 +34,7 @@ def lifecycle() -> WiFiHotspotLifeCycle:
         "region",
         "interface",
         "bridge",
+        True,
     )
 
 
@@ -50,6 +51,7 @@ def test_wifi_hotspot_lifecycle_constructor(lifecycle: WiFiHotspotLifeCycle) -> 
     assert lifecycle._psk == "pskpskpskpsk"
     assert lifecycle._region == "region"
     assert lifecycle._interface == "interface"
+    assert lifecycle._use_wpa3 is True
 
 
 def test_wifi_hotspot_hostapd_config_generation(
@@ -90,6 +92,7 @@ async def test_wifi_hotspot_start_stop(
         assert lifecycle._proc is None
         assert lifecycle._config_file is not None
         assert not config_file.exists()
+
 
 METADATA_TEST_CASES: List[Tuple[str, str, str, bool]] = [
     ("ssid", "pskpskpskpsk", "region", False),

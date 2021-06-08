@@ -90,6 +90,7 @@ class WiFiHotspotDaemon(StateConsumer):
                         metadata.wifi_region,  # type: ignore
                         self.config.wifi.interface,
                         self.config.wifi.bridge,
+                        self.config.wifi.use_wpa3,
                     )
                     asyncio.ensure_future(self._lifecycle.run_hotspot())
             else:
@@ -106,6 +107,7 @@ class WiFiHotspotDaemon(StateConsumer):
                     metadata.wifi_region,  # type: ignore
                     self.config.wifi.interface,
                     self.config.wifi.bridge,
+                    self.config.wifi.use_wpa3,
                 )
                 asyncio.ensure_future(self._lifecycle.run_hotspot())
 
@@ -122,6 +124,7 @@ class WiFiHotspotLifeCycle:
             region: str,
             interface: str,
             bridge: str,
+            use_wpa3: bool,
     ) -> None:
         LOGGER.info("Starting WiFi Hotspot lifecycle")
         self._ssid: str = ssid
@@ -129,6 +132,7 @@ class WiFiHotspotLifeCycle:
         self._region: str = region
         self._interface: str = interface
         self._bridge: str = bridge
+        self._use_wpa3: bool = use_wpa3
 
         self._config_file: Optional[IO[bytes]] = None
         self._proc: Optional[asyncio.subprocess.Process] = None
@@ -186,11 +190,20 @@ class WiFiHotspotLifeCycle:
             # Set of accepted cipher suites; disabling insecure TKIP
             "wpa_pairwise": "CCMP",
             # Set of accepted key management algorithms
-            "wpa_key_mgmt": "SAE WPA-PSK",  # SAE = WPA3, WPA-PSK = WPA2
+            # SAE = WPA3, WPA-PSK = WPA2
+            "wpa_key_mgmt": "WPA-PSK",
             "wpa_passphrase": self._psk,
-            "ieee80211w": 2,
-            "sae_require_mfp": 1,
         }
+
+        if self._use_wpa3:
+            config["wpa_key_mgmt"] = "SAE WPA-PSK"
+            # Management frame support (802.11w)
+            # Most client devices will not connect to a
+            # WPA3-SAE secured AP unless it is using 802.11w.
+            # This must be supported by both the AP and client.
+            config["ieee80211w"] = 2
+            config["sae_require_mfp"] = 1
+
         contents = "\n".join(f"{k}={v}" for k, v in config.items())
 
         self._config_file.write(contents.encode())
