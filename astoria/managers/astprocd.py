@@ -479,6 +479,7 @@ class UsercodeLifecycle:
                 read_from_stream(proc_outputs, LogEventSource.STDOUT, log_line),
                 read_from_stream(proc_outputs, LogEventSource.STDERR, log_line),
             )
+            time_passed = datetime.now() - start_time
             log(f"[{time_passed}] === LOG FINISHED ===\n", log_line)
 
 
