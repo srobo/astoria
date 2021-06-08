@@ -13,6 +13,7 @@ from astoria.common.messages.astdiskd import DiskInfo, DiskType, DiskUUID
 from astoria.common.messages.astmetad import Metadata, MetadataManagerMessage
 from astoria.managers.mixins.disk_handler import DiskHandlerMixin
 
+from .metadata_cache import MetadataCache
 from .metadata_disk_lifecycle import (
     AbstractMetadataDiskLifecycle,
     BundleDiskLifecycle,
@@ -38,17 +39,20 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
         DiskType.METADATA: {"arena", "zone", "mode", "game_timeout", "wifi_enabled"},
     }
 
+    MUTABLE_ATTRS_BY_REQUEST: Set[str] = {"arena", "zone", "mode"}
+    CACHED_ATTRS: Set[str] = {"wifi_ssid", "wifi_psk", "wifi_region"}
+
     def _init(self) -> None:
         self._lifecycles: Dict[DiskType, Optional[AbstractMetadataDiskLifecycle]] = {
             disk_type: None
             for disk_type in self.DISK_TYPE_LIFECYCLE_MAP
         }
+        self._cache = MetadataCache(self.CACHED_ATTRS)
 
         self._cur_disks: Dict[DiskUUID, DiskInfo] = {}
         self._mqtt.subscribe("astdiskd", self.handle_astdiskd_disk_info_message)
 
         self._requested_data: Dict[str, str] = {}
-        self._allowed_mutations_by_request: Set[str] = {"arena", "zone", "mode"}
         self._register_request(
             "mutate",
             MetadataSetManagerRequest,
@@ -112,7 +116,7 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
         request: MetadataSetManagerRequest,
     ) -> RequestResponse:
         """Handle a request to mutate metadata."""
-        if request.attr not in self._allowed_mutations_by_request:
+        if request.attr not in self.MUTABLE_ATTRS_BY_REQUEST:
             return RequestResponse(
                 uuid=request.uuid,
                 success=False,
@@ -149,7 +153,8 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
         """
         # Metadata sources in priority order.
         metadata_sources: List[Tuple[Set[str], Dict[str, str]]] = [
-            (self._allowed_mutations_by_request, self._requested_data),
+            (self.CACHED_ATTRS, self._cache.data),
+            (self.MUTABLE_ATTRS_BY_REQUEST, self._requested_data),
         ]
 
         for disk_type, val in self._lifecycles.items():
@@ -172,6 +177,11 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
                     LOGGER.warning(
                         f"There was an attempt to mutate {k}, but it was not permitted.",
                     )
+
+        # Update the cache with the new values.
+        for key in self.CACHED_ATTRS:
+            self._cache.update_cached_attr(key, metadata.__getattribute__(key))
+
         return metadata
 
     def update_status(self) -> None:
