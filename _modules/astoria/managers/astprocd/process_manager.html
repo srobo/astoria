@@ -1,0 +1,378 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>astoria.managers.astprocd.process_manager &mdash; Astoria 0.3.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Astoria
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../design/index.html">Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../implementation/index.html">Implementation</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Astoria</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>astoria.managers.astprocd.process_manager</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for astoria.managers.astprocd.process_manager</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Process Manager Application.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span> <span class="nn">astoria.common.broadcast_event</span> <span class="kn">import</span> <span class="n">UsercodeLogBroadcastEvent</span>
+<span class="kn">from</span> <span class="nn">astoria.common.manager</span> <span class="kn">import</span> <span class="n">StateManager</span>
+<span class="kn">from</span> <span class="nn">astoria.common.manager_requests</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">RequestResponse</span><span class="p">,</span>
+    <span class="n">UsercodeKillManagerRequest</span><span class="p">,</span>
+    <span class="n">UsercodeRestartManagerRequest</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">astoria.common.messages.astdiskd</span> <span class="kn">import</span> <span class="n">DiskInfo</span><span class="p">,</span> <span class="n">DiskType</span><span class="p">,</span> <span class="n">DiskUUID</span>
+<span class="kn">from</span> <span class="nn">astoria.common.messages.astprocd</span> <span class="kn">import</span> <span class="n">CodeStatus</span><span class="p">,</span> <span class="n">ProcessManagerMessage</span>
+<span class="kn">from</span> <span class="nn">astoria.common.mqtt</span> <span class="kn">import</span> <span class="n">BroadcastHelper</span>
+<span class="kn">from</span> <span class="nn">astoria.managers.mixins.disk_handler</span> <span class="kn">import</span> <span class="n">DiskHandlerMixin</span>
+
+<span class="kn">from</span> <span class="nn">.usercode_lifecycle</span> <span class="kn">import</span> <span class="n">UsercodeLifecycle</span>
+
+<span class="n">LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="ProcessManager"><a class="viewcode-back" href="../../../../implementation/managers/astprocd.html#astoria.managers.astprocd.ProcessManager">[docs]</a><span class="k">class</span> <span class="nc">ProcessManager</span><span class="p">(</span><span class="n">DiskHandlerMixin</span><span class="p">,</span> <span class="n">StateManager</span><span class="p">[</span><span class="n">ProcessManagerMessage</span><span class="p">]):</span>
+    <span class="sd">&quot;&quot;&quot;Astoria Process State Manager.&quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;astprocd&quot;</span>
+    <span class="n">dependencies</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;astdiskd&quot;</span><span class="p">,</span> <span class="s2">&quot;astmetad&quot;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_init</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lifecycle</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">UsercodeLifecycle</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cur_disks</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">DiskUUID</span><span class="p">,</span> <span class="n">DiskInfo</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mqtt</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="s2">&quot;astdiskd&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_astdiskd_disk_info_message</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_register_request</span><span class="p">(</span>
+            <span class="s2">&quot;restart&quot;</span><span class="p">,</span>
+            <span class="n">UsercodeRestartManagerRequest</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">handle_restart_request</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_register_request</span><span class="p">(</span>
+            <span class="s2">&quot;kill&quot;</span><span class="p">,</span>
+            <span class="n">UsercodeKillManagerRequest</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">handle_kill_request</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log_helper</span> <span class="o">=</span> <span class="n">BroadcastHelper</span><span class="o">.</span><span class="n">get_helper</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_mqtt</span><span class="p">,</span>
+            <span class="n">UsercodeLogBroadcastEvent</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">offline_status</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ProcessManagerMessage</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Status to publish when the manager goes offline.</span>
+
+<span class="sd">        This status should ensure that any other components relying</span>
+<span class="sd">        on this data go into a safe state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ProcessManagerMessage</span><span class="p">(</span>
+            <span class="n">status</span><span class="o">=</span><span class="n">ProcessManagerMessage</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">STOPPED</span><span class="p">,</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="ProcessManager.main"><a class="viewcode-back" href="../../../../implementation/managers/astprocd.html#astoria.managers.astprocd.ProcessManager.main">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Main routine for astprocd.&quot;&quot;&quot;</span>
+        <span class="c1"># Wait whilst the program is running.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_status</span><span class="p">()</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">wait_loop</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cur_disks</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">asyncio</span><span class="o">.</span><span class="n">ensure_future</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">handle_disk_removal</span><span class="p">(</span><span class="n">uuid</span><span class="p">,</span> <span class="n">info</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="ProcessManager.handle_disk_insertion"><a class="viewcode-back" href="../../../../implementation/managers/astprocd.html#astoria.managers.astprocd.ProcessManager.handle_disk_insertion">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">handle_disk_insertion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">:</span> <span class="n">DiskUUID</span><span class="p">,</span> <span class="n">disk_info</span><span class="p">:</span> <span class="n">DiskInfo</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Handle a disk insertion.&quot;&quot;&quot;</span>
+        <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Disk inserted: </span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">disk_info</span><span class="o">.</span><span class="n">disk_type</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">disk_info</span><span class="o">.</span><span class="n">disk_type</span> <span class="ow">is</span> <span class="n">DiskType</span><span class="o">.</span><span class="n">USERCODE</span><span class="p">:</span>
+            <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Usercode disk </span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s2"> is mounted at </span><span class="si">{</span><span class="n">disk_info</span><span class="o">.</span><span class="n">mount_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lifecycle</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting usercode lifecycle for </span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_lifecycle</span> <span class="o">=</span> <span class="n">UsercodeLifecycle</span><span class="p">(</span>
+                    <span class="n">uuid</span><span class="p">,</span>
+                    <span class="n">disk_info</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">update_status</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_log_helper</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">asyncio</span><span class="o">.</span><span class="n">ensure_future</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_lifecycle</span><span class="o">.</span><span class="n">run_process</span><span class="p">())</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">LOGGER</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Cannot run usercode, there is already a lifecycle present.&quot;</span><span class="p">)</span>
+                <span class="k">with</span> <span class="n">disk_info</span><span class="o">.</span><span class="n">mount_path</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;log.txt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+                    <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Unable to start code.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;It is not safe to run multiple code disks at once.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ProcessManager.handle_disk_removal"><a class="viewcode-back" href="../../../../implementation/managers/astprocd.html#astoria.managers.astprocd.ProcessManager.handle_disk_removal">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">handle_disk_removal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">:</span> <span class="n">DiskUUID</span><span class="p">,</span> <span class="n">disk_info</span><span class="p">:</span> <span class="n">DiskInfo</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Handle a disk removal.&quot;&quot;&quot;</span>
+        <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Disk removed: </span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">disk_info</span><span class="o">.</span><span class="n">disk_type</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">disk_info</span><span class="o">.</span><span class="n">disk_type</span> <span class="ow">is</span> <span class="n">DiskType</span><span class="o">.</span><span class="n">USERCODE</span><span class="p">:</span>
+            <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Usercode disk </span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s2"> removed (</span><span class="si">{</span><span class="n">disk_info</span><span class="o">.</span><span class="n">mount_path</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lifecycle</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lifecycle</span><span class="o">.</span><span class="n">_uuid</span> <span class="o">==</span> <span class="n">disk_info</span><span class="o">.</span><span class="n">uuid</span><span class="p">:</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lifecycle</span><span class="o">.</span><span class="n">kill_process</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_lifecycle</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">update_status</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Disk removed, but no code lifecycle available&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ProcessManager.handle_kill_request"><a class="viewcode-back" href="../../../../implementation/managers/astprocd.html#astoria.managers.astprocd.ProcessManager.handle_kill_request">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">handle_kill_request</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">request</span><span class="p">:</span> <span class="n">UsercodeKillManagerRequest</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RequestResponse</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Handle a request to kill running usercode.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lifecycle</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">RequestResponse</span><span class="p">(</span>
+                <span class="n">uuid</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">uuid</span><span class="p">,</span>
+                <span class="n">success</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">reason</span><span class="o">=</span><span class="s2">&quot;No active usercode lifecycle&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Kill request received.&quot;</span><span class="p">)</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lifecycle</span><span class="o">.</span><span class="n">kill_process</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">RequestResponse</span><span class="p">(</span>
+                <span class="n">uuid</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">uuid</span><span class="p">,</span>
+                <span class="n">success</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="ProcessManager.handle_restart_request"><a class="viewcode-back" href="../../../../implementation/managers/astprocd.html#astoria.managers.astprocd.ProcessManager.handle_restart_request">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">handle_restart_request</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">request</span><span class="p">:</span> <span class="n">UsercodeRestartManagerRequest</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RequestResponse</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Handle a request to restart usercode.&quot;&quot;&quot;</span>
+        <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Restart request received.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lifecycle</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">RequestResponse</span><span class="p">(</span>
+                <span class="n">uuid</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">uuid</span><span class="p">,</span>
+                <span class="n">success</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">reason</span><span class="o">=</span><span class="s2">&quot;No active usercode lifecycle&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lifecycle</span><span class="o">.</span><span class="n">status</span> <span class="ow">is</span> <span class="n">CodeStatus</span><span class="o">.</span><span class="n">RUNNING</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">RequestResponse</span><span class="p">(</span>
+                    <span class="n">uuid</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">uuid</span><span class="p">,</span>
+                    <span class="n">success</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">reason</span><span class="o">=</span><span class="s2">&quot;Code is already running.&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">asyncio</span><span class="o">.</span><span class="n">ensure_future</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_lifecycle</span><span class="o">.</span><span class="n">run_process</span><span class="p">())</span>
+                <span class="k">return</span> <span class="n">RequestResponse</span><span class="p">(</span>
+                    <span class="n">uuid</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">uuid</span><span class="p">,</span>
+                    <span class="n">success</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="p">)</span></div>
+
+<div class="viewcode-block" id="ProcessManager.update_status"><a class="viewcode-back" href="../../../../implementation/managers/astprocd.html#astoria.managers.astprocd.ProcessManager.update_status">[docs]</a>    <span class="k">def</span> <span class="nf">update_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code_status</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">CodeStatus</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate and update the status of this manager.</span>
+
+<span class="sd">        Called by the usercode lifecycle to inform us of changes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lifecycle</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># When the status is updated in the lifecycle constructor, we</span>
+            <span class="c1"># are left with a situation where there is no lifecycle object,</span>
+            <span class="c1"># but the code is starting. Thus we want to inform anyway.</span>
+            <span class="c1">#</span>
+            <span class="c1"># This section also updates the status when the lifecycle is cleaned up.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">ProcessManagerMessage</span><span class="p">(</span>
+                <span class="n">status</span><span class="o">=</span><span class="n">ProcessManagerMessage</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">RUNNING</span><span class="p">,</span>
+                <span class="n">code_status</span><span class="o">=</span><span class="n">code_status</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">ProcessManagerMessage</span><span class="p">(</span>
+                <span class="n">status</span><span class="o">=</span><span class="n">ProcessManagerMessage</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">RUNNING</span><span class="p">,</span>
+                <span class="n">code_status</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_lifecycle</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+                <span class="n">disk_info</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_lifecycle</span><span class="o">.</span><span class="n">disk_info</span><span class="p">,</span>
+            <span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2020-21, Dan Trickey.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
