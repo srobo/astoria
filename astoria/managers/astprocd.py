@@ -13,7 +13,10 @@ import click
 import toml
 from pydantic import ValidationError
 
-from astoria.common.broadcast_event import UsercodeLogBroadcastEvent, LogEventSource
+from astoria.common.broadcast_event import (
+    LogEventSource,
+    UsercodeLogBroadcastEvent,
+)
 from astoria.common.bundle import CodeBundle, IncompatibleKitVersionException
 from astoria.common.config import AstoriaConfig
 from astoria.common.manager import StateManager
@@ -336,7 +339,8 @@ class UsercodeLifecycle:
                         start_new_session=True,
                     )
                     if self._process is not None:
-                        if self._process.stdout is not None and self._process.stderr is not None:
+                        if self._process.stdout is not None and \
+                                self._process.stderr is not None:
                             asyncio.ensure_future(
                                 self.logger(
                                     {LogEventSource.STDOUT: self._process.stdout,
@@ -427,7 +431,11 @@ class UsercodeLifecycle:
         else:
             pid = -1  # Use -1 if unknown
 
-        def log(data: str, log_line_idx: int, source: LogEventSource = LogEventSource.ASTORIA) -> None:
+        def log(
+            data: str,
+            log_line_idx: int,
+            source: LogEventSource = LogEventSource.ASTORIA,
+        ) -> None:
             fh.write(data)
             fh.flush()
             self._log_helper.send(
