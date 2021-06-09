@@ -1,5 +1,6 @@
 """Command to view usercode logs in real-time."""
 import asyncio
+import signal
 from typing import Optional
 
 import click
@@ -36,6 +37,7 @@ class ViewUsercodeLogCommand(Command):
 
     async def main(self) -> None:
         """Send a trigger event."""
+        signal.signal(signal.SIGINT, self._exit)
         while True:
             ev = await self._log_event.wait_broadcast()
             print(ev)
