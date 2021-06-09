@@ -1,5 +1,8 @@
 """Command to view usercode logs in real-time."""
 import asyncio
+import signal
+import sys
+from types import FrameType
 from typing import Optional
 
 import click
@@ -20,6 +23,10 @@ def log(*, verbose: bool, config_file: Optional[str]) -> None:
     loop.run_until_complete(command.run())
 
 
+def _exit(signals: signal.Signals, frame_type: FrameType) -> None:
+    sys.exit(0)
+
+
 class ViewUsercodeLogCommand(Command):
     """Command to view usercode logs in real-time."""
 
@@ -36,6 +43,7 @@ class ViewUsercodeLogCommand(Command):
 
     async def main(self) -> None:
         """Send a trigger event."""
+        signal.signal(signal.SIGINT, _exit)
         while True:
             ev = await self._log_event.wait_broadcast()
             print(ev)
