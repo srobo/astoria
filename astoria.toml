@@ -16,3 +16,6 @@ version = "0.0.0.0dev"
 interface = "wlan0"
 bridge = "br0"
 enable_wpa3 = false
+
+[system]
+cache_dir = ".cache_dir"  # Use a directory in /var for production
