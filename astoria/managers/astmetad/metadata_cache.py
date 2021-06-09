@@ -15,7 +15,7 @@ class MetadataCache:
         self,
         cached_keys: Set[str],
         *,
-        cache_path: Path = Path("/var/cache/astoria/astmetad-cache.json"),
+        cache_path: Path = Path("/var/srobo/astmetad-cache.json"),
     ) -> None:
         """
         Construct the metadata cache.
