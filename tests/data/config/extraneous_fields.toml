@@ -11,3 +11,4 @@ bees = "yes"
 [kit]
 name = "Astoria Development"
 version = "0.0.0.0dev"
+enable_wpa3 = true
