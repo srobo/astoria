@@ -7,8 +7,11 @@ and managing the event loop.
 """
 import asyncio
 import logging
+import signal
+import sys
 from abc import ABCMeta, abstractmethod
 from signal import SIGHUP, SIGINT, SIGTERM
+from types import FrameType
 from typing import List, Optional
 
 from pydantic import BaseModel
@@ -86,6 +89,9 @@ class DataComponent(metaclass=ABCMeta):
         Called in the constructor of the parent class.
         """
         pass
+
+    def _exit(self, signals: signal.Signals, frame_type: FrameType) -> None:
+        sys.exit(0)
 
     @property
     @abstractmethod
