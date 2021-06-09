@@ -65,7 +65,13 @@ class MetadataCache:
                     LOGGER.warning(f"Invalid JSON data in cache: {raw_data}")
                     return {}
 
-            return {k: v for k, v in unvalidated_data.items() if k in self._cached_keys}
+            data = {k: v for k, v in unvalidated_data.items() if k in self._cached_keys}
+
+            if data != unvalidated_data:
+                LOGGER.warning("Bad keys in cache, re-writing cache!")
+                self._write_cache(data)
+            return data
+
         except JSONDecodeError:
             LOGGER.warning(f"Invalid JSON data in cache: {raw_data}")
             return {}
@@ -99,7 +105,7 @@ class MetadataCache:
                 f"Tried to cache {key}, but it is not allowed to be cached.",
             )
         else:
-            if self._data[key] != value:
+            if key not in self._data or self._data[key] != value:
                 LOGGER.info(f"Updated cache: {key} -> {value}")
-                self._data[key] = value
+                self._data[key] = str(value)  # Make sure the value is a string
                 self._write_cache(self._data)
