@@ -3,7 +3,7 @@
 import logging
 from json import JSONDecodeError, dumps, loads
 from pathlib import Path
-from typing import Dict, Set
+from typing import Dict, Optional, Set
 
 LOGGER = logging.getLogger(__name__)
 
@@ -91,7 +91,7 @@ class MetadataCache:
         """The cached data."""
         return self._data
 
-    def update_cached_attr(self, key: str, value: str) -> None:
+    def update_cached_attr(self, key: str, value: Optional[str]) -> None:
         """
         Update a cached attribute.
 
@@ -106,6 +106,10 @@ class MetadataCache:
             )
         else:
             if key not in self._data or self._data[key] != value:
-                LOGGER.info(f"Updated cache: {key} -> {value}")
-                self._data[key] = str(value)  # Make sure the value is a string
+                if value is None:
+                    LOGGER.info(f"Deleting {key} from cache.")
+                    self._data.pop(key, None)  # Remove the key from the cache.
+                else:
+                    LOGGER.info(f"Updated cache: {key} -> {value}")
+                    self._data[key] = str(value)  # Make sure the value is a string
                 self._write_cache(self._data)

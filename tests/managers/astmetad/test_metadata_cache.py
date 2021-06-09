@@ -108,3 +108,16 @@ def test_metadata_cache_bad_keys_is_ignored(empty_temp_dir: Path) -> None:
     meta.update_cached_attr("bees", "bighive")
     assert meta.data == {"bees": "bighive"}
     assert cache_path.read_text() == "{\"bees\": \"bighive\"}"
+
+
+def test_metadata_cache_remove_key_when_none(empty_temp_dir: Path) -> None:
+    """Test that we remove an entry from the cache when the value is None."""
+    cache_path = empty_temp_dir / "meta.json"
+
+    cache_path.write_text("{\"bees\": \"hive\"}")
+
+    meta = MetadataCache({"bees"}, cache_path=cache_path)
+
+    meta.update_cached_attr("bees", None)
+    assert meta.data == {}
+    assert cache_path.read_text() == "{}"
