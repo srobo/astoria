@@ -247,6 +247,7 @@
                         <span class="n">metadata</span><span class="o">.</span><span class="n">wifi_region</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">wifi</span><span class="o">.</span><span class="n">interface</span><span class="p">,</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">wifi</span><span class="o">.</span><span class="n">bridge</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">wifi</span><span class="o">.</span><span class="n">enable_wpa3</span><span class="p">,</span>
                     <span class="p">)</span>
                     <span class="n">asyncio</span><span class="o">.</span><span class="n">ensure_future</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_lifecycle</span><span class="o">.</span><span class="n">run_hotspot</span><span class="p">())</span>
             <span class="k">else</span><span class="p">:</span>
@@ -263,6 +264,7 @@
                     <span class="n">metadata</span><span class="o">.</span><span class="n">wifi_region</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">wifi</span><span class="o">.</span><span class="n">interface</span><span class="p">,</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">wifi</span><span class="o">.</span><span class="n">bridge</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">wifi</span><span class="o">.</span><span class="n">enable_wpa3</span><span class="p">,</span>
                 <span class="p">)</span>
                 <span class="n">asyncio</span><span class="o">.</span><span class="n">ensure_future</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_lifecycle</span><span class="o">.</span><span class="n">run_hotspot</span><span class="p">())</span>
 
@@ -279,6 +281,7 @@
             <span class="n">region</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
             <span class="n">interface</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
             <span class="n">bridge</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+            <span class="n">enable_wpa3</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting WiFi Hotspot lifecycle&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ssid</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">ssid</span>
@@ -286,6 +289,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_region</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">region</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_interface</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">interface</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_bridge</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">bridge</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_enable_wpa3</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">enable_wpa3</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_config_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">IO</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_proc</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">asyncio</span><span class="o">.</span><span class="n">subprocess</span><span class="o">.</span><span class="n">Process</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
@@ -343,11 +347,20 @@
             <span class="c1"># Set of accepted cipher suites; disabling insecure TKIP</span>
             <span class="s2">&quot;wpa_pairwise&quot;</span><span class="p">:</span> <span class="s2">&quot;CCMP&quot;</span><span class="p">,</span>
             <span class="c1"># Set of accepted key management algorithms</span>
-            <span class="s2">&quot;wpa_key_mgmt&quot;</span><span class="p">:</span> <span class="s2">&quot;SAE WPA-PSK&quot;</span><span class="p">,</span>  <span class="c1"># SAE = WPA3, WPA-PSK = WPA2</span>
+            <span class="c1"># SAE = WPA3, WPA-PSK = WPA2</span>
+            <span class="s2">&quot;wpa_key_mgmt&quot;</span><span class="p">:</span> <span class="s2">&quot;WPA-PSK&quot;</span><span class="p">,</span>
             <span class="s2">&quot;wpa_passphrase&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_psk</span><span class="p">,</span>
-            <span class="s2">&quot;ieee80211w&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-            <span class="s2">&quot;sae_require_mfp&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
         <span class="p">}</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_enable_wpa3</span><span class="p">:</span>
+            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;wpa_key_mgmt&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;SAE WPA-PSK&quot;</span>
+            <span class="c1"># Management frame support (802.11w)</span>
+            <span class="c1"># Most client devices will not connect to a</span>
+            <span class="c1"># WPA3-SAE secured AP unless it is using 802.11w.</span>
+            <span class="c1"># This must be supported by both the AP and client.</span>
+            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;ieee80211w&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;sae_require_mfp&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
         <span class="n">contents</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_config_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">contents</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
