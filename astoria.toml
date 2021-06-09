@@ -15,4 +15,4 @@ version = "0.0.0.0dev"
 [wifi]
 interface = "wlan0"
 bridge = "br0"
-use_wpa3 = false
+enable_wpa3 = false

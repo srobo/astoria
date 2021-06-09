@@ -53,7 +53,7 @@ class WiFiInfo(BaseModel):
 
     interface: str
     bridge: str
-    use_wpa3: bool
+    enable_wpa3: bool
 
     class Config:
         """Pydantic config."""

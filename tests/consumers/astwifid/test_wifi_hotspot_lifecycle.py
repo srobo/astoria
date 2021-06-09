@@ -51,7 +51,7 @@ def test_wifi_hotspot_lifecycle_constructor(lifecycle: WiFiHotspotLifeCycle) -> 
     assert lifecycle._psk == "pskpskpskpsk"
     assert lifecycle._region == "region"
     assert lifecycle._interface == "interface"
-    assert lifecycle._use_wpa3 is True
+    assert lifecycle._enable_wpa3 is True
 
 
 def test_wifi_hotspot_hostapd_config_generation(

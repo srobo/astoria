@@ -90,7 +90,7 @@ class WiFiHotspotDaemon(StateConsumer):
                         metadata.wifi_region,  # type: ignore
                         self.config.wifi.interface,
                         self.config.wifi.bridge,
-                        self.config.wifi.use_wpa3,
+                        self.config.wifi.enable_wpa3,
                     )
                     asyncio.ensure_future(self._lifecycle.run_hotspot())
             else:
@@ -107,7 +107,7 @@ class WiFiHotspotDaemon(StateConsumer):
                     metadata.wifi_region,  # type: ignore
                     self.config.wifi.interface,
                     self.config.wifi.bridge,
-                    self.config.wifi.use_wpa3,
+                    self.config.wifi.enable_wpa3,
                 )
                 asyncio.ensure_future(self._lifecycle.run_hotspot())
 
@@ -124,7 +124,7 @@ class WiFiHotspotLifeCycle:
             region: str,
             interface: str,
             bridge: str,
-            use_wpa3: bool,
+            enable_wpa3: bool,
     ) -> None:
         LOGGER.info("Starting WiFi Hotspot lifecycle")
         self._ssid: str = ssid
@@ -132,7 +132,7 @@ class WiFiHotspotLifeCycle:
         self._region: str = region
         self._interface: str = interface
         self._bridge: str = bridge
-        self._use_wpa3: bool = use_wpa3
+        self._enable_wpa3: bool = enable_wpa3
 
         self._config_file: Optional[IO[bytes]] = None
         self._proc: Optional[asyncio.subprocess.Process] = None
@@ -195,7 +195,7 @@ class WiFiHotspotLifeCycle:
             "wpa_passphrase": self._psk,
         }
 
-        if self._use_wpa3:
+        if self._enable_wpa3:
             config["wpa_key_mgmt"] = "SAE WPA-PSK"
             # Management frame support (802.11w)
             # Most client devices will not connect to a
