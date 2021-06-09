@@ -61,12 +61,24 @@ class WiFiInfo(BaseModel):
         extra = "forbid"
 
 
+class SystemInfo(BaseModel):
+    """System settings that don't find elsewhere."""
+
+    cache_dir: Path
+
+    class Config:
+        """Pydantic config."""
+
+        extra = "forbid"
+
+
 class AstoriaConfig(BaseModel):
     """Config schema for Astoria."""
 
     mqtt: MQTTBrokerInfo
     kit: KitInfo
     wifi: WiFiInfo
+    system: SystemInfo
 
     class Config:
         """Pydantic config."""

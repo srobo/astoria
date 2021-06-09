@@ -192,3 +192,4 @@ modules.xml
 .vscode
 setup.py
 README.rst
+.cache_dir/

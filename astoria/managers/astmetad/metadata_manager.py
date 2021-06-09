@@ -47,7 +47,10 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
             disk_type: None
             for disk_type in self.DISK_TYPE_LIFECYCLE_MAP
         }
-        self._cache = MetadataCache(self.CACHED_ATTRS)
+        self._cache = MetadataCache(
+            self.CACHED_ATTRS,
+            cache_path=self.config.system.cache_dir / "astmetad-metadata.json",
+        )
 
         self._cur_disks: Dict[DiskUUID, DiskInfo] = {}
         self._mqtt.subscribe("astdiskd", self.handle_astdiskd_disk_info_message)
