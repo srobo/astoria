@@ -1,6 +1,7 @@
 """StateManager to manage disks."""
 import asyncio
 import logging
+from typing import List
 
 from astoria.common.manager import StateManager
 from astoria.common.messages.astdiskd import (
@@ -8,6 +9,7 @@ from astoria.common.messages.astdiskd import (
     DiskManagerMessage,
     DiskType,
 )
+from astoria.managers.astdiskd.disk_provider import DiskProvider
 
 from .udisks import UdisksConnection
 
@@ -20,7 +22,9 @@ class DiskManager(StateManager[DiskManagerMessage]):
     name = "astdiskd"
 
     def _init(self) -> None:
-        self._udisks = UdisksConnection(notify_coro=self.update_state)
+        self._providers: List[DiskProvider] = [
+            UdisksConnection(self, notify_coro=self.update_state),
+        ]
 
     @property
     def offline_status(self) -> DiskManagerMessage:
@@ -37,7 +41,8 @@ class DiskManager(StateManager[DiskManagerMessage]):
 
     async def main(self) -> None:
         """Main routine for astdiskd."""
-        asyncio.ensure_future(self._udisks.main())
+        for provider in self._providers:
+            asyncio.ensure_future(provider.main())
 
         # Wait whilst the program is running.
         await self.wait_loop()
@@ -45,12 +50,13 @@ class DiskManager(StateManager[DiskManagerMessage]):
     async def update_state(self) -> None:
         """Update the status of astdiskd when disks are changed."""
         disks = {}
-        for uuid, mount_path in self._udisks.disks.items():
-            disks[uuid] = DiskInfo(
-                uuid=uuid,
-                mount_path=mount_path,
-                disk_type=DiskType.determine_disk_type(mount_path),
-            )
+        for provider in self._providers:
+            for uuid, mount_path in provider.disks.items():
+                disks[uuid] = DiskInfo(
+                    uuid=uuid,
+                    mount_path=mount_path,
+                    disk_type=DiskType.determine_disk_type(mount_path),
+                )
         self.status = DiskManagerMessage(
             status=DiskManagerMessage.Status.RUNNING,
             disks=disks,
