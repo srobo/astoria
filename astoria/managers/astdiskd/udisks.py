@@ -2,7 +2,7 @@
 import asyncio
 import logging
 from pathlib import Path
-from typing import Callable, Coroutine, Dict, List
+from typing import Dict, List
 
 from dbus_next.aio import MessageBus
 from dbus_next.aio.proxy_object import ProxyInterface
@@ -12,27 +12,16 @@ from dbus_next.signature import Variant
 
 from astoria.common.messages.astdiskd import DiskUUID
 
+from .disk_provider import DiskProvider
+
 LOGGER = logging.getLogger(__name__)
 
 
-class UdisksConnection:
+class UdisksConnection(DiskProvider):
     """Connect and communicate with UDisks2."""
 
     DBUS_PATH: str = "/org/freedesktop/UDisks2"
     DBUS_NAME: str = "org.freedesktop.UDisks2"
-
-    def __init__(
-        self,
-        *,
-        notify_coro: Callable[[], Coroutine[None, None, None]],
-    ) -> None:
-        self._disks: Dict[DiskUUID, Path] = {}
-        self._notify_coro = notify_coro
-
-    @property
-    def disks(self) -> Dict[DiskUUID, Path]:
-        """Currently mounted disks."""
-        return self._disks
 
     async def main(self) -> None:
         """Setup the message bus and task dispatcher."""
