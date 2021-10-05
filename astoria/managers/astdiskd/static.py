@@ -1,8 +1,13 @@
+"""Allows disks to be added manually through local filesystem paths."""
 import logging
-from typing import Callable, Coroutine, TYPE_CHECKING
+from typing import TYPE_CHECKING, Callable, Coroutine
 
-from astoria.common.manager_requests import AddStaticDiskRequest, RemoveAllStaticDisksRequest, RemoveStaticDiskRequest, \
-    RequestResponse
+from astoria.common.manager_requests import (
+    AddStaticDiskRequest,
+    RemoveAllStaticDisksRequest,
+    RemoveStaticDiskRequest,
+    RequestResponse,
+)
 
 from .disk_provider import DiskProvider
 
@@ -11,7 +16,9 @@ LOGGER = logging.getLogger(__name__)
 if TYPE_CHECKING:
     from . import DiskManager
 
+
 class StaticDiskProvider(DiskProvider):
+    """Provides disks added manually via a command."""
 
     def __init__(
         self,
@@ -40,12 +47,13 @@ class StaticDiskProvider(DiskProvider):
         self,
         request: AddStaticDiskRequest,
     ) -> RequestResponse:
+        """Handles the add static disk command."""
         if request.path.exists() and request.path.is_dir():
-            if request.path in [str(disk_path) for disk_path in self.disks.values()]:
+            if str(request.path) in map(lambda d: str(d), self.disks.values()):
                 return RequestResponse(
                     uuid=request.uuid,
                     success=False,
-                    reason=f"The specified path is already mounted.",
+                    reason="The specified path is already mounted.",
                 )
 
             self.disks[f"static-{request.uuid}"] = request.path
@@ -66,6 +74,7 @@ class StaticDiskProvider(DiskProvider):
         self,
         request: RemoveStaticDiskRequest,
     ) -> RequestResponse:
+        """Handles the remove static disk command."""
         if request.path in self.disks.values():
             for uuid, path in self.disks.items():
                 if str(path) == str(request.path):
@@ -91,6 +100,7 @@ class StaticDiskProvider(DiskProvider):
         self,
         request: RemoveAllStaticDisksRequest,
     ) -> RequestResponse:
+        """Handles the remove all static disks command."""
         removed = False
         for uuid, path in self.disks.items():
             LOGGER.info(uuid)
