@@ -7,8 +7,8 @@ import click
 
 from .list_disks import list_disks
 from .metadata import metadata
-from .usercode import usercode
 from .static_disks import static_disk
+from .usercode import usercode
 
 
 @click.group("astdiskd")
