@@ -37,3 +37,12 @@ class AddStaticDiskRequest(ManagerRequest):
     """Schema definition for adding a static disk."""
 
     path: Path
+
+
+class RemoveStaticDiskRequest(ManagerRequest):
+    """Schema definition for removing a static disk."""
+
+    path: Path
+
+
+RemoveAllStaticDisksRequest = ManagerRequest
