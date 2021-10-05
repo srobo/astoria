@@ -9,7 +9,8 @@ from astoria.common.messages.astdiskd import (
     DiskManagerMessage,
     DiskType,
 )
-from astoria.managers.astdiskd.disk_provider import DiskProvider
+from .disk_provider import DiskProvider
+from .static import StaticDiskProvider
 
 from .udisks import UdisksConnection
 
@@ -24,6 +25,7 @@ class DiskManager(StateManager[DiskManagerMessage]):
     def _init(self) -> None:
         self._providers: List[DiskProvider] = [
             UdisksConnection(self, notify_coro=self.update_state),
+            StaticDiskProvider(self, notify_coro=self.update_state)
         ]
 
     @property

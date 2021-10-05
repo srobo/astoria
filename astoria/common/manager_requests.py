@@ -1,4 +1,5 @@
 """Schema definitions for manager requests."""
+from pathlib import Path
 from uuid import UUID, uuid4
 
 from pydantic import BaseModel, Field
@@ -30,3 +31,9 @@ class MetadataSetManagerRequest(ManagerRequest):
 
 UsercodeKillManagerRequest = ManagerRequest
 UsercodeRestartManagerRequest = ManagerRequest
+
+
+class AddStaticDiskRequest(ManagerRequest):
+    """Schema definition for adding a static disk."""
+
+    path: Path
