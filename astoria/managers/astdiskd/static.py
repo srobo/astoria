@@ -8,6 +8,7 @@ from astoria.common.manager_requests import (
     RemoveStaticDiskRequest,
     RequestResponse,
 )
+from astoria.common.messages.astdiskd import DiskUUID
 
 from .disk_provider import DiskProvider
 
@@ -56,7 +57,7 @@ class StaticDiskProvider(DiskProvider):
                     reason="The specified path is already mounted.",
                 )
 
-            self.disks[f"static-{request.uuid}"] = request.path
+            self.disks[DiskUUID(f"static-{request.uuid}")] = request.path
             await self._notify_coro()
             LOGGER.info(f"Static disk {request.uuid} mounted ({request.path})")
             return RequestResponse(
