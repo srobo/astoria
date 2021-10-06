@@ -104,7 +104,6 @@ class StaticDiskProvider(DiskProvider):
         """Handles the remove all static disks command."""
         removed = False
         for uuid, path in self.disks.items():
-            LOGGER.info(uuid)
             if uuid.startswith('static-'):
                 removed = True
                 del self.disks[uuid]
