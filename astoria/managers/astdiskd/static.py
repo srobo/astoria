@@ -15,7 +15,7 @@ from .disk_provider import DiskProvider
 LOGGER = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
-    from . import DiskManager
+    from .disk_manager import DiskManager
 
 
 class StaticDiskProvider(DiskProvider):
