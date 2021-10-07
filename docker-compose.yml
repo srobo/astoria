@@ -1,0 +1,20 @@
+version: "3.9"
+services:
+  astdiskd:
+    build: .
+    command: astdiskd
+  astprocd:
+    build: .
+    command: astprocd
+  astmetad:
+    build: .
+    command: astmetad
+  mosquitto:
+    image: eclipse-mosquitto
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - type: bind
+        source: ./docker/mosquitto.conf
+        target: /mosquitto/config/mosquitto.conf
