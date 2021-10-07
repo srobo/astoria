@@ -98,6 +98,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-in-docker">Running in Docker</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../implementation/index.html">Implementation</a></li>
@@ -227,6 +228,13 @@ you can run the test suite in <cite>html-cov</cite> mode.</p>
 <p>All documentation can be found in the <code class="docutils literal notranslate"><span class="pre">docs/</span></code> folder.</p>
 <p>Generate HTML Documentation: <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">docs</span></code></p>
 <p>Generate HTML Docs and serve locally: <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">docs-serve</span></code></p>
+</div>
+<div class="section" id="running-in-docker">
+<h2>Running in Docker<a class="headerlink" href="#running-in-docker" title="Permalink to this headline">¶</a></h2>
+<p>The repository includes a <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> and <code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code> that can be used to operate Astoria for development.</p>
+<p>This is helpful for testing and developing applications that interface with Astoria.</p>
+<p>Run Astoria in Docker: <code class="docutils literal notranslate"><span class="pre">docker-compose</span> <span class="pre">-f</span> <span class="pre">docker-compose.yml</span> <span class="pre">up</span> <span class="pre">--build</span></code></p>
+<p>The MQTT broker will be exposed to your host on port <code class="docutils literal notranslate"><span class="pre">1883</span></code> and <code class="docutils literal notranslate"><span class="pre">9001</span></code> (websockets).</p>
 </div>
 </div>
 
