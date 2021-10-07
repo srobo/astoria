@@ -7,6 +7,7 @@ import click
 
 from .list_disks import list_disks
 from .metadata import metadata
+from .static_disks import static_disk
 from .usercode import usercode
 
 
@@ -18,6 +19,7 @@ def main() -> None:
 main.add_command(list_disks)
 main.add_command(metadata)
 main.add_command(usercode)
+main.add_command(static_disk)
 
 if __name__ == "__main__":
     main()
