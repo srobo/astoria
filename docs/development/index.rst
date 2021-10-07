@@ -88,3 +88,13 @@ Generate HTML Docs and serve locally: ``make docs-serve``
 .. _Python: https://www.python.org/
 .. _poetry: https://poetry.eustace.io/
 
+Running in Docker
+-----------------
+
+The repository includes a ``Dockerfile`` and ``docker-compose.yml`` that can be used to operate Astoria for development.
+
+This is helpful for testing and developing applications that interface with Astoria.
+
+Run Astoria in Docker: ``docker-compose -f docker-compose.yml up --build``
+
+The MQTT broker will be exposed to your host on port ``1883`` and ``9001`` (websockets).
