@@ -1,6 +1,7 @@
 """StateManager to manage disks."""
 import asyncio
 import logging
+from pathlib import Path
 from typing import List
 
 from astoria.common.manager import StateManager
@@ -24,9 +25,12 @@ class DiskManager(StateManager[DiskManagerMessage]):
 
     def _init(self) -> None:
         self._providers: List[DiskProvider] = [
-            UdisksConnection(self, notify_coro=self.update_state),
             StaticDiskProvider(self, notify_coro=self.update_state),
         ]
+
+        # Add UDisks provider if it DBus is installed
+        if Path("/usr/bin/dbus-daemon").exists():
+            self._providers.append(UdisksConnection(self, notify_coro=self.update_state))
 
     @property
     def offline_status(self) -> DiskManagerMessage:
