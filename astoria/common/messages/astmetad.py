@@ -62,6 +62,7 @@ class Metadata(BaseModel):
     arena: str = "A"
     zone: int = 0
     mode: RobotMode = RobotMode.DEV
+    marker_offset: int = 0
     game_timeout: Optional[int] = None
     wifi_enabled: bool = True
 
