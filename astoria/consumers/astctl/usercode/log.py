@@ -1,6 +1,5 @@
 """Command to view usercode logs in real-time."""
 import asyncio
-import signal
 from typing import Optional
 
 import click
@@ -37,7 +36,11 @@ class ViewUsercodeLogCommand(Command):
 
     async def main(self) -> None:
         """Send a trigger event."""
-        signal.signal(signal.SIGINT, self._exit)
-        while True:
-            ev = await self._log_event.wait_broadcast()
-            print(ev)
+        while not self._stop_event.is_set():
+            # wait_broadcast waits forever until a broadcoast, so we will use a short
+            # timeout to ensure that the loop condition is checked.
+            try:
+                ev = await asyncio.wait_for(self._log_event.wait_broadcast(), timeout=0.1)
+                print(ev)
+            except asyncio.TimeoutError:
+                pass
