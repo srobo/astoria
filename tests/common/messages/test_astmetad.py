@@ -56,7 +56,8 @@ def test_metadata_fields() -> None:
     assert metadata.wifi_psk == "bees"
     assert metadata.wifi_region == "GB"
 
-    assert metadata.json() == '{"arena": "B", "zone": 12, "mode": "COMP", "marker_offset": 40, "game_timeout": 120, "wifi_enabled": false, "astoria_version": "0.0.0", "kernel_version": "5.0.0", "arch": "x64", "python_version": "3", "libc_ver": "2.0", "kit_name": "Unit Testing", "kit_version": "0.0.0", "wifi_ssid": "robot", "wifi_psk": "bees", "wifi_region": "GB"}'  # noqa: E501
+    assert metadata.json() == '{"arena": "B", "zone": 12, "mode": "COMP", "marker_offset": 40, "game_timeout": 120, "wifi_enabled": false, "astoria_version": "0.0.0", "kernel_version": "5.0.0", "arch": "x64", ' + \
+        '"python_version": "3", "libc_ver": "2.0", "kit_name": "Unit Testing", "kit_version": "0.0.0", "wifi_ssid": "robot", "wifi_psk": "bees", "wifi_region": "GB"}'  # noqa: E501
 
 
 def test_metadata_fields_default() -> None:
