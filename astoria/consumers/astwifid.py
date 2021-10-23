@@ -9,6 +9,7 @@ import os
 import signal
 import tempfile
 from json import JSONDecodeError, loads
+from pathlib import Path
 from typing import IO, Match, Optional
 
 import click
@@ -79,8 +80,9 @@ class WiFiHotspotDaemon(StateConsumer):
 
         :param metadata: The metadata included in the update.
         """
+        wifi_interface = Path(f"/sys/class/net/{self.config.wifi.interface}")
         if self._lifecycle:
-            if metadata.is_wifi_valid():
+            if metadata.is_wifi_valid() and wifi_interface.exists():
                 if self._lifecycle.has_metadata_changed(metadata):
                     await self._lifecycle.stop_hotspot()
                     self._lifecycle = WiFiHotspotLifeCycle(
@@ -98,7 +100,7 @@ class WiFiHotspotDaemon(StateConsumer):
                 await self._lifecycle.stop_hotspot()
                 self._lifecycle = None
         else:
-            if metadata.is_wifi_valid():
+            if metadata.is_wifi_valid() and wifi_interface.exists():
                 # Turn it on!
                 self._lifecycle = WiFiHotspotLifeCycle(
                     # The types here are checked by is_wifi_valid
