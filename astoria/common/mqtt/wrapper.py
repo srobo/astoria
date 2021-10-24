@@ -295,7 +295,13 @@ class MQTTWrapper:
 
         self.publish(topic, request, auto_prefix_topic=False)
 
-        await self._request_response_events[request.uuid].wait()
+        try:
+            await asyncio.wait_for(
+                self._request_response_events[request.uuid].wait(),
+                2,
+            )
+        except asyncio.TimeoutError as e:
+            raise RuntimeError("No response to manager request") from e
         if request.uuid not in self._request_response_data:
             raise RuntimeError("Request Response not available.")
         else:
