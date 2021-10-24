@@ -224,6 +224,10 @@ class UsercodeLifecycle:
         """Kill the process, if one is running."""
         if self._process is not None and self._process_lock.locked():
             LOGGER.info("Attempting to kill process.")
+
+            # Work-around for bpo-43884
+            self._process._transport.close()  # type: ignore
+
             LOGGER.info(f"Sent SIGTERM to pid {self._process.pid}")
             self._process.send_signal(SIGTERM)
             try:
