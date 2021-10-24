@@ -322,6 +322,77 @@ async def test_run_with_valid_python_wait_finish() -> None:
 
     assert lines == sith.log_helper.get_lines()
 
+
+@pytest.mark.asyncio
+async def test_run_with_valid_python_wait_kill() -> None:
+    """
+    Test that valid python code is successfully executed and killed.
+
+    Checks that:
+    - Zip file is extracted and robot.py is run
+    - The code is killed after 2 secs of execution
+    - Output is written to the log file
+    - The correct status is passed to the state manager
+    """
+    ucl, sith = StatusInformTestHelper.setup(EXECUTE_CODE_DATA / "valid_python_long")
+    asyncio.ensure_future(ucl.run_process())
+    await asyncio.sleep(2)
+    await ucl.kill_process()
+    assert sith.called_queue == [
+        CodeStatus.STARTING,
+        CodeStatus.RUNNING,
+        CodeStatus.KILLED,
+    ]
+    # Check that the log file contains the right text
+    log_file = EXECUTE_CODE_DATA / "valid_python_long" / "log.txt"
+    with ReadAndCleanupFile(log_file) as fh:
+        lines = fh.read().splitlines()
+    assert _strip_timestamp(lines[0]) == "WARNING: Running on DEVELOPMENT BUILD"
+    assert _strip_timestamp(lines[1]) == "=== LOG STARTED ==="
+    assert _strip_timestamp(lines[2]) == "Starting"
+    assert _strip_timestamp(lines[3]) == "0"
+    assert _strip_timestamp(lines[-1]) == "=== LOG FINISHED ==="
+    assert len(lines) == 6  # Check the code didn't run for the entire length
+
+    assert lines == sith.log_helper.get_lines()
+
+
+@pytest.mark.asyncio
+async def test_run_with_valid_python_wait_kill_ignore_sigint() -> None:
+    """
+    Test that valid python code that ignores SIGINT can be killed.
+
+    Checks that:
+    - Zip file is extracted and robot.py is run
+    - The code is killed after 2 secs of execution
+    - Output is written to the log file
+    - The correct status is passed to the state manager
+    """
+    ucl, sith = StatusInformTestHelper.setup(
+        EXECUTE_CODE_DATA / "valid_python_long_ignore_signals",
+    )
+    asyncio.ensure_future(ucl.run_process())
+    await asyncio.sleep(2)
+    await ucl.kill_process()
+    assert sith.called_queue == [
+        CodeStatus.STARTING,
+        CodeStatus.RUNNING,
+        CodeStatus.KILLED,
+    ]
+    # Check that the log file contains the right text
+    log_file = EXECUTE_CODE_DATA / "valid_python_long_ignore_signals" / "log.txt"
+    with ReadAndCleanupFile(log_file) as fh:
+        lines = fh.read().splitlines()
+    assert _strip_timestamp(lines[0]) == "WARNING: Running on DEVELOPMENT BUILD"
+    assert _strip_timestamp(lines[1]) == "=== LOG STARTED ==="
+    assert _strip_timestamp(lines[2]) == "Starting"
+    assert _strip_timestamp(lines[3]) == "0"
+    assert _strip_timestamp(lines[-1]) == "=== LOG FINISHED ==="
+    assert len(lines) == 6  # Check the code didn't run for the entire length
+
+    assert lines == sith.log_helper.get_lines()
+
+
 ALLOWED_SYSTEM_VERSIONS: List[Tuple[str, List[str]]] = [
     ("0.0.0.0", []),
     ("0.0.0.0dev", ["WARNING: Running on DEVELOPMENT BUILD"]),
