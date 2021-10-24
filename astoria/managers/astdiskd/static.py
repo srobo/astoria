@@ -1,6 +1,7 @@
 """Allows disks to be added manually through local filesystem paths."""
 import logging
-from typing import TYPE_CHECKING, Callable, Coroutine
+from pathlib import Path
+from typing import TYPE_CHECKING, Callable, Coroutine, Dict
 
 from astoria.common.manager_requests import (
     AddStaticDiskRequest,
@@ -102,22 +103,33 @@ class StaticDiskProvider(DiskProvider):
         request: RemoveAllStaticDisksRequest,
     ) -> RequestResponse:
         """Handles the remove all static disks command."""
-        removed = False
-        for uuid, path in self.disks.items():
-            if uuid.startswith('static-'):
-                removed = True
-                del self.disks[uuid]
-                LOGGER.info(f'Static disk {uuid} unmounted ({path})')
+        # Find the disks that we need to remove
+        removed_disks: Dict[DiskUUID, Path] = {
+            uuid: path
+            for uuid, path in self.disks.items()
+            if uuid.startswith('static-')
+        }
 
-        if not removed:
+        # Remove those disks from the list of disks
+        self._disks = {
+            uuid: path
+            for uuid, path in self.disks.items()
+            if uuid not in removed_disks
+        }
+
+        # Log which disks we have remove
+        for uuid, path in removed_disks.items():
+            LOGGER.info(f'Static disk {uuid} unmounted ({path})')
+
+        if len(removed_disks) == 0:
             return RequestResponse(
                 uuid=request.uuid,
                 success=True,
                 reason='There are no static disks to remove.',
             )
-
-        return RequestResponse(
-            uuid=request.uuid,
-            success=True,
-            reason='Successfully removed all static disks.',
-        )
+        else:
+            return RequestResponse(
+                uuid=request.uuid,
+                success=True,
+                reason='Successfully removed all static disks.',
+            )
