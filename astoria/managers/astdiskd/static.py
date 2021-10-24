@@ -82,6 +82,7 @@ class StaticDiskProvider(DiskProvider):
                 if str(path) == str(request.path):
                     del self.disks[uuid]
                     LOGGER.info(f'Static disk {uuid} unmounted ({request.path})')
+                    await self._notify_coro()
                     return RequestResponse(
                         uuid=request.uuid,
                         success=True,
@@ -128,6 +129,7 @@ class StaticDiskProvider(DiskProvider):
                 reason='There are no static disks to remove.',
             )
         else:
+            await self._notify_coro()
             return RequestResponse(
                 uuid=request.uuid,
                 success=True,
