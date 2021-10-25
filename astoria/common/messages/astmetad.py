@@ -84,7 +84,8 @@ class RobotSettings(BaseModel):
 
     wifi_ssid: str
     wifi_psk: str
-    wifi_region: str
+    wifi_region: str = "GB"  # Assume GB as that is where most competitors are.
+    wifi_enabled: bool = True
 
     @classmethod
     def generate_default_settings(cls) -> 'RobotSettings':
@@ -99,7 +100,6 @@ class RobotSettings(BaseModel):
         return cls(
             wifi_ssid=f"robot-{ssid_random}",
             wifi_psk=passphrase,
-            wifi_region="GB",  # Assume GB as that is where most competitors are.
         )
 
 
