@@ -1,5 +1,7 @@
 """Types for astmetad."""
 import platform
+import random
+import string
 from enum import Enum
 from typing import Optional
 
@@ -75,6 +77,30 @@ class Metadata(BaseModel):
     wifi_ssid: Optional[str] = None
     wifi_psk: Optional[str] = None
     wifi_region: Optional[str] = None
+
+
+class RobotSettings(BaseModel):
+    """Schema for robot-settings.toml."""
+
+    wifi_ssid: str
+    wifi_psk: str
+    wifi_region: str
+
+    @classmethod
+    def generate_default_settings(cls) -> 'RobotSettings':
+        """Generate default sensible settings for the robot."""
+        ssid_random = "".join(random.choice(string.ascii_uppercase) for _ in range(6))
+
+        # Use random characters for the WiFi password as passphrase schemes
+        # such as Diceware are very language specific. This can be changed
+        # by competitors if they need to.
+        passphrase = "".join(random.choice(string.ascii_lowercase) for _ in range(12))
+
+        return cls(
+            wifi_ssid=f"robot-{ssid_random}",
+            wifi_psk=passphrase,
+            wifi_region="GB",  # Assume GB as that is where most competitors are.
+        )
 
 
 class MetadataManagerMessage(ManagerMessage):

@@ -4,9 +4,14 @@ import asyncio
 import logging
 from abc import ABCMeta, abstractmethod
 from json import JSONDecodeError, loads
+from pathlib import Path
 from typing import Dict
 
+import toml
+from pydantic.error_wrappers import ValidationError
+
 from astoria.common.messages.astdiskd import DiskInfo, DiskUUID
+from astoria.common.messages.astmetad import RobotSettings
 
 LOGGER = logging.getLogger(__name__)
 
@@ -54,13 +59,50 @@ class MetadataDiskLifecycle(AbstractMetadataDiskLifecycle):
         return {}
 
 
+class NoValidRobotSettingsException(Exception):
+    """The robot settings were not valid or did not exist."""
+
+
 class UsercodeDiskLifecycle(AbstractMetadataDiskLifecycle):
     """Load and validate metadata from a usercode disk."""
+
+    def _load_settings_file(self, path: Path) -> RobotSettings:
+        """
+        Load the robot settings file.
+
+        :param path: The file to load settings from.
+        :raises NoValidRobotSettingsException: The robot settings were not valid.
+        :returns: The robot settings in path.
+        """
+        if not path.exists():
+            raise NoValidRobotSettingsException("File did not exist.")
+
+        try:
+            data = toml.load(path)
+        except toml.TomlDecodeError:
+            raise NoValidRobotSettingsException("Invalid TOML")
+
+        try:
+            return RobotSettings(**data)
+        except ValidationError as e:
+            raise NoValidRobotSettingsException(
+                f"Settings did not match schema: {e}",
+            )
 
     def extract_diff_data(self) -> Dict[str, str]:
         """
         Extract the diff data from the disk.
 
-        Loads wifi.toml fom the disk.
+        Loads robot-settings.toml fom the disk.
         """
-        return {}
+        robot_settings_file = self._disk_info.mount_path / "robot-settings.toml"
+        try:
+            settings = self._load_settings_file(robot_settings_file)
+        except NoValidRobotSettingsException:
+            settings = RobotSettings.generate_default_settings()
+
+            LOGGER.info("No valid settings, writing sensible defaults.")
+            with robot_settings_file.open("w") as fh:
+                toml.dump(settings.dict(), fh)
+
+        return settings.dict()
