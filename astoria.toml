@@ -8,10 +8,6 @@ force_protocol_version_3_1 = true
 
 topic_prefix = "astoria"
 
-[kit]
-name = "Astoria Development"
-version = "0.0.0.0dev"
-
 [wifi]
 interface = "wlan0"
 bridge = "br0"

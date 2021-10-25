@@ -40,8 +40,6 @@ class Metadata(BaseModel):
             arch=uname.machine,
             python_version=platform.python_version(),
             libc_ver="".join(platform.libc_ver()),
-            kit_name=config.kit.name,
-            kit_version=config.kit.version,
         )
 
     def is_wifi_valid(self) -> bool:
@@ -74,8 +72,6 @@ class Metadata(BaseModel):
     libc_ver: str
 
     # From astoria.toml
-    kit_name: str
-    kit_version: str
     wifi_ssid: Optional[str] = None
     wifi_psk: Optional[str] = None
     wifi_region: Optional[str] = None

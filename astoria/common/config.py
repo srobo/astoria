@@ -3,11 +3,10 @@ Configuration schema for Astoria.
 
 Common to all components.
 """
-import re
 from pathlib import Path
 from typing import IO, Optional
 
-from pydantic import BaseModel, validator
+from pydantic import BaseModel
 from toml import load
 
 
@@ -19,28 +18,6 @@ class MQTTBrokerInfo(BaseModel):
     enable_tls: bool = False
     topic_prefix: str = "astoria"
     force_protocol_version_3_1: bool = False
-
-    class Config:
-        """Pydantic config."""
-
-        extra = "forbid"
-
-
-KIT_VERSION_REGEX = re.compile(r"^(?P<epoch>\d+)\.(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)(?P<dev>dev)?(?::(?P<hash>[0-9a-f]{5,40})(?:@(?P<branch>\w+))?)?$")  # noqa: E501
-
-
-class KitInfo(BaseModel):
-    """Kit Information."""
-
-    name: str
-    version: str
-
-    @validator('version')
-    def version_must_match_regex(cls, v: str) -> str:
-        """Validate that the version matches the regex."""
-        if not KIT_VERSION_REGEX.match(v):
-            raise ValueError("version does not match format")
-        return v
 
     class Config:
         """Pydantic config."""
@@ -76,7 +53,6 @@ class AstoriaConfig(BaseModel):
     """Config schema for Astoria."""
 
     mqtt: MQTTBrokerInfo
-    kit: KitInfo
     wifi: WiFiInfo
     system: SystemInfo
 
