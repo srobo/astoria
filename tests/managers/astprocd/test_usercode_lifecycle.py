@@ -254,9 +254,8 @@ async def test_run_with_not_python() -> None:
     log_file = EXECUTE_CODE_DATA / "not_python" / "log.txt"
     with ReadAndCleanupFile(log_file) as fh:
         lines = fh.read().splitlines()
-    assert _strip_timestamp(lines[0]) == "WARNING: Running on DEVELOPMENT BUILD"
-    assert _strip_timestamp(lines[1]) == "=== LOG STARTED ==="
-    assert "This is not a python program" in _strip_timestamp(lines[3])
+    assert _strip_timestamp(lines[0]) == "=== LOG STARTED ==="
+    assert "This is not a python program" in _strip_timestamp(lines[2])
     assert _strip_timestamp(lines[-1]) == "=== LOG FINISHED ==="
 
     assert lines == sith.log_helper.get_lines()
@@ -285,9 +284,8 @@ async def test_run_with_syntax_error() -> None:
     log_file = EXECUTE_CODE_DATA / "syntax_error" / "log.txt"
     with ReadAndCleanupFile(log_file) as fh:
         lines = fh.read().splitlines()
-    assert _strip_timestamp(lines[0]) == "WARNING: Running on DEVELOPMENT BUILD"
-    assert _strip_timestamp(lines[1]) == "=== LOG STARTED ==="
-    assert "SyntaxError" in _strip_timestamp(lines[5])
+    assert _strip_timestamp(lines[0]) == "=== LOG STARTED ==="
+    assert "SyntaxError" in _strip_timestamp(lines[4])
     assert _strip_timestamp(lines[-1]) == "=== LOG FINISHED ==="
 
     assert lines == sith.log_helper.get_lines()
@@ -315,9 +313,8 @@ async def test_run_with_valid_python_wait_finish() -> None:
     log_file = EXECUTE_CODE_DATA / "valid_python_short" / "log.txt"
     with ReadAndCleanupFile(log_file) as fh:
         lines = fh.read().splitlines()
-    assert _strip_timestamp(lines[0]) == "WARNING: Running on DEVELOPMENT BUILD"
-    assert _strip_timestamp(lines[1]) == "=== LOG STARTED ==="
-    assert _strip_timestamp(lines[2]) == "Hello World"
+    assert _strip_timestamp(lines[0]) == "=== LOG STARTED ==="
+    assert _strip_timestamp(lines[1]) == "Hello World"
     assert _strip_timestamp(lines[-1]) == "=== LOG FINISHED ==="
 
     assert lines == sith.log_helper.get_lines()
@@ -347,12 +344,11 @@ async def test_run_with_valid_python_wait_kill() -> None:
     log_file = EXECUTE_CODE_DATA / "valid_python_long" / "log.txt"
     with ReadAndCleanupFile(log_file) as fh:
         lines = fh.read().splitlines()
-    assert _strip_timestamp(lines[0]) == "WARNING: Running on DEVELOPMENT BUILD"
-    assert _strip_timestamp(lines[1]) == "=== LOG STARTED ==="
-    assert _strip_timestamp(lines[2]) == "Starting"
-    assert _strip_timestamp(lines[3]) == "0"
+    assert _strip_timestamp(lines[0]) == "=== LOG STARTED ==="
+    assert _strip_timestamp(lines[1]) == "Starting"
+    assert _strip_timestamp(lines[2]) == "0"
     assert _strip_timestamp(lines[-1]) == "=== LOG FINISHED ==="
-    assert len(lines) == 6  # Check the code didn't run for the entire length
+    assert len(lines) == 5  # Check the code didn't run for the entire length
 
     assert lines == sith.log_helper.get_lines()
 
@@ -383,82 +379,10 @@ async def test_run_with_valid_python_wait_kill_ignore_sigint() -> None:
     log_file = EXECUTE_CODE_DATA / "valid_python_long_ignore_signals" / "log.txt"
     with ReadAndCleanupFile(log_file) as fh:
         lines = fh.read().splitlines()
-    assert _strip_timestamp(lines[0]) == "WARNING: Running on DEVELOPMENT BUILD"
-    assert _strip_timestamp(lines[1]) == "=== LOG STARTED ==="
-    assert _strip_timestamp(lines[2]) == "Starting"
-    assert _strip_timestamp(lines[3]) == "0"
+    assert _strip_timestamp(lines[0]) == "=== LOG STARTED ==="
+    assert _strip_timestamp(lines[1]) == "Starting"
+    assert _strip_timestamp(lines[2]) == "0"
     assert _strip_timestamp(lines[-1]) == "=== LOG FINISHED ==="
-    assert len(lines) == 6  # Check the code didn't run for the entire length
-
-    assert lines == sith.log_helper.get_lines()
-
-
-ALLOWED_SYSTEM_VERSIONS: List[Tuple[str, List[str]]] = [
-    ("0.0.0.0", []),
-    ("0.0.0.0dev", ["WARNING: Running on DEVELOPMENT BUILD"]),
-    ("0.0.0.1", ["kit software which is different than the current version."]),
-    (
-        "0.0.0.1dev",
-        [
-            "WARNING: Running on DEVELOPMENT BUILD",
-            "kit software which is different than the current version.",
-        ],
-    ),
-    ("0.0.1.0", ["kit software is unsupported"]),
-    (
-        "0.0.1.0dev",
-        [
-            "WARNING: Running on DEVELOPMENT BUILD",
-            "kit software is unsupported",
-        ],
-    ),
-    ("0.1.0.1", ["kit software is unsupported"]),
-    (
-        "0.1.0.1dev",
-        [
-            "WARNING: Running on DEVELOPMENT BUILD",
-            "kit software is unsupported",
-        ],
-    ),
-]
-
-
-@pytest.mark.parametrize("version_data", ALLOWED_SYSTEM_VERSIONS)
-@pytest.mark.asyncio
-async def test_run_with_allowed_system_version(
-    version_data: Tuple[str, List[str]],
-) -> None:
-    """
-    Test that a suitable warning is given to about system versions.
-
-    The robot.zip used for this test has a version of 0.0.0.0dev.
-    """
-    version, warning_strings = version_data
-    CONFIG.kit.version = version
-    ucl, sith = StatusInformTestHelper.setup(
-        EXECUTE_CODE_DATA / "valid_python_short",
-        config=CONFIG,
-    )
-    await ucl.run_process()
-    await asyncio.sleep(0.05)  # Wait for logger to flush
-    assert sith.called_queue == [
-        CodeStatus.STARTING,
-        CodeStatus.RUNNING,
-        CodeStatus.FINISHED,
-    ]
-    # Check that the log file contains the right text
-    log_file = EXECUTE_CODE_DATA / "valid_python_short" / "log.txt"
-    with ReadAndCleanupFile(log_file) as fh:
-        lines = fh.read().splitlines()
-
-    # Check that the warning strings are at the start
-    for index, warning_string in enumerate(warning_strings):
-        assert warning_string in lines[index]
-
-    # Check the rest of the file is okay too
-    offset = len(warning_strings)
-    assert _strip_timestamp(lines[offset]) == "=== LOG STARTED ==="
-    assert _strip_timestamp(lines[offset + 1]) == "Hello World"
-    assert _strip_timestamp(lines[-1]) == "=== LOG FINISHED ==="
+    assert len(lines) == 5  # Check the code didn't run for the entire length
 
     assert lines == sith.log_helper.get_lines()

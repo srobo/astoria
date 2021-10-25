@@ -16,8 +16,8 @@ from astoria.managers.mixins.disk_handler import DiskHandlerMixin
 from .metadata_cache import MetadataCache
 from .metadata_disk_lifecycle import (
     AbstractMetadataDiskLifecycle,
-    BundleDiskLifecycle,
     MetadataDiskLifecycle,
+    UsercodeDiskLifecycle,
 )
 
 LOGGER = logging.getLogger(__name__)
@@ -30,7 +30,7 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
     dependencies = ["astdiskd"]
 
     DISK_TYPE_LIFECYCLE_MAP: Dict[DiskType, Type[AbstractMetadataDiskLifecycle]] = {
-        DiskType.USERCODE: BundleDiskLifecycle,
+        DiskType.USERCODE: UsercodeDiskLifecycle,
         DiskType.METADATA: MetadataDiskLifecycle,
     }
 

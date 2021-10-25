@@ -6,17 +6,13 @@ from datetime import datetime
 from pathlib import Path
 from signal import SIGKILL, SIGTERM
 from tempfile import TemporaryDirectory
-from typing import Callable, Dict, List, Optional, Set
+from typing import Callable, Dict, Optional, Set
 from zipfile import BadZipFile, ZipFile
-
-import toml
-from pydantic import ValidationError
 
 from astoria.common.broadcast_event import (
     LogEventSource,
     UsercodeLogBroadcastEvent,
 )
-from astoria.common.bundle import CodeBundle, IncompatibleKitVersionException
 from astoria.common.config import AstoriaConfig
 from astoria.common.messages.astdiskd import DiskInfo, DiskUUID
 from astoria.common.messages.astprocd import CodeStatus
@@ -84,7 +80,7 @@ class UsercodeLifecycle:
         self._dir = TemporaryDirectory(prefix="astprocd-")
         self._dir_path = Path(self._dir.name)
 
-    def _extract_and_validate_zip_file(self) -> List[str]:
+    def _extract_and_validate_zip_file(self) -> None:
         """
         Extract and validate a robot.zip file.
 
@@ -93,7 +89,7 @@ class UsercodeLifecycle:
         of the usercode lifecycle, and should not be called multiple
         times.
 
-        :returns: messages to put in the log file
+        :raises InvalidCodeBundleException: The code bundle was not valid.
         """
         zip_path = self._disk_info.mount_path / "robot.zip"
 
@@ -125,29 +121,6 @@ class UsercodeLifecycle:
                     will not work with this version of the kit.",
                 )
 
-        # Check for code bundle info
-        bundle_meta_path = self._dir_path / "bundle.toml"
-        if not bundle_meta_path.exists():
-            raise InvalidCodeBundleException(
-                "The provided robot.zip did not contain a bundle.toml",
-            )
-        else:
-            # Validate code bundle info
-            try:
-                bundle_contents = toml.loads(bundle_meta_path.read_text())
-            except toml.TomlDecodeError as e:
-                raise InvalidCodeBundleException(f"The code bundle was invalid.\n{e}")
-
-            try:
-                bundle = CodeBundle(**bundle_contents)
-            except ValidationError as e:
-                raise InvalidCodeBundleException(f"The code bundle was invalid.\n{e}")
-
-            try:
-                return bundle.check_kit_version_is_compatible(self._config.kit)
-            except IncompatibleKitVersionException as e:
-                raise InvalidCodeBundleException(f"Invalid code bundle: {e}")
-
     async def run_process(self) -> None:
         """
         Start the execution of the usercode.
@@ -156,7 +129,7 @@ class UsercodeLifecycle:
         """
         if self._process is None:
             try:
-                log_message = self._extract_and_validate_zip_file()
+                self._extract_and_validate_zip_file()
                 async with self._process_lock:
                     self._process = await asyncio.create_subprocess_exec(
                         "python3",
@@ -175,7 +148,6 @@ class UsercodeLifecycle:
                                 self.logger(
                                     {LogEventSource.STDOUT: self._process.stdout,
                                      LogEventSource.STDERR: self._process.stderr},
-                                    initial_messages=log_message,
                                 ),
                             )
                         else:
@@ -247,8 +219,6 @@ class UsercodeLifecycle:
     async def logger(
         self,
         proc_outputs: Dict[LogEventSource, asyncio.StreamReader],
-        *,
-        initial_messages: List[str] = [],
     ) -> None:
         """
         Logger task.
@@ -256,7 +226,6 @@ class UsercodeLifecycle:
         Logs the output of the process to a log file and MQTT
 
         :param proc_outputs: streams of data from the usercode process
-        :param initial_messages: optional messages to add at the start of the log
         """
         log_path = self._disk_info.mount_path / "log.txt"
 
@@ -298,12 +267,6 @@ class UsercodeLifecycle:
                     log(f"[{time_passed}] {data_str}", log_line_idx, source)
                     data = await output.readline()
                     log_line_idx += 1
-
-            # Print any initial messages
-            for message in initial_messages:
-                time_passed = datetime.now() - start_time
-                log(f"[{time_passed}] {message}\n", log_line)
-                log_line += 1
 
             time_passed = datetime.now() - start_time
             log(f"[{time_passed}] === LOG STARTED ===\n", log_line)
