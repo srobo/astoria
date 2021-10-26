@@ -96,13 +96,13 @@ class RobotSettings(BaseModel):
         :param val: The received TLA value.
         :returns: The TLA value.
         """
-        if not re.match(r"^[A-Z]{3}\d*$", val):
+        if not re.match(r"^[A-Z]{3}\d*$", val, re.IGNORECASE):
             raise ValueError("Team name did not match format.")
 
         if len(val) > 32:
             raise ValueError("SSID is too long.")
 
-        return val
+        return val.upper()
 
     @classmethod
     def generate_default_settings(cls) -> 'RobotSettings':
