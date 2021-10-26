@@ -99,6 +99,9 @@ class RobotSettings(BaseModel):
         if not re.match(r"^[A-Z]{3}\d*$", val):
             raise ValueError("Team name did not match format.")
 
+        if len(val) > 32:
+            raise ValueError("SSID is too long.")
+
         return val
 
     @classmethod
