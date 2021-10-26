@@ -1,12 +1,12 @@
 """Types for astmetad."""
 import platform
 import random
-import string
+import re
 import secrets
 from enum import Enum
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 
 from astoria import __version__
 from astoria.common.config import AstoriaConfig
@@ -83,15 +83,28 @@ class Metadata(BaseModel):
 class RobotSettings(BaseModel):
     """Schema for robot-settings.toml."""
 
-    wifi_ssid: str
+    team_name: str
     wifi_psk: str
     wifi_region: str = "GB"  # Assume GB as that is where most competitors are.
     wifi_enabled: bool = True
 
+    @validator("team_name")
+    def validate_team_name(cls, val: str) -> str:
+        """
+        Validate the TLA.
+
+        :param val: The received TLA value.
+        :returns: The TLA value.
+        """
+        if not re.match(r"^[A-Z]{3}\d*$", val):
+            raise ValueError("Team name did not match format.")
+
+        return val
+
     @classmethod
     def generate_default_settings(cls) -> 'RobotSettings':
         """Generate default sensible settings for the robot."""
-        ssid_random = "".join(random.choices(string.ascii_uppercase, k=6))
+        random_tla = f"SRZ{random.randint(0, 99999)}"
 
         # Use random characters for the WiFi password as passphrase schemes
         # such as Diceware are very language specific. This can be changed
@@ -101,7 +114,7 @@ class RobotSettings(BaseModel):
         passphrase = "-".join(secrets.token_hex(2) for _ in range(3))
 
         return cls(
-            wifi_ssid=f"robot-{ssid_random}",
+            team_name=random_tla,
             wifi_psk=passphrase,
         )
 

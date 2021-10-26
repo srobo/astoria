@@ -105,4 +105,9 @@ class UsercodeDiskLifecycle(AbstractMetadataDiskLifecycle):
             with robot_settings_file.open("w") as fh:
                 toml.dump(settings.dict(), fh)
 
-        return settings.dict()
+        return {
+            "wifi_ssid": f"robot-{settings.team_name}",
+            "wifi_psk": settings.wifi_psk,
+            "wifi_region": settings.wifi_region,
+            "wifi_enabled": str(settings.wifi_enabled),
+        }

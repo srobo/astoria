@@ -1,6 +1,6 @@
 # Example Robot Settings File
 
-wifi_ssid = "robot-JDQZRZ"
+team_name = "SRZ1"
 wifi_psk = "kgiwtnnmdfnd"
 wifi_region = "GB"
 wifi_enabled = true
