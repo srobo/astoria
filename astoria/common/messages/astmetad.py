@@ -2,6 +2,7 @@
 import platform
 import random
 import string
+import secrets
 from enum import Enum
 from typing import Optional
 
@@ -90,12 +91,14 @@ class RobotSettings(BaseModel):
     @classmethod
     def generate_default_settings(cls) -> 'RobotSettings':
         """Generate default sensible settings for the robot."""
-        ssid_random = "".join(random.choice(string.ascii_uppercase) for _ in range(6))
+        ssid_random = "".join(random.choices(string.ascii_uppercase, k=6))
 
         # Use random characters for the WiFi password as passphrase schemes
         # such as Diceware are very language specific. This can be changed
         # by competitors if they need to.
-        passphrase = "".join(random.choice(string.ascii_lowercase) for _ in range(12))
+        #
+        # Also separate every 4 characters by a dash for readability
+        passphrase = "-".join(secrets.token_hex(2) for _ in range(3))
 
         return cls(
             wifi_ssid=f"robot-{ssid_random}",
