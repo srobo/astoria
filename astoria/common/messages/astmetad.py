@@ -96,6 +96,9 @@ class RobotSettings(BaseModel):
         :param val: The received TLA value.
         :returns: The TLA value.
         """
+        if val == "beeeeees":
+            return "🐝" * 6
+
         if not re.match(r"^[A-Z]{3}\d*$", val, re.IGNORECASE):
             raise ValueError("Team name did not match format.")
 
