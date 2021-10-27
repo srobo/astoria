@@ -116,7 +116,7 @@ class RobotSettings(BaseModel):
     @classmethod
     def generate_default_settings(cls) -> 'RobotSettings':
         """Generate default sensible settings for the robot."""
-        random_tla = f"SRZ{random.randint(0, 99999)}"
+        random_tla = f"ZZZ{random.randint(0, 99999)}"
 
         # Use random characters for the WiFi password as passphrase schemes
         # such as Diceware are very language specific. This can be changed
