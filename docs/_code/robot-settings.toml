@@ -1,6 +1,6 @@
 # Example Robot Settings File
 
-team_name = "SRZ1"
+team_tla = "ABC1"
 wifi_psk = "kgiwtnnmdfnd"
 wifi_region = "GB"
 wifi_enabled = true

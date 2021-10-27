@@ -11,7 +11,7 @@ import toml
 from pydantic.error_wrappers import ValidationError
 
 from astoria.common.messages.astdiskd import DiskInfo, DiskUUID
-from astoria.common.messages.astmetad import RobotSettings, SSID_PREFIX
+from astoria.common.messages.astmetad import SSID_PREFIX, RobotSettings
 
 LOGGER = logging.getLogger(__name__)
 
@@ -106,7 +106,7 @@ class UsercodeDiskLifecycle(AbstractMetadataDiskLifecycle):
                 toml.dump(settings.dict(), fh)
 
         return {
-            "wifi_ssid": SSID_PREFIX + settings.team_name,
+            "wifi_ssid": SSID_PREFIX + settings.team_tla,
             "wifi_psk": settings.wifi_psk,
             "wifi_region": settings.wifi_region,
             "wifi_enabled": str(settings.wifi_enabled),

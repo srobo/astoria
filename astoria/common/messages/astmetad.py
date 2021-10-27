@@ -86,13 +86,13 @@ class Metadata(BaseModel):
 class RobotSettings(BaseModel):
     """Schema for robot-settings.toml."""
 
-    team_name: str
+    team_tla: str
     wifi_psk: str
     wifi_region: str = "GB"  # Assume GB as that is where most competitors are.
     wifi_enabled: bool = True
 
-    @validator("team_name")
-    def validate_team_name(cls, val: str) -> str:
+    @validator("team_tla")
+    def validate_team_tla(cls, val: str) -> str:
         """
         Validate the TLA.
 
@@ -126,7 +126,7 @@ class RobotSettings(BaseModel):
         passphrase = "-".join(secrets.token_hex(2) for _ in range(3))
 
         return cls(
-            team_name=random_tla,
+            team_tla=random_tla,
             wifi_psk=passphrase,
         )
 
