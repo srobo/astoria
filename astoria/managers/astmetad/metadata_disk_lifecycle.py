@@ -75,7 +75,7 @@ class UsercodeDiskLifecycle(AbstractMetadataDiskLifecycle):
         :returns: The robot settings in path.
         """
         if not path.exists():
-            raise NoValidRobotSettingsException("File did not exist.")
+            raise NoValidRobotSettingsException("File does not exist.")
 
         try:
             data = toml.load(path)
@@ -101,7 +101,7 @@ class UsercodeDiskLifecycle(AbstractMetadataDiskLifecycle):
         except NoValidRobotSettingsException:
             settings = RobotSettings.generate_default_settings()
 
-            LOGGER.info("No valid settings, writing sensible defaults.")
+            LOGGER.warning("No valid settings, writing sensible defaults.")
             with robot_settings_file.open("w") as fh:
                 toml.dump(settings.dict(), fh)
 
