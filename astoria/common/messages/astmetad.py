@@ -13,6 +13,9 @@ from astoria.common.config import AstoriaConfig
 
 from .base import ManagerMessage
 
+SSID_PREFIX = "robot-"
+MAX_SSID_LENGTH = 32  # SSIDs must be no more than 32 octets.
+
 
 class RobotMode(Enum):
     """Running Status of the manager daemon."""
@@ -102,7 +105,7 @@ class RobotSettings(BaseModel):
         if not re.match(r"^[A-Z]{3}\d*$", val, re.IGNORECASE):
             raise ValueError("Team name did not match format.")
 
-        if len(val) > 32:
+        if len(val) > MAX_SSID_LENGTH - len(SSID_PREFIX):
             raise ValueError("SSID is too long.")
 
         return val.upper()
