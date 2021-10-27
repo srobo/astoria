@@ -106,7 +106,10 @@ class RobotSettings(BaseModel):
             raise ValueError("Team name did not match format.")
 
         if len(val) > MAX_SSID_LENGTH - len(SSID_PREFIX):
-            raise ValueError("SSID is too long.")
+            raise ValueError(
+                f"SSID {SSID_PREFIX}{val} is longer than "
+                f"maximum length: {MAX_SSID_LENGTH} octets.",
+            )
 
         return val.upper()
 
