@@ -185,7 +185,7 @@
 <ul class="simple">
 <li><p>Waiting for usercode drive information from <a class="reference internal" href="astdiskd.html#astdiskd"><span class="std std-ref">Astdiskd</span></a></p></li>
 <li><p>Starting and managing the <a class="reference internal" href="#usercode-lifecycle"><span class="std std-ref">Usercode Lifecycle</span></a></p></li>
-<li><p>Unpacking and verifying a <a class="reference internal" href="../../design/code_format.html#code-bundle-format"><span class="std std-ref">code bundle</span></a></p></li>
+<li><p>Unpacking and verifying a <a class="reference internal" href="../../design/usercode_drives.html#code-bundle-format"><span class="std std-ref">code bundle</span></a></p></li>
 <li><p>Writing logs to the usercode drive</p></li>
 <li><p>Making logs available to other components in real time (To be <a class="reference external" href="https://github.com/srobo/astoria/issues/23">implemented</a>)</p></li>
 </ul>
@@ -212,7 +212,7 @@
 <p>Usercode is executed as a <a class="reference external" href="https://linux.die.net/man/2/fork">child process</a> of the astprocd process.
 This is managed via the <code class="docutils literal notranslate"><span class="pre">asyncio.subprocess</span></code> module, specifically <code class="docutils literal notranslate"><span class="pre">asyncio.subprocess.Process</span></code>.</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="../../design/code_format.html#code-bundle-format"><span class="std std-ref">Code bundle</span></a> is extracted to a temporary directory and validated</p></li>
+<li><p><a class="reference internal" href="../../design/usercode_drives.html#code-bundle-format"><span class="std std-ref">Code bundle</span></a> is extracted to a temporary directory and validated</p></li>
 <li><p>The usercode process is started as a child process</p></li>
 <li><p>The logger task captures <code class="docutils literal notranslate"><span class="pre">stderr</span></code> and <code class="docutils literal notranslate"><span class="pre">stdout</span></code> and writes to the log locations</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">SIGCHLD</span></code> is received and return code handled.</p></li>
