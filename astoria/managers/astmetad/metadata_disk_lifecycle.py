@@ -4,14 +4,14 @@ import asyncio
 import logging
 from abc import ABCMeta, abstractmethod
 from json import JSONDecodeError, loads
+from pathlib import Path
 from typing import Dict
-from zipfile import BadZipFile, ZipFile
 
 import toml
-from pydantic import ValidationError
+from pydantic.error_wrappers import ValidationError
 
-from astoria.common.bundle import CodeBundle
 from astoria.common.messages.astdiskd import DiskInfo, DiskUUID
+from astoria.common.messages.astmetad import SSID_PREFIX, RobotSettings
 
 LOGGER = logging.getLogger(__name__)
 
@@ -59,35 +59,55 @@ class MetadataDiskLifecycle(AbstractMetadataDiskLifecycle):
         return {}
 
 
-class BundleDiskLifecycle(AbstractMetadataDiskLifecycle):
-    """Load and validate metadata from a usercode bundle on the disk."""
+class NoValidRobotSettingsException(Exception):
+    """The robot settings were not valid or did not exist."""
+
+
+class UsercodeDiskLifecycle(AbstractMetadataDiskLifecycle):
+    """Load and validate metadata from a usercode disk."""
+
+    def _load_settings_file(self, path: Path) -> RobotSettings:
+        """
+        Load the robot settings file.
+
+        :param path: The file to load settings from.
+        :raises NoValidRobotSettingsException: The robot settings were not valid.
+        :returns: The robot settings in path.
+        """
+        if not path.exists():
+            raise NoValidRobotSettingsException("File does not exist.")
+
+        try:
+            data = toml.load(path)
+        except toml.TomlDecodeError:
+            raise NoValidRobotSettingsException("Invalid TOML")
+
+        try:
+            return RobotSettings(**data)
+        except ValidationError as e:
+            raise NoValidRobotSettingsException(
+                f"Settings did not match schema: {e}",
+            )
 
     def extract_diff_data(self) -> Dict[str, str]:
         """
         Extract the diff data from the disk.
 
-        Loads bundle.toml fron inside the robot.zip
+        Loads robot-settings.toml fom the disk.
         """
-        bundle_path = self._disk_info.mount_path / "robot.zip"
-
+        robot_settings_file = self._disk_info.mount_path / "robot-settings.toml"
         try:
-            with ZipFile(bundle_path) as zf:
-                bundle_file = zf.read("bundle.toml")
-            bundle_contents = toml.loads(bundle_file.decode())
-            bundle = CodeBundle(**bundle_contents)
+            settings = self._load_settings_file(robot_settings_file)
+        except NoValidRobotSettingsException:
+            settings = RobotSettings.generate_default_settings()
 
-            return {
-                "wifi_ssid": bundle.wifi.ssid,
-                "wifi_psk": bundle.wifi.psk,
-                "wifi_region": bundle.wifi.region,
-                "wifi_enabled": str(bundle.wifi.enabled),
-            }
-        except FileNotFoundError:
-            LOGGER.warning("Unable to find metadata.json.")
-        except BadZipFile:
-            LOGGER.warning("Bad robot.zip")
-        except toml.TomlDecodeError:
-            LOGGER.warning("Invalid code bundle.toml")
-        except ValidationError:
-            LOGGER.warning("Invalid code bundle.toml")
-        return {}
+            LOGGER.warning("No valid settings, writing sensible defaults.")
+            with robot_settings_file.open("w") as fh:
+                toml.dump(settings.dict(), fh)
+
+        return {
+            "wifi_ssid": SSID_PREFIX + settings.team_tla,
+            "wifi_psk": settings.wifi_psk,
+            "wifi_region": settings.wifi_region,
+            "wifi_enabled": str(settings.wifi_enabled),
+        }
