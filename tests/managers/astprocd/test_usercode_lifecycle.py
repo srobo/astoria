@@ -321,6 +321,44 @@ async def test_run_with_valid_python_wait_finish() -> None:
 
 
 @pytest.mark.asyncio
+async def test_run_with_valid_python_additional_log_lines() -> None:
+    """
+    Test that valid python code is successfully executed.
+
+    Checks that:
+    - Zip file is extracted and robot.py is run
+    - Output is written to the log file
+    - The correct status is passed to the state manager
+    """
+    config = CONFIG.dict()
+    config["system"]["initial_log_lines"] = ["Hello", "World"]
+    ucl, sith = StatusInformTestHelper.setup(
+        EXECUTE_CODE_DATA / "valid_python_short",
+        config=AstoriaConfig(**config),
+    )
+    await ucl.run_process()
+    await asyncio.sleep(0.05)  # Wait for logger to flush
+    assert sith.called_queue == [
+        CodeStatus.STARTING,
+        CodeStatus.RUNNING,
+        CodeStatus.FINISHED,
+    ]
+    # Check that the log file contains the right text
+    log_file = EXECUTE_CODE_DATA / "valid_python_short" / "log.txt"
+    with ReadAndCleanupFile(log_file) as fh:
+        lines = fh.read().splitlines()
+    assert _strip_timestamp(lines[0]) == "---"
+    assert _strip_timestamp(lines[1]) == "Hello"
+    assert _strip_timestamp(lines[2]) == "World"
+    assert _strip_timestamp(lines[3]) == "---"
+    assert _strip_timestamp(lines[4]) == "=== LOG STARTED ==="
+    assert _strip_timestamp(lines[5]) == "Hello World"
+    assert _strip_timestamp(lines[-1]) == "=== LOG FINISHED ==="
+
+    assert lines == sith.log_helper.get_lines()
+
+
+@pytest.mark.asyncio
 async def test_run_with_valid_python_wait_kill() -> None:
     """
     Test that valid python code is successfully executed and killed.

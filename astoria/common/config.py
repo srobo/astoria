@@ -4,7 +4,7 @@ Configuration schema for Astoria.
 Common to all components.
 """
 from pathlib import Path
-from typing import IO, Optional
+from typing import IO, List, Optional
 
 from pydantic import BaseModel
 from toml import load
@@ -42,6 +42,7 @@ class SystemInfo(BaseModel):
     """System settings that don't find elsewhere."""
 
     cache_dir: Path
+    initial_log_lines: List[str] = []
 
     class Config:
         """Pydantic config."""

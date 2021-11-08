@@ -269,6 +269,16 @@ class UsercodeLifecycle:
                     log_line_idx += 1
 
             time_passed = datetime.now() - start_time
+
+            # Print initial lines to the log, if any.
+            # This is useful to show a message to the user in every log file.
+            if self._config.system.initial_log_lines:
+                log(f"[{time_passed}] ---\n", log_line)
+
+                for line in self._config.system.initial_log_lines:
+                    log(f"[{time_passed}] {line}\n", log_line)
+                log(f"[{time_passed}] ---\n", log_line)
+
             log(f"[{time_passed}] === LOG STARTED ===\n", log_line)
             log_line += 1
 
