@@ -35,7 +35,10 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
     }
 
     DISK_TYPE_OVERRIDE_MAP: Dict[DiskType, Set[str]] = {
-        DiskType.USERCODE: {"usercode_entrypoint", "wifi_ssid", "wifi_psk", "wifi_region", "wifi_enabled"},
+        DiskType.USERCODE: {
+            "usercode_entrypoint", "wifi_ssid",
+            "wifi_psk", "wifi_region", "wifi_enabled",
+        },
         DiskType.METADATA: {
             "arena", "zone", "mode", "marker_offset", "game_timeout", "wifi_enabled",
         },

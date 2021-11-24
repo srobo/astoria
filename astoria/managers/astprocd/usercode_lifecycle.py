@@ -15,6 +15,7 @@ from astoria.common.broadcast_event import (
 )
 from astoria.common.config import AstoriaConfig
 from astoria.common.messages.astdiskd import DiskInfo, DiskUUID
+from astoria.common.messages.astmetad import Metadata
 from astoria.common.messages.astprocd import CodeStatus
 from astoria.common.mqtt import BroadcastHelper
 
@@ -40,17 +41,21 @@ class UsercodeLifecycle:
             disk_info: DiskInfo,
             status_inform_callback: Callable[[CodeStatus], None],
             log_helper: BroadcastHelper[UsercodeLogBroadcastEvent],
+            metadata: Metadata,
             config: AstoriaConfig,
     ) -> None:
         self._uuid = uuid
         self._disk_info = disk_info
         self._status_inform_callback = status_inform_callback
         self._log_helper = log_helper
+        self._metadata = metadata
         self._config = config
 
         self._process: Optional[asyncio.subprocess.Process] = None
         self._process_lock = asyncio.Lock()
         self._setup_temp_dir()
+
+        self._entrypoint = self._metadata.usercode_entrypoint
 
         self.status = CodeStatus.STARTING
 
@@ -105,10 +110,10 @@ class UsercodeLifecycle:
             )
 
         # Check that robot.py is present
-        exe_path = self._dir_path / "robot.py"
+        exe_path = self._dir_path / self._entrypoint
         if not exe_path.exists():
             raise InvalidCodeBundleException(
-                "The provided robot.zip did not contain a robot.py",
+                f"The provided robot.zip did not contain a {self._entrypoint}",
             )
 
         LEGACY_FILES: Set[str] = {"info.yaml", "info.yml", "wifi.yaml", "wifi.yml"}
@@ -131,10 +136,14 @@ class UsercodeLifecycle:
             try:
                 self._extract_and_validate_zip_file()
                 async with self._process_lock:
+                    LOGGER.info(
+                        "Starting usercode execution with "
+                        f"entrypoint {self._entrypoint}",
+                    )
                     self._process = await asyncio.create_subprocess_exec(
                         "python3",
                         "-u",
-                        "robot.py",
+                        self._metadata.usercode_entrypoint,
                         stdin=asyncio.subprocess.DEVNULL,
                         stdout=asyncio.subprocess.PIPE,
                         stderr=asyncio.subprocess.PIPE,

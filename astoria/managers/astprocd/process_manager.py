@@ -2,7 +2,8 @@
 
 import asyncio
 import logging
-from typing import Dict, Optional
+from json import JSONDecodeError, loads
+from typing import Dict, Match, Optional
 
 from astoria.common.broadcast_event import UsercodeLogBroadcastEvent
 from astoria.common.manager import StateManager
@@ -12,6 +13,7 @@ from astoria.common.manager_requests import (
     UsercodeRestartManagerRequest,
 )
 from astoria.common.messages.astdiskd import DiskInfo, DiskType, DiskUUID
+from astoria.common.messages.astmetad import Metadata, MetadataManagerMessage
 from astoria.common.messages.astprocd import CodeStatus, ProcessManagerMessage
 from astoria.common.mqtt import BroadcastHelper
 from astoria.managers.mixins.disk_handler import DiskHandlerMixin
@@ -29,11 +31,14 @@ class ProcessManager(DiskHandlerMixin, StateManager[ProcessManagerMessage]):
     name = "astprocd"
     dependencies = ["astdiskd", "astmetad"]
 
+    _recent_metadata: Metadata
+
     def _init(self) -> None:
         self._lifecycle: Optional[UsercodeLifecycle] = None
         self._cur_disks: Dict[DiskUUID, DiskInfo] = {}
 
         self._mqtt.subscribe("astdiskd", self.handle_astdiskd_disk_info_message)
+        self._mqtt.subscribe("astmetad", self.handle_astmetad_message)
 
         self._register_request(
             "restart",
@@ -71,6 +76,21 @@ class ProcessManager(DiskHandlerMixin, StateManager[ProcessManagerMessage]):
         for uuid, info in self._cur_disks.items():
             asyncio.ensure_future(self.handle_disk_removal(uuid, info))
 
+    async def handle_astmetad_message(
+        self,
+        match: Match[str],
+        payload: str,
+    ) -> None:
+        """Handle disk info messages."""
+        if payload:
+            try:
+                message = MetadataManagerMessage(**loads(payload))
+                self._recent_metadata = message.metadata
+            except JSONDecodeError:
+                LOGGER.warning("Received bad JSON in disk manager message.")
+        else:
+            LOGGER.warning("Received empty disk manager message.")
+
     async def handle_disk_insertion(self, uuid: DiskUUID, disk_info: DiskInfo) -> None:
         """Handle a disk insertion."""
         LOGGER.debug(f"Disk inserted: {uuid} ({disk_info.disk_type})")
@@ -83,6 +103,7 @@ class ProcessManager(DiskHandlerMixin, StateManager[ProcessManagerMessage]):
                     disk_info,
                     self.update_status,
                     self._log_helper,
+                    self._recent_metadata,
                     self.config,
                 )
                 asyncio.ensure_future(self._lifecycle.run_process())

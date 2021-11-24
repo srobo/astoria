@@ -10,6 +10,7 @@ import pytest
 from astoria.common.broadcast_event import UsercodeLogBroadcastEvent
 from astoria.common.config import AstoriaConfig
 from astoria.common.messages.astdiskd import DiskInfo, DiskType, DiskUUID
+from astoria.common.messages.astmetad import Metadata
 from astoria.common.messages.astprocd import CodeStatus
 from astoria.common.mqtt.broadcast_helper import BroadcastHelper, T
 from astoria.managers.astprocd.usercode_lifecycle import (
@@ -116,6 +117,7 @@ class StatusInformTestHelper:
             ),
             status_inform_callback=sith.callback,
             log_helper=sith.log_helper,
+            metadata=Metadata.init(config),
             config=config,
         )
         return ucl, sith
