@@ -50,11 +50,18 @@ class SystemInfo(BaseModel):
         extra = "forbid"
 
 
+class ProcessManagerInfo(BaseModel):
+    """Settings specifically for astprocd."""
+
+    default_usercode_entrypoint: str = "robot.py"
+
+
 class AstoriaConfig(BaseModel):
     """Config schema for Astoria."""
 
     mqtt: MQTTBrokerInfo
     wifi: WiFiInfo
+    astprocd: ProcessManagerInfo = ProcessManagerInfo()  # Optional section
     system: SystemInfo
 
     class Config:

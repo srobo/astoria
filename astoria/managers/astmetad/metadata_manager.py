@@ -35,7 +35,10 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
     }
 
     DISK_TYPE_OVERRIDE_MAP: Dict[DiskType, Set[str]] = {
-        DiskType.USERCODE: {"wifi_ssid", "wifi_psk", "wifi_region", "wifi_enabled"},
+        DiskType.USERCODE: {
+            "usercode_entrypoint", "wifi_ssid",
+            "wifi_psk", "wifi_region", "wifi_enabled",
+        },
         DiskType.METADATA: {
             "arena", "zone", "mode", "marker_offset", "game_timeout", "wifi_enabled",
         },
@@ -98,7 +101,11 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
                 )
                 if self._lifecycles[disk_type] is None:
                     LOGGER.debug(f"Starting lifecycle for {uuid}")
-                    self._lifecycles[disk_type] = lifecycle_class(uuid, disk_info)
+                    self._lifecycles[disk_type] = lifecycle_class(
+                        uuid,
+                        disk_info,
+                        self.config,
+                    )
                     self.update_status()
                 else:
                     LOGGER.warn(

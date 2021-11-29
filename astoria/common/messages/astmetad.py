@@ -46,6 +46,7 @@ class Metadata(BaseModel):
             arch=uname.machine,
             python_version=platform.python_version(),
             libc_ver="".join(platform.libc_ver()),
+            usercode_entrypoint=config.astprocd.default_usercode_entrypoint,
         )
 
     def is_wifi_valid(self) -> bool:
@@ -77,7 +78,8 @@ class Metadata(BaseModel):
     python_version: str
     libc_ver: str
 
-    # From astoria.toml
+    # From robot settings file
+    usercode_entrypoint: str
     wifi_ssid: Optional[str] = None
     wifi_psk: Optional[str] = None
     wifi_region: Optional[str] = None
@@ -87,6 +89,7 @@ class RobotSettings(BaseModel):
     """Schema for robot-settings.toml."""
 
     team_tla: str
+    usercode_entrypoint: str
     wifi_psk: str
     wifi_region: str = "GB"  # Assume GB as that is where most competitors are.
     wifi_enabled: bool = True
@@ -114,7 +117,7 @@ class RobotSettings(BaseModel):
         return val.upper()
 
     @classmethod
-    def generate_default_settings(cls) -> 'RobotSettings':
+    def generate_default_settings(cls, config: AstoriaConfig) -> 'RobotSettings':
         """Generate default sensible settings for the robot."""
         random_tla = f"ZZZ{random.randint(0, 99999)}"
 
@@ -127,6 +130,7 @@ class RobotSettings(BaseModel):
 
         return cls(
             team_tla=random_tla,
+            usercode_entrypoint=config.astprocd.default_usercode_entrypoint,
             wifi_psk=passphrase,
         )
 

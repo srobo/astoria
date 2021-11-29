@@ -10,6 +10,7 @@ from typing import Dict
 import toml
 from pydantic.error_wrappers import ValidationError
 
+from astoria.common.config import AstoriaConfig
 from astoria.common.messages.astdiskd import DiskInfo, DiskUUID
 from astoria.common.messages.astmetad import SSID_PREFIX, RobotSettings
 
@@ -21,9 +22,15 @@ loop = asyncio.get_event_loop()
 class AbstractMetadataDiskLifecycle(metaclass=ABCMeta):
     """Load and validate metadata from a disk."""
 
-    def __init__(self, uuid: DiskUUID, disk_info: DiskInfo) -> None:
+    def __init__(
+        self,
+        uuid: DiskUUID,
+        disk_info: DiskInfo,
+        config: AstoriaConfig,
+    ) -> None:
         self._uuid = uuid
         self._disk_info = disk_info
+        self._config = config
 
         self._diff = self.extract_diff_data()
 
@@ -99,13 +106,14 @@ class UsercodeDiskLifecycle(AbstractMetadataDiskLifecycle):
         try:
             settings = self._load_settings_file(robot_settings_file)
         except NoValidRobotSettingsException:
-            settings = RobotSettings.generate_default_settings()
+            settings = RobotSettings.generate_default_settings(self._config)
 
             LOGGER.warning("No valid settings, writing sensible defaults.")
             with robot_settings_file.open("w") as fh:
                 toml.dump(settings.dict(), fh)
 
         return {
+            "usercode_entrypoint": settings.usercode_entrypoint,
             "wifi_ssid": SSID_PREFIX + settings.team_tla,
             "wifi_psk": settings.wifi_psk,
             "wifi_region": settings.wifi_region,
