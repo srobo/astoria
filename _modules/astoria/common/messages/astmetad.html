@@ -203,6 +203,7 @@
             <span class="n">arch</span><span class="o">=</span><span class="n">uname</span><span class="o">.</span><span class="n">machine</span><span class="p">,</span>
             <span class="n">python_version</span><span class="o">=</span><span class="n">platform</span><span class="o">.</span><span class="n">python_version</span><span class="p">(),</span>
             <span class="n">libc_ver</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">platform</span><span class="o">.</span><span class="n">libc_ver</span><span class="p">()),</span>
+            <span class="n">usercode_entrypoint</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">astprocd</span><span class="o">.</span><span class="n">default_usercode_entrypoint</span><span class="p">,</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="Metadata.is_wifi_valid"><a class="viewcode-back" href="../../../../implementation/managers/astmetad.html#astoria.common.messages.astmetad.Metadata.is_wifi_valid">[docs]</a>    <span class="k">def</span> <span class="nf">is_wifi_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -234,7 +235,8 @@
     <span class="n">python_version</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">libc_ver</span><span class="p">:</span> <span class="nb">str</span>
 
-    <span class="c1"># From astoria.toml</span>
+    <span class="c1"># From robot settings file</span>
+    <span class="n">usercode_entrypoint</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">wifi_ssid</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">wifi_psk</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">wifi_region</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
@@ -244,6 +246,7 @@
     <span class="sd">&quot;&quot;&quot;Schema for robot-settings.toml.&quot;&quot;&quot;</span>
 
     <span class="n">team_tla</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">usercode_entrypoint</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">wifi_psk</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">wifi_region</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;GB&quot;</span>  <span class="c1"># Assume GB as that is where most competitors are.</span>
     <span class="n">wifi_enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
@@ -271,7 +274,7 @@
         <span class="k">return</span> <span class="n">val</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">generate_default_settings</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;RobotSettings&#39;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">generate_default_settings</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">AstoriaConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;RobotSettings&#39;</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Generate default sensible settings for the robot.&quot;&quot;&quot;</span>
         <span class="n">random_tla</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;ZZZ</span><span class="si">{</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">99999</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
 
@@ -284,6 +287,7 @@
 
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
             <span class="n">team_tla</span><span class="o">=</span><span class="n">random_tla</span><span class="p">,</span>
+            <span class="n">usercode_entrypoint</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">astprocd</span><span class="o">.</span><span class="n">default_usercode_entrypoint</span><span class="p">,</span>
             <span class="n">wifi_psk</span><span class="o">=</span><span class="n">passphrase</span><span class="p">,</span>
         <span class="p">)</span>
 
