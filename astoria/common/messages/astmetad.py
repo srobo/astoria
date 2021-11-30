@@ -10,6 +10,7 @@ from pydantic import BaseModel, validator
 
 from astoria import __version__
 from astoria.common.config import AstoriaConfig
+from astoria.common.usercode_strategy import UsercodeStrategy
 
 from .base import ManagerMessage
 
@@ -94,6 +95,8 @@ class RobotSettings(BaseModel):
     wifi_region: str = "GB"  # Assume GB as that is where most competitors are.
     wifi_enabled: bool = True
 
+    executor: UsercodeStrategy
+
     @validator("team_tla")
     def validate_team_tla(cls, val: str) -> str:
         """
@@ -132,6 +135,7 @@ class RobotSettings(BaseModel):
             team_tla=random_tla,
             usercode_entrypoint=config.astprocd.default_usercode_entrypoint,
             wifi_psk=passphrase,
+            executor=config.astprocd.default_usercode_strategy,
         )
 
 
