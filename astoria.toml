@@ -15,6 +15,7 @@ enable_wpa3 = false
 
 [astprocd]
 default_usercode_entrypoint = "robot.py"
+default_usercode_strategy = {strategy = "zip_bundle", zip_file = "robot.zip"}
 
 [system]
 cache_dir = ".cache_dir"  # Use a directory in /var for production

@@ -9,6 +9,11 @@ from typing import IO, Dict, List, Optional
 from pydantic import BaseModel
 from toml import load
 
+from astoria.common.usercode_strategy import (
+    UsercodeStrategy,
+    ZipBundleUsercodeStrategy,
+)
+
 
 class MQTTBrokerInfo(BaseModel):
     """MQTT Broker Information."""
@@ -54,6 +59,9 @@ class ProcessManagerInfo(BaseModel):
     """Settings specifically for astprocd."""
 
     default_usercode_entrypoint: str = "robot.py"
+    default_usercode_strategy: UsercodeStrategy = ZipBundleUsercodeStrategy(
+        strategy="zip_bundle",
+    )
 
 
 class AstoriaConfig(BaseModel):
