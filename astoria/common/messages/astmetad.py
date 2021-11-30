@@ -48,6 +48,7 @@ class Metadata(BaseModel):
             python_version=platform.python_version(),
             libc_ver="".join(platform.libc_ver()),
             usercode_entrypoint=config.astprocd.default_usercode_entrypoint,
+            usercode_strategy=config.astprocd.default_usercode_strategy,
         )
 
     def is_wifi_valid(self) -> bool:
@@ -81,6 +82,7 @@ class Metadata(BaseModel):
 
     # From robot settings file
     usercode_entrypoint: str
+    usercode_strategy: UsercodeStrategy
     wifi_ssid: Optional[str] = None
     wifi_psk: Optional[str] = None
     wifi_region: Optional[str] = None

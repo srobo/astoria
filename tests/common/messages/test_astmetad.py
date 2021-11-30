@@ -7,6 +7,7 @@ from astoria.common.messages.astmetad import (
     MetadataManagerMessage,
     RobotMode,
 )
+from astoria.common.usercode_strategy import ZipBundleUsercodeStrategy
 
 CONFIG_PATH = Path("tests/data/config/valid.toml")
 
@@ -33,6 +34,7 @@ def test_metadata_fields() -> None:
         python_version="3",
         libc_ver="2.0",
         usercode_entrypoint="robot.py",
+        usercode_strategy=ZipBundleUsercodeStrategy(strategy="zip_bundle"),
         wifi_ssid="robot",
         wifi_psk="bees",
         wifi_region="GB",
@@ -50,12 +52,13 @@ def test_metadata_fields() -> None:
     assert metadata.python_version == "3"
     assert metadata.libc_ver == "2.0"
     assert metadata.usercode_entrypoint == "robot.py"
+    assert metadata.usercode_strategy.strategy == "zip_bundle"
     assert metadata.wifi_ssid == "robot"
     assert metadata.wifi_psk == "bees"
     assert metadata.wifi_region == "GB"
 
     assert metadata.json() == '{"arena": "B", "zone": 12, "mode": "COMP", "marker_offset": 40, "game_timeout": 120, "wifi_enabled": false, "astoria_version": "0.0.0", "kernel_version": "5.0.0", "arch": "x64", ' + \
-        '"python_version": "3", "libc_ver": "2.0", "usercode_entrypoint": "robot.py", "wifi_ssid": "robot", "wifi_psk": "bees", "wifi_region": "GB"}'  # noqa: E501
+        '"python_version": "3", "libc_ver": "2.0", "usercode_entrypoint": "robot.py", "usercode_strategy": {"strategy": "zip_bundle", "zip_name": "robot.zip"}, "wifi_ssid": "robot", "wifi_psk": "bees", "wifi_region": "GB"}'  # noqa: E501
 
 
 def test_metadata_fields_default() -> None:
@@ -67,6 +70,7 @@ def test_metadata_fields_default() -> None:
         python_version="3",
         libc_ver="2.0",
         usercode_entrypoint="robot.py",
+        usercode_strategy=ZipBundleUsercodeStrategy(strategy="zip_bundle"),
     )
 
     assert metadata.arena == "A"
@@ -80,6 +84,7 @@ def test_metadata_fields_default() -> None:
     assert metadata.python_version == "3"
     assert metadata.libc_ver == "2.0"
     assert metadata.usercode_entrypoint == "robot.py"
+    assert metadata.usercode_strategy.strategy == "zip_bundle"
     assert metadata.wifi_ssid is None
     assert metadata.wifi_psk is None
 
@@ -106,6 +111,7 @@ def test_metadata_manager_message_fields() -> None:
         python_version="3",
         libc_ver="2.0",
         usercode_entrypoint="robot.py",
+        usercode_strategy=ZipBundleUsercodeStrategy(strategy="zip_bundle"),
     )
 
     mmm = MetadataManagerMessage(
