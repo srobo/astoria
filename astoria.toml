@@ -18,3 +18,6 @@ default_usercode_entrypoint = "robot.py"
 
 [system]
 cache_dir = ".cache_dir"  # Use a directory in /var for production
+
+[env]
+EXAMPLE_ENV_VAR=123

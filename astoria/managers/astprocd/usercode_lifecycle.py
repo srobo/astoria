@@ -3,6 +3,7 @@
 import asyncio
 import logging
 from datetime import datetime
+from os import environ
 from pathlib import Path
 from signal import SIGKILL, SIGTERM
 from tempfile import TemporaryDirectory
@@ -149,6 +150,7 @@ class UsercodeLifecycle:
                         stderr=asyncio.subprocess.PIPE,
                         cwd=self._dir_path,
                         start_new_session=True,
+                        env={**environ.copy(), **self._config.env},
                     )
                     if self._process is not None:
                         if self._process.stdout is not None and \
