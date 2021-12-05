@@ -4,7 +4,7 @@ Configuration schema for Astoria.
 Common to all components.
 """
 from pathlib import Path
-from typing import IO, List, Optional
+from typing import IO, Dict, List, Optional
 
 from pydantic import BaseModel
 from toml import load
@@ -63,6 +63,7 @@ class AstoriaConfig(BaseModel):
     wifi: WiFiInfo
     astprocd: ProcessManagerInfo = ProcessManagerInfo()  # Optional section
     system: SystemInfo
+    env: Dict[str, str] = {}
 
     class Config:
         """Pydantic config."""
