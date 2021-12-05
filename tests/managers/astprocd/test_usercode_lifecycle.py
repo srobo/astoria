@@ -426,3 +426,32 @@ async def test_run_with_valid_python_wait_kill_ignore_sigint() -> None:
     assert len(lines) == 5  # Check the code didn't run for the entire length
 
     assert lines == sith.log_helper.get_lines()
+
+
+@pytest.mark.asyncio
+async def test_run_with_valid_python_env_vars() -> None:
+    """
+    Tests that environment variables are passed down to executed Python code.
+
+    Checks that:
+    - Zip file is extracted and robot.py is run
+    - The code finishes running after 1 second of execution
+    - Log file output contains the contents of an environment variable set in astoria.toml
+    """
+    ucl, sith = StatusInformTestHelper.setup(
+        EXECUTE_CODE_DATA / "valid_python_with_env",
+    )
+    asyncio.ensure_future(ucl.run_process())
+    await asyncio.sleep(1)
+    assert sith.called_queue == [
+        CodeStatus.STARTING,
+        CodeStatus.RUNNING,
+        CodeStatus.FINISHED,
+    ]
+    # Check that the log file contains the right text
+    log_file = EXECUTE_CODE_DATA / "valid_python_with_env" / "log.txt"
+    with ReadAndCleanupFile(log_file) as fh:
+        lines = fh.read().splitlines()
+    assert _strip_timestamp(lines[0]) == "=== LOG STARTED ==="
+    assert _strip_timestamp(lines[1]) == "123"
+    assert _strip_timestamp(lines[-1]) == "=== LOG FINISHED ==="
