@@ -50,6 +50,9 @@ class DiskManager(StateManager[DiskManagerMessage]):
         for provider in self._providers:
             asyncio.ensure_future(provider.main())
 
+        # Send a disk manager update on startup so we don't wait for the first disk.
+        await self.update_state()
+
         # Wait whilst the program is running.
         await self.wait_loop()
 
