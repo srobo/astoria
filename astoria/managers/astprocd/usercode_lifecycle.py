@@ -56,7 +56,7 @@ class UsercodeLifecycle:
         self._process_lock = asyncio.Lock()
         self._setup_temp_dir()
 
-        self._entrypoint = self._metadata.usercode_entrypoint
+        self._entrypoint = "robot.py"  # TODO: Choose this
 
         self.status = CodeStatus.STARTING
 
@@ -144,7 +144,7 @@ class UsercodeLifecycle:
                     self._process = await asyncio.create_subprocess_exec(
                         "python3",
                         "-u",
-                        self._metadata.usercode_entrypoint,
+                        self._entrypoint,
                         stdin=asyncio.subprocess.DEVNULL,
                         stdout=asyncio.subprocess.PIPE,
                         stderr=asyncio.subprocess.PIPE,

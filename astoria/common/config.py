@@ -58,7 +58,6 @@ class SystemInfo(BaseModel):
 class ProcessManagerInfo(BaseModel):
     """Settings specifically for astprocd."""
 
-    default_usercode_entrypoint: str = "robot.py"
     default_usercode_strategy: UsercodeStrategy = ZipBundleUsercodeStrategy(
         strategy="zip_bundle",
     )

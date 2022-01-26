@@ -113,7 +113,6 @@ class UsercodeDiskLifecycle(AbstractMetadataDiskLifecycle):
                 toml.dump(settings.dict(), fh)
 
         return {
-            "usercode_entrypoint": settings.usercode_entrypoint,
             "wifi_ssid": SSID_PREFIX + settings.team_tla,
             "wifi_psk": settings.wifi_psk,
             "wifi_region": settings.wifi_region,

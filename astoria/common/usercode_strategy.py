@@ -69,7 +69,7 @@ class FolderUsercodeStrategy(BaseUsercodeStrategy):
     i.e a main.py on the USB drive is executed.
     """
 
-    entrypoint_name: str = "main.py"
+    entrypoint_name: str = "robot.py"
 
     @classmethod
     def get_strategy_name(self) -> str:
@@ -99,6 +99,7 @@ class ZipBundleUsercodeStrategy(BaseUsercodeStrategy):
     """Code is contained with a ZIP archive."""
 
     zip_name: str = "robot.zip"
+    internal_executor: 'UsercodeStrategy' = FolderUsercodeStrategy(strategy="folder")
 
     @classmethod
     def get_strategy_name(self) -> str:
@@ -128,7 +129,10 @@ class ZipBundleUsercodeStrategy(BaseUsercodeStrategy):
         :param target_dir: The directory to test for usercode.
         :returns: True if the directory contains usercode.
         """
+        # TODO: Validate the robot.zip contains the entrypoint
         return target_dir.joinpath(self.zip_name).exists()
 
 
 UsercodeStrategy = Union[FolderUsercodeStrategy, ZipBundleUsercodeStrategy]
+
+ZipBundleUsercodeStrategy.update_forward_refs()

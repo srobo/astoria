@@ -47,7 +47,6 @@ class Metadata(BaseModel):
             arch=uname.machine,
             python_version=platform.python_version(),
             libc_ver="".join(platform.libc_ver()),
-            usercode_entrypoint=config.astprocd.default_usercode_entrypoint,
             usercode_strategy=config.astprocd.default_usercode_strategy,
         )
 
@@ -81,7 +80,6 @@ class Metadata(BaseModel):
     libc_ver: str
 
     # From robot settings file
-    usercode_entrypoint: str
     usercode_strategy: UsercodeStrategy
     wifi_ssid: Optional[str] = None
     wifi_psk: Optional[str] = None
@@ -92,7 +90,6 @@ class RobotSettings(BaseModel):
     """Schema for robot-settings.toml."""
 
     team_tla: str
-    usercode_entrypoint: str
     wifi_psk: str
     wifi_region: str = "GB"  # Assume GB as that is where most competitors are.
     wifi_enabled: bool = True
@@ -135,7 +132,6 @@ class RobotSettings(BaseModel):
 
         return cls(
             team_tla=random_tla,
-            usercode_entrypoint=config.astprocd.default_usercode_entrypoint,
             wifi_psk=passphrase,
             executor=config.astprocd.default_usercode_strategy,
         )

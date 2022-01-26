@@ -14,7 +14,6 @@ bridge = "br0"
 enable_wpa3 = false
 
 [astprocd]
-default_usercode_entrypoint = "robot.py"
 default_usercode_strategy = {strategy = "zip_bundle", zip_file = "robot.zip"}
 
 [system]

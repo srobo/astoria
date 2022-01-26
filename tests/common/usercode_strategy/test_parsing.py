@@ -17,8 +17,18 @@ class TestUsercodeStrategyParsing(unittest.TestCase):
 
     def test_folder_config(self) -> None:
         """Test that we correctly parse a folder config."""
+        strat = parse_obj_as(
+            UsercodeStrategy,
+            {"strategy": "folder", "entrypoint_name": "main.py"},
+        )
+        self.assertEqual(strat.strategy, "folder")
+        self.assertEqual(strat.entrypoint_name, "main.py")
+
+    def test_folder_config_missing_entrypoint_name(self) -> None:
+        """Test that we fall back to main.py if not specified."""
         strat = parse_obj_as(UsercodeStrategy, {"strategy": "folder"})
         self.assertEqual(strat.strategy, "folder")
+        self.assertEqual(strat.entrypoint_name, "robot.py")
 
     def test_zip_bundle_config(self) -> None:
         """Test that we correctly parse a zip_bundle config."""
