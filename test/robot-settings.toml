@@ -1,0 +1,9 @@
+team_tla = "ZZZ57197"
+usercode_entrypoint = "robot.py"
+wifi_psk = "5431-50fc-ce21"
+wifi_region = "GB"
+wifi_enabled = true
+
+[executor]
+strategy = "zip_bundle"
+zip_name = "robot.zip"

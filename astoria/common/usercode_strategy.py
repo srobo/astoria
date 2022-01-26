@@ -8,6 +8,7 @@ it into the temporary directory for execution in astprocd.
 """
 
 from abc import abstractmethod
+from pathlib import Path
 from typing import Union
 
 from pydantic import BaseModel, validator
@@ -45,6 +46,21 @@ class BaseUsercodeStrategy(BaseModel):
             raise ValueError("Strategy name did not match.")
         return v
 
+    @abstractmethod
+    def directory_contains_usercode(self, target_dir: Path) -> bool:
+        """
+        Determine if a directory contains usercode for this strategy.
+
+        target_dir is assumed to be a directory, and would typically be the
+        mountpoint of a drive.
+
+        This function is used by astdiskd to determine whether a drive contains usercode.
+
+        :param target_dir: The directory to test for usercode.
+        :returns: True if the directory contains usercode.
+        """
+        raise NotImplementedError
+
 
 class FolderUsercodeStrategy(BaseUsercodeStrategy):
     """
@@ -52,6 +68,8 @@ class FolderUsercodeStrategy(BaseUsercodeStrategy):
 
     i.e a main.py on the USB drive is executed.
     """
+
+    entrypoint_name: str = "main.py"
 
     @classmethod
     def get_strategy_name(self) -> str:
@@ -61,6 +79,20 @@ class FolderUsercodeStrategy(BaseUsercodeStrategy):
         :returns: name of the usercode strategy.
         """
         return "folder"
+
+    def directory_contains_usercode(self, target_dir: Path) -> bool:
+        """
+        Determine if a directory contains usercode for this strategy.
+
+        target_dir is assumed to be a directory, and would typically be the
+        mountpoint of a drive.
+
+        This function is used by astdiskd to determine whether a drive contains usercode.
+
+        :param target_dir: The directory to test for usercode.
+        :returns: True if the directory contains usercode.
+        """
+        return target_dir.joinpath(self.entrypoint_name).exists()
 
 
 class ZipBundleUsercodeStrategy(BaseUsercodeStrategy):
@@ -83,6 +115,20 @@ class ZipBundleUsercodeStrategy(BaseUsercodeStrategy):
         if not v.endswith(".zip"):
             raise ValueError(f"Zip Name {v} does not end with .zip")
         return v
+
+    def directory_contains_usercode(self, target_dir: Path) -> bool:
+        """
+        Determine if a directory contains usercode for this strategy.
+
+        target_dir is assumed to be a directory, and would typically be the
+        mountpoint of a drive.
+
+        This function is used by astdiskd to determine whether a drive contains usercode.
+
+        :param target_dir: The directory to test for usercode.
+        :returns: True if the directory contains usercode.
+        """
+        return target_dir.joinpath(self.zip_name).exists()
 
 
 UsercodeStrategy = Union[FolderUsercodeStrategy, ZipBundleUsercodeStrategy]
