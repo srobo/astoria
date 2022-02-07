@@ -2,13 +2,31 @@ version: "3.9"
 services:
   astdiskd:
     build: .
-    command: astdiskd
+    command: bash -c "astctl static-disk add /robot/ & astdiskd"
+    depends_on:
+      - mosquitto
+    volumes:
+      - type: bind
+        source: ./docker/usb/
+        target: /robot/
   astprocd:
     build: .
     command: astprocd
+    depends_on:
+      - mosquitto
+    volumes:
+      - type: bind
+        source: ./docker/usb/
+        target: /robot/
   astmetad:
     build: .
     command: astmetad
+    depends_on:
+      - mosquitto
+    volumes:
+      - type: bind
+        source: ./docker/usb/
+        target: /robot/
   mosquitto:
     image: eclipse-mosquitto
     ports:
