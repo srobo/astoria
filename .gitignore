@@ -193,3 +193,6 @@ modules.xml
 setup.py
 README.rst
 .cache_dir/
+
+# Docker
+docker/usb/*
