@@ -18,7 +18,7 @@ class FakeHostapdWiFiHotspotLifeCycle(WiFiHotspotLifeCycle):
 
 
 @pytest.fixture
-def config() -> None:
+def config() -> AstoriaConfig:
     """Load a config file."""
     path = Path("tests/data/config/valid.toml")
     with path.open() as fh:

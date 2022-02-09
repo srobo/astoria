@@ -23,6 +23,11 @@ class Message:
         **kwargs: Any,
     ): ...
 
+    topic: Union[str, bytes]
+    qos: int
+    retain: bool
+    payload: Optional[Union[List[Any], Tuple[Any, ...], Dict[Any, Any], int, float, str, bytes]]
+
 class Subscription:
     def __init__(
         self,
@@ -44,6 +49,8 @@ class Client:
         will_message: Optional[Message] = None, 
         **kwargs: Any,
     ): ...
+
+    _client_id: str
 
     @property
     def is_connected(self) -> bool: ...

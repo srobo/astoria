@@ -25,7 +25,6 @@ class StubModel(BaseModel):
 
 
 async def stub_message_handler(
-    self,
     match: Match[str],
     payload: str,
 ) -> None:

@@ -2,6 +2,7 @@
 
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from typing import Generator
 
 import pytest
 
@@ -9,7 +10,7 @@ from astoria.managers.astmetad.metadata_cache import MetadataCache
 
 
 @pytest.fixture
-def empty_temp_dir() -> None:
+def empty_temp_dir() -> Generator[Path, None, None]:
     """Use a temporary directory for tests."""
     with TemporaryDirectory() as temp_dir:
         yield Path(temp_dir)
