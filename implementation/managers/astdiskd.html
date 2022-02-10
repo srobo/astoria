@@ -1,71 +1,35 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>Astdiskd &mdash; Astoria 0.8.0 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Astmetad" href="astmetad.html" />
     <link rel="prev" title="State Managers" href="index.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../index.html" class="icon icon-home"> Astoria
-          
-
-          
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -73,19 +37,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <p class="caption"><span class="caption-text">Documentation:</span></p>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../design/index.html">Design</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
@@ -111,77 +64,34 @@
 </li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">Astoria</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="../index.html">Implementation</a> &raquo;</li>
-        
           <li><a href="index.html">State Managers</a> &raquo;</li>
-        
       <li>Astdiskd</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../../_sources/implementation/managers/astdiskd.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="astdiskd">
-<h1>Astdiskd<a class="headerlink" href="#astdiskd" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="astdiskd">
+<h1>Astdiskd<a class="headerlink" href="#astdiskd" title="Permalink to this headline"></a></h1>
 <p>Astdiskd is responsible for:</p>
 <ul class="simple">
 <li><p>Detecting newly mounted disk drives</p></li>
@@ -189,37 +99,37 @@
 <li><p>Determining if and how the drive is relevant to Astoria</p></li>
 <li><p>Communicating a list of currently mounted drives to other components.</p></li>
 </ul>
-<div class="section" id="drive-detection">
-<h2>Drive Detection<a class="headerlink" href="#drive-detection" title="Permalink to this headline">¶</a></h2>
+<section id="drive-detection">
+<h2>Drive Detection<a class="headerlink" href="#drive-detection" title="Permalink to this headline"></a></h2>
 <p>Astdiskd communicates with <a class="reference external" href="https://www.freedesktop.org/wiki/Software/udisks/">UDisks 2</a>  over <a class="reference external" href="https://www.freedesktop.org/wiki/Software/dbus/">DBus</a>
 to receive information about the mounted volumes on the system.</p>
 <p>On startup, it reads disk information from the UDisks managed objects at <code class="docutils literal notranslate"><span class="pre">/org/freedesktop/UDisks2/block_devices/</span></code>.</p>
 <p>It listens for job signals in the path <code class="docutils literal notranslate"><span class="pre">/org/freedesktop/UDisks2/jobs/</span></code>, dispatching a task if the job is <code class="docutils literal notranslate"><span class="pre">filesystem-mount</span></code> or <code class="docutils literal notranslate"><span class="pre">cleanup</span></code>.</p>
 <p>This relies on another program automatically mounting drives that are inserted, and ensuring that DBus notices them. <a class="reference external" href="https://github.com/coldfix/udiskie">UDiskie 2</a> is recommended.</p>
 <p><a class="reference external" href="https://wiki.gnome.org/Apps/DFeet">DFeet</a> is useful for observing and debugging the DBus interactions. <a class="reference external" href="https://github.com/altdesktop/python-dbus-next">Python-dbus-next</a> is the pure-python library that is used to communicate with DBus.</p>
-</div>
-<div class="section" id="disk-identification">
-<h2>Disk Identification<a class="headerlink" href="#disk-identification" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="disk-identification">
+<h2>Disk Identification<a class="headerlink" href="#disk-identification" title="Permalink to this headline"></a></h2>
 <p>After a disk has been detected, the type of disk also needs to be identified. A disk can only have one type, the value of which must be a member of <a class="reference internal" href="#astoria.common.messages.astdiskd.DiskType" title="astoria.common.messages.astdiskd.DiskType"><code class="xref py py-class docutils literal notranslate"><span class="pre">astoria.common.messages.astdiskd.DiskType</span></code></a>.</p>
 <p>Given the mount path for a disk, the type of the disk can be found using the <a class="reference internal" href="#astoria.common.messages.astdiskd.DiskType.determine_disk_type" title="astoria.common.messages.astdiskd.DiskType.determine_disk_type"><code class="xref py py-meth docutils literal notranslate"><span class="pre">astoria.common.messages.astdiskd.DiskType.determine_disk_type()</span></code></a> method.</p>
 <p>The path is compared against a <a class="reference internal" href="#astoria.common.disk_constraints.Constraint" title="astoria.common.disk_constraints.Constraint"><code class="xref py py-class docutils literal notranslate"><span class="pre">astoria.common.disk_constraints.Constraint</span></code></a> for each type. The type that is returned will be the first type for which the constraint matches.</p>
 <p>As a disk must always have a type, the last constraint in the list is <cite>DiskType.NOACTION</cite>, which is matched using a <a class="reference internal" href="#astoria.common.disk_constraints.TrueConstraint" title="astoria.common.disk_constraints.TrueConstraint"><code class="xref py py-class docutils literal notranslate"><span class="pre">astoria.common.disk_constraints.TrueConstraint</span></code></a>.</p>
-<div class="section" id="constraints">
-<h3>Constraints<a class="headerlink" href="#constraints" title="Permalink to this headline">¶</a></h3>
+<section id="constraints">
+<h3>Constraints<a class="headerlink" href="#constraints" title="Permalink to this headline"></a></h3>
 <p>A constraint is a class that implements <a class="reference internal" href="#astoria.common.disk_constraints.Constraint" title="astoria.common.disk_constraints.Constraint"><code class="xref py py-class docutils literal notranslate"><span class="pre">astoria.common.disk_constraints.Constraint</span></code></a>. Given a path, a constaint will determine if the path matches the constraint or not.</p>
 <p>Some constraints, such as <a class="reference internal" href="#astoria.common.disk_constraints.AndConstraint" title="astoria.common.disk_constraints.AndConstraint"><code class="xref py py-class docutils literal notranslate"><span class="pre">astoria.common.disk_constraints.AndConstraint</span></code></a> take other constraints as parameters in the constructor. This allows us to combine constraints programmatically.</p>
 <p>A full list of available constraints, along with their uses is listed in <a class="reference internal" href="#constraint-definitions"><span class="std std-ref">Constraint Definitions</span></a>.</p>
-</div>
-</div>
-<div class="section" id="astdiskd-data-structures-and-classes">
-<h2>Astdiskd Data Structures and Classes<a class="headerlink" href="#astdiskd-data-structures-and-classes" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+<section id="astdiskd-data-structures-and-classes">
+<h2>Astdiskd Data Structures and Classes<a class="headerlink" href="#astdiskd-data-structures-and-classes" title="Permalink to this headline"></a></h2>
 <dl class="py class">
-<dt id="astoria.managers.astdiskd.DiskManager">
-<em class="property">class </em><code class="sig-prename descclassname">astoria.managers.astdiskd.</code><code class="sig-name descname">DiskManager</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">verbose</span></em>, <em class="sig-param"><span class="n">config_file</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/managers/astdiskd/disk_manager.html#DiskManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.managers.astdiskd.DiskManager" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.managers.astdiskd.DiskManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.managers.astdiskd.</span></span><span class="sig-name descname"><span class="pre">DiskManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/managers/astdiskd/disk_manager.html#DiskManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.managers.astdiskd.DiskManager" title="Permalink to this definition"></a></dt>
 <dd><p>Astoria Disk Manager.</p>
 <dl class="py method">
-<dt id="astoria.managers.astdiskd.DiskManager.main">
-<em class="property">async </em><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/managers/astdiskd/disk_manager.html#DiskManager.main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.managers.astdiskd.DiskManager.main" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.managers.astdiskd.DiskManager.main">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/managers/astdiskd/disk_manager.html#DiskManager.main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.managers.astdiskd.DiskManager.main" title="Permalink to this definition"></a></dt>
 <dd><p>Main routine for astdiskd.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -229,13 +139,13 @@ to receive information about the mounted volumes on the system.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="astoria.managers.astdiskd.DiskManager.name">
-<code class="sig-name descname">name</code><em class="property"> = 'astdiskd'</em><a class="headerlink" href="#astoria.managers.astdiskd.DiskManager.name" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.managers.astdiskd.DiskManager.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'astdiskd'</span></em><a class="headerlink" href="#astoria.managers.astdiskd.DiskManager.name" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
-<dt id="astoria.managers.astdiskd.DiskManager.offline_status">
-<em class="property">property </em><code class="sig-name descname">offline_status</code><a class="headerlink" href="#astoria.managers.astdiskd.DiskManager.offline_status" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="astoria.managers.astdiskd.DiskManager.offline_status">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">offline_status</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#astoria.common.messages.astdiskd.DiskManagerMessage" title="astoria.common.messages.astdiskd.DiskManagerMessage"><span class="pre">astoria.common.messages.astdiskd.DiskManagerMessage</span></a></em><a class="headerlink" href="#astoria.managers.astdiskd.DiskManager.offline_status" title="Permalink to this definition"></a></dt>
 <dd><p>Status to publish when the manager goes offline.</p>
 <p>This status should ensure that any other components relying
 on this data go into a safe state.</p>
@@ -247,8 +157,8 @@ on this data go into a safe state.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="astoria.managers.astdiskd.DiskManager.update_state">
-<em class="property">async </em><code class="sig-name descname">update_state</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/managers/astdiskd/disk_manager.html#DiskManager.update_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.managers.astdiskd.DiskManager.update_state" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.managers.astdiskd.DiskManager.update_state">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update_state</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/managers/astdiskd/disk_manager.html#DiskManager.update_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.managers.astdiskd.DiskManager.update_state" title="Permalink to this definition"></a></dt>
 <dd><p>Update the status of astdiskd when disks are changed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -260,58 +170,58 @@ on this data go into a safe state.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="astoria.common.messages.astdiskd.DiskUUID">
-<em class="property">class </em><code class="sig-prename descclassname">astoria.common.messages.astdiskd.</code><code class="sig-name descname">DiskUUID</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="headerlink" href="#astoria.common.messages.astdiskd.DiskUUID" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.messages.astdiskd.DiskUUID">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.messages.astdiskd.</span></span><span class="sig-name descname"><span class="pre">DiskUUID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#astoria.common.messages.astdiskd.DiskUUID" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py class">
-<dt id="astoria.common.messages.astdiskd.DiskInfo">
-<em class="property">class </em><code class="sig-prename descclassname">astoria.common.messages.astdiskd.</code><code class="sig-name descname">DiskInfo</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/messages/astdiskd.html#DiskInfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.common.messages.astdiskd.DiskInfo" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.messages.astdiskd.DiskInfo">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.messages.astdiskd.</span></span><span class="sig-name descname"><span class="pre">DiskInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/messages/astdiskd.html#DiskInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.messages.astdiskd.DiskInfo" title="Permalink to this definition"></a></dt>
 <dd><p>Information about a mounted disk.</p>
 <dl class="py attribute">
-<dt id="astoria.common.messages.astdiskd.DiskInfo.disk_type">
-<code class="sig-name descname">disk_type</code><em class="property">: <a class="reference internal" href="#astoria.common.messages.astdiskd.DiskType" title="astoria.common.messages.astdiskd.DiskType">astoria.common.messages.astdiskd.DiskType</a></em><a class="headerlink" href="#astoria.common.messages.astdiskd.DiskInfo.disk_type" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.messages.astdiskd.DiskInfo.disk_type">
+<span class="sig-name descname"><span class="pre">disk_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#astoria.common.messages.astdiskd.DiskType" title="astoria.common.messages.astdiskd.DiskType"><span class="pre">astoria.common.messages.astdiskd.DiskType</span></a></em><a class="headerlink" href="#astoria.common.messages.astdiskd.DiskInfo.disk_type" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="astoria.common.messages.astdiskd.DiskInfo.mount_path">
-<code class="sig-name descname">mount_path</code><em class="property">: <a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.10)">pathlib.Path</a></em><a class="headerlink" href="#astoria.common.messages.astdiskd.DiskInfo.mount_path" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.messages.astdiskd.DiskInfo.mount_path">
+<span class="sig-name descname"><span class="pre">mount_path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.10)"><span class="pre">pathlib.Path</span></a></em><a class="headerlink" href="#astoria.common.messages.astdiskd.DiskInfo.mount_path" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="astoria.common.messages.astdiskd.DiskInfo.uuid">
-<code class="sig-name descname">uuid</code><em class="property">: <a class="reference internal" href="#astoria.common.messages.astdiskd.DiskUUID" title="astoria.common.messages.astdiskd.DiskUUID">DiskUUID</a></em><a class="headerlink" href="#astoria.common.messages.astdiskd.DiskInfo.uuid" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.messages.astdiskd.DiskInfo.uuid">
+<span class="sig-name descname"><span class="pre">uuid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#astoria.common.messages.astdiskd.DiskUUID" title="astoria.common.messages.astdiskd.DiskUUID"><span class="pre">DiskUUID</span></a></em><a class="headerlink" href="#astoria.common.messages.astdiskd.DiskInfo.uuid" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt id="astoria.common.messages.astdiskd.DiskType">
-<em class="property">class </em><code class="sig-prename descclassname">astoria.common.messages.astdiskd.</code><code class="sig-name descname">DiskType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/messages/astdiskd.html#DiskType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.common.messages.astdiskd.DiskType" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.messages.astdiskd.DiskType">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.messages.astdiskd.</span></span><span class="sig-name descname"><span class="pre">DiskType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/messages/astdiskd.html#DiskType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.messages.astdiskd.DiskType" title="Permalink to this definition"></a></dt>
 <dd><p>Type of disk.</p>
 <dl class="py attribute">
-<dt id="astoria.common.messages.astdiskd.DiskType.METADATA">
-<code class="sig-name descname">METADATA</code><em class="property"> = 'METADATA'</em><a class="headerlink" href="#astoria.common.messages.astdiskd.DiskType.METADATA" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.messages.astdiskd.DiskType.METADATA">
+<span class="sig-name descname"><span class="pre">METADATA</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'METADATA'</span></em><a class="headerlink" href="#astoria.common.messages.astdiskd.DiskType.METADATA" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="astoria.common.messages.astdiskd.DiskType.NOACTION">
-<code class="sig-name descname">NOACTION</code><em class="property"> = 'NOACTION'</em><a class="headerlink" href="#astoria.common.messages.astdiskd.DiskType.NOACTION" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.messages.astdiskd.DiskType.NOACTION">
+<span class="sig-name descname"><span class="pre">NOACTION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'NOACTION'</span></em><a class="headerlink" href="#astoria.common.messages.astdiskd.DiskType.NOACTION" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="astoria.common.messages.astdiskd.DiskType.UPDATE">
-<code class="sig-name descname">UPDATE</code><em class="property"> = 'UPDATE'</em><a class="headerlink" href="#astoria.common.messages.astdiskd.DiskType.UPDATE" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.messages.astdiskd.DiskType.UPDATE">
+<span class="sig-name descname"><span class="pre">UPDATE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'UPDATE'</span></em><a class="headerlink" href="#astoria.common.messages.astdiskd.DiskType.UPDATE" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="astoria.common.messages.astdiskd.DiskType.USERCODE">
-<code class="sig-name descname">USERCODE</code><em class="property"> = 'USERCODE'</em><a class="headerlink" href="#astoria.common.messages.astdiskd.DiskType.USERCODE" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.messages.astdiskd.DiskType.USERCODE">
+<span class="sig-name descname"><span class="pre">USERCODE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'USERCODE'</span></em><a class="headerlink" href="#astoria.common.messages.astdiskd.DiskType.USERCODE" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="astoria.common.messages.astdiskd.DiskType.determine_disk_type">
-<em class="property">classmethod </em><code class="sig-name descname">determine_disk_type</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mount_path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/messages/astdiskd.html#DiskType.determine_disk_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.common.messages.astdiskd.DiskType.determine_disk_type" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.messages.astdiskd.DiskType.determine_disk_type">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">determine_disk_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mount_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/messages/astdiskd.html#DiskType.determine_disk_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.messages.astdiskd.DiskType.determine_disk_type" title="Permalink to this definition"></a></dt>
 <dd><p>Determine the disk type from the mount path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -323,27 +233,27 @@ on this data go into a safe state.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="astoria.common.messages.astdiskd.DiskManagerMessage">
-<em class="property">class </em><code class="sig-prename descclassname">astoria.common.messages.astdiskd.</code><code class="sig-name descname">DiskManagerMessage</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/messages/astdiskd.html#DiskManagerMessage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.common.messages.astdiskd.DiskManagerMessage" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.messages.astdiskd.DiskManagerMessage">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.messages.astdiskd.</span></span><span class="sig-name descname"><span class="pre">DiskManagerMessage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/messages/astdiskd.html#DiskManagerMessage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.messages.astdiskd.DiskManagerMessage" title="Permalink to this definition"></a></dt>
 <dd><p>Status message for Disk Manager.</p>
 <p>Published to /astoria/astdiskd</p>
 <dl class="py attribute">
-<dt id="astoria.common.messages.astdiskd.DiskManagerMessage.disks">
-<code class="sig-name descname">disks</code><em class="property">: Dict<span class="p">[</span><a class="reference internal" href="#astoria.common.messages.astdiskd.DiskUUID" title="astoria.common.messages.astdiskd.DiskUUID">DiskUUID</a><span class="p">, </span><a class="reference internal" href="#astoria.common.messages.astdiskd.DiskInfo" title="astoria.common.messages.astdiskd.DiskInfo">astoria.common.messages.astdiskd.DiskInfo</a><span class="p">]</span></em><a class="headerlink" href="#astoria.common.messages.astdiskd.DiskManagerMessage.disks" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.messages.astdiskd.DiskManagerMessage.disks">
+<span class="sig-name descname"><span class="pre">disks</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#astoria.common.messages.astdiskd.DiskUUID" title="astoria.common.messages.astdiskd.DiskUUID"><span class="pre">DiskUUID</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#astoria.common.messages.astdiskd.DiskInfo" title="astoria.common.messages.astdiskd.DiskInfo"><span class="pre">astoria.common.messages.astdiskd.DiskInfo</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#astoria.common.messages.astdiskd.DiskManagerMessage.disks" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-</div>
-<div class="section" id="constraint-definitions">
-<h2>Constraint Definitions<a class="headerlink" href="#constraint-definitions" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="constraint-definitions">
+<h2>Constraint Definitions<a class="headerlink" href="#constraint-definitions" title="Permalink to this headline"></a></h2>
 <dl class="py class">
-<dt id="astoria.common.disk_constraints.Constraint">
-<em class="property">class </em><code class="sig-prename descclassname">astoria.common.disk_constraints.</code><code class="sig-name descname">Constraint</code><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#Constraint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.common.disk_constraints.Constraint" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.disk_constraints.Constraint">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.disk_constraints.</span></span><span class="sig-name descname"><span class="pre">Constraint</span></span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#Constraint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.disk_constraints.Constraint" title="Permalink to this definition"></a></dt>
 <dd><p>A constraint that a path can match.</p>
 <dl class="py method">
-<dt id="astoria.common.disk_constraints.Constraint.matches">
-<em class="property">abstract </em><code class="sig-name descname">matches</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#Constraint.matches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.common.disk_constraints.Constraint.matches" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.disk_constraints.Constraint.matches">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">matches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#Constraint.matches"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.disk_constraints.Constraint.matches" title="Permalink to this definition"></a></dt>
 <dd><p>Determine if the disk at the given path matches the constraint.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -358,13 +268,13 @@ on this data go into a safe state.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="astoria.common.disk_constraints.FilePresentConstraint">
-<em class="property">class </em><code class="sig-prename descclassname">astoria.common.disk_constraints.</code><code class="sig-name descname">FilePresentConstraint</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#FilePresentConstraint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.common.disk_constraints.FilePresentConstraint" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.disk_constraints.FilePresentConstraint">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.disk_constraints.</span></span><span class="sig-name descname"><span class="pre">FilePresentConstraint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#FilePresentConstraint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.disk_constraints.FilePresentConstraint" title="Permalink to this definition"></a></dt>
 <dd><p>Ensure that a file is present on the disk.</p>
 <p>This constraint will check that the path exists and contains the given file.</p>
 <dl class="py method">
-<dt id="astoria.common.disk_constraints.FilePresentConstraint.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#FilePresentConstraint.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.common.disk_constraints.FilePresentConstraint.__init__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.disk_constraints.FilePresentConstraint.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#FilePresentConstraint.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.disk_constraints.FilePresentConstraint.__init__" title="Permalink to this definition"></a></dt>
 <dd><p>Initialise the constraint class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -374,8 +284,8 @@ on this data go into a safe state.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="astoria.common.disk_constraints.FilePresentConstraint.matches">
-<code class="sig-name descname">matches</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#FilePresentConstraint.matches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.common.disk_constraints.FilePresentConstraint.matches" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.disk_constraints.FilePresentConstraint.matches">
+<span class="sig-name descname"><span class="pre">matches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#FilePresentConstraint.matches"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.disk_constraints.FilePresentConstraint.matches" title="Permalink to this definition"></a></dt>
 <dd><p>Determine if the disk at the given path matches the constraint.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -390,13 +300,13 @@ on this data go into a safe state.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="astoria.common.disk_constraints.NumberOfFilesConstraint">
-<em class="property">class </em><code class="sig-prename descclassname">astoria.common.disk_constraints.</code><code class="sig-name descname">NumberOfFilesConstraint</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#NumberOfFilesConstraint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.common.disk_constraints.NumberOfFilesConstraint" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.disk_constraints.NumberOfFilesConstraint">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.disk_constraints.</span></span><span class="sig-name descname"><span class="pre">NumberOfFilesConstraint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#NumberOfFilesConstraint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.disk_constraints.NumberOfFilesConstraint" title="Permalink to this definition"></a></dt>
 <dd><p>Ensure that a certain number of files are present.</p>
 <p>This can be used to ensure that there are no spurious files on the disk.</p>
 <dl class="py method">
-<dt id="astoria.common.disk_constraints.NumberOfFilesConstraint.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#NumberOfFilesConstraint.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.common.disk_constraints.NumberOfFilesConstraint.__init__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.disk_constraints.NumberOfFilesConstraint.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#NumberOfFilesConstraint.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.disk_constraints.NumberOfFilesConstraint.__init__" title="Permalink to this definition"></a></dt>
 <dd><p>Initialise the constraint class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -406,8 +316,8 @@ on this data go into a safe state.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="astoria.common.disk_constraints.NumberOfFilesConstraint.matches">
-<code class="sig-name descname">matches</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#NumberOfFilesConstraint.matches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.common.disk_constraints.NumberOfFilesConstraint.matches" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.disk_constraints.NumberOfFilesConstraint.matches">
+<span class="sig-name descname"><span class="pre">matches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#NumberOfFilesConstraint.matches"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.disk_constraints.NumberOfFilesConstraint.matches" title="Permalink to this definition"></a></dt>
 <dd><p>Determine if the disk at the given path matches the constraint.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -422,12 +332,12 @@ on this data go into a safe state.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="astoria.common.disk_constraints.OrConstraint">
-<em class="property">class </em><code class="sig-prename descclassname">astoria.common.disk_constraints.</code><code class="sig-name descname">OrConstraint</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span></em>, <em class="sig-param"><span class="n">b</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#OrConstraint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.common.disk_constraints.OrConstraint" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.disk_constraints.OrConstraint">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.disk_constraints.</span></span><span class="sig-name descname"><span class="pre">OrConstraint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#OrConstraint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.disk_constraints.OrConstraint" title="Permalink to this definition"></a></dt>
 <dd><p>Ensure that either of the given constraints match.</p>
 <dl class="py method">
-<dt id="astoria.common.disk_constraints.OrConstraint.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span></em>, <em class="sig-param"><span class="n">b</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#OrConstraint.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.common.disk_constraints.OrConstraint.__init__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.disk_constraints.OrConstraint.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#OrConstraint.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.disk_constraints.OrConstraint.__init__" title="Permalink to this definition"></a></dt>
 <dd><p>Initialise the constraint class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -440,8 +350,8 @@ on this data go into a safe state.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="astoria.common.disk_constraints.OrConstraint.matches">
-<code class="sig-name descname">matches</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#OrConstraint.matches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.common.disk_constraints.OrConstraint.matches" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.disk_constraints.OrConstraint.matches">
+<span class="sig-name descname"><span class="pre">matches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#OrConstraint.matches"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.disk_constraints.OrConstraint.matches" title="Permalink to this definition"></a></dt>
 <dd><p>Determine if the disk at the given path matches the constraint.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -456,12 +366,12 @@ on this data go into a safe state.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="astoria.common.disk_constraints.AndConstraint">
-<em class="property">class </em><code class="sig-prename descclassname">astoria.common.disk_constraints.</code><code class="sig-name descname">AndConstraint</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span></em>, <em class="sig-param"><span class="n">b</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#AndConstraint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.common.disk_constraints.AndConstraint" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.disk_constraints.AndConstraint">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.disk_constraints.</span></span><span class="sig-name descname"><span class="pre">AndConstraint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#AndConstraint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.disk_constraints.AndConstraint" title="Permalink to this definition"></a></dt>
 <dd><p>Ensure that both of the constraints match.</p>
 <dl class="py method">
-<dt id="astoria.common.disk_constraints.AndConstraint.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span></em>, <em class="sig-param"><span class="n">b</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#AndConstraint.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.common.disk_constraints.AndConstraint.__init__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.disk_constraints.AndConstraint.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#AndConstraint.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.disk_constraints.AndConstraint.__init__" title="Permalink to this definition"></a></dt>
 <dd><p>Initialise the constraint class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -474,8 +384,8 @@ on this data go into a safe state.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="astoria.common.disk_constraints.AndConstraint.matches">
-<code class="sig-name descname">matches</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#AndConstraint.matches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.common.disk_constraints.AndConstraint.matches" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.disk_constraints.AndConstraint.matches">
+<span class="sig-name descname"><span class="pre">matches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#AndConstraint.matches"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.disk_constraints.AndConstraint.matches" title="Permalink to this definition"></a></dt>
 <dd><p>Determine if the disk at the given path matches the constraint.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -490,12 +400,12 @@ on this data go into a safe state.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="astoria.common.disk_constraints.NotConstraint">
-<em class="property">class </em><code class="sig-prename descclassname">astoria.common.disk_constraints.</code><code class="sig-name descname">NotConstraint</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#NotConstraint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.common.disk_constraints.NotConstraint" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.disk_constraints.NotConstraint">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.disk_constraints.</span></span><span class="sig-name descname"><span class="pre">NotConstraint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#NotConstraint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.disk_constraints.NotConstraint" title="Permalink to this definition"></a></dt>
 <dd><p>Ensure that the constraint does not match.</p>
 <dl class="py method">
-<dt id="astoria.common.disk_constraints.NotConstraint.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#NotConstraint.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.common.disk_constraints.NotConstraint.__init__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.disk_constraints.NotConstraint.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#NotConstraint.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.disk_constraints.NotConstraint.__init__" title="Permalink to this definition"></a></dt>
 <dd><p>Initialise the constraint class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -505,8 +415,8 @@ on this data go into a safe state.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="astoria.common.disk_constraints.NotConstraint.matches">
-<code class="sig-name descname">matches</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#NotConstraint.matches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.common.disk_constraints.NotConstraint.matches" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.disk_constraints.NotConstraint.matches">
+<span class="sig-name descname"><span class="pre">matches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#NotConstraint.matches"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.disk_constraints.NotConstraint.matches" title="Permalink to this definition"></a></dt>
 <dd><p>Determine if the disk at the given path matches the constraint.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -521,13 +431,13 @@ on this data go into a safe state.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="astoria.common.disk_constraints.TrueConstraint">
-<em class="property">class </em><code class="sig-prename descclassname">astoria.common.disk_constraints.</code><code class="sig-name descname">TrueConstraint</code><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#TrueConstraint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.common.disk_constraints.TrueConstraint" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.disk_constraints.TrueConstraint">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.disk_constraints.</span></span><span class="sig-name descname"><span class="pre">TrueConstraint</span></span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#TrueConstraint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.disk_constraints.TrueConstraint" title="Permalink to this definition"></a></dt>
 <dd><p>A constraint that is always true.</p>
 <p>Useful to create a default value when matching disks in order.</p>
 <dl class="py method">
-<dt id="astoria.common.disk_constraints.TrueConstraint.matches">
-<code class="sig-name descname">matches</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">_</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#TrueConstraint.matches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.common.disk_constraints.TrueConstraint.matches" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.disk_constraints.TrueConstraint.matches">
+<span class="sig-name descname"><span class="pre">matches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#TrueConstraint.matches"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.disk_constraints.TrueConstraint.matches" title="Permalink to this definition"></a></dt>
 <dd><p>Determine if the disk at the given path matches the constraint.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -542,12 +452,12 @@ on this data go into a safe state.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="astoria.common.disk_constraints.FalseConstraint">
-<em class="property">class </em><code class="sig-prename descclassname">astoria.common.disk_constraints.</code><code class="sig-name descname">FalseConstraint</code><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#FalseConstraint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.common.disk_constraints.FalseConstraint" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.disk_constraints.FalseConstraint">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.disk_constraints.</span></span><span class="sig-name descname"><span class="pre">FalseConstraint</span></span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#FalseConstraint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.disk_constraints.FalseConstraint" title="Permalink to this definition"></a></dt>
 <dd><p>A constraint that is always false.</p>
 <dl class="py method">
-<dt id="astoria.common.disk_constraints.FalseConstraint.matches">
-<code class="sig-name descname">matches</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">_</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#FalseConstraint.matches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.common.disk_constraints.FalseConstraint.matches" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.disk_constraints.FalseConstraint.matches">
+<span class="sig-name descname"><span class="pre">matches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disk_constraints.html#FalseConstraint.matches"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.disk_constraints.FalseConstraint.matches" title="Permalink to this definition"></a></dt>
 <dd><p>Determine if the disk at the given path matches the constraint.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -561,55 +471,38 @@ on this data go into a safe state.</p>
 
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="astmetad.html" class="btn btn-neutral float-right" title="Astmetad" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="index.html" class="btn btn-neutral float-left" title="State Managers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="astmetad.html" class="btn btn-neutral float-right" title="Astmetad" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2020-21, Dan Trickey.
-
-    </p>
+    <p>&#169; Copyright 2020-21, Dan Trickey.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

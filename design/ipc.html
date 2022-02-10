@@ -1,71 +1,35 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>Inter-Process Communication &mdash; Astoria 0.8.0 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Usercode Drives" href="usercode_drives.html" />
     <link rel="prev" title="Design Requirements" href="requirements.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> Astoria
-          
-
-          
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -73,19 +37,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <p class="caption"><span class="caption-text">Documentation:</span></p>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Design</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="history.html">Background</a></li>
@@ -109,89 +62,47 @@
 <li class="toctree-l1"><a class="reference internal" href="../implementation/index.html">Implementation</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">Astoria</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="index.html">Design</a> &raquo;</li>
-        
       <li>Inter-Process Communication</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/design/ipc.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="inter-process-communication">
-<h1>Inter-Process Communication<a class="headerlink" href="#inter-process-communication" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="inter-process-communication">
+<h1>Inter-Process Communication<a class="headerlink" href="#inter-process-communication" title="Permalink to this headline"></a></h1>
 <p>Astoria uses Inter-Process Communications (IPC) to communicate events and data between components.</p>
-<div class="section" id="communications">
-<h2>Communications<a class="headerlink" href="#communications" title="Permalink to this headline">¶</a></h2>
+<section id="communications">
+<h2>Communications<a class="headerlink" href="#communications" title="Permalink to this headline"></a></h2>
 <p>Components exchange information using JSON messages over MQTT, a pub/sub protocol. All messages should conform
 to a defined schemas, and should be rejected by the receiving component if it does not conform.</p>
 <p>An MQTT broker will need to be run on the robot to faciliate this messaging. It should listen on both TCP and Websockets, so that the Web UI can communicate without an additional proxy in the middle.</p>
 <p>The retained message flag should be used such that information is available immediately after subscribing to a topic on
 the broker. This means that subscribers do not need to wait for the next publication to receive any information.</p>
-</div>
-<div class="section" id="message-types">
-<h2>Message Types<a class="headerlink" href="#message-types" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="message-types">
+<h2>Message Types<a class="headerlink" href="#message-types" title="Permalink to this headline"></a></h2>
 <p>There are currently three classes of message.</p>
-<div class="section" id="manager-messages">
-<h3>Manager Messages<a class="headerlink" href="#manager-messages" title="Permalink to this headline">¶</a></h3>
+<section id="manager-messages">
+<h3>Manager Messages<a class="headerlink" href="#manager-messages" title="Permalink to this headline"></a></h3>
 <p>A manager message contains information about the status of a <a class="reference internal" href="../implementation/managers/index.html#state-managers"><span class="std std-ref">state manager</span></a> and it’s current state.</p>
 <p>Published on <code class="docutils literal notranslate"><span class="pre">astoria/[manager_name]</span></code></p>
 <p>Based on the <code class="docutils literal notranslate"><span class="pre">ManagerMessage</span></code> class, must contain at least:</p>
@@ -201,9 +112,9 @@ the broker. This means that subscribers do not need to wait for the next publica
 </ul>
 <p>It should be ensured that the last will and testament of the client is used to change the status to “STOPPED”
 so that clients are alerted to the disconnection. The state should also be cleared to a safe state.</p>
-</div>
-<div class="section" id="manager-requests">
-<h3>Manager Requests<a class="headerlink" href="#manager-requests" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="manager-requests">
+<h3>Manager Requests<a class="headerlink" href="#manager-requests" title="Permalink to this headline"></a></h3>
 <p>A <em>Manager Request</em> is a message sent to a single, specific <a class="reference internal" href="../implementation/managers/index.html#state-managers"><span class="std std-ref">state manager</span></a> to request a single specific action.</p>
 <p>A <a class="reference internal" href="#astoria.common.manager_requests.ManagerRequest" title="astoria.common.manager_requests.ManagerRequest"><code class="xref py py-class docutils literal notranslate"><span class="pre">ManagerRequest</span></code></a> is published to <code class="docutils literal notranslate"><span class="pre">astoria/[manager_name]/request/[request]</span></code> by the requesting component.</p>
 <p>A request must contain a UUID that is unique to the request.</p>
@@ -211,100 +122,83 @@ so that clients are alerted to the disconnection. The state should also be clear
 <p>After a state manager receives a request, it must reply with a <a class="reference internal" href="#astoria.common.manager_requests.RequestResponse" title="astoria.common.manager_requests.RequestResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">RequestResponse</span></code></a>. The UUID in the response must match the UUID of the request.</p>
 <p>Mutation responses are published to <code class="docutils literal notranslate"><span class="pre">astoria/[manager_name]/request/[request]/[uuid]</span></code></p>
 <dl class="py class">
-<dt id="astoria.common.manager_requests.ManagerRequest">
-<em class="property">class </em><code class="sig-prename descclassname">astoria.common.manager_requests.</code><code class="sig-name descname">ManagerRequest</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/astoria/common/manager_requests.html#ManagerRequest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.common.manager_requests.ManagerRequest" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.manager_requests.ManagerRequest">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.manager_requests.</span></span><span class="sig-name descname"><span class="pre">ManagerRequest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/astoria/common/manager_requests.html#ManagerRequest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.manager_requests.ManagerRequest" title="Permalink to this definition"></a></dt>
 <dd><p>Schema definition for a Manager Request.</p>
 <dl class="py attribute">
-<dt id="astoria.common.manager_requests.ManagerRequest.sender_name">
-<code class="sig-name descname">sender_name</code><em class="property">: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a></em><a class="headerlink" href="#astoria.common.manager_requests.ManagerRequest.sender_name" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.manager_requests.ManagerRequest.sender_name">
+<span class="sig-name descname"><span class="pre">sender_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.common.manager_requests.ManagerRequest.sender_name" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="astoria.common.manager_requests.ManagerRequest.uuid">
-<code class="sig-name descname">uuid</code><em class="property">: <a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.10)">uuid.UUID</a></em><a class="headerlink" href="#astoria.common.manager_requests.ManagerRequest.uuid" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.manager_requests.ManagerRequest.uuid">
+<span class="sig-name descname"><span class="pre">uuid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.10)"><span class="pre">uuid.UUID</span></a></em><a class="headerlink" href="#astoria.common.manager_requests.ManagerRequest.uuid" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt id="astoria.common.manager_requests.RequestResponse">
-<em class="property">class </em><code class="sig-prename descclassname">astoria.common.manager_requests.</code><code class="sig-name descname">RequestResponse</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/astoria/common/manager_requests.html#RequestResponse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#astoria.common.manager_requests.RequestResponse" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.manager_requests.RequestResponse">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.manager_requests.</span></span><span class="sig-name descname"><span class="pre">RequestResponse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/astoria/common/manager_requests.html#RequestResponse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.manager_requests.RequestResponse" title="Permalink to this definition"></a></dt>
 <dd><p>Schema definition for the response to a Manager Request.</p>
 <dl class="py attribute">
-<dt id="astoria.common.manager_requests.RequestResponse.reason">
-<code class="sig-name descname">reason</code><em class="property">: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a></em><a class="headerlink" href="#astoria.common.manager_requests.RequestResponse.reason" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.manager_requests.RequestResponse.reason">
+<span class="sig-name descname"><span class="pre">reason</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.common.manager_requests.RequestResponse.reason" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="astoria.common.manager_requests.RequestResponse.success">
-<code class="sig-name descname">success</code><em class="property">: <a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)">bool</a></em><a class="headerlink" href="#astoria.common.manager_requests.RequestResponse.success" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.manager_requests.RequestResponse.success">
+<span class="sig-name descname"><span class="pre">success</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></em><a class="headerlink" href="#astoria.common.manager_requests.RequestResponse.success" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="astoria.common.manager_requests.RequestResponse.uuid">
-<code class="sig-name descname">uuid</code><em class="property">: <a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.10)">uuid.UUID</a></em><a class="headerlink" href="#astoria.common.manager_requests.RequestResponse.uuid" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.common.manager_requests.RequestResponse.uuid">
+<span class="sig-name descname"><span class="pre">uuid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.10)"><span class="pre">uuid.UUID</span></a></em><a class="headerlink" href="#astoria.common.manager_requests.RequestResponse.uuid" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-</div>
-<div class="section" id="broadcast-events">
-<h3>Broadcast Events<a class="headerlink" href="#broadcast-events" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="broadcast-events">
+<h3>Broadcast Events<a class="headerlink" href="#broadcast-events" title="Permalink to this headline"></a></h3>
 <p>A <em>Broadcast Event</em> is a message sent to all components to signify an event occuring.</p>
 <p>A BroadcastEvent is published to <code class="docutils literal notranslate"><span class="pre">astoria/broadcast_event/[event_name]</span></code>. It can be published by any component and multiple components can broadcast the same event simultaneously.</p>
 <p>Every <em>Broadcast Event</em> must have a unique <code class="docutils literal notranslate"><span class="pre">event_name</span></code> that identifies the event and its purpose.</p>
 <p>A <em>Broadcast Event</em> must also contain a priority and the compenent that originated the event.</p>
 <p>Broadcast Events can be sent using the BroadcastHelper class.</p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="usercode_drives.html" class="btn btn-neutral float-right" title="Usercode Drives" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="requirements.html" class="btn btn-neutral float-left" title="Design Requirements" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="usercode_drives.html" class="btn btn-neutral float-right" title="Usercode Drives" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2020-21, Dan Trickey.
-
-    </p>
+    <p>&#169; Copyright 2020-21, Dan Trickey.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

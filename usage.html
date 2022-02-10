@@ -1,71 +1,35 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>Usage &mdash; Astoria 0.8.0 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-
-    
+    <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Development" href="development/index.html" />
     <link rel="prev" title="Metadatas" href="design/metadata.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="index.html" class="icon icon-home"> Astoria
-          
-
-          
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -73,19 +37,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <p class="caption"><span class="caption-text">Documentation:</span></p>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="design/index.html">Design</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Usage</a><ul>
@@ -103,78 +56,37 @@
 <li class="toctree-l1"><a class="reference internal" href="implementation/index.html">Implementation</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">Astoria</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Usage</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="_sources/usage.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="usage">
-<h1>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="usage">
+<h1>Usage<a class="headerlink" href="#usage" title="Permalink to this headline"></a></h1>
 <p>Astoria is designed to be deployed on robots that do not have a traditional keyboard or mouse interface. This page describes
 the requirements for it to be deployed on such a system. Reference to packages available in Debian Buster will be made,
 although it is possible for Astoria to be deployed on any Linux system.</p>
-<div class="section" id="system-requirements">
-<h2>System Requirements<a class="headerlink" href="#system-requirements" title="Permalink to this headline">¶</a></h2>
+<section id="system-requirements">
+<h2>System Requirements<a class="headerlink" href="#system-requirements" title="Permalink to this headline"></a></h2>
 <ul class="simple">
 <li><p>Python 3.6 + library Requirements</p></li>
 <li><p>DBus</p></li>
@@ -189,79 +101,79 @@ although it is possible for Astoria to be deployed on any Linux system.</p>
 <li><p>MQTT Broker supporting MQTT 3 or later. Mosquitto is recommended</p></li>
 </ul>
 <p>Astoria is targeted for Linux-based OSes, although it may be possible to run on other POSIX-compatible operating systems.</p>
-</div>
-<div class="section" id="configuration">
-<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline"></a></h2>
 <p>Astoria is configured using the <code class="docutils literal notranslate"><span class="pre">astoria.toml</span></code> config file. All components will look for this config file and the location can be specified using the <code class="docutils literal notranslate"><span class="pre">-c</span></code> command line option.</p>
-<div class="highlight-TOML notranslate"><div class="highlight"><pre><span></span><span class="c1"># Astoria Default Config File</span>
+<div class="highlight-TOML notranslate"><div class="highlight"><pre><span></span><span class="c1"># Astoria Default Config File</span><span class="w"></span>
 
-<span class="k">[mqtt]</span>
-<span class="n">host</span> <span class="o">=</span> <span class="s">&quot;::1&quot;</span>
-<span class="n">port</span> <span class="o">=</span> <span class="mi">1883</span>
-<span class="n">enable_tls</span> <span class="o">=</span> <span class="kc">false</span>
-<span class="n">force_protocol_version_3_1</span> <span class="o">=</span> <span class="kc">true</span>
+<span class="k">[mqtt]</span><span class="w"></span>
+<span class="n">host</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;::1&quot;</span><span class="w"></span>
+<span class="n">port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1883</span><span class="w"></span>
+<span class="n">enable_tls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="w"></span>
+<span class="n">force_protocol_version_3_1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="w"></span>
 
-<span class="n">topic_prefix</span> <span class="o">=</span> <span class="s">&quot;astoria&quot;</span>
+<span class="n">topic_prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;astoria&quot;</span><span class="w"></span>
 
-<span class="k">[wifi]</span>
-<span class="n">interface</span> <span class="o">=</span> <span class="s">&quot;wlan0&quot;</span>
-<span class="n">bridge</span> <span class="o">=</span> <span class="s">&quot;br0&quot;</span>
-<span class="n">enable_wpa3</span> <span class="o">=</span> <span class="kc">false</span>
+<span class="k">[wifi]</span><span class="w"></span>
+<span class="n">interface</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;wlan0&quot;</span><span class="w"></span>
+<span class="n">bridge</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;br0&quot;</span><span class="w"></span>
+<span class="n">enable_wpa3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="w"></span>
 
-<span class="k">[astprocd]</span>
-<span class="n">default_usercode_entrypoint</span> <span class="o">=</span> <span class="s">&quot;robot.py&quot;</span>
+<span class="k">[astprocd]</span><span class="w"></span>
+<span class="n">default_usercode_entrypoint</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;robot.py&quot;</span><span class="w"></span>
 
-<span class="k">[system]</span>
-<span class="n">cache_dir</span> <span class="o">=</span> <span class="s">&quot;.cache_dir&quot;</span>  <span class="c1"># Use a directory in /var for production</span>
+<span class="k">[system]</span><span class="w"></span>
+<span class="n">cache_dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;.cache_dir&quot;</span><span class="w">  </span><span class="c1"># Use a directory in /var for production</span><span class="w"></span>
 
-<span class="k">[env]</span>
-<span class="n">EXAMPLE_ENV_VAR</span><span class="o">=</span><span class="mi">123</span>
+<span class="k">[env]</span><span class="w"></span>
+<span class="n">EXAMPLE_ENV_VAR</span><span class="o">=</span><span class="mi">123</span><span class="w"></span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="running">
-<h2>Running<a class="headerlink" href="#running" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="running">
+<h2>Running<a class="headerlink" href="#running" title="Permalink to this headline"></a></h2>
 <p>State Managers should be installed in the path once the package is installed.</p>
 <p>For the recommended setup, you will need to run at least <code class="docutils literal notranslate"><span class="pre">astdiskd</span></code>, <code class="docutils literal notranslate"><span class="pre">astmetad</span></code> and <code class="docutils literal notranslate"><span class="pre">astprocd</span></code>.</p>
 <p>The state managers should be managed using systemd in a proper deployment, although that is outside of the scope of this documentation. <code class="docutils literal notranslate"><span class="pre">tmux</span></code> is good for testing.</p>
-</div>
-<div class="section" id="command-line-usage">
-<h2>Command Line Usage<a class="headerlink" href="#command-line-usage" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="astctl">
-<h3>astctl<a class="headerlink" href="#astctl" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="command-line-usage">
+<h2>Command Line Usage<a class="headerlink" href="#command-line-usage" title="Permalink to this headline"></a></h2>
+<section id="astctl">
+<h3>astctl<a class="headerlink" href="#astctl" title="Permalink to this headline"></a></h3>
 <p>Astoria Command Line Utility.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>astctl <span class="o">[</span>OPTIONS<span class="o">]</span> COMMAND <span class="o">[</span>ARGS<span class="o">]</span>...
 </pre></div>
 </div>
 <p class="rubric">Commands</p>
 <dl class="object">
-<dt>
-<code class="sig-name descname">list-disks</code></dt>
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">list-disks</span></span></dt>
 <dd><p>List information about mounted disks.</p>
 </dd></dl>
 
 <dl class="object">
-<dt>
-<code class="sig-name descname">metadata</code></dt>
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">metadata</span></span></dt>
 <dd><p>Interact with metadata.</p>
 </dd></dl>
 
 <dl class="object">
-<dt>
-<code class="sig-name descname">static-disk</code></dt>
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">static-disk</span></span></dt>
 <dd><p>Interact with metadata.</p>
 </dd></dl>
 
 <dl class="object">
-<dt>
-<code class="sig-name descname">usercode</code></dt>
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">usercode</span></span></dt>
 <dd><p>Interact with Usercode.</p>
 </dd></dl>
 
-</div>
-</div>
-<div class="section" id="metadata-usbs">
-<h2>Metadata USBs<a class="headerlink" href="#metadata-usbs" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+<section id="metadata-usbs">
+<h2>Metadata USBs<a class="headerlink" href="#metadata-usbs" title="Permalink to this headline"></a></h2>
 <p>Metadata USBs contain a high priority <a class="reference internal" href="design/metadata.html#metadata-source"><span class="std std-ref">Metadata Source</span></a>.</p>
 <p>The source data should be stored in a file called <code class="docutils literal notranslate"><span class="pre">astoria.json</span></code> in JSON format.</p>
 <p>There should ideally not be any other files on the Metadata USB.</p>
@@ -271,58 +183,41 @@ although it is possible for Astoria to be deployed on any Linux system.</p>
 recognise it as a usercode disk. See <a class="reference internal" href="implementation/managers/astdiskd.html#disk-identification"><span class="std std-ref">Disk Identification</span></a> for an explanation of this process.</p>
 </div>
 <p>Example override file:</p>
-<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;arena&quot;</span><span class="p">:</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="nt">&quot;zone&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="nt">&quot;mode&quot;</span><span class="p">:</span> <span class="s2">&quot;COMP&quot;</span><span class="p">,</span> <span class="nt">&quot;game_timeout&quot;</span><span class="p">:</span> <span class="mi">120</span><span class="p">,</span> <span class="nt">&quot;wifi_enabled&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">}</span>
+<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;arena&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;zone&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;COMP&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;game_timeout&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">120</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;wifi_enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="development/index.html" class="btn btn-neutral float-right" title="Development" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="design/metadata.html" class="btn btn-neutral float-left" title="Metadatas" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="development/index.html" class="btn btn-neutral float-right" title="Development" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2020-21, Dan Trickey.
-
-    </p>
+    <p>&#169; Copyright 2020-21, Dan Trickey.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>
