@@ -2,7 +2,7 @@
 import asyncio
 from pathlib import Path
 from re import match
-from typing import List, Match
+from typing import Dict, List, Match
 
 import pytest
 
@@ -24,7 +24,7 @@ def get_match() -> Match[str]:
         raise RuntimeError("Regex did not match")
 
 
-def get_disk_info_list(names: List[str] = []) -> str:
+def get_disk_info_list(names: List[str] = []) -> Dict[DiskUUID, DiskInfo]:
     """
     Construct a list of disk info objects.
 
@@ -32,7 +32,7 @@ def get_disk_info_list(names: List[str] = []) -> str:
     on set logic using the hash of the object.
     """
     return {
-        name: DiskInfo(
+        DiskUUID(name): DiskInfo(
             uuid=name,
             mount_path=Path(),
             disk_type=DiskType.NOACTION,

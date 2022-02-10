@@ -51,13 +51,13 @@ class MockBroadcastHelper(BroadcastHelper[T]):
         self._sent: List[T] = []
 
     @classmethod
-    def get_helper(cls, schema: Type[T]) -> 'MockBroadcastHelper[T]':
+    def get_helper(cls, schema: Type[T]) -> 'MockBroadcastHelper[T]':  # type: ignore
         """Get the broadcast helper for a given event."""
-        return cls[T](schema.name, schema)
+        return cls(schema.name, schema)
 
     def get_lines(self) -> List[str]:
         """Get lines in the same format as the file."""
-        return "".join(a.content for a in self._sent).splitlines()
+        return "".join(a.content for a in self._sent).splitlines()  # type: ignore
 
     def send(self, **kwargs: Any) -> None:  # type: ignore
         """Send an event."""
@@ -69,7 +69,7 @@ class MockBroadcastHelper(BroadcastHelper[T]):
         self._sent.append(data)
 
 
-class ReadAndCleanupFile(AbstractContextManager):
+class ReadAndCleanupFile(AbstractContextManager):  # type: ignore
     """Read a file and clean it up."""
 
     def __init__(self, file_path: Path) -> None:
@@ -80,7 +80,7 @@ class ReadAndCleanupFile(AbstractContextManager):
         self._fh = self._file_path.open("r")
         return self._fh
 
-    def __exit__(self, exc_type, exc_value, exc_traceback) -> None:
+    def __exit__(self, exc_type, exc_value, exc_traceback) -> None:  # type: ignore
         if self._fh is not None:
             self._fh.close()
         # self._file_path.unlink()

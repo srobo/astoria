@@ -29,7 +29,7 @@ def test_manager_status_fields() -> None:
         f'{{"status": "STOPPED", "astoria_version": "{__version__}"}}'
 
 
-def test_manager_status_subclass():
+def test_manager_status_subclass() -> None:
     """Test that we can create a subclass."""
     class MyManagerStatusMessage(ManagerMessage):
 

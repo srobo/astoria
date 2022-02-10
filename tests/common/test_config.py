@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 from pydantic import ValidationError
-from toml.decoder import TomlDecodeError
+from toml import TomlDecodeError
 
 from astoria.common.config import AstoriaConfig
 
