@@ -69,7 +69,7 @@ class MockBroadcastHelper(BroadcastHelper[T]):
         self._sent.append(data)
 
 
-class ReadAndCleanupFile(AbstractContextManager[IO[str]]):
+class ReadAndCleanupFile(AbstractContextManager):  # type: ignore
     """Read a file and clean it up."""
 
     def __init__(self, file_path: Path) -> None:
