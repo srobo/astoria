@@ -4,6 +4,8 @@ import asyncio
 import logging
 from typing import Dict, List, Optional, Set, Tuple, Type
 
+from pydantic import ValidationError
+
 from astoria.common.components import StateManager
 from astoria.common.disks import DiskInfo, DiskType, DiskUUID
 from astoria.common.ipc import (
@@ -145,11 +147,31 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
             except KeyError:
                 pass
         else:
-            self._requested_data[request.attr] = request.value
-            LOGGER.info(
-                f"{request.attr} has been overridden to {request.value} by request",
-            )
-            self.update_status()
+            # Store the old value, just in case we need to set it back.
+            if request.attr in self._requested_data:
+                old_value = self._requested_data[request.attr]
+            else:
+                old_value = None
+
+            # Attempt to update the data, reset it if it is invalid.
+            try:
+                self._requested_data[request.attr] = request.value
+                self.update_status()
+                LOGGER.info(
+                    f"{request.attr} has been overridden to {request.value} by request",
+                )
+            except ValidationError as e:
+                # Set the requested data back to the old value
+                if old_value is not None:
+                    self._requested_data[request.attr] = old_value
+
+                LOGGER.warning(f"Unable to set {request.attr} to {request.value}.")
+                LOGGER.warning(str(e))
+                return RequestResponse(
+                    uuid=request.uuid,
+                    success=False,
+                    reason=f"{request.value} is not a valid value for {request.attr}",
+                )
         return RequestResponse(
             uuid=request.uuid,
             success=True,
