@@ -5,7 +5,7 @@ from typing import Dict, NewType
 
 from pydantic import BaseModel
 
-from astoria.common.disk_constraints import (
+from astoria.common.disks.constraints import (
     Constraint,
     FilePresentConstraint,
     TrueConstraint,
