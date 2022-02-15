@@ -6,7 +6,7 @@ from json import JSONDecodeError, loads
 from typing import Callable, Coroutine, Generic, Match, Type, TypeVar
 
 from .data_component import DataComponent
-from .manager_requests import ManagerRequest, RequestResponse
+from .ipc import ManagerRequest, RequestResponse
 from .messages.base import ManagerMessage
 
 LOGGER = logging.getLogger(__name__)

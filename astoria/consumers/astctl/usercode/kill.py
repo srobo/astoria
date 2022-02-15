@@ -4,7 +4,7 @@ from typing import Optional
 
 import click
 
-from astoria.common.manager_requests import ManagerRequest
+from astoria.common.ipc import ManagerRequest
 from astoria.consumers.astctl.command import Command
 
 loop = asyncio.get_event_loop()

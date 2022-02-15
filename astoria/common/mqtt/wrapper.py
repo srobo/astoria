@@ -19,7 +19,7 @@ import gmqtt
 from pydantic import BaseModel
 
 from astoria.common.config import MQTTBrokerInfo
-from astoria.common.manager_requests import ManagerRequest, RequestResponse
+from astoria.common.ipc import ManagerRequest, RequestResponse
 from astoria.common.messages.base import ManagerMessage
 
 from .topic import Topic

@@ -5,7 +5,7 @@ from typing import Optional
 
 import click
 
-from astoria.common.manager_requests import RemoveStaticDiskRequest
+from astoria.common.ipc import RemoveStaticDiskRequest
 from astoria.consumers.astctl.command import Command
 
 loop = asyncio.get_event_loop()

@@ -3,7 +3,7 @@ import logging
 from pathlib import Path
 from typing import TYPE_CHECKING, Callable, Coroutine, Dict
 
-from astoria.common.manager_requests import (
+from astoria.common.ipc import (
     AddStaticDiskRequest,
     RemoveAllStaticDisksRequest,
     RemoveStaticDiskRequest,

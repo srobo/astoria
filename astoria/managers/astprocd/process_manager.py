@@ -6,12 +6,12 @@ from json import JSONDecodeError, loads
 from typing import Dict, Match, Optional
 
 from astoria.common.broadcast_event import UsercodeLogBroadcastEvent
-from astoria.common.manager import StateManager
-from astoria.common.manager_requests import (
+from astoria.common.ipc import (
     RequestResponse,
     UsercodeKillManagerRequest,
     UsercodeRestartManagerRequest,
 )
+from astoria.common.manager import StateManager
 from astoria.common.messages.astdiskd import DiskInfo, DiskType, DiskUUID
 from astoria.common.messages.astmetad import Metadata, MetadataManagerMessage
 from astoria.common.messages.astprocd import CodeStatus, ProcessManagerMessage
