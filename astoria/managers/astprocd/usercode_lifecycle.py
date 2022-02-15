@@ -10,11 +10,8 @@ from tempfile import TemporaryDirectory
 from typing import Callable, Dict, Optional, Set
 from zipfile import BadZipFile, ZipFile
 
-from astoria.common.broadcast_event import (
-    LogEventSource,
-    UsercodeLogBroadcastEvent,
-)
 from astoria.common.config import AstoriaConfig
+from astoria.common.ipc import LogEventSource, UsercodeLogBroadcastEvent
 from astoria.common.messages.astdiskd import DiskInfo, DiskUUID
 from astoria.common.messages.astmetad import Metadata
 from astoria.common.messages.astprocd import CodeStatus

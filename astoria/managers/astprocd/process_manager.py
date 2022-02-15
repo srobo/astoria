@@ -5,10 +5,10 @@ import logging
 from json import JSONDecodeError, loads
 from typing import Dict, Match, Optional
 
-from astoria.common.broadcast_event import UsercodeLogBroadcastEvent
 from astoria.common.ipc import (
     RequestResponse,
     UsercodeKillManagerRequest,
+    UsercodeLogBroadcastEvent,
     UsercodeRestartManagerRequest,
 )
 from astoria.common.manager import StateManager
