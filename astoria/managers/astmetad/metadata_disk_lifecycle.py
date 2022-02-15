@@ -10,9 +10,8 @@ from typing import Dict
 import toml
 from pydantic.error_wrappers import ValidationError
 
-from astoria.common.config import AstoriaConfig
+from astoria.common.config import SSID_PREFIX, AstoriaConfig, RobotSettings
 from astoria.common.messages.astdiskd import DiskInfo, DiskUUID
-from astoria.common.messages.astmetad import SSID_PREFIX, RobotSettings
 
 LOGGER = logging.getLogger(__name__)
 
