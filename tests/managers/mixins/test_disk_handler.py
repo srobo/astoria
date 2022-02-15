@@ -6,12 +6,8 @@ from typing import Dict, List, Match
 
 import pytest
 
-from astoria.common.messages.astdiskd import (
-    DiskInfo,
-    DiskManagerMessage,
-    DiskType,
-    DiskUUID,
-)
+from astoria.common.disks import DiskInfo, DiskType, DiskUUID
+from astoria.common.messages.astdiskd import DiskManagerMessage
 from astoria.managers.mixins.disk_handler import DiskHandlerMixin
 
 

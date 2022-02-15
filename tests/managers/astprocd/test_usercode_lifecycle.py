@@ -8,8 +8,8 @@ from typing import IO, Any, List, Optional, Tuple, Type
 import pytest
 
 from astoria.common.config import AstoriaConfig
+from astoria.common.disks import DiskInfo, DiskType, DiskUUID
 from astoria.common.ipc import UsercodeLogBroadcastEvent
-from astoria.common.messages.astdiskd import DiskInfo, DiskType, DiskUUID
 from astoria.common.messages.astmetad import Metadata
 from astoria.common.messages.astprocd import CodeStatus
 from astoria.common.mqtt.broadcast_helper import BroadcastHelper, T

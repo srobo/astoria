@@ -2,7 +2,7 @@
 from pathlib import Path
 
 from astoria import __version__
-from astoria.common.messages.astdiskd import DiskInfo, DiskType, DiskUUID
+from astoria.common.disks import DiskInfo, DiskType, DiskUUID
 from astoria.common.messages.astprocd import CodeStatus, ProcessManagerMessage
 
 

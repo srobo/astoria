@@ -4,9 +4,9 @@ import asyncio
 import logging
 from typing import Dict, List, Optional, Set, Tuple, Type
 
+from astoria.common.disks import DiskInfo, DiskType, DiskUUID
 from astoria.common.ipc import MetadataSetManagerRequest, RequestResponse
 from astoria.common.manager import StateManager
-from astoria.common.messages.astdiskd import DiskInfo, DiskType, DiskUUID
 from astoria.common.messages.astmetad import Metadata, MetadataManagerMessage
 from astoria.managers.mixins.disk_handler import DiskHandlerMixin
 

@@ -5,6 +5,7 @@ import logging
 from json import JSONDecodeError, loads
 from typing import Dict, Match, Optional
 
+from astoria.common.disks import DiskInfo, DiskType, DiskUUID
 from astoria.common.ipc import (
     RequestResponse,
     UsercodeKillManagerRequest,
@@ -12,7 +13,6 @@ from astoria.common.ipc import (
     UsercodeRestartManagerRequest,
 )
 from astoria.common.manager import StateManager
-from astoria.common.messages.astdiskd import DiskInfo, DiskType, DiskUUID
 from astoria.common.messages.astmetad import Metadata, MetadataManagerMessage
 from astoria.common.messages.astprocd import CodeStatus, ProcessManagerMessage
 from astoria.common.mqtt import BroadcastHelper

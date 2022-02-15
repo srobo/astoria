@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from astoria.common.messages.astdiskd import DiskInfo, DiskType, DiskUUID
+from astoria.common.disks import DiskInfo, DiskType, DiskUUID
 
 DATA_PATH = Path("tests/data/disk_types")
 
