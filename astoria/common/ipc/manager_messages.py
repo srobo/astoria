@@ -1,4 +1,4 @@
-"""Common data for MQTT messages."""
+"""Manager Messages."""
 from enum import Enum
 
 from pydantic import BaseModel

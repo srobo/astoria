@@ -10,8 +10,7 @@ from pydantic import BaseModel, validator
 
 from astoria import __version__
 from astoria.common.config import AstoriaConfig
-
-from .base import ManagerMessage
+from astoria.common.ipc import ManagerMessage
 
 SSID_PREFIX = "robot-"
 MAX_SSID_LENGTH = 32  # SSIDs must be no more than 32 octets.

@@ -6,7 +6,7 @@ from typing import Generic, Match, Type, TypeVar
 from uuid import uuid4
 
 from astoria.common.consumer import StateConsumer
-from astoria.common.messages.base import ManagerMessage
+from astoria.common.ipc import ManagerMessage
 
 T = TypeVar("T", bound=ManagerMessage)
 

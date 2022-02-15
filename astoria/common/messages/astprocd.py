@@ -2,8 +2,9 @@
 from enum import Enum
 from typing import Optional
 
+from astoria.common.ipc import ManagerMessage
+
 from .astdiskd import DiskInfo
-from .base import ManagerMessage
 
 
 class CodeStatus(str, Enum):

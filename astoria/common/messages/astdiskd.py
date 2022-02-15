@@ -10,8 +10,7 @@ from astoria.common.disk_constraints import (
     FilePresentConstraint,
     TrueConstraint,
 )
-
-from .base import ManagerMessage
+from astoria.common.ipc import ManagerMessage
 
 DiskUUID = NewType('DiskUUID', str)
 

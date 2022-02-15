@@ -4,7 +4,7 @@ import pytest
 from pydantic import ValidationError
 
 from astoria import __version__
-from astoria.common.messages.base import ManagerMessage
+from astoria.common.ipc import ManagerMessage
 
 
 def test_manager_status_enum() -> None:
