@@ -1,5 +1,5 @@
 """
-Configuration schema for Astoria.
+System Configuration schema for Astoria.
 
 Common to all components.
 """

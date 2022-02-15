@@ -7,7 +7,7 @@ import gmqtt
 import pytest
 from pydantic import BaseModel
 
-from astoria.common.config import MQTTBrokerInfo
+from astoria.common.config.system import MQTTBrokerInfo
 from astoria.common.ipc import ManagerMessage
 from astoria.common.mqtt.topic import Topic
 from astoria.common.mqtt.wrapper import MQTTWrapper
