@@ -4,7 +4,7 @@ from typing import Optional
 
 import click
 
-from astoria.common.messages.astdiskd import DiskManagerMessage
+from astoria.common.ipc import DiskManagerMessage
 
 from .command import SingleManagerMessageCommand
 

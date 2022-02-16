@@ -6,7 +6,12 @@ from .broadcast_event import (
     StartButtonBroadcastEvent,
     UsercodeLogBroadcastEvent,
 )
-from .manager_messages import ManagerMessage
+from .manager_messages import (
+    DiskManagerMessage,
+    ManagerMessage,
+    MetadataManagerMessage,
+    ProcessManagerMessage,
+)
 from .manager_requests import (
     AddStaticDiskRequest,
     ManagerRequest,
@@ -21,10 +26,13 @@ from .manager_requests import (
 __all__ = [
     "AddStaticDiskRequest",
     "BroadcastEvent",
+    "DiskManagerMessage",
     "LogEventSource",
     "ManagerMessage",
     "ManagerRequest",
+    "MetadataManagerMessage",
     "MetadataSetManagerRequest",
+    "ProcessManagerMessage",
     "RemoveAllStaticDisksRequest",
     "RemoveStaticDiskRequest",
     "RequestResponse",

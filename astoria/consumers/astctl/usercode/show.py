@@ -4,7 +4,7 @@ from typing import Optional
 
 import click
 
-from astoria.common.messages.astprocd import ProcessManagerMessage
+from astoria.common.ipc import ProcessManagerMessage
 from astoria.consumers.astctl.command import SingleManagerMessageCommand
 
 loop = asyncio.get_event_loop()

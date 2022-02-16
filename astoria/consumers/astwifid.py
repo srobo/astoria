@@ -16,7 +16,8 @@ import click
 from pydantic import ValidationError
 
 from astoria.common.consumer import StateConsumer
-from astoria.common.messages.astmetad import Metadata, MetadataManagerMessage
+from astoria.common.ipc import MetadataManagerMessage
+from astoria.common.metadata import Metadata
 
 LOGGER = logging.getLogger(__name__)
 

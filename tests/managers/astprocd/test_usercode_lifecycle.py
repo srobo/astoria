@@ -7,11 +7,11 @@ from typing import IO, Any, List, Optional, Tuple, Type
 
 import pytest
 
+from astoria.common.code_status import CodeStatus
 from astoria.common.config import AstoriaConfig
 from astoria.common.disks import DiskInfo, DiskType, DiskUUID
 from astoria.common.ipc import UsercodeLogBroadcastEvent
-from astoria.common.messages.astmetad import Metadata
-from astoria.common.messages.astprocd import CodeStatus
+from astoria.common.metadata import Metadata
 from astoria.common.mqtt.broadcast_helper import BroadcastHelper, T
 from astoria.managers.astprocd.usercode_lifecycle import (
     InvalidCodeBundleException,

@@ -7,7 +7,7 @@ from typing import Dict, List, Match
 import pytest
 
 from astoria.common.disks import DiskInfo, DiskType, DiskUUID
-from astoria.common.messages.astdiskd import DiskManagerMessage
+from astoria.common.ipc import DiskManagerMessage
 from astoria.managers.mixins.disk_handler import DiskHandlerMixin
 
 

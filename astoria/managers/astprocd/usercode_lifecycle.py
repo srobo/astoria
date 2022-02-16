@@ -10,11 +10,11 @@ from tempfile import TemporaryDirectory
 from typing import Callable, Dict, Optional, Set
 from zipfile import BadZipFile, ZipFile
 
+from astoria.common.code_status import CodeStatus
 from astoria.common.config import AstoriaConfig
+from astoria.common.disks import DiskInfo, DiskUUID
 from astoria.common.ipc import LogEventSource, UsercodeLogBroadcastEvent
-from astoria.common.messages.astdiskd import DiskInfo, DiskUUID
-from astoria.common.messages.astmetad import Metadata
-from astoria.common.messages.astprocd import CodeStatus
+from astoria.common.metadata import Metadata
 from astoria.common.mqtt import BroadcastHelper
 
 LOGGER = logging.getLogger(__name__)

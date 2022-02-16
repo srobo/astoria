@@ -10,7 +10,7 @@ from dbus_next.constants import BusType
 from dbus_next.errors import InterfaceNotFoundError
 from dbus_next.signature import Variant
 
-from astoria.common.messages.astdiskd import DiskUUID
+from astoria.common.disks import DiskUUID
 
 from .disk_provider import DiskProvider
 

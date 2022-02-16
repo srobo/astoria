@@ -4,7 +4,7 @@ from pathlib import Path
 from astoria import __version__
 from astoria.common.code_status import CodeStatus
 from astoria.common.disks import DiskInfo, DiskType, DiskUUID
-from astoria.common.messages.astprocd import ProcessManagerMessage
+from astoria.common.ipc import ProcessManagerMessage
 
 
 def test_proc_manager_fields() -> None:

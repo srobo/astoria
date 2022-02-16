@@ -5,11 +5,8 @@ import logging
 from json import JSONDecodeError, loads
 from typing import Dict, Match
 
-from astoria.common.messages.astdiskd import (
-    DiskInfo,
-    DiskManagerMessage,
-    DiskUUID,
-)
+from astoria.common.disks import DiskInfo, DiskUUID
+from astoria.common.ipc import DiskManagerMessage
 
 LOGGER = logging.getLogger(__name__)
 

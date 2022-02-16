@@ -4,7 +4,7 @@ from abc import ABCMeta
 from pathlib import Path
 from typing import TYPE_CHECKING, Callable, Coroutine, Dict
 
-from astoria.common.messages.astdiskd import DiskUUID
+from astoria.common.disks import DiskUUID
 
 if TYPE_CHECKING:
     from .disk_manager import DiskManager

@@ -3,13 +3,13 @@ import logging
 from pathlib import Path
 from typing import TYPE_CHECKING, Callable, Coroutine, Dict
 
+from astoria.common.disks import DiskUUID
 from astoria.common.ipc import (
     AddStaticDiskRequest,
     RemoveAllStaticDisksRequest,
     RemoveStaticDiskRequest,
     RequestResponse,
 )
-from astoria.common.messages.astdiskd import DiskUUID
 
 from .disk_provider import DiskProvider
 

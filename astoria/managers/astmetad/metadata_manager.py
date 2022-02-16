@@ -5,9 +5,13 @@ import logging
 from typing import Dict, List, Optional, Set, Tuple, Type
 
 from astoria.common.disks import DiskInfo, DiskType, DiskUUID
-from astoria.common.ipc import MetadataSetManagerRequest, RequestResponse
+from astoria.common.ipc import (
+    MetadataManagerMessage,
+    MetadataSetManagerRequest,
+    RequestResponse,
+)
 from astoria.common.manager import StateManager
-from astoria.common.messages.astmetad import Metadata, MetadataManagerMessage
+from astoria.common.metadata import Metadata
 from astoria.managers.mixins.disk_handler import DiskHandlerMixin
 
 from .metadata_cache import MetadataCache

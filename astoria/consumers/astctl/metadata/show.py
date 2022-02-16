@@ -4,7 +4,7 @@ from typing import Optional
 
 import click
 
-from astoria.common.messages.astmetad import MetadataManagerMessage
+from astoria.common.ipc import MetadataManagerMessage
 from astoria.consumers.astctl.command import SingleManagerMessageCommand
 
 loop = asyncio.get_event_loop()

@@ -5,8 +5,8 @@ from pathlib import Path
 from typing import List
 
 from astoria.common.disks import DiskInfo, DiskType
+from astoria.common.ipc import DiskManagerMessage
 from astoria.common.manager import StateManager
-from astoria.common.messages.astdiskd import DiskManagerMessage
 
 from .disk_provider import DiskProvider
 from .static import StaticDiskProvider
