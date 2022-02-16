@@ -17,8 +17,8 @@ from astoria.common.ipc import (
     UsercodeRestartManagerRequest,
 )
 from astoria.common.metadata import Metadata
+from astoria.common.mixins import DiskHandlerMixin
 from astoria.common.mqtt import BroadcastHelper
-from astoria.managers.mixins.disk_handler import DiskHandlerMixin
 
 from .usercode_lifecycle import UsercodeLifecycle
 

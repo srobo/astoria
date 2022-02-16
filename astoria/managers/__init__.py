@@ -1,1 +1,0 @@
-"""Executable components of Astoria."""

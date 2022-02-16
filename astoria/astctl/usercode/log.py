@@ -4,9 +4,9 @@ from typing import Optional
 
 import click
 
+from astoria.astctl.command import Command
 from astoria.common.ipc import UsercodeLogBroadcastEvent
 from astoria.common.mqtt import BroadcastHelper
-from astoria.consumers.astctl.command import Command
 
 loop = asyncio.get_event_loop()
 

@@ -5,23 +5,23 @@ from typing import Optional
 
 import click
 
-from astoria.common.ipc import AddStaticDiskRequest
-from astoria.consumers.astctl.command import Command
+from astoria.astctl.command import Command
+from astoria.common.ipc import RemoveStaticDiskRequest
 
 loop = asyncio.get_event_loop()
 
 
-@click.command("add")
+@click.command("remove")
 @click.argument("path")
 @click.option("-v", "--verbose", is_flag=True)
 @click.option("-c", "--config-file", type=click.Path(exists=True))
-def add(path: str, *, verbose: bool, config_file: Optional[str]) -> None:
-    """Mount a filesystem path as a disk."""
-    command = AddStaticDiskCommand(path, verbose, config_file)
+def remove(path: str, *, verbose: bool, config_file: Optional[str]) -> None:
+    """Unmount a static disk."""
+    command = RemoveStaticDiskCommand(path, verbose, config_file)
     loop.run_until_complete(command.run())
 
 
-class AddStaticDiskCommand(Command):
+class RemoveStaticDiskCommand(Command):
     """Command to add a filesystem path as a static disk."""
 
     _path: Path
@@ -41,15 +41,15 @@ class AddStaticDiskCommand(Command):
         """Main method of the command."""
         res = await self._mqtt.manager_request(
             "astdiskd",
-            "add_static_disk",
-            AddStaticDiskRequest(sender_name=self.name, path=self._path),
+            "remove_static_disk",
+            RemoveStaticDiskRequest(sender_name=self.name, path=self._path),
         )
         if res.success:
-            print("Successfully added disk.")
+            print("Successfully removed disk.")
             if len(res.reason) > 0:
                 print(res.reason)
         else:
-            print("Unable to add disk.")
+            print("Unable to remove disk.")
             if len(res.reason) > 0:
                 print(res.reason)
         # Add timeout

@@ -7,16 +7,16 @@ from typing import IO, Any, List, Optional, Tuple, Type
 
 import pytest
 
+from astoria.astprocd.usercode_lifecycle import (
+    InvalidCodeBundleException,
+    UsercodeLifecycle,
+)
 from astoria.common.code_status import CodeStatus
 from astoria.common.config import AstoriaConfig
 from astoria.common.disks import DiskInfo, DiskType, DiskUUID
 from astoria.common.ipc import UsercodeLogBroadcastEvent
 from astoria.common.metadata import Metadata
 from astoria.common.mqtt.broadcast_helper import BroadcastHelper, T
-from astoria.managers.astprocd.usercode_lifecycle import (
-    InvalidCodeBundleException,
-    UsercodeLifecycle,
-)
 
 EXTRACT_ZIP_DATA = Path("tests/data/extract_zip")
 EXECUTE_CODE_DATA = Path("tests/data/execute_code")

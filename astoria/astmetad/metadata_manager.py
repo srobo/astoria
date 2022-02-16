@@ -12,7 +12,7 @@ from astoria.common.ipc import (
     RequestResponse,
 )
 from astoria.common.metadata import Metadata
-from astoria.managers.mixins.disk_handler import DiskHandlerMixin
+from astoria.common.mixins.disk_handler import DiskHandlerMixin
 
 from .metadata_cache import MetadataCache
 from .metadata_disk_lifecycle import (
