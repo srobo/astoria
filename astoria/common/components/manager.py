@@ -5,8 +5,8 @@ from abc import ABCMeta, abstractmethod
 from json import JSONDecodeError, loads
 from typing import Callable, Coroutine, Generic, Match, Type, TypeVar
 
-from .data_component import DataComponent
-from .ipc import ManagerMessage, ManagerRequest, RequestResponse
+from ..ipc import ManagerMessage, ManagerRequest, RequestResponse
+from .component import DataComponent
 
 LOGGER = logging.getLogger(__name__)
 

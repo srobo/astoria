@@ -3,7 +3,7 @@ import asyncio
 import logging
 from abc import ABCMeta
 
-from .data_component import DataComponent
+from .component import DataComponent
 
 LOGGER = logging.getLogger(__name__)
 

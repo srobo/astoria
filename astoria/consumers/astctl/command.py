@@ -5,7 +5,7 @@ from json import JSONDecodeError, loads
 from typing import Generic, Match, Type, TypeVar
 from uuid import uuid4
 
-from astoria.common.consumer import StateConsumer
+from astoria.common.components import StateConsumer
 from astoria.common.ipc import ManagerMessage
 
 T = TypeVar("T", bound=ManagerMessage)

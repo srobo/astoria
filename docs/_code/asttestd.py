@@ -6,8 +6,8 @@ from typing import Optional
 
 import click
 
+from astoria.common.components import StateManager
 from astoria.common.ipc import ManagerMessage
-from astoria.common.manager import StateManager
 
 LOGGER = logging.getLogger(__name__)
 

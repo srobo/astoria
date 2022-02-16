@@ -17,9 +17,8 @@ from typing import List, Optional
 from pydantic import BaseModel
 
 from astoria import __version__
-
-from .config import AstoriaConfig
-from .mqtt.wrapper import MQTTWrapper
+from astoria.common.config import AstoriaConfig
+from astoria.common.mqtt.wrapper import MQTTWrapper
 
 LOGGER = logging.getLogger(__name__)
 

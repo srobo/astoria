@@ -15,7 +15,7 @@ from typing import IO, Match, Optional
 import click
 from pydantic import ValidationError
 
-from astoria.common.consumer import StateConsumer
+from astoria.common.components import StateConsumer
 from astoria.common.ipc import MetadataManagerMessage
 from astoria.common.metadata import Metadata
 

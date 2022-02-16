@@ -6,6 +6,7 @@ from json import JSONDecodeError, loads
 from typing import Dict, Match, Optional
 
 from astoria.common.code_status import CodeStatus
+from astoria.common.components import StateManager
 from astoria.common.disks import DiskInfo, DiskType, DiskUUID
 from astoria.common.ipc import (
     MetadataManagerMessage,
@@ -15,7 +16,6 @@ from astoria.common.ipc import (
     UsercodeLogBroadcastEvent,
     UsercodeRestartManagerRequest,
 )
-from astoria.common.manager import StateManager
 from astoria.common.metadata import Metadata
 from astoria.common.mqtt import BroadcastHelper
 from astoria.managers.mixins.disk_handler import DiskHandlerMixin
