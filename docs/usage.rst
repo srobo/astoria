@@ -37,7 +37,7 @@ The state managers should be managed using systemd in a proper deployment, altho
 Command Line Usage
 ------------------
 
-.. click:: astoria.consumers.astctl:main
+.. click:: astoria.astctl:main
    :prog: astctl
    :nested: short
 
