@@ -25,64 +25,64 @@ This relies on another program automatically mounting drives that are inserted, 
 Disk Identification
 -------------------
 
-After a disk has been detected, the type of disk also needs to be identified. A disk can only have one type, the value of which must be a member of :class:`astoria.common.messages.astdiskd.DiskType`.
+After a disk has been detected, the type of disk also needs to be identified. A disk can only have one type, the value of which must be a member of :class:`astoria.common.disks.DiskType`.
 
-Given the mount path for a disk, the type of the disk can be found using the :meth:`astoria.common.messages.astdiskd.DiskType.determine_disk_type` method.
+Given the mount path for a disk, the type of the disk can be found using the :meth:`astoria.common.disks.DiskType.determine_disk_type` method.
 
-The path is compared against a :class:`astoria.common.disk_constraints.Constraint` for each type. The type that is returned will be the first type for which the constraint matches.
+The path is compared against a :class:`astoria.common.disks.constraints.Constraint` for each type. The type that is returned will be the first type for which the constraint matches.
 
-As a disk must always have a type, the last constraint in the list is `DiskType.NOACTION`, which is matched using a :class:`astoria.common.disk_constraints.TrueConstraint`.
+As a disk must always have a type, the last constraint in the list is `DiskType.NOACTION`, which is matched using a :class:`astoria.common.disks.constraints.TrueConstraint`.
 
 Constraints
 ~~~~~~~~~~~
 
-A constraint is a class that implements :class:`astoria.common.disk_constraints.Constraint`. Given a path, a constaint will determine if the path matches the constraint or not.
+A constraint is a class that implements :class:`astoria.common.disks.constraints.Constraint`. Given a path, a constaint will determine if the path matches the constraint or not.
 
-Some constraints, such as :class:`astoria.common.disk_constraints.AndConstraint` take other constraints as parameters in the constructor. This allows us to combine constraints programmatically.
+Some constraints, such as :class:`astoria.common.disks.constraints.AndConstraint` take other constraints as parameters in the constructor. This allows us to combine constraints programmatically.
 
 A full list of available constraints, along with their uses is listed in :ref:`Constraint Definitions`.
 
 Astdiskd Data Structures and Classes
 ------------------------------------
 
-.. autoclass:: astoria.managers.astdiskd.DiskManager
+.. autoclass:: astoria.astdiskd.DiskManager
     :members:
 
-.. autoclass:: astoria.common.messages.astdiskd.DiskUUID
+.. autoclass:: astoria.common.disks.DiskUUID
     :members:
 
-.. autoclass:: astoria.common.messages.astdiskd.DiskInfo
+.. autoclass:: astoria.common.disks.DiskInfo
     :members:
 
-.. autoclass:: astoria.common.messages.astdiskd.DiskType
+.. autoclass:: astoria.common.disks.DiskType
     :members:
 
-.. autoclass:: astoria.common.messages.astdiskd.DiskManagerMessage
+.. autoclass:: astoria.common.ipc.DiskManagerMessage
     :members:
 
 Constraint Definitions
 ----------------------
 
-.. autoclass:: astoria.common.disk_constraints.Constraint
+.. autoclass:: astoria.common.disks.constraints.Constraint
     :members:
 
-.. autoclass:: astoria.common.disk_constraints.FilePresentConstraint
+.. autoclass:: astoria.common.disks.constraints.FilePresentConstraint
     :members:
 
-.. autoclass:: astoria.common.disk_constraints.NumberOfFilesConstraint
+.. autoclass:: astoria.common.disks.constraints.NumberOfFilesConstraint
     :members:
 
-.. autoclass:: astoria.common.disk_constraints.OrConstraint
+.. autoclass:: astoria.common.disks.constraints.OrConstraint
     :members:
 
-.. autoclass:: astoria.common.disk_constraints.AndConstraint
+.. autoclass:: astoria.common.disks.constraints.AndConstraint
     :members:
 
-.. autoclass:: astoria.common.disk_constraints.NotConstraint
+.. autoclass:: astoria.common.disks.constraints.NotConstraint
     :members:
 
-.. autoclass:: astoria.common.disk_constraints.TrueConstraint
+.. autoclass:: astoria.common.disks.constraints.TrueConstraint
     :members:
 
-.. autoclass:: astoria.common.disk_constraints.FalseConstraint
+.. autoclass:: astoria.common.disks.constraints.FalseConstraint
     :members:

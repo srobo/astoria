@@ -105,67 +105,67 @@
 <section id="astmetad-data-structures-and-classes">
 <h2>Astmetad Data Structures and Classes<a class="headerlink" href="#astmetad-data-structures-and-classes" title="Permalink to this headline"></a></h2>
 <dl class="py class">
-<dt class="sig sig-object py" id="astoria.common.messages.astmetad.MetadataManagerMessage">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.messages.astmetad.</span></span><span class="sig-name descname"><span class="pre">MetadataManagerMessage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/messages/astmetad.html#MetadataManagerMessage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.messages.astmetad.MetadataManagerMessage" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="astoria.common.ipc.MetadataManagerMessage">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.ipc.</span></span><span class="sig-name descname"><span class="pre">MetadataManagerMessage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/ipc/manager_messages.html#MetadataManagerMessage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.ipc.MetadataManagerMessage" title="Permalink to this definition"></a></dt>
 <dd><p>Status message for Metadata Manager.</p>
 <p>Published to /astoria/astmetad</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="astoria.common.messages.astmetad.MetadataManagerMessage.metadata">
-<span class="sig-name descname"><span class="pre">metadata</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#astoria.common.messages.astmetad.Metadata" title="astoria.common.messages.astmetad.Metadata"><span class="pre">astoria.common.messages.astmetad.Metadata</span></a></em><a class="headerlink" href="#astoria.common.messages.astmetad.MetadataManagerMessage.metadata" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="astoria.common.ipc.MetadataManagerMessage.metadata">
+<span class="sig-name descname"><span class="pre">metadata</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#astoria.common.metadata.Metadata" title="astoria.common.metadata.Metadata"><span class="pre">astoria.common.metadata.Metadata</span></a></em><a class="headerlink" href="#astoria.common.ipc.MetadataManagerMessage.metadata" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="astoria.common.messages.astmetad.Metadata">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.messages.astmetad.</span></span><span class="sig-name descname"><span class="pre">Metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/messages/astmetad.html#Metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.messages.astmetad.Metadata" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="astoria.common.metadata.Metadata">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.metadata.</span></span><span class="sig-name descname"><span class="pre">Metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/metadata.html#Metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.metadata.Metadata" title="Permalink to this definition"></a></dt>
 <dd><p>Astoria Metadata.</p>
 <dl class="py class">
-<dt class="sig sig-object py" id="astoria.common.messages.astmetad.Metadata.Config">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Config</span></span><a class="reference internal" href="../../_modules/astoria/common/messages/astmetad.html#Metadata.Config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.messages.astmetad.Metadata.Config" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="astoria.common.metadata.Metadata.Config">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Config</span></span><a class="reference internal" href="../../_modules/astoria/common/metadata.html#Metadata.Config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.metadata.Metadata.Config" title="Permalink to this definition"></a></dt>
 <dd><p>Pydantic config.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="astoria.common.messages.astmetad.Metadata.Config.validate_assignment">
-<span class="sig-name descname"><span class="pre">validate_assignment</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#astoria.common.messages.astmetad.Metadata.Config.validate_assignment" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="astoria.common.metadata.Metadata.Config.validate_assignment">
+<span class="sig-name descname"><span class="pre">validate_assignment</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#astoria.common.metadata.Metadata.Config.validate_assignment" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="astoria.common.messages.astmetad.Metadata.arch">
-<span class="sig-name descname"><span class="pre">arch</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.common.messages.astmetad.Metadata.arch" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="astoria.common.metadata.Metadata.arch">
+<span class="sig-name descname"><span class="pre">arch</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.arch" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="astoria.common.messages.astmetad.Metadata.arena">
-<span class="sig-name descname"><span class="pre">arena</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.common.messages.astmetad.Metadata.arena" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="astoria.common.metadata.Metadata.arena">
+<span class="sig-name descname"><span class="pre">arena</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.arena" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="astoria.common.messages.astmetad.Metadata.astoria_version">
-<span class="sig-name descname"><span class="pre">astoria_version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.common.messages.astmetad.Metadata.astoria_version" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="astoria.common.metadata.Metadata.astoria_version">
+<span class="sig-name descname"><span class="pre">astoria_version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.astoria_version" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="astoria.common.messages.astmetad.Metadata.game_timeout">
-<span class="sig-name descname"><span class="pre">game_timeout</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#astoria.common.messages.astmetad.Metadata.game_timeout" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="astoria.common.metadata.Metadata.game_timeout">
+<span class="sig-name descname"><span class="pre">game_timeout</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#astoria.common.metadata.Metadata.game_timeout" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="astoria.common.messages.astmetad.Metadata.init">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/messages/astmetad.html#Metadata.init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.messages.astmetad.Metadata.init" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="astoria.common.metadata.Metadata.init">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/metadata.html#Metadata.init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.metadata.Metadata.init" title="Permalink to this definition"></a></dt>
 <dd><p>Initialise the metadata and populate with data.</p>
 <p>Based on information from software and the astoria configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#astoria.common.messages.astmetad.Metadata" title="astoria.common.messages.astmetad.Metadata"><code class="xref py py-class docutils literal notranslate"><span class="pre">Metadata</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#astoria.common.metadata.Metadata" title="astoria.common.metadata.Metadata"><code class="xref py py-class docutils literal notranslate"><span class="pre">Metadata</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="astoria.common.messages.astmetad.Metadata.is_wifi_valid">
-<span class="sig-name descname"><span class="pre">is_wifi_valid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/messages/astmetad.html#Metadata.is_wifi_valid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.messages.astmetad.Metadata.is_wifi_valid" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="astoria.common.metadata.Metadata.is_wifi_valid">
+<span class="sig-name descname"><span class="pre">is_wifi_valid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/metadata.html#Metadata.is_wifi_valid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.metadata.Metadata.is_wifi_valid" title="Permalink to this definition"></a></dt>
 <dd><p>Check if the WiFi configuration is valid to be turned on.</p>
 <p>Checks that the WiFi is enabled and that the config params are set.Optional
 :rtype: <a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>
@@ -173,74 +173,74 @@
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="astoria.common.messages.astmetad.Metadata.kernel_version">
-<span class="sig-name descname"><span class="pre">kernel_version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.common.messages.astmetad.Metadata.kernel_version" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="astoria.common.metadata.Metadata.kernel_version">
+<span class="sig-name descname"><span class="pre">kernel_version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.kernel_version" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="astoria.common.messages.astmetad.Metadata.libc_ver">
-<span class="sig-name descname"><span class="pre">libc_ver</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.common.messages.astmetad.Metadata.libc_ver" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="astoria.common.metadata.Metadata.libc_ver">
+<span class="sig-name descname"><span class="pre">libc_ver</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.libc_ver" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="astoria.common.messages.astmetad.Metadata.marker_offset">
-<span class="sig-name descname"><span class="pre">marker_offset</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></em><a class="headerlink" href="#astoria.common.messages.astmetad.Metadata.marker_offset" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="astoria.common.metadata.Metadata.marker_offset">
+<span class="sig-name descname"><span class="pre">marker_offset</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.marker_offset" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="astoria.common.messages.astmetad.Metadata.mode">
-<span class="sig-name descname"><span class="pre">mode</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#astoria.common.messages.astmetad.RobotMode" title="astoria.common.messages.astmetad.RobotMode"><span class="pre">astoria.common.messages.astmetad.RobotMode</span></a></em><a class="headerlink" href="#astoria.common.messages.astmetad.Metadata.mode" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="astoria.common.metadata.Metadata.mode">
+<span class="sig-name descname"><span class="pre">mode</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#astoria.common.metadata.RobotMode" title="astoria.common.metadata.RobotMode"><span class="pre">astoria.common.metadata.RobotMode</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.mode" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="astoria.common.messages.astmetad.Metadata.python_version">
-<span class="sig-name descname"><span class="pre">python_version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.common.messages.astmetad.Metadata.python_version" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="astoria.common.metadata.Metadata.python_version">
+<span class="sig-name descname"><span class="pre">python_version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.python_version" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="astoria.common.messages.astmetad.Metadata.usercode_entrypoint">
-<span class="sig-name descname"><span class="pre">usercode_entrypoint</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.common.messages.astmetad.Metadata.usercode_entrypoint" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="astoria.common.metadata.Metadata.usercode_entrypoint">
+<span class="sig-name descname"><span class="pre">usercode_entrypoint</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.usercode_entrypoint" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="astoria.common.messages.astmetad.Metadata.wifi_enabled">
-<span class="sig-name descname"><span class="pre">wifi_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></em><a class="headerlink" href="#astoria.common.messages.astmetad.Metadata.wifi_enabled" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="astoria.common.metadata.Metadata.wifi_enabled">
+<span class="sig-name descname"><span class="pre">wifi_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.wifi_enabled" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="astoria.common.messages.astmetad.Metadata.wifi_psk">
-<span class="sig-name descname"><span class="pre">wifi_psk</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#astoria.common.messages.astmetad.Metadata.wifi_psk" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="astoria.common.metadata.Metadata.wifi_psk">
+<span class="sig-name descname"><span class="pre">wifi_psk</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#astoria.common.metadata.Metadata.wifi_psk" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="astoria.common.messages.astmetad.Metadata.wifi_region">
-<span class="sig-name descname"><span class="pre">wifi_region</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#astoria.common.messages.astmetad.Metadata.wifi_region" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="astoria.common.metadata.Metadata.wifi_region">
+<span class="sig-name descname"><span class="pre">wifi_region</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#astoria.common.metadata.Metadata.wifi_region" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="astoria.common.messages.astmetad.Metadata.wifi_ssid">
-<span class="sig-name descname"><span class="pre">wifi_ssid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#astoria.common.messages.astmetad.Metadata.wifi_ssid" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="astoria.common.metadata.Metadata.wifi_ssid">
+<span class="sig-name descname"><span class="pre">wifi_ssid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#astoria.common.metadata.Metadata.wifi_ssid" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="astoria.common.messages.astmetad.Metadata.zone">
-<span class="sig-name descname"><span class="pre">zone</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></em><a class="headerlink" href="#astoria.common.messages.astmetad.Metadata.zone" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="astoria.common.metadata.Metadata.zone">
+<span class="sig-name descname"><span class="pre">zone</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.zone" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="astoria.common.messages.astmetad.RobotMode">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.messages.astmetad.</span></span><span class="sig-name descname"><span class="pre">RobotMode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/messages/astmetad.html#RobotMode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.messages.astmetad.RobotMode" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="astoria.common.metadata.RobotMode">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.metadata.</span></span><span class="sig-name descname"><span class="pre">RobotMode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/metadata.html#RobotMode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.metadata.RobotMode" title="Permalink to this definition"></a></dt>
 <dd><p>Running Status of the manager daemon.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="astoria.common.messages.astmetad.RobotMode.COMP">
-<span class="sig-name descname"><span class="pre">COMP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'COMP'</span></em><a class="headerlink" href="#astoria.common.messages.astmetad.RobotMode.COMP" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="astoria.common.metadata.RobotMode.COMP">
+<span class="sig-name descname"><span class="pre">COMP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'COMP'</span></em><a class="headerlink" href="#astoria.common.metadata.RobotMode.COMP" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="astoria.common.messages.astmetad.RobotMode.DEV">
-<span class="sig-name descname"><span class="pre">DEV</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DEV'</span></em><a class="headerlink" href="#astoria.common.messages.astmetad.RobotMode.DEV" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="astoria.common.metadata.RobotMode.DEV">
+<span class="sig-name descname"><span class="pre">DEV</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DEV'</span></em><a class="headerlink" href="#astoria.common.metadata.RobotMode.DEV" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

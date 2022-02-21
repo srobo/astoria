@@ -116,44 +116,44 @@ so that clients are alerted to the disconnection. The state should also be clear
 <section id="manager-requests">
 <h3>Manager Requests<a class="headerlink" href="#manager-requests" title="Permalink to this headline"></a></h3>
 <p>A <em>Manager Request</em> is a message sent to a single, specific <a class="reference internal" href="../implementation/managers/index.html#state-managers"><span class="std std-ref">state manager</span></a> to request a single specific action.</p>
-<p>A <a class="reference internal" href="#astoria.common.manager_requests.ManagerRequest" title="astoria.common.manager_requests.ManagerRequest"><code class="xref py py-class docutils literal notranslate"><span class="pre">ManagerRequest</span></code></a> is published to <code class="docutils literal notranslate"><span class="pre">astoria/[manager_name]/request/[request]</span></code> by the requesting component.</p>
+<p>A <a class="reference internal" href="#astoria.common.ipc.ManagerRequest" title="astoria.common.ipc.ManagerRequest"><code class="xref py py-class docutils literal notranslate"><span class="pre">ManagerRequest</span></code></a> is published to <code class="docutils literal notranslate"><span class="pre">astoria/[manager_name]/request/[request]</span></code> by the requesting component.</p>
 <p>A request must contain a UUID that is unique to the request.</p>
 <p>A request can also contain additional information related to that request.</p>
-<p>After a state manager receives a request, it must reply with a <a class="reference internal" href="#astoria.common.manager_requests.RequestResponse" title="astoria.common.manager_requests.RequestResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">RequestResponse</span></code></a>. The UUID in the response must match the UUID of the request.</p>
+<p>After a state manager receives a request, it must reply with a <a class="reference internal" href="#astoria.common.ipc.RequestResponse" title="astoria.common.ipc.RequestResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">RequestResponse</span></code></a>. The UUID in the response must match the UUID of the request.</p>
 <p>Mutation responses are published to <code class="docutils literal notranslate"><span class="pre">astoria/[manager_name]/request/[request]/[uuid]</span></code></p>
 <dl class="py class">
-<dt class="sig sig-object py" id="astoria.common.manager_requests.ManagerRequest">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.manager_requests.</span></span><span class="sig-name descname"><span class="pre">ManagerRequest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/astoria/common/manager_requests.html#ManagerRequest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.manager_requests.ManagerRequest" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="astoria.common.ipc.ManagerRequest">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.ipc.</span></span><span class="sig-name descname"><span class="pre">ManagerRequest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/astoria/common/ipc/manager_requests.html#ManagerRequest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.ipc.ManagerRequest" title="Permalink to this definition"></a></dt>
 <dd><p>Schema definition for a Manager Request.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="astoria.common.manager_requests.ManagerRequest.sender_name">
-<span class="sig-name descname"><span class="pre">sender_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.common.manager_requests.ManagerRequest.sender_name" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="astoria.common.ipc.ManagerRequest.sender_name">
+<span class="sig-name descname"><span class="pre">sender_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.common.ipc.ManagerRequest.sender_name" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="astoria.common.manager_requests.ManagerRequest.uuid">
-<span class="sig-name descname"><span class="pre">uuid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.10)"><span class="pre">uuid.UUID</span></a></em><a class="headerlink" href="#astoria.common.manager_requests.ManagerRequest.uuid" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="astoria.common.ipc.ManagerRequest.uuid">
+<span class="sig-name descname"><span class="pre">uuid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.10)"><span class="pre">uuid.UUID</span></a></em><a class="headerlink" href="#astoria.common.ipc.ManagerRequest.uuid" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="astoria.common.manager_requests.RequestResponse">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.manager_requests.</span></span><span class="sig-name descname"><span class="pre">RequestResponse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/astoria/common/manager_requests.html#RequestResponse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.manager_requests.RequestResponse" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="astoria.common.ipc.RequestResponse">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.ipc.</span></span><span class="sig-name descname"><span class="pre">RequestResponse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/astoria/common/ipc/manager_requests.html#RequestResponse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.ipc.RequestResponse" title="Permalink to this definition"></a></dt>
 <dd><p>Schema definition for the response to a Manager Request.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="astoria.common.manager_requests.RequestResponse.reason">
-<span class="sig-name descname"><span class="pre">reason</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.common.manager_requests.RequestResponse.reason" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="astoria.common.ipc.RequestResponse.reason">
+<span class="sig-name descname"><span class="pre">reason</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.common.ipc.RequestResponse.reason" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="astoria.common.manager_requests.RequestResponse.success">
-<span class="sig-name descname"><span class="pre">success</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></em><a class="headerlink" href="#astoria.common.manager_requests.RequestResponse.success" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="astoria.common.ipc.RequestResponse.success">
+<span class="sig-name descname"><span class="pre">success</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></em><a class="headerlink" href="#astoria.common.ipc.RequestResponse.success" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="astoria.common.manager_requests.RequestResponse.uuid">
-<span class="sig-name descname"><span class="pre">uuid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.10)"><span class="pre">uuid.UUID</span></a></em><a class="headerlink" href="#astoria.common.manager_requests.RequestResponse.uuid" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="astoria.common.ipc.RequestResponse.uuid">
+<span class="sig-name descname"><span class="pre">uuid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.10)"><span class="pre">uuid.UUID</span></a></em><a class="headerlink" href="#astoria.common.ipc.RequestResponse.uuid" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

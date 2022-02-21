@@ -12,7 +12,7 @@ Astprocd is responsible for:
 Usercode Lifecycle
 ------------------
 
-When a new USB is inserted, it will follow the usercode lifecycle. The possible states of the lifecycle are defined in :class:`astoria.common.messages.astprocd.CodeStatus`.
+When a new USB is inserted, it will follow the usercode lifecycle. The possible states of the lifecycle are defined in :class:`astoria.common.code_status.CodeStatus`.
 
 .. graphviz::
 
@@ -53,11 +53,11 @@ Usercode is killed by sending ``SIGTERM``, waiting 5 seconds and then sending ``
 Astprocd Data Structures and Classes
 ------------------------------------
 
-.. autoclass:: astoria.common.messages.astprocd.CodeStatus
+.. autoclass:: astoria.common.code_status.CodeStatus
     :members:
 
-.. autoclass:: astoria.common.messages.astprocd.ProcessManagerMessage
+.. autoclass:: astoria.common.ipc.ProcessManagerMessage
    :members:
 
-.. autoclass:: astoria.managers.astprocd.ProcessManager
+.. autoclass:: astoria.astprocd.ProcessManager
    :members:
