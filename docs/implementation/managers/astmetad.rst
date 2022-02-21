@@ -20,11 +20,11 @@ Once the drive has had its data loaded and validated, it will be added as a high
 Astmetad Data Structures and Classes
 ------------------------------------
 
-.. autoclass:: astoria.common.messages.astmetad.MetadataManagerMessage
+.. autoclass:: astoria.common.ipc.MetadataManagerMessage
     :members:
 
-.. autoclass:: astoria.common.messages.astmetad.Metadata
+.. autoclass:: astoria.common.metadata.Metadata
     :members:
 
-.. autoclass:: astoria.common.messages.astmetad.RobotMode
+.. autoclass:: astoria.common.metadata.RobotMode
     :members:

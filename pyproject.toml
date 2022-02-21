@@ -56,8 +56,8 @@ requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
 
 [tool.poetry.scripts]
-astdiskd = 'astoria.managers.astdiskd:main'
-astmetad = 'astoria.managers.astmetad:main'
-astprocd = 'astoria.managers.astprocd:main'
-astctl = 'astoria.consumers.astctl:main'
-astwifid = 'astoria.consumers.astwifid:main'
+astdiskd = 'astoria.astdiskd:main'
+astmetad = 'astoria.astmetad:main'
+astprocd = 'astoria.astprocd:main'
+astctl = 'astoria.astctl:main'
+astwifid = 'astoria.astwifid:main'

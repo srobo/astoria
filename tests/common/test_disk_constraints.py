@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from astoria.common.disk_constraints import (
+from astoria.common.disks.constraints import (
     AndConstraint,
     Constraint,
     FalseConstraint,

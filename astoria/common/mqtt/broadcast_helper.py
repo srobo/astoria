@@ -4,7 +4,7 @@ from asyncio import PriorityQueue
 from json import JSONDecodeError, loads
 from typing import TYPE_CHECKING, Any, Generic, Match, Type, TypeVar
 
-from astoria.common.broadcast_event import BroadcastEvent
+from astoria.common.ipc import BroadcastEvent
 
 if TYPE_CHECKING:
     from .wrapper import MQTTWrapper

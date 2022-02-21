@@ -6,7 +6,7 @@ from typing import Generator
 
 import pytest
 
-from astoria.managers.astmetad.metadata_cache import MetadataCache
+from astoria.astmetad.metadata_cache import MetadataCache
 
 
 @pytest.fixture

@@ -39,20 +39,20 @@ Manager Requests
 
 A *Manager Request* is a message sent to a single, specific :ref:`state manager <state managers>` to request a single specific action.
 
-A :class:`ManagerRequest <astoria.common.manager_requests.ManagerRequest>` is published to ``astoria/[manager_name]/request/[request]`` by the requesting component.
+A :class:`ManagerRequest <astoria.common.ipc.ManagerRequest>` is published to ``astoria/[manager_name]/request/[request]`` by the requesting component.
 
 A request must contain a UUID that is unique to the request.
 
 A request can also contain additional information related to that request.
 
-After a state manager receives a request, it must reply with a :class:`RequestResponse <astoria.common.manager_requests.RequestResponse>`. The UUID in the response must match the UUID of the request.
+After a state manager receives a request, it must reply with a :class:`RequestResponse <astoria.common.ipc.RequestResponse>`. The UUID in the response must match the UUID of the request.
 
 Mutation responses are published to ``astoria/[manager_name]/request/[request]/[uuid]``
 
-.. autoclass:: astoria.common.manager_requests.ManagerRequest
+.. autoclass:: astoria.common.ipc.ManagerRequest
     :members:
 
-.. autoclass:: astoria.common.manager_requests.RequestResponse
+.. autoclass:: astoria.common.ipc.RequestResponse
     :members:
 
 Broadcast Events

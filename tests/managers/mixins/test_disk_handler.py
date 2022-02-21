@@ -6,13 +6,9 @@ from typing import Dict, List, Match
 
 import pytest
 
-from astoria.common.messages.astdiskd import (
-    DiskInfo,
-    DiskManagerMessage,
-    DiskType,
-    DiskUUID,
-)
-from astoria.managers.mixins.disk_handler import DiskHandlerMixin
+from astoria.common.disks import DiskInfo, DiskType, DiskUUID
+from astoria.common.ipc import DiskManagerMessage
+from astoria.common.mixins import DiskHandlerMixin
 
 
 def get_match() -> Match[str]:
