@@ -273,7 +273,7 @@ class UsercodeLifecycle:
 
                 data = await output.readline()
                 while data != b"":
-                    data_str = data.decode('utf-8')
+                    data_str = data.decode('utf-8', errors='ignore')
                     time_passed = datetime.now() - start_time
                     log(f"[{time_passed}] {data_str}", log_line_idx, source)
                     data = await output.readline()
