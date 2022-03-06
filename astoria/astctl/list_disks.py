@@ -32,7 +32,7 @@ class ListDisksCommand(SingleManagerMessageCommand[DiskManagerMessage]):
     ) -> None:
         """Display information about the disks."""
         print(f"{len(message.disks)} disks found")
-        for uuid, disk in message.disks.items():
+        for uuid, disk in message.calculate_disk_info().items():
             print(f"\tUUID: {uuid}")
             print(f"\t\tMounted at: {disk.mount_path}")
             print(f"\t\tDisk Type: {disk.disk_type.name}")
