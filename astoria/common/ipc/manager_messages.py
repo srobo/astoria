@@ -61,7 +61,7 @@ class DiskManagerMessage(ManagerMessage):
         As astdiskd only gives us information about the path of each disk,
         we need to calculate the type of each disk in the message.
 
-        :returns: A dictionary of disk uuids and disk information.
+        :returns: A dictionary of disk UUIDs and disk information.
         """
         disk_type_calculator = DiskTypeCalculator()
         return {
