@@ -71,38 +71,20 @@
 <span></span><span class="sd">&quot;&quot;&quot;Struct definitions for astdiskd.&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">NewType</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">NewType</span>
 
 <span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
-
-<span class="kn">from</span> <span class="nn">.constraints</span> <span class="kn">import</span> <span class="n">Constraint</span><span class="p">,</span> <span class="n">FilePresentConstraint</span><span class="p">,</span> <span class="n">TrueConstraint</span>
 
 <span class="n">DiskUUID</span> <span class="o">=</span> <span class="n">NewType</span><span class="p">(</span><span class="s1">&#39;DiskUUID&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="DiskType"><a class="viewcode-back" href="../../../../implementation/managers/astdiskd.html#astoria.common.disks.DiskType">[docs]</a><span class="k">class</span> <span class="nc">DiskType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<div class="viewcode-block" id="DiskType"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.DiskType">[docs]</a><span class="k">class</span> <span class="nc">DiskType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Type of disk.&quot;&quot;&quot;</span>
 
     <span class="n">USERCODE</span> <span class="o">=</span> <span class="s2">&quot;USERCODE&quot;</span>
     <span class="n">METADATA</span> <span class="o">=</span> <span class="s2">&quot;METADATA&quot;</span>
     <span class="n">UPDATE</span> <span class="o">=</span> <span class="s2">&quot;UPDATE&quot;</span>
-    <span class="n">NOACTION</span> <span class="o">=</span> <span class="s2">&quot;NOACTION&quot;</span>
-
-<div class="viewcode-block" id="DiskType.determine_disk_type"><a class="viewcode-back" href="../../../../implementation/managers/astdiskd.html#astoria.common.disks.DiskType.determine_disk_type">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">determine_disk_type</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">mount_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;DiskType&#39;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Determine the disk type from the mount path.&quot;&quot;&quot;</span>
-        <span class="n">constraints</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="s1">&#39;DiskType&#39;</span><span class="p">,</span> <span class="n">Constraint</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="bp">cls</span><span class="o">.</span><span class="n">USERCODE</span><span class="p">:</span> <span class="n">FilePresentConstraint</span><span class="p">(</span><span class="s2">&quot;robot.zip&quot;</span><span class="p">),</span>
-            <span class="bp">cls</span><span class="o">.</span><span class="n">METADATA</span><span class="p">:</span> <span class="n">FilePresentConstraint</span><span class="p">(</span><span class="s2">&quot;astoria.json&quot;</span><span class="p">),</span>
-            <span class="bp">cls</span><span class="o">.</span><span class="n">UPDATE</span><span class="p">:</span> <span class="n">FilePresentConstraint</span><span class="p">(</span><span class="s2">&quot;updatefile.txt&quot;</span><span class="p">),</span>
-            <span class="bp">cls</span><span class="o">.</span><span class="n">NOACTION</span><span class="p">:</span> <span class="n">TrueConstraint</span><span class="p">(),</span>  <span class="c1"># Always match</span>
-        <span class="p">}</span>
-
-        <span class="k">for</span> <span class="n">typ</span><span class="p">,</span> <span class="n">constraint</span> <span class="ow">in</span> <span class="n">constraints</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">constraint</span><span class="o">.</span><span class="n">matches</span><span class="p">(</span><span class="n">mount_path</span><span class="p">):</span>
-                <span class="k">return</span> <span class="n">typ</span>
-
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Unable to determine type of disk.&quot;</span><span class="p">)</span>  <span class="c1"># pragma: nocover</span></div></div>
+    <span class="n">NOACTION</span> <span class="o">=</span> <span class="s2">&quot;NOACTION&quot;</span></div>
 
 
 <div class="viewcode-block" id="DiskInfo"><a class="viewcode-back" href="../../../../implementation/managers/astdiskd.html#astoria.common.disks.DiskInfo">[docs]</a><span class="k">class</span> <span class="nc">DiskInfo</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>

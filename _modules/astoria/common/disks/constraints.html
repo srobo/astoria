@@ -77,10 +77,10 @@
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
 
-<div class="viewcode-block" id="Constraint"><a class="viewcode-back" href="../../../../implementation/managers/astdiskd.html#astoria.common.disks.constraints.Constraint">[docs]</a><span class="k">class</span> <span class="nc">Constraint</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
+<div class="viewcode-block" id="Constraint"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.Constraint">[docs]</a><span class="k">class</span> <span class="nc">Constraint</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;A constraint that a path can match.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Constraint.matches"><a class="viewcode-back" href="../../../../implementation/managers/astdiskd.html#astoria.common.disks.constraints.Constraint.matches">[docs]</a>    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="Constraint.matches"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.Constraint.matches">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">matches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determine if the disk at the given path matches the constraint.</span>
@@ -90,14 +90,14 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>  <span class="c1"># pragma: nocover</span></div></div>
 
 
-<div class="viewcode-block" id="FilePresentConstraint"><a class="viewcode-back" href="../../../../implementation/managers/astdiskd.html#astoria.common.disks.constraints.FilePresentConstraint">[docs]</a><span class="k">class</span> <span class="nc">FilePresentConstraint</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
+<div class="viewcode-block" id="FilePresentConstraint"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.FilePresentConstraint">[docs]</a><span class="k">class</span> <span class="nc">FilePresentConstraint</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Ensure that a file is present on the disk.</span>
 
 <span class="sd">    This constraint will check that the path exists and contains the given file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="FilePresentConstraint.__init__"><a class="viewcode-back" href="../../../../implementation/managers/astdiskd.html#astoria.common.disks.constraints.FilePresentConstraint.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="FilePresentConstraint.__init__"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.FilePresentConstraint.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialise the constraint class.</span>
 
@@ -105,7 +105,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span></div>
 
-<div class="viewcode-block" id="FilePresentConstraint.matches"><a class="viewcode-back" href="../../../../implementation/managers/astdiskd.html#astoria.common.disks.constraints.FilePresentConstraint.matches">[docs]</a>    <span class="k">def</span> <span class="nf">matches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="FilePresentConstraint.matches"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.FilePresentConstraint.matches">[docs]</a>    <span class="k">def</span> <span class="nf">matches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determine if the disk at the given path matches the constraint.</span>
 
@@ -121,14 +121,14 @@
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;FilePresentConstraint(filename=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="si">}</span><span class="s2">)&quot;</span></div>
 
 
-<div class="viewcode-block" id="NumberOfFilesConstraint"><a class="viewcode-back" href="../../../../implementation/managers/astdiskd.html#astoria.common.disks.constraints.NumberOfFilesConstraint">[docs]</a><span class="k">class</span> <span class="nc">NumberOfFilesConstraint</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
+<div class="viewcode-block" id="NumberOfFilesConstraint"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.NumberOfFilesConstraint">[docs]</a><span class="k">class</span> <span class="nc">NumberOfFilesConstraint</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Ensure that a certain number of files are present.</span>
 
 <span class="sd">    This can be used to ensure that there are no spurious files on the disk.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="NumberOfFilesConstraint.__init__"><a class="viewcode-back" href="../../../../implementation/managers/astdiskd.html#astoria.common.disks.constraints.NumberOfFilesConstraint.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<div class="viewcode-block" id="NumberOfFilesConstraint.__init__"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.NumberOfFilesConstraint.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialise the constraint class.</span>
 
@@ -136,7 +136,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">n</span></div>
 
-<div class="viewcode-block" id="NumberOfFilesConstraint.matches"><a class="viewcode-back" href="../../../../implementation/managers/astdiskd.html#astoria.common.disks.constraints.NumberOfFilesConstraint.matches">[docs]</a>    <span class="k">def</span> <span class="nf">matches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="NumberOfFilesConstraint.matches"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.NumberOfFilesConstraint.matches">[docs]</a>    <span class="k">def</span> <span class="nf">matches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determine if the disk at the given path matches the constraint.</span>
 
@@ -154,10 +154,10 @@
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;NumberOfFilesConstraint(n=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="si">}</span><span class="s2">)&quot;</span></div>
 
 
-<div class="viewcode-block" id="OrConstraint"><a class="viewcode-back" href="../../../../implementation/managers/astdiskd.html#astoria.common.disks.constraints.OrConstraint">[docs]</a><span class="k">class</span> <span class="nc">OrConstraint</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
+<div class="viewcode-block" id="OrConstraint"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.OrConstraint">[docs]</a><span class="k">class</span> <span class="nc">OrConstraint</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Ensure that either of the given constraints match.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="OrConstraint.__init__"><a class="viewcode-back" href="../../../../implementation/managers/astdiskd.html#astoria.common.disks.constraints.OrConstraint.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">Constraint</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">Constraint</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="OrConstraint.__init__"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.OrConstraint.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">Constraint</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">Constraint</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialise the constraint class.</span>
 
@@ -167,7 +167,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="n">a</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">b</span></div>
 
-<div class="viewcode-block" id="OrConstraint.matches"><a class="viewcode-back" href="../../../../implementation/managers/astdiskd.html#astoria.common.disks.constraints.OrConstraint.matches">[docs]</a>    <span class="k">def</span> <span class="nf">matches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="OrConstraint.matches"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.OrConstraint.matches">[docs]</a>    <span class="k">def</span> <span class="nf">matches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determine if the disk at the given path matches the constraint.</span>
 
@@ -182,10 +182,10 @@
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;OrConstraint(a=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="si">}</span><span class="s2">, b=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">b</span><span class="si">}</span><span class="s2">)&quot;</span></div>
 
 
-<div class="viewcode-block" id="AndConstraint"><a class="viewcode-back" href="../../../../implementation/managers/astdiskd.html#astoria.common.disks.constraints.AndConstraint">[docs]</a><span class="k">class</span> <span class="nc">AndConstraint</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
+<div class="viewcode-block" id="AndConstraint"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.AndConstraint">[docs]</a><span class="k">class</span> <span class="nc">AndConstraint</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Ensure that both of the constraints match.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="AndConstraint.__init__"><a class="viewcode-back" href="../../../../implementation/managers/astdiskd.html#astoria.common.disks.constraints.AndConstraint.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">Constraint</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">Constraint</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="AndConstraint.__init__"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.AndConstraint.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">Constraint</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">Constraint</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialise the constraint class.</span>
 
@@ -195,7 +195,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="n">a</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">b</span></div>
 
-<div class="viewcode-block" id="AndConstraint.matches"><a class="viewcode-back" href="../../../../implementation/managers/astdiskd.html#astoria.common.disks.constraints.AndConstraint.matches">[docs]</a>    <span class="k">def</span> <span class="nf">matches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="AndConstraint.matches"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.AndConstraint.matches">[docs]</a>    <span class="k">def</span> <span class="nf">matches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determine if the disk at the given path matches the constraint.</span>
 
@@ -210,10 +210,10 @@
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;AndConstraint(a=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="si">}</span><span class="s2">, b=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">b</span><span class="si">}</span><span class="s2">)&quot;</span></div>
 
 
-<div class="viewcode-block" id="NotConstraint"><a class="viewcode-back" href="../../../../implementation/managers/astdiskd.html#astoria.common.disks.constraints.NotConstraint">[docs]</a><span class="k">class</span> <span class="nc">NotConstraint</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
+<div class="viewcode-block" id="NotConstraint"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.NotConstraint">[docs]</a><span class="k">class</span> <span class="nc">NotConstraint</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Ensure that the constraint does not match.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="NotConstraint.__init__"><a class="viewcode-back" href="../../../../implementation/managers/astdiskd.html#astoria.common.disks.constraints.NotConstraint.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">Constraint</span><span class="p">):</span>
+<div class="viewcode-block" id="NotConstraint.__init__"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.NotConstraint.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">Constraint</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialise the constraint class.</span>
 
@@ -221,7 +221,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="n">a</span></div>
 
-<div class="viewcode-block" id="NotConstraint.matches"><a class="viewcode-back" href="../../../../implementation/managers/astdiskd.html#astoria.common.disks.constraints.NotConstraint.matches">[docs]</a>    <span class="k">def</span> <span class="nf">matches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="NotConstraint.matches"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.NotConstraint.matches">[docs]</a>    <span class="k">def</span> <span class="nf">matches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determine if the disk at the given path matches the constraint.</span>
 
@@ -233,14 +233,14 @@
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;NotConstraint(a=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="si">}</span><span class="s2">)&quot;</span></div>
 
 
-<div class="viewcode-block" id="TrueConstraint"><a class="viewcode-back" href="../../../../implementation/managers/astdiskd.html#astoria.common.disks.constraints.TrueConstraint">[docs]</a><span class="k">class</span> <span class="nc">TrueConstraint</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
+<div class="viewcode-block" id="TrueConstraint"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.TrueConstraint">[docs]</a><span class="k">class</span> <span class="nc">TrueConstraint</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A constraint that is always true.</span>
 
 <span class="sd">    Useful to create a default value when matching disks in order.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="TrueConstraint.matches"><a class="viewcode-back" href="../../../../implementation/managers/astdiskd.html#astoria.common.disks.constraints.TrueConstraint.matches">[docs]</a>    <span class="k">def</span> <span class="nf">matches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="TrueConstraint.matches"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.TrueConstraint.matches">[docs]</a>    <span class="k">def</span> <span class="nf">matches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determine if the disk at the given path matches the constraint.</span>
 
@@ -252,10 +252,10 @@
         <span class="k">return</span> <span class="s2">&quot;TrueConstraint()&quot;</span></div>
 
 
-<div class="viewcode-block" id="FalseConstraint"><a class="viewcode-back" href="../../../../implementation/managers/astdiskd.html#astoria.common.disks.constraints.FalseConstraint">[docs]</a><span class="k">class</span> <span class="nc">FalseConstraint</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
+<div class="viewcode-block" id="FalseConstraint"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.FalseConstraint">[docs]</a><span class="k">class</span> <span class="nc">FalseConstraint</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;A constraint that is always false.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="FalseConstraint.matches"><a class="viewcode-back" href="../../../../implementation/managers/astdiskd.html#astoria.common.disks.constraints.FalseConstraint.matches">[docs]</a>    <span class="k">def</span> <span class="nf">matches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="FalseConstraint.matches"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.FalseConstraint.matches">[docs]</a>    <span class="k">def</span> <span class="nf">matches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determine if the disk at the given path matches the constraint.</span>
 

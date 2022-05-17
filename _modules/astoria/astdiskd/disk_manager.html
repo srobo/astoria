@@ -75,7 +75,6 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
 
 <span class="kn">from</span> <span class="nn">astoria.common.components</span> <span class="kn">import</span> <span class="n">StateManager</span>
-<span class="kn">from</span> <span class="nn">astoria.common.disks</span> <span class="kn">import</span> <span class="n">DiskInfo</span><span class="p">,</span> <span class="n">DiskType</span>
 <span class="kn">from</span> <span class="nn">astoria.common.ipc</span> <span class="kn">import</span> <span class="n">DiskManagerMessage</span>
 
 <span class="kn">from</span> <span class="nn">.disk_provider</span> <span class="kn">import</span> <span class="n">DiskProvider</span>
@@ -128,11 +127,7 @@
         <span class="n">disks</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">provider</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_providers</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">mount_path</span> <span class="ow">in</span> <span class="n">provider</span><span class="o">.</span><span class="n">disks</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="n">disks</span><span class="p">[</span><span class="n">uuid</span><span class="p">]</span> <span class="o">=</span> <span class="n">DiskInfo</span><span class="p">(</span>
-                    <span class="n">uuid</span><span class="o">=</span><span class="n">uuid</span><span class="p">,</span>
-                    <span class="n">mount_path</span><span class="o">=</span><span class="n">mount_path</span><span class="p">,</span>
-                    <span class="n">disk_type</span><span class="o">=</span><span class="n">DiskType</span><span class="o">.</span><span class="n">determine_disk_type</span><span class="p">(</span><span class="n">mount_path</span><span class="p">),</span>
-                <span class="p">)</span>
+                <span class="n">disks</span><span class="p">[</span><span class="n">uuid</span><span class="p">]</span> <span class="o">=</span> <span class="n">mount_path</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">DiskManagerMessage</span><span class="p">(</span>
             <span class="n">status</span><span class="o">=</span><span class="n">DiskManagerMessage</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">RUNNING</span><span class="p">,</span>
             <span class="n">disks</span><span class="o">=</span><span class="n">disks</span><span class="p">,</span>
