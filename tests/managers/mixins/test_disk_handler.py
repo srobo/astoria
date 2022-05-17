@@ -45,7 +45,7 @@ def get_disk_manager_message(names: List[str] = []) -> str:
     on set logic using the hash of the object.
     """
     return DiskManagerMessage(
-        disks=get_disk_info_list(names),
+        disks={DiskUUID(name): Path() for name in names},
         status=DiskManagerMessage.Status.RUNNING,
     ).json()
 

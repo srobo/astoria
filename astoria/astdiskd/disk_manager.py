@@ -5,7 +5,6 @@ from pathlib import Path
 from typing import List
 
 from astoria.common.components import StateManager
-from astoria.common.disks import DiskInfo, DiskType
 from astoria.common.ipc import DiskManagerMessage
 
 from .disk_provider import DiskProvider
@@ -58,11 +57,7 @@ class DiskManager(StateManager[DiskManagerMessage]):
         disks = {}
         for provider in self._providers:
             for uuid, mount_path in provider.disks.items():
-                disks[uuid] = DiskInfo(
-                    uuid=uuid,
-                    mount_path=mount_path,
-                    disk_type=DiskType.determine_disk_type(mount_path),
-                )
+                disks[uuid] = mount_path
         self.status = DiskManagerMessage(
             status=DiskManagerMessage.Status.RUNNING,
             disks=disks,

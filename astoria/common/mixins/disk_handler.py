@@ -36,8 +36,9 @@ class DiskHandlerMixin:
                     info = self._cur_disks.pop(uuid)
                     asyncio.ensure_future(self.handle_disk_removal(uuid, info))
 
+                disk_info_dict = message.calculate_disk_info()
                 for uuid in added_disks:
-                    info = message.disks[uuid]
+                    info = disk_info_dict[uuid]
                     self._cur_disks[uuid] = info
                     asyncio.ensure_future(self.handle_disk_insertion(uuid, info))
             except JSONDecodeError:

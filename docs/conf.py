@@ -44,4 +44,9 @@ autodoc_default_options = {
 
 autodoc_mock_imports = []
 
+nitpick_ignore = [
+    ('py:data', 'DiskUUID'),
+    ('py:func', 'typing.NewType'),
+]
+
 source_suffix = [".rst", ".md"]

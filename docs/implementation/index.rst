@@ -8,3 +8,4 @@ Implementation
    data_components
    managers/index
    consumers/index
+   disk_types
