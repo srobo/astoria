@@ -51,7 +51,7 @@ class StaticDiskProvider(DiskProvider):
     ) -> RequestResponse:
         """Handles the add static disk command."""
         if request.path.exists() and request.path.is_dir():
-            if str(request.path) in map(lambda d: str(d), self.disks.values()):
+            if str(request.path) in [str(d) for d in self.disks.values()]:
                 return RequestResponse(
                     uuid=request.uuid,
                     success=False,
