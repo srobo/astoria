@@ -17,13 +17,12 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.6"
-pydantic = "^1.6.1"
-click = "^7.1.2"
-dbus-next = "^0.2.1"
-gmqtt = "^0.6.8"
+python = "^3.8"
+pydantic = "^1.9.1"
+click = "^8.1.2"
+dbus-next = "^0.2.3"
+gmqtt = "^0.6.11"
 toml = "^0.10.2"
-typing-extensions = "^3.7.4"
 
 [tool.poetry.dev-dependencies]
 flake8 = "*"

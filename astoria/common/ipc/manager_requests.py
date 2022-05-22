@@ -1,9 +1,9 @@
 """Schema definitions for manager requests."""
 from pathlib import Path
+from typing import final
 from uuid import UUID, uuid4
 
 from pydantic import BaseModel, Field
-from typing_extensions import final
 
 
 class ManagerRequest(BaseModel):
