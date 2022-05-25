@@ -4,11 +4,8 @@ import asyncio
 import logging
 from datetime import datetime
 from os import environ
-from pathlib import Path
 from signal import SIGKILL, SIGTERM
-from tempfile import TemporaryDirectory
-from typing import Callable, Dict, Optional, Set
-from zipfile import BadZipFile, ZipFile
+from typing import Callable, Dict, Optional
 
 from astoria.common.code_status import CodeStatus
 from astoria.common.config import AstoriaConfig
@@ -20,10 +17,6 @@ from astoria.common.mqtt import BroadcastHelper
 LOGGER = logging.getLogger(__name__)
 
 loop = asyncio.get_event_loop()
-
-
-class InvalidCodeBundleException(Exception):
-    """The code bundle was not valid."""
 
 
 class UsercodeLifecycle:
@@ -51,7 +44,6 @@ class UsercodeLifecycle:
 
         self._process: Optional[asyncio.subprocess.Process] = None
         self._process_lock = asyncio.Lock()
-        self._setup_temp_dir()
 
         self._entrypoint = self._metadata.usercode_entrypoint
 
@@ -78,52 +70,6 @@ class UsercodeLifecycle:
         self._status = status
         self._status_inform_callback(status)
 
-    def _setup_temp_dir(self) -> None:
-        """Setup a temporary directory."""
-        self._dir = TemporaryDirectory(prefix="astprocd-")
-        self._dir_path = Path(self._dir.name)
-
-    def _extract_and_validate_zip_file(self) -> None:
-        """
-        Extract and validate a robot.zip file.
-
-        This function will extract and validate the contents of the
-        robot.zip file. It will overwrite the current temporary dir
-        of the usercode lifecycle, and should not be called multiple
-        times.
-
-        :raises InvalidCodeBundleException: The code bundle was not valid.
-        """
-        zip_path = self._disk_info.mount_path / "robot.zip"
-
-        if not (zip_path.exists() and zip_path.is_file()):
-            raise InvalidCodeBundleException("Unable to find robot.zip file")
-
-        try:
-            with ZipFile(zip_path, "r") as zf:
-                zf.extractall(self._dir_path)
-        except BadZipFile:
-            raise InvalidCodeBundleException(
-                "The provided robot.zip is not a valid ZIP archive",
-            )
-
-        # Check that robot.py is present
-        exe_path = self._dir_path / self._entrypoint
-        if not exe_path.exists():
-            raise InvalidCodeBundleException(
-                f"The provided robot.zip did not contain a {self._entrypoint}",
-            )
-
-        LEGACY_FILES: Set[str] = {"info.yaml", "info.yml", "wifi.yaml", "wifi.yml"}
-
-        for legacy_file in LEGACY_FILES:
-            legacy_info_path = self._dir_path / legacy_file
-            if legacy_info_path.exists():
-                raise InvalidCodeBundleException(
-                    "This is an old robot code package and \
-                    will not work with this version of the kit.",
-                )
-
     async def run_process(self) -> None:
         """
         Start the execution of the usercode.
@@ -131,72 +77,58 @@ class UsercodeLifecycle:
         This function will not return until the code has exited.
         """
         if self._process is None:
-            try:
-                self._extract_and_validate_zip_file()
-                async with self._process_lock:
-                    LOGGER.info(
-                        "Starting usercode execution with "
-                        f"entrypoint {self._entrypoint}",
-                    )
-                    self._process = await asyncio.create_subprocess_exec(
-                        "python3",
-                        "-u",
-                        self._metadata.usercode_entrypoint,
-                        stdin=asyncio.subprocess.DEVNULL,
-                        stdout=asyncio.subprocess.PIPE,
-                        stderr=asyncio.subprocess.PIPE,
-                        cwd=self._dir_path,
-                        start_new_session=True,
-                        env={**environ.copy(), **self._config.env},
-                    )
-                    if self._process is not None:
-                        if self._process.stdout is not None and \
-                                self._process.stderr is not None:
-                            asyncio.ensure_future(
-                                self.logger(
-                                    {LogEventSource.STDOUT: self._process.stdout,
-                                     LogEventSource.STDERR: self._process.stderr},
-                                ),
-                            )
-                        else:
-                            LOGGER.warning("Unable to start logger task.")
-                        self.status = CodeStatus.RUNNING
-                        LOGGER.info(
-                            f"Usercode pid {self._process.pid} "
-                            f"started in {self._dir_path}",
+            async with self._process_lock:
+                LOGGER.info(
+                    "Starting usercode execution with "
+                    f"entrypoint {self._entrypoint}",
+                )
+                self._process = await asyncio.create_subprocess_exec(
+                    "python3",
+                    "-u",
+                    self._metadata.usercode_entrypoint,
+                    stdin=asyncio.subprocess.DEVNULL,
+                    stdout=asyncio.subprocess.PIPE,
+                    stderr=asyncio.subprocess.PIPE,
+                    cwd=self.disk_info.mount_path,
+                    start_new_session=True,
+                    env={**environ.copy(), **self._config.env},
+                )
+                if self._process is not None:
+                    if self._process.stdout is not None and \
+                            self._process.stderr is not None:
+                        asyncio.ensure_future(
+                            self.logger(
+                                {LogEventSource.STDOUT: self._process.stdout,
+                                    LogEventSource.STDERR: self._process.stderr},
+                            ),
                         )
-
-                        # Wait for the subprocess to exit.
-                        # This may include if it is killed.
-                        rc = await self._process.wait()
-
-                        if rc == 0:
-                            self.status = CodeStatus.FINISHED
-                        elif rc < 0:
-                            self.status = CodeStatus.KILLED
-                        elif rc > 0:
-                            self.status = CodeStatus.CRASHED
-                        LOGGER.info(
-                            f"Usercode process exited with code {rc} "
-                            f"({self.status.name})",
-                        )
-
-                        self._process = None
-
-                        self._dir.cleanup()  # Reset directory
-                        self._setup_temp_dir()
                     else:
-                        LOGGER.warning("Tried to start process, but failed.")
-                        self.status = CodeStatus.CRASHED  # Close enough to indicate error
-            except InvalidCodeBundleException as e:
-                LOGGER.warning("robot.zip was invalid. Unable to start code.")
-                # Write error message to the log file.
-                with self._disk_info.mount_path.joinpath("log.txt").open("w") as fh:
-                    LOGGER.warning(str(e))
-                    fh.write("Unable to start code.\n")
-                    fh.write(f"{e}.\n")
+                        LOGGER.warning("Unable to start logger task.")
+                    self.status = CodeStatus.RUNNING
+                    LOGGER.info(
+                        f"Usercode pid {self._process.pid} "
+                        f"started in {self._disk_info.mount_path}",
+                    )
 
-                self.status = CodeStatus.CRASHED  # Close enough to indicate error
+                    # Wait for the subprocess to exit.
+                    # This may include if it is killed.
+                    rc = await self._process.wait()
+
+                    if rc == 0:
+                        self.status = CodeStatus.FINISHED
+                    elif rc < 0:
+                        self.status = CodeStatus.KILLED
+                    elif rc > 0:
+                        self.status = CodeStatus.CRASHED
+                    LOGGER.info(
+                        f"Usercode process exited with code {rc} "
+                        f"({self.status.name})",
+                    )
+
+                    self._process = None
+                else:
+                    LOGGER.warning("Tried to start process, but failed.")
+                    self.status = CodeStatus.CRASHED  # Close enough to indicate error
         else:
             LOGGER.warning("Tried to start process, but one is already running.")
 

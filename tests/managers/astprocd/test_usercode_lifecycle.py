@@ -7,10 +7,7 @@ from typing import IO, Any, List, Optional, Tuple, Type
 
 import pytest
 
-from astoria.astprocd.usercode_lifecycle import (
-    InvalidCodeBundleException,
-    UsercodeLifecycle,
-)
+from astoria.astprocd.usercode_lifecycle import UsercodeLifecycle
 from astoria.common.code_status import CodeStatus
 from astoria.common.config import AstoriaConfig
 from astoria.common.disks import DiskInfo, DiskType, DiskUUID
@@ -128,8 +125,6 @@ def test_usercode_lifecycle_init() -> None:
     ucl, sith = StatusInformTestHelper.setup()
     assert sith.times_called == 1
     assert sith.called_queue == [CodeStatus.STARTING]
-
-    assert ucl._dir_path.exists()
     assert ucl._process is None
 
 
@@ -160,47 +155,6 @@ def test_usercode_lifecycle_inform_callback_called_on_status_change() -> None:
     ]
 
 
-def test_extract_and_validate_no_zip() -> None:
-    """Test that a disk with no zip is handled."""
-    ucl, _ = StatusInformTestHelper.setup(EXTRACT_ZIP_DATA / "no_zip")
-
-    with pytest.raises(InvalidCodeBundleException) as e:
-        ucl._extract_and_validate_zip_file()
-
-    assert e.match("Unable to find robot.zip file")
-
-
-def test_bad_zip() -> None:
-    """Test that an invalid zip is handled."""
-    ucl, sith = StatusInformTestHelper.setup(EXTRACT_ZIP_DATA / "bad_zip")
-
-    with pytest.raises(InvalidCodeBundleException) as e:
-        ucl._extract_and_validate_zip_file()
-
-    assert e.match("The provided robot.zip is not a valid ZIP archive")
-
-
-def test_no_main_zip() -> None:
-    """Test that a zip with no main is handled."""
-    ucl, sith = StatusInformTestHelper.setup(EXTRACT_ZIP_DATA / "no_main_zip")
-
-    with pytest.raises(InvalidCodeBundleException) as e:
-        ucl._extract_and_validate_zip_file()
-
-    assert e.match("The provided robot.zip did not contain a robot.py")
-
-
-def test_good_zip() -> None:
-    """Test that a valid zip is successfully extracted."""
-    ucl, sith = StatusInformTestHelper.setup(EXTRACT_ZIP_DATA / "good_zip")
-
-    ucl._extract_and_validate_zip_file()
-
-    # Check that the log file does not yet exist
-    log_file = EXTRACT_ZIP_DATA / "good_zip" / "log.txt"
-    assert not log_file.exists()
-
-
 @pytest.mark.asyncio
 async def test_existing_process_on_run() -> None:
     """
@@ -216,30 +170,12 @@ async def test_existing_process_on_run() -> None:
 
 
 @pytest.mark.asyncio
-async def test_run_with_bad_zip() -> None:
-    """
-    Test that a bad zip is handled.
-
-    Checks that:
-    - Status message is written to the log file
-    - The correct status is passed to the state manager
-    - Development indicator is printed
-    """
-    ucl, sith = StatusInformTestHelper.setup(EXTRACT_ZIP_DATA / "bad_zip")
-    await ucl.run_process()
-    assert sith.called_queue == [
-        CodeStatus.STARTING,
-        CodeStatus.CRASHED,
-    ]
-
-
-@pytest.mark.asyncio
 async def test_run_with_not_python() -> None:
     """
     Test that non-python code is handled.
 
     Checks that:
-    - Zip file is extracted and robot.py is run
+    - Entrypoint is executed
     - Output is written to the log file
     - The correct status is passed to the state manager
     - Development indicator is printed
@@ -269,7 +205,7 @@ async def test_run_with_syntax_error() -> None:
     Test that bad python code is handled.
 
     Checks that:
-    - Zip file is extracted and robot.py is run
+    - Entrypoint is executed
     - Output is written to the log file
     - The correct status is passed to the state manager
     - Development indicator is printed
@@ -299,7 +235,7 @@ async def test_run_with_valid_python_wait_finish() -> None:
     Test that valid python code is successfully executed.
 
     Checks that:
-    - Zip file is extracted and robot.py is run
+    - Entrypoint is executed
     - Output is written to the log file
     - The correct status is passed to the state manager
     """
@@ -323,12 +259,41 @@ async def test_run_with_valid_python_wait_finish() -> None:
 
 
 @pytest.mark.asyncio
+async def test_run_with_valid_python_other_entrypoint() -> None:
+    """
+    Test that a non-default entrypoint is successfully executed.
+
+    Checks that:
+    - The correct entrypoint is executed
+    - Output is written to the log file
+    - The correct status is passed to the state manager
+    """
+    ucl, sith = StatusInformTestHelper.setup(EXECUTE_CODE_DATA / "valid_python_short")
+    await ucl.run_process()
+    await asyncio.sleep(0.05)  # Wait for logger to flush
+    assert sith.called_queue == [
+        CodeStatus.STARTING,
+        CodeStatus.RUNNING,
+        CodeStatus.FINISHED,
+    ]
+    # Check that the log file contains the right text
+    log_file = EXECUTE_CODE_DATA / "valid_python_different_entrypoint" / "log.txt"
+    with ReadAndCleanupFile(log_file) as fh:
+        lines = fh.read().splitlines()
+    assert _strip_timestamp(lines[0]) == "=== LOG STARTED ==="
+    assert _strip_timestamp(lines[1]) == "World Hello"
+    assert _strip_timestamp(lines[-1]) == "=== LOG FINISHED ==="
+
+    assert lines == sith.log_helper.get_lines()
+
+
+@pytest.mark.asyncio
 async def test_run_with_valid_python_additional_log_lines() -> None:
     """
     Test that valid python code is successfully executed.
 
     Checks that:
-    - Zip file is extracted and robot.py is run
+    - Entrypoint is executed
     - Output is written to the log file
     - The correct status is passed to the state manager
     """
@@ -366,7 +331,7 @@ async def test_run_with_valid_python_wait_kill() -> None:
     Test that valid python code is successfully executed and killed.
 
     Checks that:
-    - Zip file is extracted and robot.py is run
+    - Entrypoint is executed
     - The code is killed after 2 secs of execution
     - Output is written to the log file
     - The correct status is passed to the state manager
@@ -399,7 +364,7 @@ async def test_run_with_valid_python_wait_kill_ignore_sigint() -> None:
     Test that valid python code that ignores SIGINT can be killed.
 
     Checks that:
-    - Zip file is extracted and robot.py is run
+    - Entrypoint is executed
     - The code is killed after 2 secs of execution
     - Output is written to the log file
     - The correct status is passed to the state manager
@@ -434,7 +399,7 @@ async def test_run_with_valid_python_env_vars() -> None:
     Tests that environment variables are passed down to executed Python code.
 
     Checks that:
-    - Zip file is extracted and robot.py is run
+    - Entrypoint is executed
     - The code finishes running after 1 second of execution
     - Log file output contains the contents of an environment variable set in astoria.toml
     """
