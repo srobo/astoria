@@ -17,7 +17,7 @@ docs-serve:
 	$(CMD) sphinx-autobuild $(SPHINX_ARGS)
 
 lint:
-	$(CMD) flake8 $(PYMODULE) $(TESTS) $(EXTRACODE)
+	$(CMD) flake8 $(PYMODULE) $(TESTS) $(EXTRACODE) --exclude $(EXCLUDED_PATHS)
 
 type:
 	$(CMD) mypy $(PYMODULE) $(TESTS) $(EXTRACODE) --exclude $(EXCLUDED_PATHS)

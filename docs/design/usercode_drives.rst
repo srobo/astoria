@@ -1,14 +1,16 @@
 Usercode Drives
 ===============
 
-A usercode drive is a USB mass storage device containing a "code bundle", also called a ``robot.zip``.
+A usercode drive is a USB mass storage device containing a Python file, usually ``robot.py``.
 
-Code Bundle Format
-------------------
+Entrypoint
+----------
 
-A Code Bundle is simply a zip file containing Python code.
+The entrypoint to the Python code is usually ``robot.py``. However, this can be configured in ``astoria.toml``.
 
-The entrypoint to the Python code is ``robot.py`` and Astoria will refuse to run the code bundle if it does not exist.
+The entrypoint is executed in a subprocess in unbuffered mode, usually ``python3 -u robot.py``.
+
+You can change the entrypoint in the robot settings file.
 
 Robot Settings File
 -------------------
@@ -21,6 +23,14 @@ If the settings file does not already exist, it will be automatically created.
 
 .. literalinclude:: ../_code/robot-settings.toml
   :language: TOML
+
+Entrypoint Setting
+~~~~~~~~~~~~~~~~~~
+
+You can override the entrypoint in the settings file by changing the value of ``usercode_entrypoint``.
+
+WiFi Settings
+~~~~~~~~~~~~~
 
 The settings file controls the WiFi network broadcast by the kit.
 It contains information such as credentials and region. Region is required for compliance regions and
