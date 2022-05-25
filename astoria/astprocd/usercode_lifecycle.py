@@ -32,20 +32,18 @@ class UsercodeLifecycle:
             disk_info: DiskInfo,
             status_inform_callback: Callable[[CodeStatus], None],
             log_helper: BroadcastHelper[UsercodeLogBroadcastEvent],
-            metadata: Metadata,
             config: AstoriaConfig,
     ) -> None:
         self._uuid = uuid
         self._disk_info = disk_info
         self._status_inform_callback = status_inform_callback
         self._log_helper = log_helper
-        self._metadata = metadata
         self._config = config
 
         self._process: Optional[asyncio.subprocess.Process] = None
         self._process_lock = asyncio.Lock()
 
-        self._entrypoint = self._metadata.usercode_entrypoint
+        self._entrypoint = "robot.py"
 
         self.status = CodeStatus.STARTING
 
@@ -85,7 +83,7 @@ class UsercodeLifecycle:
                 self._process = await asyncio.create_subprocess_exec(
                     "python3",
                     "-u",
-                    self._metadata.usercode_entrypoint,
+                    self._entrypoint,
                     stdin=asyncio.subprocess.DEVNULL,
                     stdout=asyncio.subprocess.PIPE,
                     stderr=asyncio.subprocess.PIPE,

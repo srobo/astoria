@@ -114,7 +114,6 @@ class StatusInformTestHelper:
             ),
             status_inform_callback=sith.callback,
             log_helper=sith.log_helper,
-            metadata=Metadata.init(config),
             config=config,
         )
         return ucl, sith
