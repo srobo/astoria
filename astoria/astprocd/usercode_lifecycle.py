@@ -8,10 +8,13 @@ from signal import SIGKILL, SIGTERM
 from typing import Callable, Dict, Optional
 
 from astoria.common.code_status import CodeStatus
-from astoria.common.config import AstoriaConfig
+from astoria.common.config import (
+    AstoriaConfig,
+    NoValidRobotSettingsException,
+    RobotSettings,
+)
 from astoria.common.disks import DiskInfo, DiskUUID
 from astoria.common.ipc import LogEventSource, UsercodeLogBroadcastEvent
-from astoria.common.metadata import Metadata
 from astoria.common.mqtt import BroadcastHelper
 
 LOGGER = logging.getLogger(__name__)
@@ -43,8 +46,7 @@ class UsercodeLifecycle:
         self._process: Optional[asyncio.subprocess.Process] = None
         self._process_lock = asyncio.Lock()
 
-        self._entrypoint = "robot.py"
-
+        self._entrypoint = self._determine_entrypoint()
         self.status = CodeStatus.STARTING
 
     @property
@@ -67,6 +69,27 @@ class UsercodeLifecycle:
         """Set the status of the executing code."""
         self._status = status
         self._status_inform_callback(status)
+
+    def _determine_entrypoint(self) -> str:
+        """
+        Determine the entrypoint for the usercode.
+
+        We have already detected the entrypoint when looking at the disk type.
+
+        :returns: The name of the Python file to execute.
+        """
+        settings_path = self._disk_info.mount_path / "robot-settings.toml"
+
+        if settings_path.exists():
+            try:
+                settings = RobotSettings.load_settings_file(settings_path)
+                return settings.usercode_entrypoint
+            except NoValidRobotSettingsException:
+                # Note: This is theoretically unreachable as we have already
+                # validated the robot settings when determining the disk type.
+                pass
+
+        return self._config.astprocd.default_usercode_entrypoint
 
     async def run_process(self) -> None:
         """

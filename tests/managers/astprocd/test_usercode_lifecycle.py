@@ -12,7 +12,6 @@ from astoria.common.code_status import CodeStatus
 from astoria.common.config import AstoriaConfig
 from astoria.common.disks import DiskInfo, DiskType, DiskUUID
 from astoria.common.ipc import UsercodeLogBroadcastEvent
-from astoria.common.metadata import Metadata
 from astoria.common.mqtt.broadcast_helper import BroadcastHelper, T
 
 EXTRACT_ZIP_DATA = Path("tests/data/extract_zip")
@@ -267,7 +266,8 @@ async def test_run_with_valid_python_other_entrypoint() -> None:
     - Output is written to the log file
     - The correct status is passed to the state manager
     """
-    ucl, sith = StatusInformTestHelper.setup(EXECUTE_CODE_DATA / "valid_python_short")
+    code_dir = EXECUTE_CODE_DATA / "valid_python_different_entrypoint"
+    ucl, sith = StatusInformTestHelper.setup(code_dir)
     await ucl.run_process()
     await asyncio.sleep(0.05)  # Wait for logger to flush
     assert sith.called_queue == [
@@ -276,7 +276,7 @@ async def test_run_with_valid_python_other_entrypoint() -> None:
         CodeStatus.FINISHED,
     ]
     # Check that the log file contains the right text
-    log_file = EXECUTE_CODE_DATA / "valid_python_different_entrypoint" / "log.txt"
+    log_file = code_dir / "log.txt"
     with ReadAndCleanupFile(log_file) as fh:
         lines = fh.read().splitlines()
     assert _strip_timestamp(lines[0]) == "=== LOG STARTED ==="
