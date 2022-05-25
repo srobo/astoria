@@ -14,9 +14,11 @@ def test_disk_type_determination() -> None:
         "noaction": DiskType.NOACTION,
         "update": DiskType.UPDATE,
         "usercode": DiskType.USERCODE,
+        "usercode_alt_entrypoint": DiskType.USERCODE,
+        "usercode_zip": DiskType.NOACTION,
     }
 
-    calculator = DiskTypeCalculator()
+    calculator = DiskTypeCalculator("robot.py")
 
     for path, disk_type in expected_results.items():
         assert calculator.calculate(DATA_PATH / path) is disk_type

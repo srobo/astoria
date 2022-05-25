@@ -6,9 +6,13 @@ from typing import Dict, List, Match
 
 import pytest
 
+from astoria.common.config.system import AstoriaConfig
 from astoria.common.disks import DiskInfo, DiskType, DiskUUID
 from astoria.common.ipc import DiskManagerMessage
 from astoria.common.mixins import DiskHandlerMixin
+
+with Path("tests/data/config/valid.toml").open("r") as fh:
+    CONFIG = AstoriaConfig.load_from_file(fh)
 
 
 def get_match() -> Match[str]:
@@ -57,6 +61,7 @@ class StubHelper(DiskHandlerMixin):
         self._cur_disks = {}
         self.times_disk_inserted = 0
         self.times_disk_removed = 0
+        self.config = CONFIG  # DataComponents always have a config.
 
     async def dispatch(self, payload: str) -> None:
         """Helper method for testing the dispatch handling."""

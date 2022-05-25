@@ -5,6 +5,7 @@ import logging
 from json import JSONDecodeError, loads
 from typing import Dict, Match
 
+from astoria.common.config.system import AstoriaConfig
 from astoria.common.disks import DiskInfo, DiskUUID
 from astoria.common.ipc import DiskManagerMessage
 
@@ -14,6 +15,7 @@ LOGGER = logging.getLogger(__name__)
 class DiskHandlerMixin:
     """Mixin to translate disk events into insertions and removals."""
 
+    config: AstoriaConfig
     _cur_disks: Dict[DiskUUID, DiskInfo]
 
     async def handle_astdiskd_disk_info_message(
@@ -36,7 +38,9 @@ class DiskHandlerMixin:
                     info = self._cur_disks.pop(uuid)
                     asyncio.ensure_future(self.handle_disk_removal(uuid, info))
 
-                disk_info_dict = message.calculate_disk_info()
+                disk_info_dict = message.calculate_disk_info(
+                    self.config.astprocd.default_usercode_entrypoint,
+                )
                 for uuid in added_disks:
                     info = disk_info_dict[uuid]
                     self._cur_disks[uuid] = info

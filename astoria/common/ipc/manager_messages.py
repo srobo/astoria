@@ -54,16 +54,20 @@ class DiskManagerMessage(ManagerMessage):
 
     disks: Dict[DiskUUID, Path]
 
-    def calculate_disk_info(self) -> Dict[DiskUUID, DiskInfo]:
+    def calculate_disk_info(
+        self,
+        default_usercode_entrypoint: str,
+    ) -> Dict[DiskUUID, DiskInfo]:
         """
         Calculate the disk info of the disks in the message.
 
         As astdiskd only gives us information about the path of each disk,
         we need to calculate the type of each disk in the message.
 
+        :param default_usercode_entrypoint: default entrypoint from astoria config
         :returns: A dictionary of disk UUIDs and disk information.
         """
-        disk_type_calculator = DiskTypeCalculator()
+        disk_type_calculator = DiskTypeCalculator(default_usercode_entrypoint)
         return {
             uuid: DiskInfo(
                 uuid=uuid,
