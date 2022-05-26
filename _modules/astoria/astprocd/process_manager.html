@@ -75,6 +75,8 @@
 <span class="kn">from</span> <span class="nn">json</span> <span class="kn">import</span> <span class="n">JSONDecodeError</span><span class="p">,</span> <span class="n">loads</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Match</span><span class="p">,</span> <span class="n">Optional</span>
 
+<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">parse_obj_as</span>
+
 <span class="kn">from</span> <span class="nn">astoria.common.code_status</span> <span class="kn">import</span> <span class="n">CodeStatus</span>
 <span class="kn">from</span> <span class="nn">astoria.common.components</span> <span class="kn">import</span> <span class="n">StateManager</span>
 <span class="kn">from</span> <span class="nn">astoria.common.disks</span> <span class="kn">import</span> <span class="n">DiskInfo</span><span class="p">,</span> <span class="n">DiskType</span><span class="p">,</span> <span class="n">DiskUUID</span>
@@ -156,7 +158,8 @@
         <span class="sd">&quot;&quot;&quot;Handle disk info messages.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">payload</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">message</span> <span class="o">=</span> <span class="n">MetadataManagerMessage</span><span class="p">(</span><span class="o">**</span><span class="n">loads</span><span class="p">(</span><span class="n">payload</span><span class="p">))</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">loads</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+                <span class="n">message</span> <span class="o">=</span> <span class="n">parse_obj_as</span><span class="p">(</span><span class="n">MetadataManagerMessage</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_recent_metadata</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">metadata</span>
             <span class="k">except</span> <span class="n">JSONDecodeError</span><span class="p">:</span>
                 <span class="n">LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Received bad JSON in disk manager message.&quot;</span><span class="p">)</span>
