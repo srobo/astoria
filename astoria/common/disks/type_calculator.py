@@ -29,7 +29,7 @@ class DiskTypeCalculator:
         """
         Get the usercode constraint for a disk.
 
-        We need to calculate the usercode constraint based on the robot settings.
+        Calculates the usercode constraint based on the robot settings.
 
         :param path: The mount path of the disk.
         :returns: The usercode constraint for the disk.
