@@ -1,0 +1,3 @@
+usercode_entrypoint = "main.py"
+team_tla = "abc"
+wifi_psk = "fji"

@@ -3,13 +3,19 @@
 import random
 import re
 import secrets
+from pathlib import Path
 
-from pydantic import BaseModel, validator
+import toml
+from pydantic import BaseModel, ValidationError, validator
 
 from astoria.common.config import AstoriaConfig
 
 SSID_PREFIX = "robot-"
 MAX_SSID_LENGTH = 32  # SSIDs must be no more than 32 octets.
+
+
+class NoValidRobotSettingsException(Exception):
+    """The robot settings were not valid or did not exist."""
 
 
 class RobotSettings(BaseModel):
@@ -60,3 +66,27 @@ class RobotSettings(BaseModel):
             usercode_entrypoint=config.astprocd.default_usercode_entrypoint,
             wifi_psk=passphrase,
         )
+
+    @classmethod
+    def load_settings_file(cls, path: Path) -> 'RobotSettings':
+        """
+        Load the robot settings file.
+
+        :param path: The file to load settings from.
+        :raises NoValidRobotSettingsException: The robot settings were not valid.
+        :returns: The robot settings in path.
+        """
+        if not path.exists():
+            raise NoValidRobotSettingsException("File does not exist.")
+
+        try:
+            data = toml.load(path)
+        except toml.TomlDecodeError:
+            raise NoValidRobotSettingsException("Invalid TOML")
+
+        try:
+            return RobotSettings(**data)
+        except ValidationError as e:
+            raise NoValidRobotSettingsException(
+                f"Settings did not match schema: {e}",
+            )

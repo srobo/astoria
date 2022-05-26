@@ -4,13 +4,16 @@ import asyncio
 import logging
 from abc import ABCMeta, abstractmethod
 from json import JSONDecodeError, loads
-from pathlib import Path
 from typing import Dict
 
 import toml
-from pydantic.error_wrappers import ValidationError
 
-from astoria.common.config import SSID_PREFIX, AstoriaConfig, RobotSettings
+from astoria.common.config import (
+    SSID_PREFIX,
+    AstoriaConfig,
+    NoValidRobotSettingsException,
+    RobotSettings,
+)
 from astoria.common.disks import DiskInfo, DiskUUID
 
 LOGGER = logging.getLogger(__name__)
@@ -65,35 +68,8 @@ class MetadataDiskLifecycle(AbstractMetadataDiskLifecycle):
         return {}
 
 
-class NoValidRobotSettingsException(Exception):
-    """The robot settings were not valid or did not exist."""
-
-
 class UsercodeDiskLifecycle(AbstractMetadataDiskLifecycle):
     """Load and validate metadata from a usercode disk."""
-
-    def _load_settings_file(self, path: Path) -> RobotSettings:
-        """
-        Load the robot settings file.
-
-        :param path: The file to load settings from.
-        :raises NoValidRobotSettingsException: The robot settings were not valid.
-        :returns: The robot settings in path.
-        """
-        if not path.exists():
-            raise NoValidRobotSettingsException("File does not exist.")
-
-        try:
-            data = toml.load(path)
-        except toml.TomlDecodeError:
-            raise NoValidRobotSettingsException("Invalid TOML")
-
-        try:
-            return RobotSettings(**data)
-        except ValidationError as e:
-            raise NoValidRobotSettingsException(
-                f"Settings did not match schema: {e}",
-            )
 
     def extract_diff_data(self) -> Dict[str, str]:
         """
@@ -103,7 +79,7 @@ class UsercodeDiskLifecycle(AbstractMetadataDiskLifecycle):
         """
         robot_settings_file = self._disk_info.mount_path / "robot-settings.toml"
         try:
-            settings = self._load_settings_file(robot_settings_file)
+            settings = RobotSettings.load_settings_file(robot_settings_file)
         except NoValidRobotSettingsException:
             settings = RobotSettings.generate_default_settings(self._config)
 

@@ -5,7 +5,6 @@ Astprocd is responsible for:
 
 - Waiting for usercode drive information from :ref:`astdiskd`
 - Starting and managing the :ref:`usercode lifecycle`
-- Unpacking and verifying a :ref:`code bundle <Code Bundle Format>`
 - Writing logs to the usercode drive
 - Making logs available to other components in real time (To be `implemented <https://github.com/srobo/astoria/issues/23>`_)
 
@@ -39,7 +38,6 @@ Usercode Process Management
 Usercode is executed as a `child process <https://linux.die.net/man/2/fork>`_ of the astprocd process.
 This is managed via the ``asyncio.subprocess`` module, specifically ``asyncio.subprocess.Process``.
 
-- :ref:`Code bundle <Code Bundle Format>` is extracted to a temporary directory and validated
 - The usercode process is started as a child process
 - The logger task captures ``stderr`` and ``stdout`` and writes to the log locations
 - ``SIGCHLD`` is received and return code handled.
