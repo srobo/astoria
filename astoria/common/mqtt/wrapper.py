@@ -16,7 +16,7 @@ from typing import (
 from uuid import UUID
 
 import gmqtt
-from pydantic import BaseModel
+from pydantic import BaseModel, parse_obj_as
 
 from astoria.common.config.system import MQTTBrokerInfo
 from astoria.common.ipc import ManagerMessage, ManagerRequest, RequestResponse
@@ -317,8 +317,9 @@ class MQTTWrapper:
         # If uuid not recognised, probably a response for another client
         if uuid in self._request_response_events:
             try:
-                self._request_response_data[uuid] = RequestResponse(
-                    **loads(payload),
+                self._request_response_data[uuid] = parse_obj_as(
+                    RequestResponse,
+                    loads(payload),
                 )
             except JSONDecodeError:
                 self._request_response_data[uuid] = RequestResponse(

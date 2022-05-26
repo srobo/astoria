@@ -4,6 +4,8 @@ from asyncio import PriorityQueue
 from json import JSONDecodeError, loads
 from typing import TYPE_CHECKING, Any, Generic, Match, Type, TypeVar
 
+from pydantic import parse_obj_as
+
 from astoria.common.ipc import BroadcastEvent
 
 if TYPE_CHECKING:
@@ -41,7 +43,7 @@ class BroadcastHelper(Generic[T]):
         Inserts the event inserts it into the priority queue.
         """
         try:
-            ev = self._schema(**loads(payload))
+            ev = parse_obj_as(self._schema, loads(payload))
             LOGGER.debug(
                 f"Received {ev.event_name} broadcast event from {ev.sender_name}",
             )

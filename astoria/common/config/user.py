@@ -6,7 +6,7 @@ import secrets
 from pathlib import Path
 
 import toml
-from pydantic import BaseModel, ValidationError, validator
+from pydantic import BaseModel, ValidationError, parse_obj_as, validator
 
 from astoria.common.config import AstoriaConfig
 
@@ -85,7 +85,7 @@ class RobotSettings(BaseModel):
             raise NoValidRobotSettingsException("Invalid TOML")
 
         try:
-            return RobotSettings(**data)
+            return parse_obj_as(RobotSettings, data)
         except ValidationError as e:
             raise NoValidRobotSettingsException(
                 f"Settings did not match schema: {e}",
