@@ -6,7 +6,7 @@ Common to all components.
 from pathlib import Path
 from typing import IO, Dict, List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, parse_obj_as
 from toml import load
 
 
@@ -97,4 +97,4 @@ class AstoriaConfig(BaseModel):
     @classmethod
     def load_from_file(cls, fh: IO[str]) -> 'AstoriaConfig':
         """Load the config from a file."""
-        return cls(**load(fh))
+        return parse_obj_as(cls, load(fh))

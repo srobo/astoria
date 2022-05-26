@@ -5,6 +5,8 @@ import logging
 from json import JSONDecodeError, loads
 from typing import Dict, Match, Optional
 
+from pydantic import parse_obj_as
+
 from astoria.common.code_status import CodeStatus
 from astoria.common.components import StateManager
 from astoria.common.disks import DiskInfo, DiskType, DiskUUID
@@ -86,7 +88,8 @@ class ProcessManager(DiskHandlerMixin, StateManager[ProcessManagerMessage]):
         """Handle disk info messages."""
         if payload:
             try:
-                message = MetadataManagerMessage(**loads(payload))
+                data = loads(payload)
+                message = parse_obj_as(MetadataManagerMessage, data)
                 self._recent_metadata = message.metadata
             except JSONDecodeError:
                 LOGGER.warning("Received bad JSON in disk manager message.")

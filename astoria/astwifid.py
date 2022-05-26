@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import IO, Match, Optional
 
 import click
-from pydantic import ValidationError
+from pydantic import ValidationError, parse_obj_as
 
 from astoria.common.components import StateConsumer
 from astoria.common.ipc import MetadataManagerMessage
@@ -66,7 +66,8 @@ class WiFiHotspotDaemon(StateConsumer):
         """Event handler for metadata changes."""
         if payload:
             try:
-                metadata_manager_message = MetadataManagerMessage(**loads(payload))
+                data = loads(payload)
+                metadata_manager_message = parse_obj_as(MetadataManagerMessage, data)
                 await self.handle_metadata(metadata_manager_message.metadata)
             except ValidationError:
                 LOGGER.warning("Received bad metadata manager message.")
