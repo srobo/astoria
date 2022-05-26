@@ -124,16 +124,20 @@
 
     <span class="n">disks</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">DiskUUID</span><span class="p">,</span> <span class="n">Path</span><span class="p">]</span>
 
-<div class="viewcode-block" id="DiskManagerMessage.calculate_disk_info"><a class="viewcode-back" href="../../../../implementation/managers/astdiskd.html#astoria.common.ipc.DiskManagerMessage.calculate_disk_info">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_disk_info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">DiskUUID</span><span class="p">,</span> <span class="n">DiskInfo</span><span class="p">]:</span>
+<div class="viewcode-block" id="DiskManagerMessage.calculate_disk_info"><a class="viewcode-back" href="../../../../implementation/managers/astdiskd.html#astoria.common.ipc.DiskManagerMessage.calculate_disk_info">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_disk_info</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">default_usercode_entrypoint</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">DiskUUID</span><span class="p">,</span> <span class="n">DiskInfo</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate the disk info of the disks in the message.</span>
 
 <span class="sd">        As astdiskd only gives us information about the path of each disk,</span>
 <span class="sd">        we need to calculate the type of each disk in the message.</span>
 
+<span class="sd">        :param default_usercode_entrypoint: default entrypoint from astoria config</span>
 <span class="sd">        :returns: A dictionary of disk UUIDs and disk information.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">disk_type_calculator</span> <span class="o">=</span> <span class="n">DiskTypeCalculator</span><span class="p">()</span>
+        <span class="n">disk_type_calculator</span> <span class="o">=</span> <span class="n">DiskTypeCalculator</span><span class="p">(</span><span class="n">default_usercode_entrypoint</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="n">uuid</span><span class="p">:</span> <span class="n">DiskInfo</span><span class="p">(</span>
                 <span class="n">uuid</span><span class="o">=</span><span class="n">uuid</span><span class="p">,</span>

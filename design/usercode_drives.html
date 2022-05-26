@@ -45,8 +45,12 @@
 <li class="toctree-l2"><a class="reference internal" href="requirements.html">Design Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ipc.html">Inter-Process Communication</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Usercode Drives</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#code-bundle-format">Code Bundle Format</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#robot-settings-file">Robot Settings File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#entrypoint">Entrypoint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#robot-settings-file">Robot Settings File</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#entrypoint-setting">Entrypoint Setting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#wifi-settings">WiFi Settings</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="metadata.html">Metadatas</a></li>
@@ -84,11 +88,12 @@
              
   <section id="usercode-drives">
 <h1>Usercode Drives<a class="headerlink" href="#usercode-drives" title="Permalink to this headline"></a></h1>
-<p>A usercode drive is a USB mass storage device containing a “code bundle”, also called a <code class="docutils literal notranslate"><span class="pre">robot.zip</span></code>.</p>
-<section id="code-bundle-format">
-<h2>Code Bundle Format<a class="headerlink" href="#code-bundle-format" title="Permalink to this headline"></a></h2>
-<p>A Code Bundle is simply a zip file containing Python code.</p>
-<p>The entrypoint to the Python code is <code class="docutils literal notranslate"><span class="pre">robot.py</span></code> and Astoria will refuse to run the code bundle if it does not exist.</p>
+<p>A usercode drive is a USB mass storage device containing a Python file, usually <code class="docutils literal notranslate"><span class="pre">robot.py</span></code>.</p>
+<section id="entrypoint">
+<h2>Entrypoint<a class="headerlink" href="#entrypoint" title="Permalink to this headline"></a></h2>
+<p>The entrypoint to the Python code is usually <code class="docutils literal notranslate"><span class="pre">robot.py</span></code>. However, this can be configured in <code class="docutils literal notranslate"><span class="pre">astoria.toml</span></code>.</p>
+<p>The entrypoint is executed in a subprocess in unbuffered mode, usually <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">-u</span> <span class="pre">robot.py</span></code>.</p>
+<p>You can change the entrypoint in the robot settings file.</p>
 </section>
 <section id="robot-settings-file">
 <h2>Robot Settings File<a class="headerlink" href="#robot-settings-file" title="Permalink to this headline"></a></h2>
@@ -106,11 +111,18 @@
 <span class="n">wifi_enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="w"></span>
 </pre></div>
 </div>
+<section id="entrypoint-setting">
+<h3>Entrypoint Setting<a class="headerlink" href="#entrypoint-setting" title="Permalink to this headline"></a></h3>
+<p>You can override the entrypoint in the settings file by changing the value of <code class="docutils literal notranslate"><span class="pre">usercode_entrypoint</span></code>.</p>
+</section>
+<section id="wifi-settings">
+<h3>WiFi Settings<a class="headerlink" href="#wifi-settings" title="Permalink to this headline"></a></h3>
 <p>The settings file controls the WiFi network broadcast by the kit.
 It contains information such as credentials and region. Region is required for compliance regions and
 should be specified in accordance with [ISO-3166-1 Standard and must be in ALPHA-2 format](<a class="reference external" href="https://en.wikipedia.org/wiki/ISO_3166-2#Current_codes">https://en.wikipedia.org/wiki/ISO_3166-2#Current_codes</a>).</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">wifi_enabled</span></code> key should be set to <code class="docutils literal notranslate"><span class="pre">true</span></code> in the majority of cases, and will be overridden to <code class="docutils literal notranslate"><span class="pre">false</span></code>
 using the standard metadata mechanisms, i.e the competition USB contains a <code class="docutils literal notranslate"><span class="pre">wifi_enabled</span></code> key too.</p>
+</section>
 </section>
 </section>
 

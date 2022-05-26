@@ -137,13 +137,24 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="astoria.common.disks.DiskTypeCalculator">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.disks.</span></span><span class="sig-name descname"><span class="pre">DiskTypeCalculator</span></span><a class="reference internal" href="../_modules/astoria/common/disks/type_calculator.html#DiskTypeCalculator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.disks.DiskTypeCalculator" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.disks.</span></span><span class="sig-name descname"><span class="pre">DiskTypeCalculator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default_usercode_entrypoint</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/astoria/common/disks/type_calculator.html#DiskTypeCalculator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.disks.DiskTypeCalculator" title="Permalink to this definition"></a></dt>
 <dd><p>Helper class to calculate the DiskType of a given disk drive.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>A disk must only rely on itself and not other disks to determine it
 the type of the disk.</p>
 </div>
+<dl class="py method">
+<dt class="sig sig-object py" id="astoria.common.disks.DiskTypeCalculator.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default_usercode_entrypoint</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/astoria/common/disks/type_calculator.html#DiskTypeCalculator.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.disks.DiskTypeCalculator.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialise the DiskTypeCalculator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>default_usercode_entrypoint</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – default entrypoint from astoria config</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="astoria.common.disks.DiskTypeCalculator.calculate">
 <span class="sig-name descname"><span class="pre">calculate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/astoria/common/disks/type_calculator.html#DiskTypeCalculator.calculate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.disks.DiskTypeCalculator.calculate" title="Permalink to this definition"></a></dt>

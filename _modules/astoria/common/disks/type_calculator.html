@@ -73,6 +73,8 @@
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span>
 
+<span class="kn">from</span> <span class="nn">astoria.common.config</span> <span class="kn">import</span> <span class="n">NoValidRobotSettingsException</span><span class="p">,</span> <span class="n">RobotSettings</span>
+
 <span class="kn">from</span> <span class="nn">.constraints</span> <span class="kn">import</span> <span class="n">Constraint</span><span class="p">,</span> <span class="n">FilePresentConstraint</span><span class="p">,</span> <span class="n">TrueConstraint</span>
 <span class="kn">from</span> <span class="nn">.structs</span> <span class="kn">import</span> <span class="n">DiskType</span>
 
@@ -85,6 +87,34 @@
 <span class="sd">             the type of the disk.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+<div class="viewcode-block" id="DiskTypeCalculator.__init__"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.DiskTypeCalculator.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">default_usercode_entrypoint</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialise the DiskTypeCalculator.</span>
+
+<span class="sd">        :param default_usercode_entrypoint: default entrypoint from astoria config</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_default_usercode_entrypoint</span> <span class="o">=</span> <span class="n">default_usercode_entrypoint</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_usercode_constraint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Constraint</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the usercode constraint for a disk.</span>
+
+<span class="sd">        Calculates the usercode constraint based on the robot settings.</span>
+
+<span class="sd">        :param path: The mount path of the disk.</span>
+<span class="sd">        :returns: The usercode constraint for the disk.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">settings_path</span> <span class="o">=</span> <span class="n">path</span> <span class="o">/</span> <span class="s2">&quot;robot-settings.toml&quot;</span>
+        <span class="k">if</span> <span class="n">settings_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">settings</span> <span class="o">=</span> <span class="n">RobotSettings</span><span class="o">.</span><span class="n">load_settings_file</span><span class="p">(</span><span class="n">settings_path</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">FilePresentConstraint</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">usercode_entrypoint</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">NoValidRobotSettingsException</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+        <span class="c1"># Fall back to the default if we cannot load the settings</span>
+        <span class="k">return</span> <span class="n">FilePresentConstraint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_default_usercode_entrypoint</span><span class="p">)</span>
+
 <div class="viewcode-block" id="DiskTypeCalculator.calculate"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.DiskTypeCalculator.calculate">[docs]</a>    <span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DiskType</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate the DiskType of a drive given it&#39;s mount path.</span>
@@ -93,7 +123,7 @@
 <span class="sd">        :returns: The type of the disk.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">constraints</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="s1">&#39;DiskType&#39;</span><span class="p">,</span> <span class="n">Constraint</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="n">DiskType</span><span class="o">.</span><span class="n">USERCODE</span><span class="p">:</span> <span class="n">FilePresentConstraint</span><span class="p">(</span><span class="s2">&quot;robot.zip&quot;</span><span class="p">),</span>
+            <span class="n">DiskType</span><span class="o">.</span><span class="n">USERCODE</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_usercode_constraint</span><span class="p">(</span><span class="n">path</span><span class="p">),</span>
             <span class="n">DiskType</span><span class="o">.</span><span class="n">METADATA</span><span class="p">:</span> <span class="n">FilePresentConstraint</span><span class="p">(</span><span class="s2">&quot;astoria.json&quot;</span><span class="p">),</span>
             <span class="n">DiskType</span><span class="o">.</span><span class="n">UPDATE</span><span class="p">:</span> <span class="n">FilePresentConstraint</span><span class="p">(</span><span class="s2">&quot;updatefile.txt&quot;</span><span class="p">),</span>
             <span class="n">DiskType</span><span class="o">.</span><span class="n">NOACTION</span><span class="p">:</span> <span class="n">TrueConstraint</span><span class="p">(),</span>  <span class="c1"># Always match</span>
