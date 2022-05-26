@@ -116,6 +116,13 @@ class UdisksConnection(DiskProvider):
                     uuid: DiskUUID = DiskUUID(
                         await drive_block.get_id_uuid(),
                     )
+
+                    if len(uuid) == 0:
+                        LOGGER.warning(
+                            f"No UUID found for {disk_bus_path}, ignoring.",
+                        )
+                        return
+
                     if uuid not in self._disks.keys():
                         LOGGER.info(f"Disk {uuid} mounted ({mount_path})")
                         self._disks[uuid] = mount_path
