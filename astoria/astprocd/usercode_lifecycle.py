@@ -2,7 +2,7 @@
 
 import asyncio
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from os import environ
 from signal import SIGKILL, SIGTERM
 from typing import Callable, Dict, Optional
@@ -209,27 +209,26 @@ class UsercodeLifecycle:
                 source=source,
             )
 
+        async def read_from_stream(
+            outputs: Dict[LogEventSource, asyncio.StreamReader],
+            source: LogEventSource,
+            log_line_idx: int,
+        ) -> None:
+            output = outputs[source]
+
+            data = await output.readline()
+            while data != b"":
+                data_str = data.decode('utf-8', errors='ignore')
+                time_passed = datetime.now() - start_time
+                log(f"[{time_passed}] {data_str}", log_line_idx, source)
+                data = await output.readline()
+                log_line_idx += 1
+
         with log_path.open("w") as fh:
             log_line = 0
 
             start_time = datetime.now()
-
-            async def read_from_stream(
-                    outputs: Dict[LogEventSource, asyncio.StreamReader],
-                    source: LogEventSource,
-                    log_line_idx: int,
-            ) -> None:
-                output = outputs[source]
-
-                data = await output.readline()
-                while data != b"":
-                    data_str = data.decode('utf-8', errors='ignore')
-                    time_passed = datetime.now() - start_time
-                    log(f"[{time_passed}] {data_str}", log_line_idx, source)
-                    data = await output.readline()
-                    log_line_idx += 1
-
-            time_passed = datetime.now() - start_time
+            time_passed = timedelta(0)
 
             # Print initial lines to the log, if any.
             # This is useful to show a message to the user in every log file.
