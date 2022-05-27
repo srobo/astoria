@@ -5,7 +5,7 @@ import logging
 from datetime import datetime, timedelta
 from os import environ
 from signal import SIGKILL, SIGTERM
-from typing import Callable, Dict, Optional
+from typing import IO, Callable, Dict, Optional
 
 from astoria.common.code_status import CodeStatus
 from astoria.common.config import (
@@ -196,6 +196,7 @@ class UsercodeLifecycle:
             pid = -1  # Use -1 if unknown
 
         def log(
+            fh: IO[str],
             data: str,
             log_line_idx: int,
             source: LogEventSource = LogEventSource.ASTORIA,
@@ -220,7 +221,7 @@ class UsercodeLifecycle:
             while data != b"":
                 data_str = data.decode('utf-8', errors='ignore')
                 time_passed = datetime.now() - start_time
-                log(f"[{time_passed}] {data_str}", log_line_idx, source)
+                log(fh, f"[{time_passed}] {data_str}", log_line_idx, source)
                 data = await output.readline()
                 log_line_idx += 1
 
@@ -233,13 +234,13 @@ class UsercodeLifecycle:
             # Print initial lines to the log, if any.
             # This is useful to show a message to the user in every log file.
             if self._config.system.initial_log_lines:
-                log(f"[{time_passed}] ---\n", log_line)
+                log(fh, f"[{time_passed}] ---\n", log_line)
 
                 for line in self._config.system.initial_log_lines:
-                    log(f"[{time_passed}] {line}\n", log_line)
-                log(f"[{time_passed}] ---\n", log_line)
+                    log(fh, f"[{time_passed}] {line}\n", log_line)
+                log(fh, f"[{time_passed}] ---\n", log_line)
 
-            log(f"[{time_passed}] === LOG STARTED ===\n", log_line)
+            log(fh, f"[{time_passed}] === LOG STARTED ===\n", log_line)
             log_line += 1
 
             await asyncio.gather(
@@ -247,4 +248,4 @@ class UsercodeLifecycle:
                 read_from_stream(proc_outputs, LogEventSource.STDERR, log_line),
             )
             time_passed = datetime.now() - start_time
-            log(f"[{time_passed}] === LOG FINISHED ===\n", log_line)
+            log(fh, f"[{time_passed}] === LOG FINISHED ===\n", log_line)
