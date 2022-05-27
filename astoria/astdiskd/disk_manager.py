@@ -57,7 +57,12 @@ class DiskManager(StateManager[DiskManagerMessage]):
         disks = {}
         for provider in self._providers:
             for uuid, mount_path in provider.disks.items():
-                disks[uuid] = mount_path
+                # Only add the disk if it's not ignored.
+                if mount_path not in self.config.astdiskd.ignored_mounts:
+                    disks[uuid] = mount_path
+                else:
+                    LOGGER.info(f"Ignoring {mount_path} as it is an ignored mount.")
+
         self.status = DiskManagerMessage(
             status=DiskManagerMessage.Status.RUNNING,
             disks=disks,

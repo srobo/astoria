@@ -13,6 +13,13 @@ interface = "wlan0"
 bridge = "br0"
 enable_wpa3 = false
 
+[astdiskd]
+ignored_mounts = [
+    "/",
+    "/boot",
+    "/boot/efi",
+]
+
 [astprocd]
 default_usercode_entrypoint = "robot.py"
 

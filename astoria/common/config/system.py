@@ -50,6 +50,12 @@ class SystemInfo(BaseModel):
         extra = "forbid"
 
 
+class DiskManagerInfo(BaseModel):
+    """Settings specifically for astdiskd."""
+
+    ignored_mounts: List[str] = []
+
+
 class ProcessManagerInfo(BaseModel):
     """Settings specifically for astprocd."""
 
@@ -61,6 +67,7 @@ class AstoriaConfig(BaseModel):
 
     mqtt: MQTTBrokerInfo
     wifi: WiFiInfo
+    astdiskd: DiskManagerInfo = DiskManagerInfo()  # Optional section
     astprocd: ProcessManagerInfo = ProcessManagerInfo()  # Optional section
     system: SystemInfo
     env: Dict[str, str] = {}
