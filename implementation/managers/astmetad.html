@@ -155,6 +155,15 @@ not add nested fields to this schema.</p>
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="astoria.common.metadata.Metadata.get_os_version_info">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_os_version_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">os_release_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('/etc/os-release')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/metadata.html#Metadata.get_os_version_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.metadata.Metadata.get_os_version_info" title="Permalink to this definition"></a></dt>
+<dd><p>Reads OS version information from /etc/os-release.</p>
+<p>See man page os-release(5) for more information.
+:rtype: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]
+:returns: dict OS release values</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="astoria.common.metadata.Metadata.init">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/metadata.html#Metadata.init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.metadata.Metadata.init" title="Permalink to this definition"></a></dt>
 <dd><p>Initialise the metadata and populate with data.</p>
@@ -193,6 +202,21 @@ not add nested fields to this schema.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.metadata.Metadata.mode">
 <span class="sig-name descname"><span class="pre">mode</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#astoria.common.metadata.RobotMode" title="astoria.common.metadata.RobotMode"><span class="pre">astoria.common.metadata.RobotMode</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.mode" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="astoria.common.metadata.Metadata.os_name">
+<span class="sig-name descname"><span class="pre">os_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#astoria.common.metadata.Metadata.os_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="astoria.common.metadata.Metadata.os_pretty_name">
+<span class="sig-name descname"><span class="pre">os_pretty_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#astoria.common.metadata.Metadata.os_pretty_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="astoria.common.metadata.Metadata.os_version">
+<span class="sig-name descname"><span class="pre">os_version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#astoria.common.metadata.Metadata.os_version" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
