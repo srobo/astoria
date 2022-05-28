@@ -88,6 +88,6 @@ def test_metadata_init() -> None:
     the environment that the tests are running in. Here we will rely
     on Pydantic complaining if any values are not as expected.
     """
-    with CONFIG_PATH.open("r") as fh:
+    with CONFIG_PATH.open("rb") as fh:
         config = AstoriaConfig.load_from_file(fh)
         Metadata.init(config)

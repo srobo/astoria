@@ -3,11 +3,16 @@ System Configuration schema for Astoria.
 
 Common to all components.
 """
+import sys
 from pathlib import Path
-from typing import IO, Dict, List, Optional
+from typing import BinaryIO, Dict, List, Optional
 
 from pydantic import BaseModel, parse_obj_as
-from toml import load
+
+if sys.version_info >= (3, 11):
+    import tomllib
+else:
+    import tomli as tomllib
 
 
 class MQTTBrokerInfo(BaseModel):
@@ -98,10 +103,10 @@ class AstoriaConfig(BaseModel):
     def load(cls, config_str: Optional[str] = None) -> 'AstoriaConfig':
         """Load the config."""
         config_path = cls._get_config_path(config_str)
-        with config_path.open("r") as fh:
+        with config_path.open("rb") as fh:
             return cls.load_from_file(fh)
 
     @classmethod
-    def load_from_file(cls, fh: IO[str]) -> 'AstoriaConfig':
+    def load_from_file(cls, fh: BinaryIO) -> 'AstoriaConfig':
         """Load the config from a file."""
-        return parse_obj_as(cls, load(fh))
+        return parse_obj_as(cls, tomllib.load(fh))

@@ -3,9 +3,15 @@
 import random
 import re
 import secrets
+import sys
 from pathlib import Path
 
-import toml
+if sys.version_info >= (3, 11):
+    import tomllib
+else:
+    import tomli as tomllib
+
+
 from pydantic import BaseModel, ValidationError, parse_obj_as, validator
 
 from astoria.common.config import AstoriaConfig
@@ -80,8 +86,9 @@ class RobotSettings(BaseModel):
             raise NoValidRobotSettingsException("File does not exist.")
 
         try:
-            data = toml.load(path)
-        except toml.TomlDecodeError:
+            with path.open("rb") as fh:
+                data = tomllib.load(fh)
+        except tomllib.TOMLDecodeError:
             raise NoValidRobotSettingsException("Invalid TOML")
 
         try:
