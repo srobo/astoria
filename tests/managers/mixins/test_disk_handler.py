@@ -11,7 +11,7 @@ from astoria.common.disks import DiskInfo, DiskType, DiskUUID
 from astoria.common.ipc import DiskManagerMessage
 from astoria.common.mixins import DiskHandlerMixin
 
-with Path("tests/data/config/valid.toml").open("r") as fh:
+with Path("tests/data/config/valid.toml").open("rb") as fh:
     CONFIG = AstoriaConfig.load_from_file(fh)
 
 

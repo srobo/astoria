@@ -1,10 +1,16 @@
 """Test the config."""
 
+import sys
 from pathlib import Path
 
 import pytest
 from pydantic import ValidationError
-from toml import TomlDecodeError
+
+if sys.version_info >= (3, 11):
+    import tomllib
+else:
+    import tomli as tomllib
+
 
 from astoria.common.config import AstoriaConfig
 
@@ -16,7 +22,7 @@ GOOD_FILES = {"missing_optional.toml", "valid.toml"}
 def load_config(fn: str) -> None:
     """Load a config file."""
     path = DATA_PATH / fn
-    with open(path, "r") as fh:
+    with open(path, "rb") as fh:
         AstoriaConfig.load_from_file(fh)
 
 
@@ -46,5 +52,5 @@ def test_exception_on_missing_required() -> None:
 
 def test_exception_on_invalid_toml() -> None:
     """Test for roml validation."""
-    with pytest.raises(TomlDecodeError):
+    with pytest.raises(tomllib.TOMLDecodeError):
         load_config("not.toml")

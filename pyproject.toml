@@ -22,7 +22,8 @@ pydantic = "^1.9.1"
 click = "^8.1.2"
 dbus-next = "^0.2.3"
 gmqtt = "^0.6.11"
-toml = "^0.10.2"
+tomli = { version = "^2.0.1", python = "<=3.10" }
+tomli-w = "^1.0.0"
 
 [tool.poetry.dev-dependencies]
 flake8 = "*"
@@ -47,7 +48,6 @@ sphinx-jsonschema = "*"
 sphinx-autobuild = "*"
 sphinx-click = "*"
 m2r2 = "*"
-types-toml = "*"
 types-click = "*"
 
 [build-system]

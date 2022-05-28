@@ -21,7 +21,7 @@ class FakeHostapdWiFiHotspotLifeCycle(WiFiHotspotLifeCycle):
 def config() -> AstoriaConfig:
     """Load a config file."""
     path = Path("tests/data/config/valid.toml")
-    with path.open() as fh:
+    with path.open("rb") as fh:
         return AstoriaConfig.load_from_file(fh)
 
 

@@ -18,7 +18,7 @@ EXTRACT_ZIP_DATA = Path("tests/data/extract_zip")
 EXECUTE_CODE_DATA = Path("tests/data/execute_code")
 TIMESTAMP_REGEX = compile(r"^(\[.*\]) (.*)$")
 
-with Path("tests/data/config/valid.toml").open("r") as fh:
+with Path("tests/data/config/valid.toml").open("rb") as fh:
     CONFIG = AstoriaConfig.load_from_file(fh)
 
 

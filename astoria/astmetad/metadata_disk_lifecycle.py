@@ -6,7 +6,7 @@ from abc import ABCMeta, abstractmethod
 from json import JSONDecodeError, loads
 from typing import Dict
 
-import toml
+import tomli_w
 
 from astoria.common.config import (
     SSID_PREFIX,
@@ -84,8 +84,8 @@ class UsercodeDiskLifecycle(AbstractMetadataDiskLifecycle):
             settings = RobotSettings.generate_default_settings(self._config)
 
             LOGGER.warning("No valid settings, writing sensible defaults.")
-            with robot_settings_file.open("w") as fh:
-                toml.dump(settings.dict(), fh)
+            with robot_settings_file.open("wb") as fh:
+                tomli_w.dump(settings.dict(), fh)
 
         return {
             "usercode_entrypoint": settings.usercode_entrypoint,
