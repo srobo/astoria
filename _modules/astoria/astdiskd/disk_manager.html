@@ -127,7 +127,12 @@
         <span class="n">disks</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">provider</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_providers</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">mount_path</span> <span class="ow">in</span> <span class="n">provider</span><span class="o">.</span><span class="n">disks</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="n">disks</span><span class="p">[</span><span class="n">uuid</span><span class="p">]</span> <span class="o">=</span> <span class="n">mount_path</span>
+                <span class="c1"># Only add the disk if it&#39;s not ignored.</span>
+                <span class="k">if</span> <span class="n">mount_path</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">astdiskd</span><span class="o">.</span><span class="n">ignored_mounts</span><span class="p">:</span>
+                    <span class="n">disks</span><span class="p">[</span><span class="n">uuid</span><span class="p">]</span> <span class="o">=</span> <span class="n">mount_path</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Ignoring </span><span class="si">{</span><span class="n">mount_path</span><span class="si">}</span><span class="s2"> as it is an ignored mount.&quot;</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">DiskManagerMessage</span><span class="p">(</span>
             <span class="n">status</span><span class="o">=</span><span class="n">DiskManagerMessage</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">RUNNING</span><span class="p">,</span>
             <span class="n">disks</span><span class="o">=</span><span class="n">disks</span><span class="p">,</span>

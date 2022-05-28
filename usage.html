@@ -120,6 +120,13 @@ although it is possible for Astoria to be deployed on any Linux system.</p>
 <span class="n">bridge</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;br0&quot;</span><span class="w"></span>
 <span class="n">enable_wpa3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="w"></span>
 
+<span class="k">[astdiskd]</span><span class="w"></span>
+<span class="n">ignored_mounts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="w">    </span><span class="s">&quot;/&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="s">&quot;/boot&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="s">&quot;/boot/efi&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="p">]</span><span class="w"></span>
+
 <span class="k">[astprocd]</span><span class="w"></span>
 <span class="n">default_usercode_entrypoint</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;robot.py&quot;</span><span class="w"></span>
 
