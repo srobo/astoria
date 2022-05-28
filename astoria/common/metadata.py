@@ -17,7 +17,12 @@ class RobotMode(Enum):
 
 
 class Metadata(BaseModel):
-    """Astoria Metadata."""
+    """
+    Astoria Metadata.
+
+    As the metadata is passed into a templating engine for initial log lines, please do
+    not add nested fields to this schema.
+    """
 
     class Config:
         """Pydantic config."""

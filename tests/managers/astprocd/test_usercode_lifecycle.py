@@ -12,6 +12,7 @@ from astoria.common.code_status import CodeStatus
 from astoria.common.config import AstoriaConfig
 from astoria.common.disks import DiskInfo, DiskType, DiskUUID
 from astoria.common.ipc import UsercodeLogBroadcastEvent
+from astoria.common.metadata import Metadata
 from astoria.common.mqtt.broadcast_helper import BroadcastHelper, T
 
 EXTRACT_ZIP_DATA = Path("tests/data/extract_zip")
@@ -114,6 +115,7 @@ class StatusInformTestHelper:
             status_inform_callback=sith.callback,
             log_helper=sith.log_helper,
             config=config,
+            metadata=Metadata.init(config),
         )
         return ucl, sith
 
@@ -322,6 +324,45 @@ async def test_run_with_valid_python_additional_log_lines() -> None:
     assert _strip_timestamp(lines[-1]) == "=== LOG FINISHED ==="
 
     assert lines == sith.log_helper.get_lines()
+
+
+@pytest.mark.asyncio
+async def test_run_additional_log_lines_templated() -> None:
+    """
+    Test that we print additional log lines with correct templating.
+
+    Checks that:
+    - Output is written to the log file
+    - The output has the template variables correctly substituted.
+    """
+    config = CONFIG.dict()
+    config["system"]["initial_log_lines"] = [
+        "Hello",
+        "World",
+        "Zone: $zone",
+        "Arena: $arena",
+        "Bad Variable: $beees",
+    ]
+    ucl, _ = StatusInformTestHelper.setup(
+        EXECUTE_CODE_DATA / "valid_python_short",
+        config=AstoriaConfig(**config),
+    )
+    await ucl.run_process()
+    await asyncio.sleep(0.05)  # Wait for logger to flush
+
+    # Check that the log file contains the right text
+    log_file = EXECUTE_CODE_DATA / "valid_python_short" / "log.txt"
+    with ReadAndCleanupFile(log_file) as fh:
+        lines = fh.read().splitlines()
+    assert _strip_timestamp(lines[0]) == "---"
+    assert _strip_timestamp(lines[1]) == "Hello"
+    assert _strip_timestamp(lines[2]) == "World"
+    assert _strip_timestamp(lines[3]) == "Zone: 0"
+    assert _strip_timestamp(lines[4]) == "Arena: A"
+
+    # Check that an unknown variable is not substituted
+    assert _strip_timestamp(lines[5]) == "Bad Variable: $beees"
+    assert _strip_timestamp(lines[6]) == "---"
 
 
 @pytest.mark.asyncio
