@@ -1,10 +1,8 @@
 """Schema for the robot metadata."""
 import platform
 import re
-
-import toml
 from enum import Enum
-from typing import Optional, Dict
+from typing import Dict, Optional
 
 from pydantic import BaseModel
 
@@ -51,9 +49,9 @@ class Metadata(BaseModel):
     @classmethod
     def get_os_version_info(cls) -> Dict[str, str]:
         """
-        Reads OS version information from /etc/os-release
-        See man page os-release(5) for more information.
+        Reads OS version information from /etc/os-release.
 
+        See man page os-release(5) for more information.
         :return: dict OS release values
         """
         with open('/etc/os-release') as f:
