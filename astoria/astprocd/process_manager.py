@@ -109,6 +109,7 @@ class ProcessManager(DiskHandlerMixin, StateManager[ProcessManagerMessage]):
                     self.update_status,
                     self._log_helper,
                     self.config,
+                    self._recent_metadata,
                 )
                 asyncio.ensure_future(self._lifecycle.run_process())
             else:

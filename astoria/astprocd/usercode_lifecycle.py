@@ -5,6 +5,7 @@ import logging
 from datetime import datetime, timedelta
 from os import environ
 from signal import SIGKILL, SIGTERM
+from string import Template
 from typing import IO, Callable, Dict, Optional
 
 from astoria.common.code_status import CodeStatus
@@ -15,6 +16,7 @@ from astoria.common.config import (
 )
 from astoria.common.disks import DiskInfo, DiskUUID
 from astoria.common.ipc import LogEventSource, UsercodeLogBroadcastEvent
+from astoria.common.metadata import Metadata
 from astoria.common.mqtt import BroadcastHelper
 
 LOGGER = logging.getLogger(__name__)
@@ -36,12 +38,14 @@ class UsercodeLifecycle:
             status_inform_callback: Callable[[CodeStatus], None],
             log_helper: BroadcastHelper[UsercodeLogBroadcastEvent],
             config: AstoriaConfig,
+            metadata: Metadata,
     ) -> None:
         self._uuid = uuid
         self._disk_info = disk_info
         self._status_inform_callback = status_inform_callback
         self._log_helper = log_helper
         self._config = config
+        self._metadata = metadata
 
         self._process: Optional[asyncio.subprocess.Process] = None
         self._process_lock = asyncio.Lock()
@@ -237,7 +241,10 @@ class UsercodeLifecycle:
                 log(fh, f"[{time_passed}] ---\n", log_line)
 
                 for line in self._config.system.initial_log_lines:
-                    log(fh, f"[{time_passed}] {line}\n", log_line)
+                    template = Template(line)
+                    line_substituted = template.safe_substitute(self._metadata.dict())
+                    log(fh, f"[{time_passed}] {line_substituted}\n", log_line)
+
                 log(fh, f"[{time_passed}] ---\n", log_line)
 
             log(fh, f"[{time_passed}] === LOG STARTED ===\n", log_line)
