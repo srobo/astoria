@@ -53,7 +53,7 @@ class SystemInfo(BaseModel):
 class DiskManagerInfo(BaseModel):
     """Settings specifically for astdiskd."""
 
-    ignored_mounts: List[str] = []
+    ignored_mounts: List[Path] = []
 
 
 class ProcessManagerInfo(BaseModel):
