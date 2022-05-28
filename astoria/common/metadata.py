@@ -42,25 +42,27 @@ class Metadata(BaseModel):
             python_version=platform.python_version(),
             libc_ver="".join(platform.libc_ver()),
             usercode_entrypoint=config.astprocd.default_usercode_entrypoint,
-            os_name=os_release['NAME'],
-            os_pretty_name=os_release['PRETTY_NAME'],
-            os_version=os_release['VERSION_ID'],
+            os_name=os_release.get('NAME'),
+            os_pretty_name=os_release.get('PRETTY_NAME'),
+            os_version=os_release.get('VERSION_ID'),
         )
 
     @classmethod
-    def get_os_version_info(cls) -> Dict[str, str]:
+    def get_os_version_info(
+            cls,
+            os_release_path: Path = Path('/etc/os-release'),
+    ) -> Dict[str, str]:
         """
         Reads OS version information from /etc/os-release.
 
         See man page os-release(5) for more information.
-        :return: dict OS release values
+        :returns: dict OS release values
         """
-        os_release_path = Path('/etc/os-release')
         if os_release_path.exists():
             contents = os_release_path.read_text()
             return {
                 k: v for k, v in
-                re.findall(r'^([A-Z_]+)="?([^"]+)"?$', contents, flags=re.MULTILINE)
+                re.findall(r'^([A-Z_]+)="?([^"\n]+)"?$', contents, flags=re.MULTILINE)
             }
 
         return {}
