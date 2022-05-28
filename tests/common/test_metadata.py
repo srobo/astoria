@@ -97,3 +97,41 @@ def test_metadata_init() -> None:
     with CONFIG_PATH.open("r") as fh:
         config = AstoriaConfig.load_from_file(fh)
         Metadata.init(config)
+
+
+def test_get_os_version_info() -> None:
+    """Test the get_os_version_info() method is able to extract variables correctly."""
+    fixture_path = Path('tests/data/os_version')
+    version_info = Metadata.get_os_version_info(fixture_path / 'arch')
+    assert version_info.get('NAME') == 'Arch Linux'
+    assert version_info.get('PRETTY_NAME') == "Arch Linux"
+    assert version_info.get('ID') == 'arch'
+    assert version_info.get('BUILD_ID') == 'rolling'
+    assert version_info.get('ANSI_COLOR') == "38;2;23;147;209"
+    assert version_info.get('HOME_URL') == 'https://archlinux.org/'
+    assert version_info.get('DOCUMENTATION_URL') == 'https://wiki.archlinux.org/'
+    assert version_info.get('SUPPORT_URL') == 'https://bbs.archlinux.org/'
+    assert version_info.get('BUG_REPORT_URL') == 'https://bugs.archlinux.org/'
+    assert version_info.get('LOGO') == 'archlinux-logo'
+    assert version_info.get('VERSION') is None
+    assert version_info.get('VERSION_ID') is None
+
+    version_info = Metadata.get_os_version_info(fixture_path / 'fedora17')
+    assert version_info.get('NAME') == 'Fedora'
+    assert version_info.get('VERSION') == '17 (Beefy Miracle)'
+    assert version_info.get('ID') == 'fedora'
+    assert version_info.get('VERSION_ID') == '17'
+    assert version_info.get('PRETTY_NAME') == 'Fedora 17 (Beefy Miracle)'
+    assert version_info.get('ANSI_COLOR') == '0;34'
+    assert version_info.get('CPE_NAME') == 'cpe:/o:fedoraproject:fedora:17'
+    assert version_info.get('HOME_URL') == 'https://fedoraproject.org/'
+    assert version_info.get('BUG_REPORT_URL') == 'https://bugzilla.redhat.com/'
+
+    version_info = Metadata.get_os_version_info(fixture_path / 'poky')
+    assert version_info.get('ID') == 'poky'
+    assert version_info.get('NAME') == 'Poky (Yocto Project Reference Distro)'
+    assert version_info.get('VERSION') == "4.0.1 (kirkstone)"
+    assert version_info.get('VERSION_ID') == '4.0.1'
+    assert version_info.get('PRETTY_NAME') == \
+           'Poky (Yocto Project Reference Distro) 4.0.1 (kirkstone)'
+    assert version_info.get('DISTRO_CODENAME') == 'kirkstone'
