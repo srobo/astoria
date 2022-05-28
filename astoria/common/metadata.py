@@ -2,6 +2,7 @@
 import platform
 import re
 from enum import Enum
+from pathlib import Path
 from typing import Dict, Optional
 
 from pydantic import BaseModel
@@ -54,12 +55,14 @@ class Metadata(BaseModel):
         See man page os-release(5) for more information.
         :return: dict OS release values
         """
-        with open('/etc/os-release') as f:
-            contents = f.read()
-        return {
-            k: v for k, v in
-            re.findall(r'^([A-Z_]+)="?([^"]+)"?$', contents, flags=re.MULTILINE)
-        }
+        os_release_path = Path('/etc/os-release')
+        if os_release_path.exists():
+            return {
+                k: v for k, v in
+                re.findall(r'^([A-Z_]+)="?([^"]+)"?$', os_release_path.read_text(), flags=re.MULTILINE)
+            }
+
+        return {}
 
     def is_wifi_valid(self) -> bool:
         """
@@ -89,9 +92,9 @@ class Metadata(BaseModel):
     arch: str
     python_version: str
     libc_ver: str
-    os_name: str
-    os_pretty_name: str
-    os_version: str
+    os_name: Optional[str] = None
+    os_pretty_name: Optional[str] = None
+    os_version: Optional[str] = None
 
     # From robot settings file
     usercode_entrypoint: str

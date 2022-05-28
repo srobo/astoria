@@ -11,9 +11,6 @@ def test_metadata_manager_message_fields() -> None:
         arch="x64",
         python_version="3",
         libc_ver="2.0",
-        os_name="Student Robotics OS",
-        os_pretty_name="Student Robotics OS 2023.0.0",
-        os_version="2023.0.0",
         usercode_entrypoint="robot.py",
     )
 
