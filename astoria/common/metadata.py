@@ -57,9 +57,10 @@ class Metadata(BaseModel):
         """
         os_release_path = Path('/etc/os-release')
         if os_release_path.exists():
+            contents = os_release_path.read_text()
             return {
                 k: v for k, v in
-                re.findall(r'^([A-Z_]+)="?([^"]+)"?$', os_release_path.read_text(), flags=re.MULTILINE)
+                re.findall(r'^([A-Z_]+)="?([^"]+)"?$', contents, flags=re.MULTILINE)
             }
 
         return {}
