@@ -76,3 +76,13 @@ class DiskManagerMessage(ManagerMessage):
             )
             for uuid, path in self.disks.items()
         }
+
+
+class WiFiManagerMessage(ManagerMessage):
+    """
+    Status message for WiFi Manager.
+
+    Published to /astoria/astwifid
+    """
+
+    hotspot_running: bool

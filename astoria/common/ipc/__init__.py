@@ -11,6 +11,7 @@ from .manager_messages import (
     ManagerMessage,
     MetadataManagerMessage,
     ProcessManagerMessage,
+    WiFiManagerMessage,
 )
 from .manager_requests import (
     AddStaticDiskRequest,
@@ -40,4 +41,5 @@ __all__ = [
     "UsercodeKillManagerRequest",
     "UsercodeLogBroadcastEvent",
     "UsercodeRestartManagerRequest",
+    "WiFiManagerMessage",
 ]
