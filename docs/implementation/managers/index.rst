@@ -8,6 +8,7 @@ State Managers
    astdiskd
    astmetad
    astprocd
+   astwifid
 
 A state manager is a process that stores and mutates some state.
 

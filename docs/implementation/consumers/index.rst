@@ -16,4 +16,3 @@ A state consumer is a program that does not publish persistent data.
    :caption: List of State Consumers:
 
    astctl
-   astwifid
