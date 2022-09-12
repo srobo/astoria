@@ -11,6 +11,7 @@ from .manager_messages import (
     ManagerMessage,
     MetadataManagerMessage,
     ProcessManagerMessage,
+    RaucUpdateManagerMessage,
 )
 from .manager_requests import (
     AddStaticDiskRequest,
@@ -33,6 +34,7 @@ __all__ = [
     "MetadataManagerMessage",
     "MetadataSetManagerRequest",
     "ProcessManagerMessage",
+    "RaucUpdateManagerMessage",
     "RemoveAllStaticDisksRequest",
     "RemoveStaticDiskRequest",
     "RequestResponse",

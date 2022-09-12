@@ -9,6 +9,7 @@ from astoria import __version__
 from astoria.common.code_status import CodeStatus
 from astoria.common.disks import DiskInfo, DiskTypeCalculator, DiskUUID
 from astoria.common.metadata import Metadata
+from astoria.common.update_state import UpdateState
 
 
 class ManagerMessage(BaseModel):
@@ -43,6 +44,16 @@ class MetadataManagerMessage(ManagerMessage):
     """
 
     metadata: Metadata
+
+
+class RaucUpdateManagerMessage(ManagerMessage):
+    """
+    Status message for Rauc Update Manager.
+
+    Published to /astoria/astraucd
+    """
+
+    update_state: Optional[UpdateState] = None
 
 
 class DiskManagerMessage(ManagerMessage):
