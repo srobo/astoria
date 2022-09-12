@@ -53,9 +53,9 @@ class DiskTypeCalculator:
         :returns: The type of the disk.
         """
         constraints: Dict['DiskType', Constraint] = {
+            DiskType.UPDATE: FilePresentConstraint("srobo-robot-*.raucb"),
             DiskType.USERCODE: self._get_usercode_constraint(path),
             DiskType.METADATA: FilePresentConstraint("astoria.json"),
-            DiskType.UPDATE: FilePresentConstraint("updatefile.txt"),
             DiskType.NOACTION: TrueConstraint(),  # Always match
         }
 
