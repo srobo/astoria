@@ -27,13 +27,13 @@ class FilePresentConstraint(Constraint):
     This constraint will check that the path exists and contains the given file.
     """
 
-    def __init__(self, filename: str) -> None:
+    def __init__(self, filename_glob: str) -> None:
         """
         Initialise the constraint class.
 
-        :param filename: name of the file to find on the disk
+        :param filename_glob: file name or pattern of the file to find on the disk
         """
-        self.filename = filename
+        self.filename_glob = filename_glob
 
     def matches(self, path: Path) -> bool:
         """
@@ -44,11 +44,11 @@ class FilePresentConstraint(Constraint):
         return all([
             path.exists(),
             path.is_dir(),
-            path.joinpath(self.filename).exists(),
+            next(path.glob(self.filename_glob), False),
         ])
 
     def __repr__(self) -> str:
-        return f"FilePresentConstraint(filename={self.filename})"
+        return f"FilePresentConstraint(filename_glob={self.filename_glob})"
 
 
 class NumberOfFilesConstraint(Constraint):

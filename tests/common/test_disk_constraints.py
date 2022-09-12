@@ -20,6 +20,7 @@ NOT_EXIST_PATH = DATA_PATH.joinpath("does_not_exist")
 FILE_PATH = DATA_PATH.joinpath("actually_a_file")
 
 FILE_PRESENT_PATH = DATA_PATH.joinpath("file_present")
+FILE_PRESENT_GLOB_PATH = DATA_PATH.joinpath("file_present_glob")
 THREE_PRESENT_PATH = DATA_PATH.joinpath("three_files_present")
 OTHER_PRESENT_PATH = DATA_PATH.joinpath("other_file_present")
 
@@ -41,15 +42,16 @@ def test_subclass() -> None:
 
 def test_file_present_constraint() -> None:
     """Test that the FilePresentConstraint works as expected."""
-    constraint = FilePresentConstraint("test.txt")
+    constraint = FilePresentConstraint("test*.txt")
 
     assert not constraint.matches(EMPTY_PATH)
     assert not constraint.matches(FILE_PATH)
     assert not constraint.matches(OTHER_PRESENT_PATH)
     assert not constraint.matches(NOT_EXIST_PATH)
     assert constraint.matches(FILE_PRESENT_PATH)
+    assert constraint.matches(FILE_PRESENT_GLOB_PATH)
 
-    assert repr(constraint) == "FilePresentConstraint(filename=test.txt)"
+    assert repr(constraint) == "FilePresentConstraint(filename_glob=test*.txt)"
 
 
 def test_number_of_files_constraint() -> None:
