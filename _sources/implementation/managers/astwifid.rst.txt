@@ -20,5 +20,8 @@ Hostapd is then launched as a child process of the astwifid process. This is man
 Astwifid Data Structures and Classes
 ------------------------------------
 
+.. autoclass:: astoria.common.ipc.WiFiManagerMessage
+   :members:
+
 .. autoclass:: astoria.astwifid.WiFiHotspotLifeCycle
    :members:

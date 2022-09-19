@@ -96,7 +96,7 @@
 <h2 id="_">_</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="implementation/consumers/astwifid.html#astoria.astwifid.WiFiHotspotLifeCycle.__init__">__init__() (astoria.astwifid.WiFiHotspotLifeCycle method)</a>
+      <li><a href="implementation/managers/astwifid.html#astoria.astwifid.WiFiHotspotLifeCycle.__init__">__init__() (astoria.astwifid.WiFiHotspotLifeCycle method)</a>
 
       <ul>
         <li><a href="implementation/disk_types.html#astoria.common.disks.constraints.AndConstraint.__init__">(astoria.common.disks.constraints.AndConstraint method)</a>
@@ -204,7 +204,7 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="implementation/consumers/astwifid.html#astoria.astwifid.WiFiHotspotLifeCycle.generate_hostapd_config">generate_hostapd_config() (astoria.astwifid.WiFiHotspotLifeCycle method)</a>
+      <li><a href="implementation/managers/astwifid.html#astoria.astwifid.WiFiHotspotLifeCycle.generate_hostapd_config">generate_hostapd_config() (astoria.astwifid.WiFiHotspotLifeCycle method)</a>
 </li>
       <li><a href="implementation/managers/astmetad.html#astoria.common.metadata.Metadata.get_os_version_info">get_os_version_info() (astoria.common.metadata.Metadata class method)</a>
 </li>
@@ -220,15 +220,17 @@
 </li>
       <li><a href="implementation/managers/astprocd.html#astoria.astprocd.ProcessManager.handle_disk_removal">handle_disk_removal() (astoria.astprocd.ProcessManager method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="implementation/managers/astprocd.html#astoria.astprocd.ProcessManager.handle_kill_request">handle_kill_request() (astoria.astprocd.ProcessManager method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="implementation/managers/astprocd.html#astoria.astprocd.ProcessManager.handle_restart_request">handle_restart_request() (astoria.astprocd.ProcessManager method)</a>
 </li>
-      <li><a href="implementation/consumers/astwifid.html#astoria.astwifid.WiFiHotspotLifeCycle.has_metadata_changed">has_metadata_changed() (astoria.astwifid.WiFiHotspotLifeCycle method)</a>
+      <li><a href="implementation/managers/astwifid.html#astoria.astwifid.WiFiHotspotLifeCycle.has_metadata_changed">has_metadata_changed() (astoria.astwifid.WiFiHotspotLifeCycle method)</a>
 </li>
-      <li><a href="implementation/consumers/astwifid.html#astoria.astwifid.WiFiHotspotLifeCycle.HOSTAPD_BINARY">HOSTAPD_BINARY (astoria.astwifid.WiFiHotspotLifeCycle attribute)</a>
+      <li><a href="implementation/managers/astwifid.html#astoria.astwifid.WiFiHotspotLifeCycle.HOSTAPD_BINARY">HOSTAPD_BINARY (astoria.astwifid.WiFiHotspotLifeCycle attribute)</a>
+</li>
+      <li><a href="implementation/managers/astwifid.html#astoria.common.ipc.WiFiManagerMessage.hotspot_running">hotspot_running (astoria.common.ipc.WiFiManagerMessage attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -382,7 +384,7 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="implementation/managers/astmetad.html#astoria.common.metadata.RobotMode">RobotMode (class in astoria.common.metadata)</a>
 </li>
-      <li><a href="implementation/consumers/astwifid.html#astoria.astwifid.WiFiHotspotLifeCycle.run_hotspot">run_hotspot() (astoria.astwifid.WiFiHotspotLifeCycle method)</a>
+      <li><a href="implementation/managers/astwifid.html#astoria.astwifid.WiFiHotspotLifeCycle.run_hotspot">run_hotspot() (astoria.astwifid.WiFiHotspotLifeCycle method)</a>
 </li>
       <li><a href="implementation/managers/astprocd.html#astoria.common.code_status.CodeStatus.RUNNING">RUNNING (astoria.common.code_status.CodeStatus attribute)</a>
 </li>
@@ -398,7 +400,7 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="implementation/consumers/astwifid.html#astoria.astwifid.WiFiHotspotLifeCycle.stop_hotspot">stop_hotspot() (astoria.astwifid.WiFiHotspotLifeCycle method)</a>
+      <li><a href="implementation/managers/astwifid.html#astoria.astwifid.WiFiHotspotLifeCycle.stop_hotspot">stop_hotspot() (astoria.astwifid.WiFiHotspotLifeCycle method)</a>
 </li>
       <li><a href="design/ipc.html#astoria.common.ipc.RequestResponse.success">success (astoria.common.ipc.RequestResponse attribute)</a>
 </li>
@@ -454,13 +456,15 @@
 </li>
       <li><a href="implementation/managers/astmetad.html#astoria.common.metadata.Metadata.wifi_psk">wifi_psk (astoria.common.metadata.Metadata attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="implementation/managers/astmetad.html#astoria.common.metadata.Metadata.wifi_region">wifi_region (astoria.common.metadata.Metadata attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="implementation/managers/astmetad.html#astoria.common.metadata.Metadata.wifi_ssid">wifi_ssid (astoria.common.metadata.Metadata attribute)</a>
 </li>
-      <li><a href="implementation/consumers/astwifid.html#astoria.astwifid.WiFiHotspotLifeCycle">WiFiHotspotLifeCycle (class in astoria.astwifid)</a>
+      <li><a href="implementation/managers/astwifid.html#astoria.astwifid.WiFiHotspotLifeCycle">WiFiHotspotLifeCycle (class in astoria.astwifid)</a>
+</li>
+      <li><a href="implementation/managers/astwifid.html#astoria.common.ipc.WiFiManagerMessage">WiFiManagerMessage (class in astoria.common.ipc)</a>
 </li>
   </ul></td>
 </tr></table>

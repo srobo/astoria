@@ -19,8 +19,8 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Disk Types" href="../disk_types.html" />
-    <link rel="prev" title="Command Line Interface" href="astctl.html" /> 
+    <link rel="next" title="State Consumers" href="../consumers/index.html" />
+    <link rel="prev" title="Astprocd" href="astprocd.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -45,15 +45,19 @@
 <li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">Implementation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../data_components.html">Data Components</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../managers/index.html">State Managers</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="index.html">State Consumers</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="astctl.html">Command Line Interface</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">State Managers</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="astdiskd.html">Astdiskd</a></li>
+<li class="toctree-l3"><a class="reference internal" href="astmetad.html">Astmetad</a></li>
+<li class="toctree-l3"><a class="reference internal" href="astprocd.html">Astprocd</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Astwifid</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#astwifid-data-structures-and-classes">Astwifid Data Structures and Classes</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#manager-dependencies">Manager Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#minimal-state-manager">Minimal State Manager</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../consumers/index.html">State Consumers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../disk_types.html">Disk Types</a></li>
 </ul>
 </li>
@@ -74,10 +78,10 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../index.html">Implementation</a> &raquo;</li>
-          <li><a href="index.html">State Consumers</a> &raquo;</li>
+          <li><a href="index.html">State Managers</a> &raquo;</li>
       <li>Astwifid</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../_sources/implementation/consumers/astwifid.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/implementation/managers/astwifid.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -106,6 +110,18 @@ Hostapd is then launched as a child process of the astwifid process. This is man
 </div></blockquote>
 <section id="astwifid-data-structures-and-classes">
 <h2>Astwifid Data Structures and Classes<a class="headerlink" href="#astwifid-data-structures-and-classes" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="astoria.common.ipc.WiFiManagerMessage">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.ipc.</span></span><span class="sig-name descname"><span class="pre">WiFiManagerMessage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/ipc/manager_messages.html#WiFiManagerMessage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.ipc.WiFiManagerMessage" title="Permalink to this definition"></a></dt>
+<dd><p>Status message for WiFi Manager.</p>
+<p>Published to /astoria/astwifid</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="astoria.common.ipc.WiFiManagerMessage.hotspot_running">
+<span class="sig-name descname"><span class="pre">hotspot_running</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></em><a class="headerlink" href="#astoria.common.ipc.WiFiManagerMessage.hotspot_running" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="astoria.astwifid.WiFiHotspotLifeCycle">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.astwifid.</span></span><span class="sig-name descname"><span class="pre">WiFiHotspotLifeCycle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ssid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bridge</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_wpa3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astwifid.html#WiFiHotspotLifeCycle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astwifid.WiFiHotspotLifeCycle" title="Permalink to this definition"></a></dt>
@@ -173,8 +189,8 @@ Hostapd is then launched as a child process of the astwifid process. This is man
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="astctl.html" class="btn btn-neutral float-left" title="Command Line Interface" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../disk_types.html" class="btn btn-neutral float-right" title="Disk Types" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="astprocd.html" class="btn btn-neutral float-left" title="Astprocd" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../consumers/index.html" class="btn btn-neutral float-right" title="State Consumers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
