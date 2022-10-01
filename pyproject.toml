@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "astoria"
-version = "0.9.0"
+version = "0.10.0"
 description = "Robot Management System for Student Robotics Kit"
 authors = [
     "Dan Trickey <srobo-astoria@trickey.io>",
