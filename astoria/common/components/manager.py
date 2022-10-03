@@ -7,7 +7,8 @@ from typing import Callable, Coroutine, Generic, Match, Type, TypeVar
 
 from pydantic import ValidationError, parse_obj_as
 
-from ..ipc import ManagerMessage, ManagerRequest, RequestResponse
+from astoria.common.ipc import ManagerMessage, ManagerRequest, RequestResponse
+
 from .component import DataComponent
 
 LOGGER = logging.getLogger(__name__)
