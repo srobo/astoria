@@ -291,7 +291,7 @@ class MQTTWrapper:
         try:
             await asyncio.wait_for(
                 self._request_response_events[request.uuid].wait(),
-                2,
+                response_timeout,
             )
         except asyncio.TimeoutError as e:
             raise RuntimeError("No response to manager request") from e
