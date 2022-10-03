@@ -25,7 +25,7 @@ from .topic import Topic
 
 LOGGER = logging.getLogger(__name__)
 
-Handler = Callable[[Match[str], str], Coroutine[Any, Any, None]]  # type: ignore
+Handler = Callable[[Match[str], str], Coroutine[Any, Any, None]]
 RequestT = TypeVar("RequestT", bound=ManagerRequest)
 
 

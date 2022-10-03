@@ -51,7 +51,7 @@ class BroadcastHelper(Generic[T]):
         except JSONDecodeError:
             LOGGER.warning(f"Broadcast event {self._name} contained invalid JSON")
 
-    def send(self, **kwargs: Any) -> None:  # type: ignore
+    def send(self, **kwargs: Any) -> None:
         """Send an event."""
         data = self._schema(
             event_name=self._schema.name,
