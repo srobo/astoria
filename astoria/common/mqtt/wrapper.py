@@ -307,7 +307,12 @@ class MQTTWrapper:
         payload: str,
     ) -> None:
         """Handle request response messages."""
-        uuid = UUID(match.group(2))
+        try:
+            uuid = UUID(match.group(2))
+        except ValueError:
+            # The UUID is invalid, ignore it.
+            return
+
         # If uuid not recognised, probably a response for another client
         if uuid in self._request_response_events:
             try:
