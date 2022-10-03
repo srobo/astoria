@@ -222,6 +222,7 @@ class MQTTWrapper:
 
         Should be called before the MQTT wrapper is connected.
         """
+        print(f"SUBSVIRBBNN: {topic} {callback}")
         if len(topic) == 0:
             topic_complete = Topic.parse(self.mqtt_prefix)
         else:

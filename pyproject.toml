@@ -24,6 +24,8 @@ dbus-next = "^0.2.3"
 gmqtt = "^0.6.11"
 tomli = { version = "^2.0.1", python = "<=3.10" }
 tomli-w = "^1.0.0"
+starlette = "^0.21.0"
+uvicorn = "^0.18.3"
 
 [tool.poetry.dev-dependencies]
 flake8 = "*"
