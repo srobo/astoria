@@ -19,7 +19,12 @@ import gmqtt
 from pydantic import BaseModel, ValidationError, parse_obj_as
 
 from astoria.common.config.system import MQTTBrokerInfo
-from astoria.common.ipc import ManagerMessage, ManagerRequest, RequestResponse
+from astoria.common.ipc import (
+    ManagerMessage,
+    ManagerRequest,
+    RequestFailedException,
+    RequestResponse,
+)
 
 from .topic import Topic
 
@@ -300,9 +305,12 @@ class MQTTWrapper:
                 response_timeout,
             )
         except asyncio.TimeoutError as e:
-            raise RuntimeError("No response to manager request") from e
+            raise RequestFailedException(
+                f"No response to manager request after {response_timeout}s",
+            ) from e
+
         if request.uuid not in self._request_response_data:
-            raise RuntimeError("Request Response not available.")
+            raise RequestFailedException("Response for the request was not found.")
         else:
             self._request_response_events.pop(request.uuid)
             return self._request_response_data.pop(request.uuid)

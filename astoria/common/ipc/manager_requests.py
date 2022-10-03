@@ -6,6 +6,10 @@ from uuid import UUID, uuid4
 from pydantic import BaseModel, Field
 
 
+class RequestFailedException(RuntimeError):
+    """A manager request failed to get a response."""
+
+
 class ManagerRequest(BaseModel):
     """Schema definition for a Manager Request."""
 
