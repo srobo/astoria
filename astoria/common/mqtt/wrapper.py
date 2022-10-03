@@ -16,7 +16,7 @@ from typing import (
 from uuid import UUID
 
 import gmqtt
-from pydantic import BaseModel, parse_obj_as
+from pydantic import BaseModel, ValidationError, parse_obj_as
 
 from astoria.common.config.system import MQTTBrokerInfo
 from astoria.common.ipc import ManagerMessage, ManagerRequest, RequestResponse
@@ -254,7 +254,7 @@ class MQTTWrapper:
         """Handle status messages from state managers."""
         manager = match.group(1)
         try:
-            info = ManagerMessage(**loads(payload))
+            info = parse_obj_as(ManagerMessage, loads(payload))
             LOGGER.debug(f"Status update from {manager}: {info.status}")
             if info.status is ManagerMessage.Status.RUNNING:
                 try:
@@ -267,7 +267,13 @@ class MQTTWrapper:
                     if self._no_dependency_event is not None:
                         self._no_dependency_event.set()
         except JSONDecodeError:
-            pass
+            LOGGER.warning(
+                f"Received invalid JSON in manager message for {manager}: {payload}",
+            )
+        except ValidationError:
+            LOGGER.warning(
+                f"Received invalid manager message for {manager}: {payload}",
+            )
 
     async def manager_request(
         self,
