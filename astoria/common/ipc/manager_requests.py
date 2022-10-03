@@ -1,6 +1,6 @@
 """Schema definitions for manager requests."""
 from pathlib import Path
-from typing import final
+from typing import Dict, Type, final
 from uuid import UUID, uuid4
 
 from pydantic import BaseModel, Field
@@ -46,3 +46,20 @@ class RemoveStaticDiskRequest(ManagerRequest):
 
 
 RemoveAllStaticDisksRequest = ManagerRequest
+
+# Map of requests available on each state manager
+# A request must be registered here to work.
+REQUEST_TYPE_MAP: Dict[str, Dict[str, Type[ManagerRequest]]] = {
+    "astdiskd": {
+        "add_static_disk": AddStaticDiskRequest,
+        "remove_static_disk": RemoveStaticDiskRequest,
+        "remove_all_static_disks": RemoveAllStaticDisksRequest,
+    },
+    "astmetad": {
+        "mutate": MetadataSetManagerRequest,
+    },
+    "astprocd": {
+        "kill": UsercodeKillManagerRequest,
+        "restart": UsercodeRestartManagerRequest,
+    },
+}

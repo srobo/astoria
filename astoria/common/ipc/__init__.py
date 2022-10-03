@@ -14,6 +14,7 @@ from .manager_messages import (
     WiFiManagerMessage,
 )
 from .manager_requests import (
+    REQUEST_TYPE_MAP,
     AddStaticDiskRequest,
     ManagerRequest,
     MetadataSetManagerRequest,
@@ -37,6 +38,7 @@ __all__ = [
     "RemoveAllStaticDisksRequest",
     "RemoveStaticDiskRequest",
     "RequestResponse",
+    "REQUEST_TYPE_MAP",
     "StartButtonBroadcastEvent",
     "UsercodeKillManagerRequest",
     "UsercodeLogBroadcastEvent",
