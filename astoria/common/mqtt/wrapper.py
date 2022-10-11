@@ -16,7 +16,7 @@ from typing import (
 from uuid import UUID
 
 import gmqtt
-from pydantic import BaseModel, parse_obj_as
+from pydantic import BaseModel, ValidationError, parse_obj_as
 
 from astoria.common.config.system import MQTTBrokerInfo
 from astoria.common.ipc import ManagerMessage, ManagerRequest, RequestResponse
@@ -74,12 +74,11 @@ class MQTTWrapper:
 
         self.subscribe("+", self._dependency_message_handler)
 
-        # Subscribe to request response from dependent managers
-        for manager in self._dependencies:
-            self.subscribe(
-                f"{manager}/request/+/+",
-                self._request_response_message_handler,
-            )
+        # Subscribe to all request response messages
+        self.subscribe(
+            "+/request/+/+",
+            self._request_response_message_handler,
+        )
         self._request_response_events: Dict[UUID, asyncio.Event] = {}
         self._request_response_data: Dict[UUID, RequestResponse] = {}
 
@@ -255,7 +254,7 @@ class MQTTWrapper:
         """Handle status messages from state managers."""
         manager = match.group(1)
         try:
-            info = ManagerMessage(**loads(payload))
+            info = parse_obj_as(ManagerMessage, loads(payload))
             LOGGER.debug(f"Status update from {manager}: {info.status}")
             if info.status is ManagerMessage.Status.RUNNING:
                 try:
@@ -268,7 +267,13 @@ class MQTTWrapper:
                     if self._no_dependency_event is not None:
                         self._no_dependency_event.set()
         except JSONDecodeError:
-            pass
+            LOGGER.warning(
+                f"Received invalid JSON in manager message for {manager}: {payload}",
+            )
+        except ValidationError:
+            LOGGER.warning(
+                f"Received invalid manager message for {manager}: {payload}",
+            )
 
     async def manager_request(
         self,
@@ -283,11 +288,6 @@ class MQTTWrapper:
 
         Raises exception if not dependent on manager, or if request fails.
         """
-        if manager not in self._dependencies:
-            raise ValueError(
-                f"{manager} must be listed as dependency to make manager request",
-            )
-
         topic = f"{self._broker_info.topic_prefix}/{manager}/request/{request_name}"
 
         self._request_response_events[request.uuid] = asyncio.Event()
@@ -297,7 +297,7 @@ class MQTTWrapper:
         try:
             await asyncio.wait_for(
                 self._request_response_events[request.uuid].wait(),
-                2,
+                response_timeout,
             )
         except asyncio.TimeoutError as e:
             raise RuntimeError("No response to manager request") from e
@@ -313,7 +313,12 @@ class MQTTWrapper:
         payload: str,
     ) -> None:
         """Handle request response messages."""
-        uuid = UUID(match.group(2))
+        try:
+            uuid = UUID(match.group(2))
+        except ValueError:
+            # The UUID is invalid, ignore it.
+            return
+
         # If uuid not recognised, probably a response for another client
         if uuid in self._request_response_events:
             try:
