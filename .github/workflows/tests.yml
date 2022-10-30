@@ -37,5 +37,3 @@ jobs:
         run: make type
       - name: Unit tests
         run: make test-cov
-      - name: Build Docs
-        run: make docs

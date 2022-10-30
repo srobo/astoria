@@ -1,1 +1,0 @@
-This file is not an update file, but is here to ensure that the tests are updated when the update format is added.

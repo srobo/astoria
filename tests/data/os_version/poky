@@ -1,6 +1,0 @@
-ID=poky
-NAME="Poky (Yocto Project Reference Distro)"
-VERSION="4.0.1 (kirkstone)"
-VERSION_ID=4.0.1
-PRETTY_NAME="Poky (Yocto Project Reference Distro) 4.0.1 (kirkstone)"
-DISTRO_CODENAME="kirkstone"

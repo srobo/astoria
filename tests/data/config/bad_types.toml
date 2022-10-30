@@ -1,7 +1,0 @@
-[mqtt]
-host = 12
-port = "bees"
-enable_tls = false
-force_protocol_version_3_1 = false
-
-topic_prefix = "/astoria"
