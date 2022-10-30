@@ -1,31 +1,25 @@
 [tool.poetry]
 name = "astoria"
 version = "0.0.0"
-description = "Robot Management System for Student Robotics Kit"
+description = "EXPERIMENT"
 authors = [
     "Dan Trickey <srobo-astoria@trickey.io>",
     "Karina Kwiatek <kkwiatek@studentrobotics.org>",
 ]
 license = "MIT"
 readme = "README.md"
-repository = "https://github.com/srobo/astoria"
-homepage = "https://github.com/srobo/astoria"
-documentation = "https://srobo.github.io/astoria"
 classifiers = [
-    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Private :: Do Not Upload",
     "Typing :: Typed",
 ]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-pydantic = "^1.9.1"
-click = "^8.1.2"
-dbus-next = "^0.2.3"
-gmqtt = "^0.6.11"
-tomli = { version = "^2.0.1", python = "<=3.10" }
-tomli-w = "^1.0.0"
+libastoria = "^1.0.0"
+
 
 [tool.poetry.dev-dependencies]
+libastoria = { path = "libastoria/", develop = true }
 flake8 = "*"
 flake8-commas = "*"
 flake8-comprehensions = "*"
@@ -40,23 +34,8 @@ pytest-cov = "*"
 pytest-asyncio = "*"
 rope = "*"
 isort = {version = "*",extras = ["pyproject"]}
-sphinx = "*"
-sphinx-rtd-theme = "*"
-sphinx_autodoc_typehints = "*"
-sphinx-pydantic = "*"
-sphinx-jsonschema = "*"
-sphinx-autobuild = "*"
-sphinx-click = "*"
-m2r2 = "*"
 types-click = "*"
 
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
-
-[tool.poetry.scripts]
-astdiskd = 'astoria.astdiskd:main'
-astmetad = 'astoria.astmetad:main'
-astprocd = 'astoria.astprocd:main'
-astctl = 'astoria.astctl:main'
-astwifid = 'astoria.astwifid:main'

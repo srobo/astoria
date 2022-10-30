@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "libastoria"
+version = "1.0.0"
+description = "Astoria Client Library - EXPERIMENT"
+authors = [
+    "Dan Trickey <srobo-astoria@trickey.io>",
+]
+license = "MIT"
+repository = "https://github.com/trickeydan/astoria-next"
+homepage = "https://github.com/trickeydan/astoria-next"
+classifiers = [
+    "Private :: Do Not Upload",
+    "Typing :: Typed",
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+pydantic = "^1.10.2"
+
+[build-system]
+requires = ["poetry>=1.0.0"]
+build-backend = "poetry.masonry.api"
+
