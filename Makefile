@@ -1,11 +1,12 @@
-.PHONY: all clean docs docs-serve lint type test test-cov debian
+.PHONY: all clean lint type test test-cov isort
 
 CMD:=poetry run
-PYMODULE:=astoria libastoria
+PYMODULE:=astoria
 TESTS:=tests
 PYTEST_FLAGS:=-vv
 
 all: type test lint
+	make -C libastoria
 
 lint:
 	$(CMD) flake8 $(PYMODULE) $(TESTS)
@@ -14,20 +15,13 @@ type:
 	$(CMD) mypy $(PYMODULE) $(TESTS)
 
 test:
-	$(CMD) pytest $(PYTEST_FLAGS) --cov=$(PYMODULE) $(TESTS)
+	$(CMD) pytest $(PYTEST_FLAGS) $(TESTS)
 
 test-cov:
-	$(CMD) pytest $(PYTEST_FLAGS) --cov=$(PYMODULE) $(TESTS) --cov-report html
+	$(CMD) pytest $(PYTEST_FLAGS) $(TESTS) --cov-report html
 
 isort:
-	$(CMD) isort $(PYMODULE) $(TESTS) $(EXTRACODE) --skip-glob $(EXCLUDED_PATHS)
-
-setup.py:
-	$(CMD) dephell deps convert --from pyproject.toml --to setup.py
-
-debian: setup.py
-	sudo mk-build-deps -ir
-	debuild -uc -us
+	$(CMD) isort $(PYMODULE) $(TESTS) $(EXTRACODE)
 
 clean:
 	git clean -Xdf # Delete all files in .gitignore

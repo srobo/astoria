@@ -1,17 +1,21 @@
-from typing import Dict, Generic, List, Optional, Type
+"""Client for Astoria API."""
+from typing import Dict, Generic, Optional, Type
 
 from pydantic import parse_obj_as
 
-from libastoria.models import DisksDomain, ProcessDomain, DataT
+from libastoria.models import DataT, DisksDomain, ProcessDomain
+
 
 class DataDomain(Generic[DataT]):
+    """Data held in a specific domain."""
 
     def __init__(self, name: str, domain_t: Type[DataT]) -> None:
         self._name = name
-        self._model = parse_obj_as(domain_t, {})  # TODO: Fetch over HTTP lol
+        self._model = parse_obj_as(domain_t, {})
 
     @property
     def data(self) -> DataT:
+        """The data."""
         return self._model
 
     def request(self, name: str, data: Optional[Dict[str, str]] = None) -> None:

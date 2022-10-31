@@ -1,6 +1,6 @@
 """High-level clients."""
 
 from .asyncio import AsyncAstoriaClient
-from .sync import AstoriaClient
+from .client import AstoriaClient
 
 __all__ = ["AstoriaClient", "AsyncAstoriaClient"]

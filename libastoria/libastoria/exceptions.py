@@ -1,3 +1,5 @@
+"""Exceptions."""
+
 
 class AstoriaClientException(Exception):
     """An exception occurred with the Astoria client."""
@@ -9,4 +11,3 @@ class AstoriaDomainUnavailableException(Exception):
 
 class AstoriaRequestException(AstoriaClientException):
     """An error occurred during the request."""
-
