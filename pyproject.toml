@@ -16,6 +16,7 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.8"
 libastoria = "^1.0.0"
+tomli-w = "^1.0.0"
 
 
 [tool.poetry.dev-dependencies]
@@ -31,9 +32,11 @@ flake8-todo = "*"
 mypy = "*"
 pytest = "*"
 pytest-asyncio = "*"
+responses = "^0.22.0"
 rope = "*"
 isort = {version = "*",extras = ["pyproject"]}
 types-click = "*"
+types-requests = "^2.28.11.2"
 
 [build-system]
 requires = ["poetry>=0.12"]

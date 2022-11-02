@@ -16,6 +16,7 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.8"
 pydantic = "^1.10.2"
+requests = "^2.28.1"
 
 [build-system]
 requires = ["poetry>=1.0.0"]

@@ -14,13 +14,13 @@ DataT = TypeVar('DataT', bound=DataModel)
 class DisksDomain(DataModel):
     """State held about mounted disks."""
 
-    disks: List[str] = ["bees"]
+    disks: List[str]
 
 
 class ProcessDomain(DataModel):
     """State held about usercode processes."""
 
-    running: bool = False
+    running: bool
 
 
 class LogMessage(DataModel):

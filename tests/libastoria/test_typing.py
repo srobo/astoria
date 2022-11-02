@@ -1,15 +1,7 @@
 """Smoke tests for libastoria typing."""
 import pytest
 
-from libastoria import AstoriaClient, AsyncAstoriaClient
-
-
-def test_typing() -> None:
-    """Smoke test for sync client."""
-    client = AstoriaClient()
-
-    assert not client.process.data.running
-    client.process.request("kill")
+from libastoria import AsyncAstoriaClient
 
 
 @pytest.mark.asyncio
