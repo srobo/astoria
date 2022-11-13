@@ -162,14 +162,10 @@ class UsercodeLifecycle:
         if self._process is not None and self._process_lock.locked():
             LOGGER.info("Attempting to kill process.")
 
-            # Work-around for bpo-43884
-            self._process._transport.close()  # type: ignore
-
             LOGGER.info(f"Sent SIGTERM to pid {self._process.pid}")
             self._process.send_signal(SIGTERM)
+            await asyncio.sleep(5.0)
             try:
-                await asyncio.wait_for(self._process.communicate(), timeout=5.0)
-            except asyncio.TimeoutError:
                 if self._process is not None:
                     LOGGER.info(f"Sent SIGKILL to pid {self._process.pid}")
                     self._process.send_signal(SIGKILL)
