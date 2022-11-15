@@ -159,12 +159,16 @@ class UsercodeLifecycle:
 
     async def kill_process(self) -> None:
         """Kill the process, if one is running."""
+        async def wait_for_exit() -> None:
+            while self._process is not None:
+                await asyncio.sleep(0.1)
+
         if self._process is not None and self._process_lock.locked():
             LOGGER.info("Attempting to kill process.")
 
             LOGGER.info(f"Sent SIGTERM to pid {self._process.pid}")
             self._process.send_signal(SIGTERM)
-            await asyncio.sleep(5.0)
+            await asyncio.wait_for(wait_for_exit(), timeout=5.0)
             try:
                 if self._process is not None:
                     LOGGER.info(f"Sent SIGKILL to pid {self._process.pid}")
