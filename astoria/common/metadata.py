@@ -53,7 +53,45 @@ class Metadata(BaseModel):
         )
 
     @classmethod
-    def get_os_version_info(
+    def get_os_version_info(cls) -> Dict[str, str]:
+        """
+        Reads OS version information.
+
+        :returns: dict OS release values
+        """
+        system = platform.system()
+        if system == "Linux":
+            return cls.get_os_release_info()
+        elif system == "Darwin":
+            return cls.get_macos_release_info()
+        return {}
+
+    @classmethod
+    def get_macos_release_info(cls) -> Dict[str, str]:
+        """
+        Get the release information for MacOS.
+
+        :returns: An os-release style dictionary of OS info.
+        """
+        version, _, _ = platform.mac_ver()
+        major_ver, minor_ver = version.split(".", 1)
+
+        # Determine OS Name
+        if int(major_ver) <= 9:
+            brand = "Mac OS"
+        elif int(major_ver) == 10 and int(minor_ver) <= 11:
+            brand = "Mac OS X"
+        else:
+            brand = "macOS"
+
+        return {
+            'NAME': brand,
+            'PRETTY_NAME': f"{brand} {version}",
+            'VERSION_ID': version,
+        }
+
+    @classmethod
+    def get_os_release_info(
             cls,
             os_release_path: Path = Path('/etc/os-release'),
     ) -> Dict[str, str]:

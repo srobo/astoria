@@ -1,5 +1,8 @@
 """Test the metadata schema."""
 from pathlib import Path
+from unittest.mock import patch
+
+import pytest
 
 from astoria.common.config import AstoriaConfig
 from astoria.common.metadata import Metadata, RobotMode
@@ -99,10 +102,10 @@ def test_metadata_init() -> None:
         Metadata.init(config)
 
 
-def test_get_os_version_info() -> None:
-    """Test the get_os_version_info() method is able to extract variables correctly."""
+def test_get_os_release_info() -> None:
+    """Test the get_os_release_info() method is able to extract variables correctly."""
     fixture_path = Path('tests/data/os_version')
-    version_info = Metadata.get_os_version_info(fixture_path / 'arch')
+    version_info = Metadata.get_os_release_info(fixture_path / 'arch')
     assert version_info.get('NAME') == 'Arch Linux'
     assert version_info.get('PRETTY_NAME') == "Arch Linux"
     assert version_info.get('ID') == 'arch'
@@ -116,7 +119,7 @@ def test_get_os_version_info() -> None:
     assert version_info.get('VERSION') is None
     assert version_info.get('VERSION_ID') is None
 
-    version_info = Metadata.get_os_version_info(fixture_path / 'fedora17')
+    version_info = Metadata.get_os_release_info(fixture_path / 'fedora17')
     assert version_info.get('NAME') == 'Fedora'
     assert version_info.get('VERSION') == '17 (Beefy Miracle)'
     assert version_info.get('ID') == 'fedora'
@@ -127,7 +130,7 @@ def test_get_os_version_info() -> None:
     assert version_info.get('HOME_URL') == 'https://fedoraproject.org/'
     assert version_info.get('BUG_REPORT_URL') == 'https://bugzilla.redhat.com/'
 
-    version_info = Metadata.get_os_version_info(fixture_path / 'poky')
+    version_info = Metadata.get_os_release_info(fixture_path / 'poky')
     assert version_info.get('ID') == 'poky'
     assert version_info.get('NAME') == 'Poky (Yocto Project Reference Distro)'
     assert version_info.get('VERSION') == "4.0.1 (kirkstone)"
@@ -135,3 +138,26 @@ def test_get_os_version_info() -> None:
     assert version_info.get('PRETTY_NAME') == \
            'Poky (Yocto Project Reference Distro) 4.0.1 (kirkstone)'
     assert version_info.get('DISTRO_CODENAME') == 'kirkstone'
+
+
+@pytest.mark.parametrize(
+    "version_data,expected_brand",
+    [
+        ("8", "Mac OS"),
+        ("10.9", "Mac OS X"),
+        ("10.11", "Mac OS X"),
+        ("10.12", "macOS"),
+        ("11.3", "macOS"),
+        ("12.5", "macOS"),
+    ],
+)
+def get_macos_release_info(version_data: str, expected_brand: str) -> None:
+    """Test that we correctly get the Mac version data."""
+    with patch("platform.mac_ver") as mock_mac_ver:
+        mock_mac_ver.return_value = (version_data, "", "")
+        assert Metadata.get_macos_release_info() == {
+            'NAME': expected_brand,
+            'PRETTY_NAME': f"{expected_brand} {version_data}",
+            'VERSION_ID': version_data,
+        }
+        mock_mac_ver.assert_called_once()
