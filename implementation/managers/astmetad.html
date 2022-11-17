@@ -156,12 +156,40 @@ not add nested fields to this schema.</p>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="astoria.common.metadata.Metadata.get_os_version_info">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_os_version_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">os_release_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('/etc/os-release')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/metadata.html#Metadata.get_os_version_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.metadata.Metadata.get_os_version_info" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="astoria.common.metadata.Metadata.get_macos_release_info">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_macos_release_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/metadata.html#Metadata.get_macos_release_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.metadata.Metadata.get_macos_release_info" title="Permalink to this definition"></a></dt>
+<dd><p>Get the release information for MacOS.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An os-release style dictionary of OS info.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="astoria.common.metadata.Metadata.get_os_release_info">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_os_release_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">os_release_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('/etc/os-release')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/metadata.html#Metadata.get_os_release_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.metadata.Metadata.get_os_release_info" title="Permalink to this definition"></a></dt>
 <dd><p>Reads OS version information from /etc/os-release.</p>
 <p>See man page os-release(5) for more information.
 :rtype: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]
 :returns: dict OS release values</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="astoria.common.metadata.Metadata.get_os_version_info">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_os_version_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/metadata.html#Metadata.get_os_version_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.metadata.Metadata.get_os_version_info" title="Permalink to this definition"></a></dt>
+<dd><p>Reads OS version information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>dict OS release values</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
