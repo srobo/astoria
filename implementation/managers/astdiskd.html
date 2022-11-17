@@ -119,7 +119,7 @@ to receive information about the mounted volumes on the system.</p>
 <dd><p>Main routine for astdiskd.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -148,7 +148,7 @@ on this data go into a safe state.</p>
 <dd><p>Update the status of astdiskd when disks are changed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -171,7 +171,7 @@ on this data go into a safe state.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.disks.DiskInfo.mount_path">
-<span class="sig-name descname"><span class="pre">mount_path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.10)"><span class="pre">pathlib.Path</span></a></em><a class="headerlink" href="#astoria.common.disks.DiskInfo.mount_path" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">mount_path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.11)"><span class="pre">pathlib.Path</span></a></em><a class="headerlink" href="#astoria.common.disks.DiskInfo.mount_path" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -194,10 +194,10 @@ on this data go into a safe state.</p>
 we need to calculate the type of each disk in the message.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>default_usercode_entrypoint</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – default entrypoint from astoria config</p>
+<dd class="field-odd"><p><strong>default_usercode_entrypoint</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – default entrypoint from astoria config</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<code class="xref py py-func docutils literal notranslate"><span class="pre">NewType()</span></code>(<code class="docutils literal notranslate"><span class="pre">DiskUUID</span></code>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>), <a class="reference internal" href="#astoria.common.disks.DiskInfo" title="astoria.common.disks.structs.DiskInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">DiskInfo</span></code></a>]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<code class="xref py py-func docutils literal notranslate"><span class="pre">NewType()</span></code>(<code class="docutils literal notranslate"><span class="pre">DiskUUID</span></code>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>), <a class="reference internal" href="#astoria.common.disks.DiskInfo" title="astoria.common.disks.structs.DiskInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">DiskInfo</span></code></a>]</p>
 </dd>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>A dictionary of disk UUIDs and disk information.</p>
@@ -207,7 +207,7 @@ we need to calculate the type of each disk in the message.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.ipc.DiskManagerMessage.disks">
-<span class="sig-name descname"><span class="pre">disks</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#astoria.common.disks.DiskUUID" title="astoria.common.disks.DiskUUID"><span class="pre">DiskUUID</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.10)"><span class="pre">pathlib.Path</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#astoria.common.ipc.DiskManagerMessage.disks" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">disks</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#astoria.common.disks.DiskUUID" title="astoria.common.disks.DiskUUID"><span class="pre">DiskUUID</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.11)"><span class="pre">pathlib.Path</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#astoria.common.ipc.DiskManagerMessage.disks" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
