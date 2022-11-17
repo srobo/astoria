@@ -41,6 +41,6 @@ class ViewUsercodeLogCommand(Command):
             # timeout to ensure that the loop condition is checked.
             try:
                 ev = await asyncio.wait_for(self._log_event.wait_broadcast(), timeout=0.1)
-                print(ev.content)
+                print(ev.content.rstrip())
             except asyncio.TimeoutError:
                 pass
