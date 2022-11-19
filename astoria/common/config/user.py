@@ -33,6 +33,11 @@ class RobotSettings(BaseModel):
     wifi_region: str = "GB"  # Assume GB as that is where most competitors are.
     wifi_enabled: bool = True
 
+    class Config:
+        """Pydantic config."""
+
+        extra = "forbid"
+
     @validator("team_tla")
     def validate_team_tla(cls, val: str) -> str:
         """
