@@ -1,3 +1,4 @@
 usercode_entrypoint = "entrypoint.py"
 team_tla = "abc"
 wifi_psk = "eightcharacters"
+wifi_region = "GB"

@@ -20,8 +20,24 @@ SSID_PREFIX = "robot-"
 MAX_SSID_LENGTH = 32  # SSIDs must be no more than 32 octets.
 
 
-class NoValidRobotSettingsException(Exception):
-    """The robot settings were not valid or did not exist."""
+class RobotSettingsException(Exception):
+    """There was an error with the robot settings file."""
+
+
+class NoValidRobotSettingsException(RobotSettingsException):
+    """The robot settings were not valid."""
+
+
+class NoRobotSettingsException(RobotSettingsException):
+    """The robot settings file does not exist."""
+
+
+class UnreadableRobotSettingsException(RobotSettingsException):
+    """
+    Unable to read robot settings file.
+
+    It is probably binary or invalid UTF-8.
+    """
 
 
 class RobotSettings(BaseModel):
@@ -71,6 +87,25 @@ class RobotSettings(BaseModel):
 
         return val
 
+    @validator("usercode_entrypoint")
+    def validate_usercode_entrypoint(cls, val: str) -> str:
+        """
+        Validate that the usercode entrypoint is valid.
+
+        :param val: The entrypoint to validate.
+        :returns: The validated entrypoint.
+        """
+        if val in ["", "."]:
+            raise ValueError(f"{val!r} is a disallowed filename.")
+
+        if re.search("/<>|:&", val):
+            raise ValueError(f"{val!r} contains an invalid character.")
+
+        if val.startswith(".."):
+            raise ValueError(f"{val!r} cannot start with ..")
+
+        return val
+
     @validator("wifi_psk")
     def validate_wifi_psk(cls, val: str) -> str:
         """
@@ -109,20 +144,24 @@ class RobotSettings(BaseModel):
 
         :param path: The file to load settings from.
         :raises NoValidRobotSettingsException: The robot settings were not valid.
+        :raises NoRobotSettingsException: The robot settings file did not exist.
+        :raises UnreadableRobotSettingsException: The robot settings file was unreadable.
         :returns: The robot settings in path.
         """
         if not path.exists():
-            raise NoValidRobotSettingsException("File does not exist.")
+            raise NoRobotSettingsException(f"{path.name} does not exist.")
 
         try:
             with path.open("rb") as fh:
                 data = tomllib.load(fh)
-        except tomllib.TOMLDecodeError:
-            raise NoValidRobotSettingsException("Invalid TOML")
+        except tomllib.TOMLDecodeError as e:
+            raise NoValidRobotSettingsException(f"Invalid TOML: {e}")
+        except UnicodeDecodeError as e:
+            raise UnreadableRobotSettingsException(f"Unicode Error: {e}")
 
         try:
             return parse_obj_as(RobotSettings, data)
         except ValidationError as e:
             raise NoValidRobotSettingsException(
-                f"Settings did not match schema: {e}",
+                f"{path.name} did not match schema: {e}",
             )

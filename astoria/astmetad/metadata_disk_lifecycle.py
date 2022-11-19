@@ -4,15 +4,18 @@ import asyncio
 import logging
 from abc import ABCMeta, abstractmethod
 from json import JSONDecodeError, loads
-from typing import Dict
+from pathlib import Path
+from typing import Dict, Optional
 
 import tomli_w
 
 from astoria.common.config import (
     SSID_PREFIX,
     AstoriaConfig,
+    NoRobotSettingsException,
     NoValidRobotSettingsException,
     RobotSettings,
+    UnreadableRobotSettingsException,
 )
 from astoria.common.disks import DiskInfo, DiskUUID
 
@@ -71,22 +74,77 @@ class MetadataDiskLifecycle(AbstractMetadataDiskLifecycle):
 class UsercodeDiskLifecycle(AbstractMetadataDiskLifecycle):
     """Load and validate metadata from a usercode disk."""
 
+    def _write_error_file(
+        self,
+        file: Path,
+        error: str,
+        config: Optional[bytes] = None,
+    ) -> None:
+        """
+        Write an error file to the disk.
+
+        :param file: The file to write the error to.
+        :param error: An error message.
+        :param config: Optionally, a config file to print at the bottom.
+        """
+        with file.open("wb") as fh:
+            fh.writelines([
+                b"There was an error loading your robot-settings.toml\n"
+                b"Your robot-settings.toml has been overwritten.\n",
+                b"\n",
+            ])
+            fh.write(error.encode())
+
+            if config is not None:
+                fh.write(b"\n\n")
+                fh.write(b"Invalid settings file:\n\n")
+                fh.write(config)
+
+    def _regenerate_config(self, robot_settings_file: Path) -> RobotSettings:
+        """Generate a new user settings file and write it to the path."""
+        settings = RobotSettings.generate_default_settings(self._config)
+        with robot_settings_file.open("wb") as fh:
+            tomli_w.dump(settings.dict(), fh)
+        return settings
+
+    def _load_settings(self) -> RobotSettings:
+        """
+        Load the settings from the disk.
+
+        If there is an issue with the settings file, generate a new one
+        and write an error message if appropriate.
+
+        :returns: A RobotSettings struct.
+        """
+        disk_path = self._disk_info.mount_path
+        robot_settings_file = disk_path / "robot-settings.toml"
+        robot_settings_error_file = disk_path / "robot-settings-error.txt"
+        try:
+            return RobotSettings.load_settings_file(robot_settings_file)
+        except NoRobotSettingsException:
+            LOGGER.warning("Settings file not present, writing sensible defaults.")
+        except NoValidRobotSettingsException as e:
+            LOGGER.warning("No valid settings, writing sensible defaults.")
+            LOGGER.warning(str(e))
+            self._write_error_file(
+                robot_settings_error_file,
+                str(e),
+                robot_settings_file.read_bytes(),
+            )
+        except UnreadableRobotSettingsException as e:
+            LOGGER.warning("Settings were unreadable, writing sensible defaults.")
+            LOGGER.warning(str(e))
+            self._write_error_file(robot_settings_error_file, str(e))
+
+        return self._regenerate_config(robot_settings_file)
+
     def extract_diff_data(self) -> Dict[str, str]:
         """
         Extract the diff data from the disk.
 
         Loads robot-settings.toml fom the disk.
         """
-        robot_settings_file = self._disk_info.mount_path / "robot-settings.toml"
-        try:
-            settings = RobotSettings.load_settings_file(robot_settings_file)
-        except NoValidRobotSettingsException:
-            settings = RobotSettings.generate_default_settings(self._config)
-
-            LOGGER.warning("No valid settings, writing sensible defaults.")
-            with robot_settings_file.open("wb") as fh:
-                tomli_w.dump(settings.dict(), fh)
-
+        settings = self._load_settings()
         return {
             "usercode_entrypoint": settings.usercode_entrypoint,
             "wifi_ssid": SSID_PREFIX + settings.team_tla,

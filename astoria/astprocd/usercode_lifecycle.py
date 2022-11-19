@@ -11,8 +11,8 @@ from typing import IO, Callable, Dict, Optional
 from astoria.common.code_status import CodeStatus
 from astoria.common.config import (
     AstoriaConfig,
-    NoValidRobotSettingsException,
     RobotSettings,
+    RobotSettingsException,
 )
 from astoria.common.disks import DiskInfo, DiskUUID
 from astoria.common.ipc import LogEventSource, UsercodeLogBroadcastEvent
@@ -88,7 +88,7 @@ class UsercodeLifecycle:
             try:
                 settings = RobotSettings.load_settings_file(settings_path)
                 return settings.usercode_entrypoint
-            except NoValidRobotSettingsException:
+            except RobotSettingsException:
                 # Note: This is theoretically unreachable as we have already
                 # validated the robot settings when determining the disk type.
                 pass
