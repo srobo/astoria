@@ -170,7 +170,7 @@ class UsercodeLifecycle:
             self._process.send_signal(SIGTERM)
             try:
                 await asyncio.wait_for(wait_for_exit(), timeout=5.0)
-            except TimeoutError:
+            except asyncio.TimeoutError:
                 if self._process is not None:
                     LOGGER.info(f"Sent SIGKILL to pid {self._process.pid}")
                     self._process.send_signal(SIGKILL)
