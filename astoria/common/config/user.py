@@ -50,7 +50,7 @@ class RobotSettings(BaseModel):
             return "🐝" * 6
 
         if not re.match(r"^[A-Z]{3}\d*$", val, re.IGNORECASE):
-            raise ValueError("Team name did not match format.")
+            raise ValueError("Team name did not match format: ABC, ABC1 etc.")
 
         if len(val) > MAX_SSID_LENGTH - len(SSID_PREFIX):
             raise ValueError(
@@ -59,6 +59,30 @@ class RobotSettings(BaseModel):
             )
 
         return val.upper()
+
+    @validator("usercode_entrypoint", "wifi_psk")
+    def validate_plain_text(cls, val: str) -> str:
+        """Validate that the attributes are plaintext."""
+        if not val.isprintable():
+            raise ValueError("Value must only contain printable characters.")
+
+        if not val.isascii():
+            raise ValueError("Value must only contain ASCII characters.")
+
+        return val
+
+    @validator("wifi_psk")
+    def validate_wifi_psk(cls, val: str) -> str:
+        """
+        Validate that the WiFi PSK is valid.
+
+        :param val: The PSK to validate.
+        :returns: The validated PSK.
+        """
+        if len(val) not in range(8, 64):
+            raise ValueError("WiFi PSK must be 8 - 63 characters long.")
+
+        return val
 
     @classmethod
     def generate_default_settings(cls, config: AstoriaConfig) -> 'RobotSettings':
