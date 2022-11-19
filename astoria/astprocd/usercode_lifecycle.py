@@ -48,6 +48,7 @@ class UsercodeLifecycle:
         self._metadata = metadata
 
         self._process: Optional[asyncio.subprocess.Process] = None
+        self._process_end_event = asyncio.Event()
         self._process_lock = asyncio.Lock()
 
         self._entrypoint = self._determine_entrypoint()
@@ -107,6 +108,7 @@ class UsercodeLifecycle:
                     "Starting usercode execution with "
                     f"entrypoint {self._entrypoint}",
                 )
+                self._process_end_event.clear()
                 self._process = await asyncio.create_subprocess_exec(
                     "python3",
                     "-u",
@@ -151,6 +153,7 @@ class UsercodeLifecycle:
                     )
 
                     self._process = None
+                    self._process_end_event.set()
                 else:
                     LOGGER.warning("Tried to start process, but failed.")
                     self.status = CodeStatus.CRASHED  # Close enough to indicate error
@@ -159,17 +162,13 @@ class UsercodeLifecycle:
 
     async def kill_process(self) -> None:
         """Kill the process, if one is running."""
-        async def wait_for_exit() -> None:
-            while self._process is not None:
-                await asyncio.sleep(0.1)
-
         if self._process is not None and self._process_lock.locked():
             LOGGER.info("Attempting to kill process.")
 
             LOGGER.info(f"Sent SIGTERM to pid {self._process.pid}")
             self._process.send_signal(SIGTERM)
             try:
-                await asyncio.wait_for(wait_for_exit(), timeout=5.0)
+                await asyncio.wait_for(self._process_end_event.wait(), timeout=5.0)
             except asyncio.TimeoutError:
                 if self._process is not None:
                     LOGGER.info(f"Sent SIGKILL to pid {self._process.pid}")
