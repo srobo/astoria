@@ -68,7 +68,7 @@ class RobotSettings(BaseModel):
         if not re.match(r"^[A-Z]{3}\d*$", val, re.IGNORECASE):
             raise ValueError("Team name did not match format: ABC, ABC1 etc.")
 
-        if len(val) > MAX_SSID_LENGTH - len(SSID_PREFIX):
+        if len(val.encode()) > MAX_SSID_LENGTH - len(SSID_PREFIX):
             raise ValueError(
                 f"SSID {SSID_PREFIX}{val} is longer than "
                 f"maximum length: {MAX_SSID_LENGTH} octets.",
