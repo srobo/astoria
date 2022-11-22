@@ -42,11 +42,8 @@ def test_wrapper_init_minimal() -> None:
     assert len(wr._dependency_events) == 0
     assert wr._no_dependency_event is None
 
-    assert len(wr._topic_handlers) == 2
+    assert len(wr._topic_handlers) == 1
     assert wr._topic_handlers[Topic(["astoria", "+"])] == wr._dependency_message_handler
-    assert wr._topic_handlers[
-        Topic(["astoria", "+", "request", "+", "+"])
-    ] == wr._request_response_message_handler
 
     assert wr._client._client_id == "foo"
 
@@ -114,19 +111,13 @@ def test_subscribe() -> None:
     """Test that subscribing works as expected."""
     wr = MQTTWrapper("foo", BROKER_INFO)
 
-    assert len(wr._topic_handlers) == 2
+    assert len(wr._topic_handlers) == 1
     assert wr._topic_handlers[Topic(["astoria", "+"])] == wr._dependency_message_handler
-    assert wr._topic_handlers[
-        Topic(["astoria", "+", "request", "+", "+"])
-    ] == wr._request_response_message_handler
 
     wr.subscribe("bees/+", stub_message_handler)
-    assert len(wr._topic_handlers) == 3
+    assert len(wr._topic_handlers) == 2
     assert wr._topic_handlers[Topic(["astoria", "+"])] == wr._dependency_message_handler
     assert wr._topic_handlers[Topic(["astoria", "bees", "+"])] == stub_message_handler
-    assert wr._topic_handlers[
-        Topic(["astoria", "+", "request", "+", "+"])
-    ] == wr._request_response_message_handler
 
 
 @pytest.mark.filterwarnings("ignore")
