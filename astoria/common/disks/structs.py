@@ -13,7 +13,6 @@ class DiskType(Enum):
 
     USERCODE = "USERCODE"
     METADATA = "METADATA"
-    UPDATE = "UPDATE"
     NOACTION = "NOACTION"
 
 

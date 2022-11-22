@@ -14,7 +14,6 @@ DATA_PATH = Path("tests/data/disk_types")
     [
         ("metadata", DiskType.METADATA),
         ("noaction", DiskType.NOACTION),
-        ("update", DiskType.UPDATE),
         ("usercode", DiskType.USERCODE),
         ("usercode_alt_entrypoint", DiskType.USERCODE),
         ("usercode_zip", DiskType.NOACTION),
