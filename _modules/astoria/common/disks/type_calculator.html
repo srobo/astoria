@@ -125,7 +125,6 @@
         <span class="n">constraints</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="s1">&#39;DiskType&#39;</span><span class="p">,</span> <span class="n">Constraint</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
             <span class="n">DiskType</span><span class="o">.</span><span class="n">USERCODE</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_usercode_constraint</span><span class="p">(</span><span class="n">path</span><span class="p">),</span>
             <span class="n">DiskType</span><span class="o">.</span><span class="n">METADATA</span><span class="p">:</span> <span class="n">FilePresentConstraint</span><span class="p">(</span><span class="s2">&quot;astoria.json&quot;</span><span class="p">),</span>
-            <span class="n">DiskType</span><span class="o">.</span><span class="n">UPDATE</span><span class="p">:</span> <span class="n">FilePresentConstraint</span><span class="p">(</span><span class="s2">&quot;updatefile.txt&quot;</span><span class="p">),</span>
             <span class="n">DiskType</span><span class="o">.</span><span class="n">NOACTION</span><span class="p">:</span> <span class="n">TrueConstraint</span><span class="p">(),</span>  <span class="c1"># Always match</span>
         <span class="p">}</span>
 
