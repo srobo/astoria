@@ -8,7 +8,6 @@ from astoria.common.disks import DiskInfo, DiskType, DiskUUID
 def test_disk_type_enum() -> None:
     """Test that DiskType has the right values."""
     assert DiskType.NOACTION.value == "NOACTION"
-    assert DiskType.UPDATE.value == "UPDATE"
     assert DiskType.USERCODE.value == "USERCODE"
     assert DiskType.METADATA.value == "METADATA"
 

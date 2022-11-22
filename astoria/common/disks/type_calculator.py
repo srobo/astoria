@@ -55,7 +55,6 @@ class DiskTypeCalculator:
         constraints: Dict['DiskType', Constraint] = {
             DiskType.USERCODE: self._get_usercode_constraint(path),
             DiskType.METADATA: FilePresentConstraint("astoria.json"),
-            DiskType.UPDATE: FilePresentConstraint("updatefile.txt"),
             DiskType.NOACTION: TrueConstraint(),  # Always match
         }
 
