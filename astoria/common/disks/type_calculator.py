@@ -3,7 +3,7 @@
 from pathlib import Path
 from typing import Dict
 
-from astoria.common.config import NoValidRobotSettingsException, RobotSettings
+from astoria.common.config import RobotSettings, RobotSettingsException
 
 from .constraints import Constraint, FilePresentConstraint, TrueConstraint
 from .structs import DiskType
@@ -39,7 +39,7 @@ class DiskTypeCalculator:
             try:
                 settings = RobotSettings.load_settings_file(settings_path)
                 return FilePresentConstraint(settings.usercode_entrypoint)
-            except NoValidRobotSettingsException:
+            except RobotSettingsException:
                 pass
 
         # Fall back to the default if we cannot load the settings

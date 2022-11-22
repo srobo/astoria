@@ -1,0 +1,5 @@
+team_tla = "ZZZ3701"
+usercode_entrypoint = "robot.py"
+wifi_psk = "22e7-c2b5-8afc"
+wifi_region = "GB"
+wifi_enabled == true
