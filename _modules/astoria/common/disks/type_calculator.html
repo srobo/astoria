@@ -73,7 +73,7 @@
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span>
 
-<span class="kn">from</span> <span class="nn">astoria.common.config</span> <span class="kn">import</span> <span class="n">NoValidRobotSettingsException</span><span class="p">,</span> <span class="n">RobotSettings</span>
+<span class="kn">from</span> <span class="nn">astoria.common.config</span> <span class="kn">import</span> <span class="n">RobotSettings</span><span class="p">,</span> <span class="n">RobotSettingsException</span>
 
 <span class="kn">from</span> <span class="nn">.constraints</span> <span class="kn">import</span> <span class="n">Constraint</span><span class="p">,</span> <span class="n">FilePresentConstraint</span><span class="p">,</span> <span class="n">TrueConstraint</span>
 <span class="kn">from</span> <span class="nn">.structs</span> <span class="kn">import</span> <span class="n">DiskType</span>
@@ -109,7 +109,7 @@
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">settings</span> <span class="o">=</span> <span class="n">RobotSettings</span><span class="o">.</span><span class="n">load_settings_file</span><span class="p">(</span><span class="n">settings_path</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">FilePresentConstraint</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">usercode_entrypoint</span><span class="p">)</span>
-            <span class="k">except</span> <span class="n">NoValidRobotSettingsException</span><span class="p">:</span>
+            <span class="k">except</span> <span class="n">RobotSettingsException</span><span class="p">:</span>
                 <span class="k">pass</span>
 
         <span class="c1"># Fall back to the default if we cannot load the settings</span>
