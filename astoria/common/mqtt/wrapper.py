@@ -74,11 +74,12 @@ class MQTTWrapper:
 
         self.subscribe("+", self._dependency_message_handler)
 
-        # Subscribe to all request response messages
-        self.subscribe(
-            "+/request/+/+",
-            self._request_response_message_handler,
-        )
+        # Subscribe to request response from dependent managers
+        for manager in self._dependencies:
+            self.subscribe(
+                f"{manager}/request/+/+",
+                self._request_response_message_handler,
+            )
         self._request_response_events: Dict[UUID, asyncio.Event] = {}
         self._request_response_data: Dict[UUID, RequestResponse] = {}
 
@@ -288,6 +289,11 @@ class MQTTWrapper:
 
         Raises exception if not dependent on manager, or if request fails.
         """
+        if manager not in self._dependencies:
+            raise ValueError(
+                f"{manager} must be listed as dependency to make manager request",
+            )
+
         topic = f"{self._broker_info.topic_prefix}/{manager}/request/{request_name}"
 
         self._request_response_events[request.uuid] = asyncio.Event()
