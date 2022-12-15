@@ -33,6 +33,7 @@ class ProcessManagerMessage(ManagerMessage):
 
     code_status: Optional[CodeStatus]
     disk_info: Optional[DiskInfo]
+    pid: Optional[int]
 
 
 class MetadataManagerMessage(ManagerMessage):

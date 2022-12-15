@@ -65,6 +65,13 @@ class UsercodeLifecycle:
         return self._disk_info
 
     @property
+    def pid(self) -> Optional[int]:
+        """Process ID of the usercode process."""
+        if self._process:
+            return self._process.pid
+        return None
+
+    @property
     def status(self) -> CodeStatus:
         """Get the status of the executing code."""
         return self._status

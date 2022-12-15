@@ -198,4 +198,5 @@ class ProcessManager(DiskHandlerMixin, StateManager[ProcessManagerMessage]):
                 status=ProcessManagerMessage.Status.RUNNING,
                 code_status=self._lifecycle.status,
                 disk_info=self._lifecycle.disk_info,
+                pid=self._lifecycle.pid,
             )

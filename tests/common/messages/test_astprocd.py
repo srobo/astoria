@@ -19,6 +19,7 @@ def test_proc_manager_fields() -> None:
         disk_info=info,
         code_status=CodeStatus.RUNNING,
         status=ProcessManagerMessage.Status.RUNNING,
+        pid=8335,
     )
 
-    assert pmm.json() == f'{{"status": "RUNNING", "astoria_version": "{__version__}", "code_status": "code_running", "disk_info": {{"uuid": "foobar", "mount_path": "/mnt", "disk_type": "NOACTION"}}}}'  # noqa: E501
+    assert pmm.json() == f'{{"status": "RUNNING", "astoria_version": "{__version__}", "code_status": "code_running", "disk_info": {{"uuid": "foobar", "mount_path": "/mnt", "disk_type": "NOACTION"}}, "pid": 8335}}'  # noqa: E501
