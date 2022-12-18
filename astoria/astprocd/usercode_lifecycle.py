@@ -67,7 +67,7 @@ class UsercodeLifecycle:
     @property
     def pid(self) -> Optional[int]:
         """Process ID of the usercode process."""
-        if self._process:
+        if self._process and self._process.returncode is None:
             return self._process.pid
         return None
 
