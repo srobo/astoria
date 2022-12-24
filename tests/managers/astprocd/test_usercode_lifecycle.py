@@ -408,13 +408,17 @@ async def test_run_with_valid_python_wait_kill_ignore_sigint() -> None:
     - The code is killed after 2 secs of execution
     - Output is written to the log file
     - The correct status is passed to the state manager
+    - Test that the exported PID is updated when the process starts and exits
     """
     ucl, sith = StatusInformTestHelper.setup(
         EXECUTE_CODE_DATA / "valid_python_long_ignore_signals",
     )
+    assert ucl.pid is None
     asyncio.ensure_future(ucl.run_process())
     await asyncio.sleep(2)
+    assert ucl.pid is not None
     await ucl.kill_process()
+    assert ucl.pid is None
     assert sith.called_queue == [
         CodeStatus.STARTING,
         CodeStatus.RUNNING,
