@@ -18,6 +18,7 @@ docs-serve:
 
 lint:
 	$(CMD) flake8 $(PYMODULE) $(TESTS) $(EXTRACODE) --exclude $(EXCLUDED_PATHS)
+	$(CMD) isort $(PYMODULE) $(TESTS) $(EXTRACODE) --sg $(EXCLUDED_PATHS)
 
 type:
 	$(CMD) mypy $(PYMODULE) $(TESTS) $(EXTRACODE) --exclude $(EXCLUDED_PATHS)
