@@ -3,7 +3,7 @@ name = "astoria"
 version = "0.11.1"
 description = "Robot Management System for Student Robotics Kit"
 authors = [
-    "Dan Trickey <srobo-astoria@trickey.io>",
+    "Dan Trickey <dtrickey@studentrobotics.org>",
     "Karina Kwiatek <kkwiatek@studentrobotics.org>",
 ]
 license = "MIT"
@@ -39,7 +39,7 @@ pytest = "*"
 pytest-cov = "*"
 pytest-asyncio = "*"
 rope = "*"
-isort = {version = "*",extras = ["pyproject"]}
+isort = "*"
 sphinx = "*"
 sphinx-rtd-theme = "*"
 sphinx_autodoc_typehints = "*"
@@ -50,13 +50,49 @@ sphinx-click = "*"
 m2r2 = "*"
 types-click = "*"
 
-[build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
-
 [tool.poetry.scripts]
+astctl = 'astoria.astctl:main'
 astdiskd = 'astoria.astdiskd:main'
 astmetad = 'astoria.astmetad:main'
 astprocd = 'astoria.astprocd:main'
-astctl = 'astoria.astctl:main'
 astwifid = 'astoria.astwifid:main'
+
+[build-system]
+requires = ["poetry>=1.0"]
+build-backend = "poetry.masonry.api"
+
+[tool.isort]
+atomic = true
+balanced_wrapping = true
+# vertical hanging indent style wrapping
+multi_line_output = 3
+include_trailing_comma = true
+
+known_first_party = "astoria"
+default_section = "THIRDPARTY"
+sections = "FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
+
+[tool.mypy]
+mypy_path = "stubs"
+
+warn_unused_ignores = true
+warn_return_any = true
+
+strict_optional = true
+no_implicit_optional = true
+
+disallow_any_unimported = true
+disallow_any_explicit = true
+disallow_subclassing_any = true
+disallow_any_generics = true
+
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+disallow_untyped_decorators = true
+
+check_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = ["dbus_next.*", "gmqtt.*"]
+disallow_any_explicit = false
