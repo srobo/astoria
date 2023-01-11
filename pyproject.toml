@@ -39,7 +39,7 @@ pytest = "*"
 pytest-cov = "*"
 pytest-asyncio = "*"
 rope = "*"
-isort = {version = "*",extras = ["pyproject"]}
+isort = "*"
 sphinx = "*"
 sphinx-rtd-theme = "*"
 sphinx_autodoc_typehints = "*"
