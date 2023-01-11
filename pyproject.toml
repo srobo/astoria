@@ -3,7 +3,7 @@ name = "astoria"
 version = "0.11.1"
 description = "Robot Management System for Student Robotics Kit"
 authors = [
-    "Dan Trickey <srobo-astoria@trickey.io>",
+    "Dan Trickey <dtrickey@studentrobotics.org>",
     "Karina Kwiatek <kkwiatek@studentrobotics.org>",
 ]
 license = "MIT"
@@ -51,10 +51,10 @@ m2r2 = "*"
 types-click = "*"
 
 [tool.poetry.scripts]
+astctl = 'astoria.astctl:main'
 astdiskd = 'astoria.astdiskd:main'
 astmetad = 'astoria.astmetad:main'
 astprocd = 'astoria.astprocd:main'
-astctl = 'astoria.astctl:main'
 astwifid = 'astoria.astwifid:main'
 
 [build-system]
