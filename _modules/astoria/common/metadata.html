@@ -1,32 +1,71 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
   <title>astoria.common.metadata &mdash; Astoria 0.11.1 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/js/theme.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav"> 
+<body class="wy-body-for-nav">
+
+   
   <div class="wy-grid-for-nav">
+    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
+          
+
+          
             <a href="../../../index.html" class="icon icon-home"> Astoria
+          
+
+          
           </a>
+
+          
+            
+            
+          
+
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -34,7 +73,18 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
               <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../design/index.html">Design</a></li>
@@ -43,30 +93,69 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../implementation/index.html">Implementation</a></li>
 </ul>
 
+            
+          
         </div>
+        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">Astoria</a>
+        
       </nav>
 
+
       <div class="wy-nav-content">
+        
         <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
+    
       <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
           <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
       <li>astoria.common.metadata</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
+        
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-             
+            
   <h1>Source code for astoria.common.metadata</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Schema for the robot metadata.&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">platform</span>
@@ -82,14 +171,14 @@
 
 
 <div class="viewcode-block" id="RobotMode"><a class="viewcode-back" href="../../../implementation/managers/astmetad.html#astoria.common.metadata.RobotMode">[docs]</a><span class="k">class</span> <span class="nc">RobotMode</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Running Status of the manager daemon.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Running Status of the manager daemon.&quot;&quot;&quot;</span>
 
     <span class="n">COMP</span> <span class="o">=</span> <span class="s2">&quot;COMP&quot;</span>
     <span class="n">DEV</span> <span class="o">=</span> <span class="s2">&quot;DEV&quot;</span></div>
 
 
 <div class="viewcode-block" id="Metadata"><a class="viewcode-back" href="../../../implementation/managers/astmetad.html#astoria.common.metadata.Metadata">[docs]</a><span class="k">class</span> <span class="nc">Metadata</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Astoria Metadata.</span>
 
 <span class="sd">    As the metadata is passed into a templating engine for initial log lines, please do</span>
@@ -97,13 +186,13 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Metadata.Config"><a class="viewcode-back" href="../../../implementation/managers/astmetad.html#astoria.common.metadata.Metadata.Config">[docs]</a>    <span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Pydantic config.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Pydantic config.&quot;&quot;&quot;</span>
 
         <span class="n">validate_assignment</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="Metadata.init"><a class="viewcode-back" href="../../../implementation/managers/astmetad.html#astoria.common.metadata.Metadata.init">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">AstoriaConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Metadata&#39;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialise the metadata and populate with data.</span>
 
 <span class="sd">        Based on information from software and the astoria configuration.</span>
@@ -124,7 +213,7 @@
 
 <div class="viewcode-block" id="Metadata.get_os_version_info"><a class="viewcode-back" href="../../../implementation/managers/astmetad.html#astoria.common.metadata.Metadata.get_os_version_info">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_os_version_info</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reads OS version information.</span>
 
 <span class="sd">        :returns: dict OS release values</span>
@@ -138,7 +227,7 @@
 
 <div class="viewcode-block" id="Metadata.get_macos_release_info"><a class="viewcode-back" href="../../../implementation/managers/astmetad.html#astoria.common.metadata.Metadata.get_macos_release_info">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_macos_release_info</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the release information for MacOS.</span>
 
 <span class="sd">        :returns: An os-release style dictionary of OS info.</span>
@@ -165,7 +254,7 @@
             <span class="bp">cls</span><span class="p">,</span>
             <span class="n">os_release_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;/etc/os-release&#39;</span><span class="p">),</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reads OS version information from /etc/os-release.</span>
 
 <span class="sd">        See man page os-release(5) for more information.</span>
@@ -181,7 +270,7 @@
         <span class="k">return</span> <span class="p">{}</span></div>
 
 <div class="viewcode-block" id="Metadata.is_wifi_valid"><a class="viewcode-back" href="../../../implementation/managers/astmetad.html#astoria.common.metadata.Metadata.is_wifi_valid">[docs]</a>    <span class="k">def</span> <span class="nf">is_wifi_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if the WiFi configuration is valid to be turned on.</span>
 
 <span class="sd">        Checks that the WiFi is enabled and that the config params are set.Optional</span>
@@ -220,30 +309,46 @@
 </pre></div>
 
            </div>
+           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020-21, Dan Trickey.</p>
-  </div>
+    <p>
+        &#169; Copyright 2020-23, Dan Trickey.
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
         </div>
       </div>
+
     </section>
+
   </div>
-  <script>
+  
+
+  <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

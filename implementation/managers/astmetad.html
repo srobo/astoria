@@ -1,35 +1,74 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
   <title>Astmetad &mdash; Astoria 0.11.1 documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/js/theme.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Astprocd" href="astprocd.html" />
     <link rel="prev" title="Astdiskd" href="astdiskd.html" /> 
 </head>
 
-<body class="wy-body-for-nav"> 
+<body class="wy-body-for-nav">
+
+   
   <div class="wy-grid-for-nav">
+    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
+          
+
+          
             <a href="../../index.html" class="icon icon-home"> Astoria
+          
+
+          
           </a>
+
+          
+            
+            
+          
+
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -37,7 +76,18 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
               <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../design/index.html">Design</a></li>
@@ -64,34 +114,77 @@
 </li>
 </ul>
 
+            
+          
         </div>
+        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">Astoria</a>
+        
       </nav>
 
+
       <div class="wy-nav-content">
+        
         <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
+    
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
           <li><a href="../index.html">Implementation</a> &raquo;</li>
+        
           <li><a href="index.html">State Managers</a> &raquo;</li>
+        
       <li>Astmetad</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
+        
+          
             <a href="../../_sources/implementation/managers/astmetad.rst.txt" rel="nofollow"> View page source</a>
+          
+        
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-             
+            
   <section id="astmetad">
-<h1>Astmetad<a class="headerlink" href="#astmetad" title="Permalink to this headline"></a></h1>
+<h1>Astmetad<a class="headerlink" href="#astmetad" title="Permalink to this heading">¶</a></h1>
 <p>Astmetad is responsible for:</p>
 <ul class="simple">
 <li><p>Waiting for <a class="reference internal" href="../../usage.html#metadata-usbs"><span class="std std-ref">metadata drive</span></a> information from <a class="reference internal" href="astdiskd.html#astdiskd"><span class="std std-ref">Astdiskd</span></a></p></li>
@@ -99,71 +192,71 @@
 </ul>
 <p>See <a class="reference external" href="https://docs.python.org/3/library/importlib.metadata.html#metadata" title="(in Python v3.11)"><span>Distribution metadata</span></a> for more information on this state manager.</p>
 <section id="metadata-disk-lifecycle">
-<h2>Metadata Disk Lifecycle<a class="headerlink" href="#metadata-disk-lifecycle" title="Permalink to this headline"></a></h2>
+<h2>Metadata Disk Lifecycle<a class="headerlink" href="#metadata-disk-lifecycle" title="Permalink to this heading">¶</a></h2>
 <p>When a <a class="reference internal" href="../../usage.html#metadata-usbs"><span class="std std-ref">metadata drive</span></a> is inserted, it follows a lifecycle.</p>
 <p>There can only be one metadata drive at any given time. Additional drives are ignored.</p>
 <p>Once the drive has had its data loaded and validated, it will be added as a high priority <a class="reference internal" href="../../design/metadata.html#metadata-source"><span class="std std-ref">Metadata Source</span></a>.</p>
 </section>
 <section id="astmetad-data-structures-and-classes">
-<h2>Astmetad Data Structures and Classes<a class="headerlink" href="#astmetad-data-structures-and-classes" title="Permalink to this headline"></a></h2>
+<h2>Astmetad Data Structures and Classes<a class="headerlink" href="#astmetad-data-structures-and-classes" title="Permalink to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="astoria.common.ipc.MetadataManagerMessage">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.ipc.</span></span><span class="sig-name descname"><span class="pre">MetadataManagerMessage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/ipc/manager_messages.html#MetadataManagerMessage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.ipc.MetadataManagerMessage" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.ipc.</span></span><span class="sig-name descname"><span class="pre">MetadataManagerMessage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/ipc/manager_messages.html#MetadataManagerMessage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.ipc.MetadataManagerMessage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Status message for Metadata Manager.</p>
 <p>Published to /astoria/astmetad</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.ipc.MetadataManagerMessage.metadata">
-<span class="sig-name descname"><span class="pre">metadata</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#astoria.common.metadata.Metadata" title="astoria.common.metadata.Metadata"><span class="pre">astoria.common.metadata.Metadata</span></a></em><a class="headerlink" href="#astoria.common.ipc.MetadataManagerMessage.metadata" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">metadata</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#astoria.common.metadata.Metadata" title="astoria.common.metadata.Metadata"><span class="pre">Metadata</span></a></em><a class="headerlink" href="#astoria.common.ipc.MetadataManagerMessage.metadata" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="astoria.common.metadata.Metadata">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.metadata.</span></span><span class="sig-name descname"><span class="pre">Metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/metadata.html#Metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.metadata.Metadata" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.metadata.</span></span><span class="sig-name descname"><span class="pre">Metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/metadata.html#Metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.metadata.Metadata" title="Permalink to this definition">¶</a></dt>
 <dd><p>Astoria Metadata.</p>
 <p>As the metadata is passed into a templating engine for initial log lines, please do
 not add nested fields to this schema.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="astoria.common.metadata.Metadata.Config">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Config</span></span><a class="reference internal" href="../../_modules/astoria/common/metadata.html#Metadata.Config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.metadata.Metadata.Config" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Config</span></span><a class="reference internal" href="../../_modules/astoria/common/metadata.html#Metadata.Config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.metadata.Metadata.Config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pydantic config.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.metadata.Metadata.Config.validate_assignment">
-<span class="sig-name descname"><span class="pre">validate_assignment</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#astoria.common.metadata.Metadata.Config.validate_assignment" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">validate_assignment</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#astoria.common.metadata.Metadata.Config.validate_assignment" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.metadata.Metadata.arch">
-<span class="sig-name descname"><span class="pre">arch</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.arch" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">arch</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.arch" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.metadata.Metadata.arena">
-<span class="sig-name descname"><span class="pre">arena</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.arena" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">arena</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.arena" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.metadata.Metadata.astoria_version">
-<span class="sig-name descname"><span class="pre">astoria_version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.astoria_version" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">astoria_version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.astoria_version" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.metadata.Metadata.game_timeout">
-<span class="sig-name descname"><span class="pre">game_timeout</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#astoria.common.metadata.Metadata.game_timeout" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">game_timeout</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.game_timeout" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="astoria.common.metadata.Metadata.get_macos_release_info">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_macos_release_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/metadata.html#Metadata.get_macos_release_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.metadata.Metadata.get_macos_release_info" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_macos_release_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/metadata.html#Metadata.get_macos_release_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.metadata.Metadata.get_macos_release_info" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the release information for MacOS.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>An os-release style dictionary of OS info.</p>
 </dd>
 </dl>
@@ -171,7 +264,7 @@ not add nested fields to this schema.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="astoria.common.metadata.Metadata.get_os_release_info">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_os_release_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">os_release_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('/etc/os-release')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/metadata.html#Metadata.get_os_release_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.metadata.Metadata.get_os_release_info" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_os_release_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">os_release_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('/etc/os-release')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/metadata.html#Metadata.get_os_release_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.metadata.Metadata.get_os_release_info" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads OS version information from /etc/os-release.</p>
 <p>See man page os-release(5) for more information.
 :rtype: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]
@@ -180,13 +273,13 @@ not add nested fields to this schema.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="astoria.common.metadata.Metadata.get_os_version_info">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_os_version_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/metadata.html#Metadata.get_os_version_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.metadata.Metadata.get_os_version_info" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_os_version_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/metadata.html#Metadata.get_os_version_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.metadata.Metadata.get_os_version_info" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads OS version information.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>dict OS release values</p>
 </dd>
 </dl>
@@ -194,11 +287,11 @@ not add nested fields to this schema.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="astoria.common.metadata.Metadata.init">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/metadata.html#Metadata.init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.metadata.Metadata.init" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/metadata.html#Metadata.init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.metadata.Metadata.init" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialise the metadata and populate with data.</p>
 <p>Based on information from software and the astoria configuration.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#astoria.common.metadata.Metadata" title="astoria.common.metadata.Metadata"><code class="xref py py-class docutils literal notranslate"><span class="pre">Metadata</span></code></a></p>
 </dd>
 </dl>
@@ -206,7 +299,7 @@ not add nested fields to this schema.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="astoria.common.metadata.Metadata.is_wifi_valid">
-<span class="sig-name descname"><span class="pre">is_wifi_valid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/metadata.html#Metadata.is_wifi_valid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.metadata.Metadata.is_wifi_valid" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">is_wifi_valid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/metadata.html#Metadata.is_wifi_valid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.metadata.Metadata.is_wifi_valid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the WiFi configuration is valid to be turned on.</p>
 <p>Checks that the WiFi is enabled and that the config params are set.Optional
 :rtype: <a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>
@@ -215,88 +308,88 @@ not add nested fields to this schema.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.metadata.Metadata.kernel_version">
-<span class="sig-name descname"><span class="pre">kernel_version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.kernel_version" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">kernel_version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.kernel_version" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.metadata.Metadata.libc_ver">
-<span class="sig-name descname"><span class="pre">libc_ver</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.libc_ver" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">libc_ver</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.libc_ver" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.metadata.Metadata.marker_offset">
-<span class="sig-name descname"><span class="pre">marker_offset</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.marker_offset" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">marker_offset</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.marker_offset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.metadata.Metadata.mode">
-<span class="sig-name descname"><span class="pre">mode</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#astoria.common.metadata.RobotMode" title="astoria.common.metadata.RobotMode"><span class="pre">astoria.common.metadata.RobotMode</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.mode" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">mode</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#astoria.common.metadata.RobotMode" title="astoria.common.metadata.RobotMode"><span class="pre">RobotMode</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.mode" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.metadata.Metadata.os_name">
-<span class="sig-name descname"><span class="pre">os_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#astoria.common.metadata.Metadata.os_name" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">os_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.os_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.metadata.Metadata.os_pretty_name">
-<span class="sig-name descname"><span class="pre">os_pretty_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#astoria.common.metadata.Metadata.os_pretty_name" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">os_pretty_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.os_pretty_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.metadata.Metadata.os_version">
-<span class="sig-name descname"><span class="pre">os_version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#astoria.common.metadata.Metadata.os_version" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">os_version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.os_version" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.metadata.Metadata.python_version">
-<span class="sig-name descname"><span class="pre">python_version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.python_version" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">python_version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.python_version" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.metadata.Metadata.usercode_entrypoint">
-<span class="sig-name descname"><span class="pre">usercode_entrypoint</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.usercode_entrypoint" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">usercode_entrypoint</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.usercode_entrypoint" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.metadata.Metadata.wifi_enabled">
-<span class="sig-name descname"><span class="pre">wifi_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.wifi_enabled" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">wifi_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.wifi_enabled" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.metadata.Metadata.wifi_psk">
-<span class="sig-name descname"><span class="pre">wifi_psk</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#astoria.common.metadata.Metadata.wifi_psk" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">wifi_psk</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.wifi_psk" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.metadata.Metadata.wifi_region">
-<span class="sig-name descname"><span class="pre">wifi_region</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#astoria.common.metadata.Metadata.wifi_region" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">wifi_region</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.wifi_region" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.metadata.Metadata.wifi_ssid">
-<span class="sig-name descname"><span class="pre">wifi_ssid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#astoria.common.metadata.Metadata.wifi_ssid" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">wifi_ssid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.wifi_ssid" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.metadata.Metadata.zone">
-<span class="sig-name descname"><span class="pre">zone</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.zone" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">zone</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></em><a class="headerlink" href="#astoria.common.metadata.Metadata.zone" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="astoria.common.metadata.RobotMode">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.metadata.</span></span><span class="sig-name descname"><span class="pre">RobotMode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/metadata.html#RobotMode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.metadata.RobotMode" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.metadata.</span></span><span class="sig-name descname"><span class="pre">RobotMode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/metadata.html#RobotMode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.metadata.RobotMode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Running Status of the manager daemon.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.metadata.RobotMode.COMP">
-<span class="sig-name descname"><span class="pre">COMP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'COMP'</span></em><a class="headerlink" href="#astoria.common.metadata.RobotMode.COMP" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">COMP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'COMP'</span></em><a class="headerlink" href="#astoria.common.metadata.RobotMode.COMP" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.metadata.RobotMode.DEV">
-<span class="sig-name descname"><span class="pre">DEV</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DEV'</span></em><a class="headerlink" href="#astoria.common.metadata.RobotMode.DEV" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">DEV</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DEV'</span></em><a class="headerlink" href="#astoria.common.metadata.RobotMode.DEV" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -306,33 +399,50 @@ not add nested fields to this schema.</p>
 
 
            </div>
+           
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="astdiskd.html" class="btn btn-neutral float-left" title="Astdiskd" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
         <a href="astprocd.html" class="btn btn-neutral float-right" title="Astprocd" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="astdiskd.html" class="btn btn-neutral float-left" title="Astdiskd" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020-21, Dan Trickey.</p>
-  </div>
+    <p>
+        &#169; Copyright 2020-23, Dan Trickey.
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
         </div>
       </div>
+
     </section>
+
   </div>
-  <script>
+  
+
+  <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

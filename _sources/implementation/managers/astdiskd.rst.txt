@@ -27,7 +27,7 @@ Astdiskd Data Structures and Classes
 .. autoclass:: astoria.astdiskd.DiskManager
     :members:
 
-.. autoclass:: astoria.common.disks.DiskUUID
+.. autoclass:: astoria.common.disks.structs.DiskUUID
     :members:
 
 .. autoclass:: astoria.common.disks.DiskInfo

@@ -1,32 +1,71 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
   <title>astoria.common.disks.constraints &mdash; Astoria 0.11.1 documentation</title>
-      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
   <!--[if lt IE 9]>
     <script src="../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
-    <script src="../../../../_static/js/theme.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav"> 
+<body class="wy-body-for-nav">
+
+   
   <div class="wy-grid-for-nav">
+    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
+          
+
+          
             <a href="../../../../index.html" class="icon icon-home"> Astoria
+          
+
+          
           </a>
+
+          
+            
+            
+          
+
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -34,7 +73,18 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
               <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../design/index.html">Design</a></li>
@@ -43,30 +93,69 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../implementation/index.html">Implementation</a></li>
 </ul>
 
+            
+          
         </div>
+        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../../index.html">Astoria</a>
+        
       </nav>
 
+
       <div class="wy-nav-content">
+        
         <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
+    
       <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
           <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
       <li>astoria.common.disks.constraints</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
+        
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-             
+            
   <h1>Source code for astoria.common.disks.constraints</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">USB Constraint.</span>
@@ -78,11 +167,11 @@
 
 
 <div class="viewcode-block" id="Constraint"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.Constraint">[docs]</a><span class="k">class</span> <span class="nc">Constraint</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A constraint that a path can match.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A constraint that a path can match.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Constraint.matches"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.Constraint.matches">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">matches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determine if the disk at the given path matches the constraint.</span>
 
 <span class="sd">        :param path: path to the mount point of the disk</span>
@@ -91,14 +180,14 @@
 
 
 <div class="viewcode-block" id="FilePresentConstraint"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.FilePresentConstraint">[docs]</a><span class="k">class</span> <span class="nc">FilePresentConstraint</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Ensure that a file is present on the disk.</span>
 
 <span class="sd">    This constraint will check that the path exists and contains the given file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="FilePresentConstraint.__init__"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.FilePresentConstraint.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialise the constraint class.</span>
 
 <span class="sd">        :param filename: name of the file to find on the disk</span>
@@ -106,7 +195,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span></div>
 
 <div class="viewcode-block" id="FilePresentConstraint.matches"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.FilePresentConstraint.matches">[docs]</a>    <span class="k">def</span> <span class="nf">matches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determine if the disk at the given path matches the constraint.</span>
 
 <span class="sd">        :param path: path to the mount point of the disk</span>
@@ -122,14 +211,14 @@
 
 
 <div class="viewcode-block" id="NumberOfFilesConstraint"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.NumberOfFilesConstraint">[docs]</a><span class="k">class</span> <span class="nc">NumberOfFilesConstraint</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Ensure that a certain number of files are present.</span>
 
 <span class="sd">    This can be used to ensure that there are no spurious files on the disk.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="NumberOfFilesConstraint.__init__"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.NumberOfFilesConstraint.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialise the constraint class.</span>
 
 <span class="sd">        :param n: The number of files that should be on the disk.</span>
@@ -137,7 +226,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">n</span></div>
 
 <div class="viewcode-block" id="NumberOfFilesConstraint.matches"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.NumberOfFilesConstraint.matches">[docs]</a>    <span class="k">def</span> <span class="nf">matches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determine if the disk at the given path matches the constraint.</span>
 
 <span class="sd">        :param path: path to the mount point of the disk</span>
@@ -155,10 +244,10 @@
 
 
 <div class="viewcode-block" id="OrConstraint"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.OrConstraint">[docs]</a><span class="k">class</span> <span class="nc">OrConstraint</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Ensure that either of the given constraints match.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Ensure that either of the given constraints match.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="OrConstraint.__init__"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.OrConstraint.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">Constraint</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">Constraint</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialise the constraint class.</span>
 
 <span class="sd">        :param a: The first constraint</span>
@@ -168,7 +257,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">b</span></div>
 
 <div class="viewcode-block" id="OrConstraint.matches"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.OrConstraint.matches">[docs]</a>    <span class="k">def</span> <span class="nf">matches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determine if the disk at the given path matches the constraint.</span>
 
 <span class="sd">        :param path: path to the mount point of the disk</span>
@@ -183,10 +272,10 @@
 
 
 <div class="viewcode-block" id="AndConstraint"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.AndConstraint">[docs]</a><span class="k">class</span> <span class="nc">AndConstraint</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Ensure that both of the constraints match.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Ensure that both of the constraints match.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="AndConstraint.__init__"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.AndConstraint.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">Constraint</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">Constraint</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialise the constraint class.</span>
 
 <span class="sd">        :param a: The first constraint</span>
@@ -196,7 +285,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">b</span></div>
 
 <div class="viewcode-block" id="AndConstraint.matches"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.AndConstraint.matches">[docs]</a>    <span class="k">def</span> <span class="nf">matches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determine if the disk at the given path matches the constraint.</span>
 
 <span class="sd">        :param path: path to the mount point of the disk</span>
@@ -211,10 +300,10 @@
 
 
 <div class="viewcode-block" id="NotConstraint"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.NotConstraint">[docs]</a><span class="k">class</span> <span class="nc">NotConstraint</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Ensure that the constraint does not match.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Ensure that the constraint does not match.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="NotConstraint.__init__"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.NotConstraint.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">Constraint</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialise the constraint class.</span>
 
 <span class="sd">        :param a: The constraint to negate</span>
@@ -222,7 +311,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="n">a</span></div>
 
 <div class="viewcode-block" id="NotConstraint.matches"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.NotConstraint.matches">[docs]</a>    <span class="k">def</span> <span class="nf">matches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determine if the disk at the given path matches the constraint.</span>
 
 <span class="sd">        :param path: path to the mount point of the disk</span>
@@ -234,14 +323,14 @@
 
 
 <div class="viewcode-block" id="TrueConstraint"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.TrueConstraint">[docs]</a><span class="k">class</span> <span class="nc">TrueConstraint</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A constraint that is always true.</span>
 
 <span class="sd">    Useful to create a default value when matching disks in order.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="TrueConstraint.matches"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.TrueConstraint.matches">[docs]</a>    <span class="k">def</span> <span class="nf">matches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determine if the disk at the given path matches the constraint.</span>
 
 <span class="sd">        :param _: path to the mount point of the disk. Not used.</span>
@@ -253,10 +342,10 @@
 
 
 <div class="viewcode-block" id="FalseConstraint"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.FalseConstraint">[docs]</a><span class="k">class</span> <span class="nc">FalseConstraint</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A constraint that is always false.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A constraint that is always false.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="FalseConstraint.matches"><a class="viewcode-back" href="../../../../implementation/disk_types.html#astoria.common.disks.constraints.FalseConstraint.matches">[docs]</a>    <span class="k">def</span> <span class="nf">matches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determine if the disk at the given path matches the constraint.</span>
 
 <span class="sd">        :param _: path to the mount point of the disk. Not used.</span>
@@ -268,30 +357,46 @@
 </pre></div>
 
            </div>
+           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020-21, Dan Trickey.</p>
-  </div>
+    <p>
+        &#169; Copyright 2020-23, Dan Trickey.
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
         </div>
       </div>
+
     </section>
+
   </div>
-  <script>
+  
+
+  <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

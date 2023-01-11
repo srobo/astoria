@@ -1,35 +1,74 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
   <title>Astdiskd &mdash; Astoria 0.11.1 documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/js/theme.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Astmetad" href="astmetad.html" />
     <link rel="prev" title="State Managers" href="index.html" /> 
 </head>
 
-<body class="wy-body-for-nav"> 
+<body class="wy-body-for-nav">
+
+   
   <div class="wy-grid-for-nav">
+    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
+          
+
+          
             <a href="../../index.html" class="icon icon-home"> Astoria
+          
+
+          
           </a>
+
+          
+            
+            
+          
+
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -37,7 +76,18 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
               <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../design/index.html">Design</a></li>
@@ -64,34 +114,77 @@
 </li>
 </ul>
 
+            
+          
         </div>
+        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">Astoria</a>
+        
       </nav>
 
+
       <div class="wy-nav-content">
+        
         <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
+    
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
           <li><a href="../index.html">Implementation</a> &raquo;</li>
+        
           <li><a href="index.html">State Managers</a> &raquo;</li>
+        
       <li>Astdiskd</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
+        
+          
             <a href="../../_sources/implementation/managers/astdiskd.rst.txt" rel="nofollow"> View page source</a>
+          
+        
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-             
+            
   <section id="astdiskd">
-<h1>Astdiskd<a class="headerlink" href="#astdiskd" title="Permalink to this headline"></a></h1>
+<h1>Astdiskd<a class="headerlink" href="#astdiskd" title="Permalink to this heading">¶</a></h1>
 <p>Astdiskd is responsible for:</p>
 <ul class="simple">
 <li><p>Detecting newly mounted disk drives</p></li>
@@ -99,7 +192,7 @@
 <li><p>Communicating a list of currently mounted drives to other components.</p></li>
 </ul>
 <section id="drive-detection">
-<h2>Drive Detection<a class="headerlink" href="#drive-detection" title="Permalink to this headline"></a></h2>
+<h2>Drive Detection<a class="headerlink" href="#drive-detection" title="Permalink to this heading">¶</a></h2>
 <p>Astdiskd communicates with <a class="reference external" href="https://www.freedesktop.org/wiki/Software/udisks/">UDisks 2</a>  over <a class="reference external" href="https://www.freedesktop.org/wiki/Software/dbus/">DBus</a>
 to receive information about the mounted volumes on the system.</p>
 <p>On startup, it reads disk information from the UDisks managed objects at <code class="docutils literal notranslate"><span class="pre">/org/freedesktop/UDisks2/block_devices/</span></code>.</p>
@@ -108,17 +201,17 @@ to receive information about the mounted volumes on the system.</p>
 <p><a class="reference external" href="https://wiki.gnome.org/Apps/DFeet">DFeet</a> is useful for observing and debugging the DBus interactions. <a class="reference external" href="https://github.com/altdesktop/python-dbus-next">Python-dbus-next</a> is the pure-python library that is used to communicate with DBus.</p>
 </section>
 <section id="astdiskd-data-structures-and-classes">
-<h2>Astdiskd Data Structures and Classes<a class="headerlink" href="#astdiskd-data-structures-and-classes" title="Permalink to this headline"></a></h2>
+<h2>Astdiskd Data Structures and Classes<a class="headerlink" href="#astdiskd-data-structures-and-classes" title="Permalink to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="astoria.astdiskd.DiskManager">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.astdiskd.</span></span><span class="sig-name descname"><span class="pre">DiskManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astdiskd/disk_manager.html#DiskManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astdiskd.DiskManager" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.astdiskd.</span></span><span class="sig-name descname"><span class="pre">DiskManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astdiskd/disk_manager.html#DiskManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astdiskd.DiskManager" title="Permalink to this definition">¶</a></dt>
 <dd><p>Astoria Disk Manager.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="astoria.astdiskd.DiskManager.main">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astdiskd/disk_manager.html#DiskManager.main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astdiskd.DiskManager.main" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astdiskd/disk_manager.html#DiskManager.main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astdiskd.DiskManager.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Main routine for astdiskd.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
 </dd>
 </dl>
@@ -126,17 +219,17 @@ to receive information about the mounted volumes on the system.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.astdiskd.DiskManager.name">
-<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'astdiskd'</span></em><a class="headerlink" href="#astoria.astdiskd.DiskManager.name" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'astdiskd'</span></em><a class="headerlink" href="#astoria.astdiskd.DiskManager.name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="astoria.astdiskd.DiskManager.offline_status">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">offline_status</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#astoria.common.ipc.DiskManagerMessage" title="astoria.common.ipc.manager_messages.DiskManagerMessage"><span class="pre">astoria.common.ipc.manager_messages.DiskManagerMessage</span></a></em><a class="headerlink" href="#astoria.astdiskd.DiskManager.offline_status" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">offline_status</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#astoria.common.ipc.DiskManagerMessage" title="astoria.common.ipc.manager_messages.DiskManagerMessage"><span class="pre">DiskManagerMessage</span></a></em><a class="headerlink" href="#astoria.astdiskd.DiskManager.offline_status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Status to publish when the manager goes offline.</p>
 <p>This status should ensure that any other components relying
 on this data go into a safe state.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#astoria.common.ipc.DiskManagerMessage" title="astoria.common.ipc.manager_messages.DiskManagerMessage"><code class="xref py py-class docutils literal notranslate"><span class="pre">DiskManagerMessage</span></code></a></p>
 </dd>
 </dl>
@@ -144,10 +237,10 @@ on this data go into a safe state.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="astoria.astdiskd.DiskManager.update_state">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update_state</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astdiskd/disk_manager.html#DiskManager.update_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astdiskd.DiskManager.update_state" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update_state</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astdiskd/disk_manager.html#DiskManager.update_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astdiskd.DiskManager.update_state" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the status of astdiskd when disks are changed.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
 </dd>
 </dl>
@@ -156,50 +249,51 @@ on this data go into a safe state.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="astoria.common.disks.DiskUUID">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.disks.</span></span><span class="sig-name descname"><span class="pre">DiskUUID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#astoria.common.disks.DiskUUID" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="astoria.common.disks.structs.DiskUUID">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.disks.structs.</span></span><span class="sig-name descname"><span class="pre">DiskUUID</span></span><a class="headerlink" href="#astoria.common.disks.structs.DiskUUID" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="astoria.common.disks.DiskInfo">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.disks.</span></span><span class="sig-name descname"><span class="pre">DiskInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disks/structs.html#DiskInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.disks.DiskInfo" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.disks.</span></span><span class="sig-name descname"><span class="pre">DiskInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/disks/structs.html#DiskInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.disks.DiskInfo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Information about a mounted disk.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.disks.DiskInfo.disk_type">
-<span class="sig-name descname"><span class="pre">disk_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../disk_types.html#astoria.common.disks.DiskType" title="astoria.common.disks.structs.DiskType"><span class="pre">astoria.common.disks.structs.DiskType</span></a></em><a class="headerlink" href="#astoria.common.disks.DiskInfo.disk_type" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">disk_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../disk_types.html#astoria.common.disks.DiskType" title="astoria.common.disks.structs.DiskType"><span class="pre">DiskType</span></a></em><a class="headerlink" href="#astoria.common.disks.DiskInfo.disk_type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.disks.DiskInfo.mount_path">
-<span class="sig-name descname"><span class="pre">mount_path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.11)"><span class="pre">pathlib.Path</span></a></em><a class="headerlink" href="#astoria.common.disks.DiskInfo.mount_path" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">mount_path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.11)"><span class="pre">Path</span></a></em><a class="headerlink" href="#astoria.common.disks.DiskInfo.mount_path" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.disks.DiskInfo.uuid">
-<span class="sig-name descname"><span class="pre">uuid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#astoria.common.disks.DiskUUID" title="astoria.common.disks.DiskUUID"><span class="pre">DiskUUID</span></a></em><a class="headerlink" href="#astoria.common.disks.DiskInfo.uuid" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">uuid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#astoria.common.disks.structs.DiskUUID" title="astoria.common.disks.structs.DiskUUID"><span class="pre">DiskUUID</span></a></em><a class="headerlink" href="#astoria.common.disks.DiskInfo.uuid" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="astoria.common.ipc.DiskManagerMessage">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.ipc.</span></span><span class="sig-name descname"><span class="pre">DiskManagerMessage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/ipc/manager_messages.html#DiskManagerMessage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.ipc.DiskManagerMessage" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.ipc.</span></span><span class="sig-name descname"><span class="pre">DiskManagerMessage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/ipc/manager_messages.html#DiskManagerMessage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.ipc.DiskManagerMessage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Status message for Disk Manager.</p>
 <p>Published to /astoria/astdiskd</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="astoria.common.ipc.DiskManagerMessage.calculate_disk_info">
-<span class="sig-name descname"><span class="pre">calculate_disk_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default_usercode_entrypoint</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/ipc/manager_messages.html#DiskManagerMessage.calculate_disk_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.ipc.DiskManagerMessage.calculate_disk_info" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">calculate_disk_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default_usercode_entrypoint</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/ipc/manager_messages.html#DiskManagerMessage.calculate_disk_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.ipc.DiskManagerMessage.calculate_disk_info" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the disk info of the disks in the message.</p>
 <p>As astdiskd only gives us information about the path of each disk,
 we need to calculate the type of each disk in the message.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>default_usercode_entrypoint</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – default entrypoint from astoria config</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<code class="xref py py-func docutils literal notranslate"><span class="pre">NewType()</span></code>(<code class="docutils literal notranslate"><span class="pre">DiskUUID</span></code>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>), <a class="reference internal" href="#astoria.common.disks.DiskInfo" title="astoria.common.disks.structs.DiskInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">DiskInfo</span></code></a>]</p>
 </dd>
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>A dictionary of disk UUIDs and disk information.</p>
 </dd>
 </dl>
@@ -207,7 +301,7 @@ we need to calculate the type of each disk in the message.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.ipc.DiskManagerMessage.disks">
-<span class="sig-name descname"><span class="pre">disks</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#astoria.common.disks.DiskUUID" title="astoria.common.disks.DiskUUID"><span class="pre">DiskUUID</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.11)"><span class="pre">pathlib.Path</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#astoria.common.ipc.DiskManagerMessage.disks" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">disks</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#astoria.common.disks.structs.DiskUUID" title="astoria.common.disks.structs.DiskUUID"><span class="pre">DiskUUID</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.11)"><span class="pre">Path</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#astoria.common.ipc.DiskManagerMessage.disks" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -217,33 +311,50 @@ we need to calculate the type of each disk in the message.</p>
 
 
            </div>
+           
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="index.html" class="btn btn-neutral float-left" title="State Managers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
         <a href="astmetad.html" class="btn btn-neutral float-right" title="Astmetad" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="State Managers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020-21, Dan Trickey.</p>
-  </div>
+    <p>
+        &#169; Copyright 2020-23, Dan Trickey.
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
         </div>
       </div>
+
     </section>
+
   </div>
-  <script>
+  
+
+  <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

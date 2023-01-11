@@ -1,35 +1,74 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
   <title>Astprocd &mdash; Astoria 0.11.1 documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/js/theme.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Astwifid" href="astwifid.html" />
     <link rel="prev" title="Astmetad" href="astmetad.html" /> 
 </head>
 
-<body class="wy-body-for-nav"> 
+<body class="wy-body-for-nav">
+
+   
   <div class="wy-grid-for-nav">
+    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
+          
+
+          
             <a href="../../index.html" class="icon icon-home"> Astoria
+          
+
+          
           </a>
+
+          
+            
+            
+          
+
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -37,7 +76,18 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
               <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../design/index.html">Design</a></li>
@@ -65,34 +115,77 @@
 </li>
 </ul>
 
+            
+          
         </div>
+        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">Astoria</a>
+        
       </nav>
 
+
       <div class="wy-nav-content">
+        
         <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
+    
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
           <li><a href="../index.html">Implementation</a> &raquo;</li>
+        
           <li><a href="index.html">State Managers</a> &raquo;</li>
+        
       <li>Astprocd</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
+        
+          
             <a href="../../_sources/implementation/managers/astprocd.rst.txt" rel="nofollow"> View page source</a>
+          
+        
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-             
+            
   <section id="astprocd">
-<h1>Astprocd<a class="headerlink" href="#astprocd" title="Permalink to this headline"></a></h1>
+<h1>Astprocd<a class="headerlink" href="#astprocd" title="Permalink to this heading">¶</a></h1>
 <p>Astprocd is responsible for:</p>
 <ul class="simple">
 <li><p>Waiting for usercode drive information from <a class="reference internal" href="astdiskd.html#astdiskd"><span class="std std-ref">Astdiskd</span></a></p></li>
@@ -101,7 +194,7 @@
 <li><p>Making logs available to other components in real time (To be <a class="reference external" href="https://github.com/srobo/astoria/issues/23">implemented</a>)</p></li>
 </ul>
 <section id="usercode-lifecycle">
-<h2>Usercode Lifecycle<a class="headerlink" href="#usercode-lifecycle" title="Permalink to this headline"></a></h2>
+<h2>Usercode Lifecycle<a class="headerlink" href="#usercode-lifecycle" title="Permalink to this heading">¶</a></h2>
 <p>When a new USB is inserted, it will follow the usercode lifecycle. The possible states of the lifecycle are defined in <a class="reference internal" href="#astoria.common.code_status.CodeStatus" title="astoria.common.code_status.CodeStatus"><code class="xref py py-class docutils literal notranslate"><span class="pre">astoria.common.code_status.CodeStatus</span></code></a>.</p>
 <div class="graphviz"><img src="../../_images/graphviz-d7b6f820f4fffe72a2479cf11ad01e503f78e3f3.png" alt="digraph {
    &quot;None&quot; -&gt; &quot;STARTING&quot; [ label=&quot;USB Inserted&quot;, color=&quot;darkgreen&quot;]
@@ -119,7 +212,7 @@
 <p>Usercode can be executed multiple times within the lifecycle via the <code class="docutils literal notranslate"><span class="pre">restart</span></code> paths in the above diagram. A restart can only be triggered via mutation request.</p>
 </section>
 <section id="usercode-process-management">
-<h2>Usercode Process Management<a class="headerlink" href="#usercode-process-management" title="Permalink to this headline"></a></h2>
+<h2>Usercode Process Management<a class="headerlink" href="#usercode-process-management" title="Permalink to this heading">¶</a></h2>
 <p>Usercode is executed as a <a class="reference external" href="https://linux.die.net/man/2/fork">child process</a> of the astprocd process.
 This is managed via the <code class="docutils literal notranslate"><span class="pre">asyncio.subprocess</span></code> module, specifically <code class="docutils literal notranslate"><span class="pre">asyncio.subprocess.Process</span></code>.</p>
 <ul class="simple">
@@ -132,75 +225,75 @@ This is managed via the <code class="docutils literal notranslate"><span class="
 <p>Usercode is killed by sending <code class="docutils literal notranslate"><span class="pre">SIGTERM</span></code>, waiting 5 seconds and then sending <code class="docutils literal notranslate"><span class="pre">SIGKILL</span></code> if the process still exists.</p>
 </section>
 <section id="astprocd-data-structures-and-classes">
-<h2>Astprocd Data Structures and Classes<a class="headerlink" href="#astprocd-data-structures-and-classes" title="Permalink to this headline"></a></h2>
+<h2>Astprocd Data Structures and Classes<a class="headerlink" href="#astprocd-data-structures-and-classes" title="Permalink to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="astoria.common.code_status.CodeStatus">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.code_status.</span></span><span class="sig-name descname"><span class="pre">CodeStatus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/code_status.html#CodeStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.code_status.CodeStatus" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.code_status.</span></span><span class="sig-name descname"><span class="pre">CodeStatus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/code_status.html#CodeStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.code_status.CodeStatus" title="Permalink to this definition">¶</a></dt>
 <dd><p>Status of the running code.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.code_status.CodeStatus.CRASHED">
-<span class="sig-name descname"><span class="pre">CRASHED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'code_crashed'</span></em><a class="headerlink" href="#astoria.common.code_status.CodeStatus.CRASHED" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">CRASHED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'code_crashed'</span></em><a class="headerlink" href="#astoria.common.code_status.CodeStatus.CRASHED" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.code_status.CodeStatus.FINISHED">
-<span class="sig-name descname"><span class="pre">FINISHED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'code_finished'</span></em><a class="headerlink" href="#astoria.common.code_status.CodeStatus.FINISHED" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">FINISHED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'code_finished'</span></em><a class="headerlink" href="#astoria.common.code_status.CodeStatus.FINISHED" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.code_status.CodeStatus.KILLED">
-<span class="sig-name descname"><span class="pre">KILLED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'code_killed'</span></em><a class="headerlink" href="#astoria.common.code_status.CodeStatus.KILLED" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">KILLED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'code_killed'</span></em><a class="headerlink" href="#astoria.common.code_status.CodeStatus.KILLED" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.code_status.CodeStatus.RUNNING">
-<span class="sig-name descname"><span class="pre">RUNNING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'code_running'</span></em><a class="headerlink" href="#astoria.common.code_status.CodeStatus.RUNNING" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">RUNNING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'code_running'</span></em><a class="headerlink" href="#astoria.common.code_status.CodeStatus.RUNNING" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.code_status.CodeStatus.STARTING">
-<span class="sig-name descname"><span class="pre">STARTING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'code_starting'</span></em><a class="headerlink" href="#astoria.common.code_status.CodeStatus.STARTING" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">STARTING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'code_starting'</span></em><a class="headerlink" href="#astoria.common.code_status.CodeStatus.STARTING" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="astoria.common.ipc.ProcessManagerMessage">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.ipc.</span></span><span class="sig-name descname"><span class="pre">ProcessManagerMessage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/ipc/manager_messages.html#ProcessManagerMessage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.ipc.ProcessManagerMessage" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.ipc.</span></span><span class="sig-name descname"><span class="pre">ProcessManagerMessage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/ipc/manager_messages.html#ProcessManagerMessage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.ipc.ProcessManagerMessage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Status message for Process Manager.</p>
 <p>Published to astoria/astprocd</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.ipc.ProcessManagerMessage.code_status">
-<span class="sig-name descname"><span class="pre">code_status</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#astoria.common.code_status.CodeStatus" title="astoria.common.code_status.CodeStatus"><span class="pre">astoria.common.code_status.CodeStatus</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#astoria.common.ipc.ProcessManagerMessage.code_status" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">code_status</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#astoria.common.code_status.CodeStatus" title="astoria.common.code_status.CodeStatus"><span class="pre">CodeStatus</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></em><a class="headerlink" href="#astoria.common.ipc.ProcessManagerMessage.code_status" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.ipc.ProcessManagerMessage.disk_info">
-<span class="sig-name descname"><span class="pre">disk_info</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="astdiskd.html#astoria.common.disks.DiskInfo" title="astoria.common.disks.structs.DiskInfo"><span class="pre">astoria.common.disks.structs.DiskInfo</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#astoria.common.ipc.ProcessManagerMessage.disk_info" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">disk_info</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="astdiskd.html#astoria.common.disks.DiskInfo" title="astoria.common.disks.structs.DiskInfo"><span class="pre">DiskInfo</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></em><a class="headerlink" href="#astoria.common.ipc.ProcessManagerMessage.disk_info" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.ipc.ProcessManagerMessage.pid">
-<span class="sig-name descname"><span class="pre">pid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#astoria.common.ipc.ProcessManagerMessage.pid" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">pid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></em><a class="headerlink" href="#astoria.common.ipc.ProcessManagerMessage.pid" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="astoria.astprocd.ProcessManager">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.astprocd.</span></span><span class="sig-name descname"><span class="pre">ProcessManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astprocd/process_manager.html#ProcessManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astprocd.ProcessManager" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.astprocd.</span></span><span class="sig-name descname"><span class="pre">ProcessManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astprocd/process_manager.html#ProcessManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astprocd.ProcessManager" title="Permalink to this definition">¶</a></dt>
 <dd><p>Astoria Process State Manager.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.astprocd.ProcessManager.dependencies">
-<span class="sig-name descname"><span class="pre">dependencies</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['astdiskd',</span> <span class="pre">'astmetad']</span></em><a class="headerlink" href="#astoria.astprocd.ProcessManager.dependencies" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">dependencies</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['astdiskd',</span> <span class="pre">'astmetad']</span></em><a class="headerlink" href="#astoria.astprocd.ProcessManager.dependencies" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="astoria.astprocd.ProcessManager.handle_astmetad_message">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">handle_astmetad_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">match</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">payload</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astprocd/process_manager.html#ProcessManager.handle_astmetad_message"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astprocd.ProcessManager.handle_astmetad_message" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">handle_astmetad_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">match</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">payload</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astprocd/process_manager.html#ProcessManager.handle_astmetad_message"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astprocd.ProcessManager.handle_astmetad_message" title="Permalink to this definition">¶</a></dt>
 <dd><p>Handle disk info messages.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
 </dd>
 </dl>
@@ -208,10 +301,10 @@ This is managed via the <code class="docutils literal notranslate"><span class="
 
 <dl class="py method">
 <dt class="sig sig-object py" id="astoria.astprocd.ProcessManager.handle_disk_insertion">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">handle_disk_insertion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uuid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disk_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astprocd/process_manager.html#ProcessManager.handle_disk_insertion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astprocd.ProcessManager.handle_disk_insertion" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">handle_disk_insertion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uuid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disk_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astprocd/process_manager.html#ProcessManager.handle_disk_insertion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astprocd.ProcessManager.handle_disk_insertion" title="Permalink to this definition">¶</a></dt>
 <dd><p>Handle a disk insertion.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
 </dd>
 </dl>
@@ -219,10 +312,10 @@ This is managed via the <code class="docutils literal notranslate"><span class="
 
 <dl class="py method">
 <dt class="sig sig-object py" id="astoria.astprocd.ProcessManager.handle_disk_removal">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">handle_disk_removal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uuid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disk_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astprocd/process_manager.html#ProcessManager.handle_disk_removal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astprocd.ProcessManager.handle_disk_removal" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">handle_disk_removal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uuid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disk_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astprocd/process_manager.html#ProcessManager.handle_disk_removal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astprocd.ProcessManager.handle_disk_removal" title="Permalink to this definition">¶</a></dt>
 <dd><p>Handle a disk removal.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
 </dd>
 </dl>
@@ -230,10 +323,10 @@ This is managed via the <code class="docutils literal notranslate"><span class="
 
 <dl class="py method">
 <dt class="sig sig-object py" id="astoria.astprocd.ProcessManager.handle_kill_request">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">handle_kill_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astprocd/process_manager.html#ProcessManager.handle_kill_request"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astprocd.ProcessManager.handle_kill_request" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">handle_kill_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astprocd/process_manager.html#ProcessManager.handle_kill_request"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astprocd.ProcessManager.handle_kill_request" title="Permalink to this definition">¶</a></dt>
 <dd><p>Handle a request to kill running usercode.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../design/ipc.html#astoria.common.ipc.RequestResponse" title="astoria.common.ipc.manager_requests.RequestResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">RequestResponse</span></code></a></p>
 </dd>
 </dl>
@@ -241,10 +334,10 @@ This is managed via the <code class="docutils literal notranslate"><span class="
 
 <dl class="py method">
 <dt class="sig sig-object py" id="astoria.astprocd.ProcessManager.handle_restart_request">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">handle_restart_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astprocd/process_manager.html#ProcessManager.handle_restart_request"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astprocd.ProcessManager.handle_restart_request" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">handle_restart_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astprocd/process_manager.html#ProcessManager.handle_restart_request"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astprocd.ProcessManager.handle_restart_request" title="Permalink to this definition">¶</a></dt>
 <dd><p>Handle a request to restart usercode.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../design/ipc.html#astoria.common.ipc.RequestResponse" title="astoria.common.ipc.manager_requests.RequestResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">RequestResponse</span></code></a></p>
 </dd>
 </dl>
@@ -252,10 +345,10 @@ This is managed via the <code class="docutils literal notranslate"><span class="
 
 <dl class="py method">
 <dt class="sig sig-object py" id="astoria.astprocd.ProcessManager.main">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astprocd/process_manager.html#ProcessManager.main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astprocd.ProcessManager.main" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astprocd/process_manager.html#ProcessManager.main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astprocd.ProcessManager.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Main routine for astprocd.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
 </dd>
 </dl>
@@ -263,17 +356,17 @@ This is managed via the <code class="docutils literal notranslate"><span class="
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.astprocd.ProcessManager.name">
-<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'astprocd'</span></em><a class="headerlink" href="#astoria.astprocd.ProcessManager.name" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'astprocd'</span></em><a class="headerlink" href="#astoria.astprocd.ProcessManager.name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="astoria.astprocd.ProcessManager.offline_status">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">offline_status</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#astoria.common.ipc.ProcessManagerMessage" title="astoria.common.ipc.manager_messages.ProcessManagerMessage"><span class="pre">astoria.common.ipc.manager_messages.ProcessManagerMessage</span></a></em><a class="headerlink" href="#astoria.astprocd.ProcessManager.offline_status" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">offline_status</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#astoria.common.ipc.ProcessManagerMessage" title="astoria.common.ipc.manager_messages.ProcessManagerMessage"><span class="pre">ProcessManagerMessage</span></a></em><a class="headerlink" href="#astoria.astprocd.ProcessManager.offline_status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Status to publish when the manager goes offline.</p>
 <p>This status should ensure that any other components relying
 on this data go into a safe state.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#astoria.common.ipc.ProcessManagerMessage" title="astoria.common.ipc.manager_messages.ProcessManagerMessage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessManagerMessage</span></code></a></p>
 </dd>
 </dl>
@@ -281,11 +374,11 @@ on this data go into a safe state.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="astoria.astprocd.ProcessManager.update_status">
-<span class="sig-name descname"><span class="pre">update_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code_status</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astprocd/process_manager.html#ProcessManager.update_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astprocd.ProcessManager.update_status" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">update_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code_status</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astprocd/process_manager.html#ProcessManager.update_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astprocd.ProcessManager.update_status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate and update the status of this manager.</p>
 <p>Called by the usercode lifecycle to inform us of changes.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
 </dd>
 </dl>
@@ -298,33 +391,50 @@ on this data go into a safe state.</p>
 
 
            </div>
+           
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="astmetad.html" class="btn btn-neutral float-left" title="Astmetad" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
         <a href="astwifid.html" class="btn btn-neutral float-right" title="Astwifid" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="astmetad.html" class="btn btn-neutral float-left" title="Astmetad" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020-21, Dan Trickey.</p>
-  </div>
+    <p>
+        &#169; Copyright 2020-23, Dan Trickey.
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
         </div>
       </div>
+
     </section>
+
   </div>
-  <script>
+  
+
+  <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>
