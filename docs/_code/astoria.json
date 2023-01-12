@@ -1,1 +1,1 @@
-{"arena": "A", "zone": 2, "mode": "COMP", "game_timeout": 120, "wifi_enabled": false}
+{"arena": "A", "zone": 2, "mode": "COMP", "game_timeout": 120, "wifi_enabled": false, "client_wifi_ssid": "arena-robots", "client_wifi_psk": "password123", "client_wifi_region": "GB"}

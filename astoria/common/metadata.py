@@ -130,7 +130,10 @@ class Metadata(BaseModel):
     mode: RobotMode = RobotMode.DEV
     marker_offset: int = 0
     game_timeout: Optional[int] = None
-    wifi_enabled: bool = True
+    wifi_enabled: bool = True  # Hotspot Enabled. We need to change this after SR2023.
+    client_wifi_ssid: Optional[str] = None
+    client_wifi_psk: Optional[str] = None
+    client_wifi_region: Optional[str] = None
 
     # From Software
     astoria_version: str
