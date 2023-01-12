@@ -6,7 +6,7 @@ from typing import List, Tuple
 
 import pytest
 
-from astoria.astwifid import WiFiHotspotLifeCycle
+from astoria.astwifid.hotspot_lifecycle import WiFiHotspotLifeCycle
 from astoria.common.config import AstoriaConfig
 from astoria.common.metadata import Metadata
 
