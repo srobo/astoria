@@ -8,118 +8,11 @@ import logging
 import os
 import signal
 import tempfile
-from pathlib import Path
 from typing import IO, Optional
 
-import click
-
-from astoria.common.components import StateManager
-from astoria.common.ipc import WiFiManagerMessage
 from astoria.common.metadata import Metadata
-from astoria.common.mixins import MetadataHandlerMixin
 
 LOGGER = logging.getLogger(__name__)
-
-loop = asyncio.get_event_loop()
-
-
-@click.command("astwifid")
-@click.option("-v", "--verbose", is_flag=True)
-@click.option("-c", "--config-file", type=click.Path(exists=True))
-def main(*, verbose: bool, config_file: Optional[str]) -> None:
-    """The WiFi Daemon Application Entrypoint."""
-    wifid = WiFiHotspotDaemon(verbose, config_file)
-    loop.run_until_complete(wifid.run())
-
-
-class WiFiHotspotDaemon(MetadataHandlerMixin, StateManager[WiFiManagerMessage]):
-    """
-    Hotspot management daemon.
-
-    Receives metadata information from astmetad and manages the WiFi hotspot.
-    """
-
-    name = "astwifid"
-
-    dependencies = ["astmetad"]
-
-    def _init(self) -> None:
-        self._lifecycle: Optional[WiFiHotspotLifeCycle] = None
-
-        self._mqtt.subscribe("astmetad", self.handle_astmetad_message)
-
-    async def main(self) -> None:
-        """Main routine for astwifid."""
-        # Wait whilst the program is running.
-        await self.wait_loop()
-
-        # Stop the hotspot when we shutdown
-        if self._lifecycle:
-            await self._lifecycle.stop_hotspot()
-
-    @property
-    def offline_status(self) -> WiFiManagerMessage:
-        """
-        Status to publish when the manager goes offline.
-
-        This status should ensure that any other components relying
-        on this data go into a safe state.
-        """
-        return WiFiManagerMessage(
-            status=WiFiManagerMessage.Status.STOPPED,
-            hotspot_running=False,
-        )
-
-    async def handle_metadata(self, metadata: Metadata) -> None:
-        """
-        Update the state of the hotspot based on the current metadata.
-
-        :param metadata: The metadata included in the update.
-        """
-        wifi_interface = Path(f"/sys/class/net/{self.config.wifi.interface}")
-        if self._lifecycle:
-            if metadata.is_wifi_valid() and wifi_interface.exists():
-                if self._lifecycle.has_metadata_changed(metadata):
-                    await self._lifecycle.stop_hotspot()
-                    self._lifecycle = WiFiHotspotLifeCycle(
-                        # The types here are checked by is_wifi_valid
-                        metadata.wifi_ssid,  # type: ignore
-                        metadata.wifi_psk,  # type: ignore
-                        metadata.wifi_region,  # type: ignore
-                        self.config.wifi.interface,
-                        self.config.wifi.bridge,
-                        self.config.wifi.enable_wpa3,
-                    )
-                    self.status = WiFiManagerMessage(
-                        status=WiFiManagerMessage.Status.RUNNING,
-                        hotspot_running=True,
-                    )
-                    asyncio.ensure_future(self._lifecycle.run_hotspot())
-            else:
-                # Turn it off!
-                await self._lifecycle.stop_hotspot()
-                self.status = WiFiManagerMessage(
-                    status=WiFiManagerMessage.Status.RUNNING,
-                    hotspot_running=False,
-                )
-                self._lifecycle = None
-        else:
-            if metadata.is_wifi_valid() and wifi_interface.exists():
-                # Turn it on!
-                self._lifecycle = WiFiHotspotLifeCycle(
-                    # The types here are checked by is_wifi_valid
-                    metadata.wifi_ssid,  # type: ignore
-                    metadata.wifi_psk,  # type: ignore
-                    metadata.wifi_region,  # type: ignore
-                    self.config.wifi.interface,
-                    self.config.wifi.bridge,
-                    self.config.wifi.enable_wpa3,
-                )
-                self.status = WiFiManagerMessage(
-                    status=WiFiManagerMessage.Status.RUNNING,
-                    hotspot_running=True,
-                )
-                asyncio.ensure_future(self._lifecycle.run_hotspot())
 
 
 class WiFiHotspotLifeCycle:
@@ -240,7 +133,3 @@ class WiFiHotspotLifeCycle:
 
         if self._config_file:
             os.unlink(self._config_file.name)
-
-
-if __name__ == "__main__":
-    main()

@@ -44,7 +44,7 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
         },
         DiskType.METADATA: {
             "arena", "zone", "mode", "marker_offset", "game_timeout", "wifi_enabled",
-            "client_wifi_ssid", "client_wifi_psk", "client_wifi_region"
+            "client_wifi_ssid", "client_wifi_psk", "client_wifi_region",
         },
     }
 
