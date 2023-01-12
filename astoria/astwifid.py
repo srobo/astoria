@@ -8,16 +8,15 @@ import logging
 import os
 import signal
 import tempfile
-from json import JSONDecodeError, loads
 from pathlib import Path
-from typing import IO, Match, Optional
+from typing import IO, Optional
 
 import click
-from pydantic import ValidationError, parse_obj_as
 
 from astoria.common.components import StateManager
-from astoria.common.ipc import MetadataManagerMessage, WiFiManagerMessage
+from astoria.common.ipc import WiFiManagerMessage
 from astoria.common.metadata import Metadata
+from astoria.common.mixins import MetadataHandlerMixin
 
 LOGGER = logging.getLogger(__name__)
 
@@ -33,7 +32,7 @@ def main(*, verbose: bool, config_file: Optional[str]) -> None:
     loop.run_until_complete(wifid.run())
 
 
-class WiFiHotspotDaemon(StateManager[WiFiManagerMessage]):
+class WiFiHotspotDaemon(MetadataHandlerMixin, StateManager[WiFiManagerMessage]):
     """
     Hotspot management daemon.
 
@@ -70,24 +69,6 @@ class WiFiHotspotDaemon(StateManager[WiFiManagerMessage]):
             status=WiFiManagerMessage.Status.STOPPED,
             hotspot_running=False,
         )
-
-    async def handle_astmetad_message(
-            self,
-            match: Match[str],
-            payload: str,
-    ) -> None:
-        """Event handler for metadata changes."""
-        if payload:
-            try:
-                data = loads(payload)
-                metadata_manager_message = parse_obj_as(MetadataManagerMessage, data)
-                await self.handle_metadata(metadata_manager_message.metadata)
-            except ValidationError:
-                LOGGER.warning("Received bad metadata manager message.")
-            except JSONDecodeError:
-                LOGGER.warning("Received bad JSON in metadata manager message.")
-        else:
-            LOGGER.warning("Received empty metadata manager message.")
 
     async def handle_metadata(self, metadata: Metadata) -> None:
         """
