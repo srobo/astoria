@@ -10,52 +10,37 @@ import signal
 import tempfile
 from typing import IO, Optional
 
-from astoria.common.metadata import Metadata
+from astoria.common.config.system import WiFiInfo
+
+from .lifecycle import AccessPointInfo, WiFiLifecycle
 
 LOGGER = logging.getLogger(__name__)
 
 
-class WiFiHotspotLifeCycle:
+class WiFiHotspotLifeCycle(WiFiLifecycle):
     """Manages the lifecycle of the hostapd process."""
+
+    name = "WiFi Hotspot"
 
     HOSTAPD_BINARY: str = "hostapd"
 
     def __init__(
             self,
-            ssid: str,
-            psk: str,
-            region: str,
-            interface: str,
-            bridge: str,
-            enable_wpa3: bool,
+            access_point_info: AccessPointInfo,
+            wifi_info: WiFiInfo,
     ) -> None:
-        LOGGER.info("Starting WiFi Hotspot lifecycle")
-        self._ssid: str = ssid
-        self._psk: str = psk
-        self._region: str = region
-        self._interface: str = interface
-        self._bridge: str = bridge
-        self._enable_wpa3: bool = enable_wpa3
+        self._access_point_info = access_point_info
+        self._wifi_info = wifi_info
 
         self._config_file: Optional[IO[bytes]] = None
         self._proc: Optional[asyncio.subprocess.Process] = None
         self._running: bool = False
 
-    def has_metadata_changed(self, metadata: Metadata) -> bool:
-        """Checks if the hotspot's properties match that of a set of metadata."""
-        return not all(
-            [
-                self._ssid == metadata.wifi_ssid,
-                self._psk == metadata.wifi_psk,
-                self._region == metadata.wifi_region,
-            ],
-        )
-
-    async def run_hotspot(self) -> None:
+    async def run(self) -> None:
         """Starts the hostapd process."""
         self._running = True
-        LOGGER.info(f"Starting WiFi Hotspot \"{self._ssid}\" on {self._interface}")
-        self.generate_hostapd_config()
+        LOGGER.info(f"Starting WiFi Hotspot \"{self.ssid}\" on {self.interface}")
+        self._generate_hostapd_config()
         if self._config_file is not None:
             while self._running:
                 self._proc = await asyncio.create_subprocess_exec(
@@ -73,17 +58,17 @@ class WiFiHotspotLifeCycle:
                 "Tried to start hotspot, but the config file was not set.",
             )
 
-    def generate_hostapd_config(self) -> None:
+    def _generate_hostapd_config(self) -> None:
         """Generates a configuration file for hostapd based on the current metadata."""
         self._config_file = tempfile.NamedTemporaryFile(delete=False)
         LOGGER.debug(
             f"Writing {self.HOSTAPD_BINARY} configuration to {self._config_file.name}",
         )
         config = {
-            "interface": self._interface,
-            "bridge": self._bridge,
-            "ssid": self._ssid,
-            "country_code": self._region,
+            "interface": self.wifi_info.interface,
+            "bridge": self.wifi_info.bridge,
+            "ssid": self.access_point_info.ssid,
+            "country_code": self.access_point_info.region,
             "channel": 7,
             "hw_mode": "g",
             # Bit field: bit0 = WPA, bit1 = WPA2
@@ -95,10 +80,10 @@ class WiFiHotspotLifeCycle:
             # Set of accepted key management algorithms
             # SAE = WPA3, WPA-PSK = WPA2
             "wpa_key_mgmt": "WPA-PSK",
-            "wpa_passphrase": self._psk,
+            "wpa_passphrase": self.access_point_info.psk,
         }
 
-        if self._enable_wpa3:
+        if self.wifi_info.enable_wpa3:
             config["wpa_key_mgmt"] = "SAE WPA-PSK"
             # Management frame support (802.11w)
             # Most client devices will not connect to a
@@ -112,7 +97,7 @@ class WiFiHotspotLifeCycle:
         self._config_file.write(contents.encode())
         self._config_file.close()
 
-    async def stop_hotspot(self) -> None:
+    async def stop(self) -> None:
         """Stops the hostapd process."""
         self._running = False
         LOGGER.info("Stopping WiFi Hotspot")
