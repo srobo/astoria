@@ -1,5 +1,5 @@
-Inter-Process Communication
-===========================
+MQTT
+====
 
 Astoria uses Inter-Process Communications (IPC) to communicate events and data between components.
 

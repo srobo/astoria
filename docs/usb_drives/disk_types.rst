@@ -1,7 +1,7 @@
 Disk Types
 ==========
 
-Whilst :ref:`astdiskd` is responsible for detecting what disks are attached to the system, it is the responsibility of each individual :ref:`data component <data components>` to determine if a disk is relevant to Astoria.
+Whilst :ref:`astdiskd` is responsible for detecting what disks are attached to the system, it is the responsibility of each individual :ref:`state manager <state managers>` to determine if a disk is relevant to Astoria.
 
 Disks are sorted into one of a few relevant types:
 

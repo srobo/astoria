@@ -4,7 +4,10 @@
    :maxdepth: 2
    :caption: Documentation:
 
-   design/index
-   usage
+   getting-started
+   overview/index
+   mqtt
+   metadata
+   usb_drives/index
+   state_managers/index
    development/index
-   implementation/index

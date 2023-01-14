@@ -42,3 +42,21 @@ Currently implemented sources:
 
 - Initial metadata generation
 - :ref:`Metadata USBs`
+
+
+Metadata USBs
+-------------
+
+Metadata USBs contain a high priority :ref:`Metadata Source`.
+
+The source data should be stored in a file called ``astoria.json`` in JSON format.
+
+There should ideally not be any other files on the Metadata USB. 
+
+.. Caution:: If a ``robot.zip`` is placed on the Metadata USB, the robot will not recognise the Metadata USB as Astdiskd will
+   recognise it as a usercode disk. See :ref:`Disk Identification` for an explanation of this process.
+
+Example override file:
+
+.. literalinclude:: _code/astoria.json
+  :language: JSON
