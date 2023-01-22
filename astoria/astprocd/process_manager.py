@@ -2,16 +2,12 @@
 
 import asyncio
 import logging
-from json import JSONDecodeError, loads
-from typing import Dict, Match, Optional
-
-from pydantic import parse_obj_as
+from typing import Dict, Optional
 
 from astoria.common.code_status import CodeStatus
 from astoria.common.components import StateManager
 from astoria.common.disks import DiskInfo, DiskType, DiskUUID
 from astoria.common.ipc import (
-    MetadataManagerMessage,
     ProcessManagerMessage,
     RequestResponse,
     UsercodeKillManagerRequest,
@@ -19,7 +15,7 @@ from astoria.common.ipc import (
     UsercodeRestartManagerRequest,
 )
 from astoria.common.metadata import Metadata
-from astoria.common.mixins import DiskHandlerMixin
+from astoria.common.mixins import DiskHandlerMixin, MetadataHandlerMixin
 from astoria.common.mqtt import BroadcastHelper
 
 from .usercode_lifecycle import UsercodeLifecycle
@@ -29,7 +25,11 @@ LOGGER = logging.getLogger(__name__)
 loop = asyncio.get_event_loop()
 
 
-class ProcessManager(DiskHandlerMixin, StateManager[ProcessManagerMessage]):
+class ProcessManager(
+    DiskHandlerMixin,
+    MetadataHandlerMixin,
+    StateManager[ProcessManagerMessage],
+):
     """Astoria Process State Manager."""
 
     name = "astprocd"
@@ -80,21 +80,9 @@ class ProcessManager(DiskHandlerMixin, StateManager[ProcessManagerMessage]):
         for uuid, info in self._cur_disks.items():
             asyncio.ensure_future(self.handle_disk_removal(uuid, info))
 
-    async def handle_astmetad_message(
-        self,
-        match: Match[str],
-        payload: str,
-    ) -> None:
-        """Handle disk info messages."""
-        if payload:
-            try:
-                data = loads(payload)
-                message = parse_obj_as(MetadataManagerMessage, data)
-                self._recent_metadata = message.metadata
-            except JSONDecodeError:
-                LOGGER.warning("Received bad JSON in disk manager message.")
-        else:
-            LOGGER.warning("Received empty disk manager message.")
+    async def handle_metadata(self, metadata: Metadata) -> None:
+        """Handle a metadata update."""
+        self._recent_metadata = metadata
 
     async def handle_disk_insertion(self, uuid: DiskUUID, disk_info: DiskInfo) -> None:
         """Handle a disk insertion."""
