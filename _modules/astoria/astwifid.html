@@ -167,16 +167,15 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">signal</span>
 <span class="kn">import</span> <span class="nn">tempfile</span>
-<span class="kn">from</span> <span class="nn">json</span> <span class="kn">import</span> <span class="n">JSONDecodeError</span><span class="p">,</span> <span class="n">loads</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">IO</span><span class="p">,</span> <span class="n">Match</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">IO</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">import</span> <span class="nn">click</span>
-<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">ValidationError</span><span class="p">,</span> <span class="n">parse_obj_as</span>
 
 <span class="kn">from</span> <span class="nn">astoria.common.components</span> <span class="kn">import</span> <span class="n">StateManager</span>
-<span class="kn">from</span> <span class="nn">astoria.common.ipc</span> <span class="kn">import</span> <span class="n">MetadataManagerMessage</span><span class="p">,</span> <span class="n">WiFiManagerMessage</span>
+<span class="kn">from</span> <span class="nn">astoria.common.ipc</span> <span class="kn">import</span> <span class="n">WiFiManagerMessage</span>
 <span class="kn">from</span> <span class="nn">astoria.common.metadata</span> <span class="kn">import</span> <span class="n">Metadata</span>
+<span class="kn">from</span> <span class="nn">astoria.common.mixins</span> <span class="kn">import</span> <span class="n">MetadataHandlerMixin</span>
 
 <span class="n">LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -192,7 +191,7 @@
     <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">wifid</span><span class="o">.</span><span class="n">run</span><span class="p">())</span>
 
 
-<span class="k">class</span> <span class="nc">WiFiHotspotDaemon</span><span class="p">(</span><span class="n">StateManager</span><span class="p">[</span><span class="n">WiFiManagerMessage</span><span class="p">]):</span>
+<span class="k">class</span> <span class="nc">WiFiHotspotDaemon</span><span class="p">(</span><span class="n">MetadataHandlerMixin</span><span class="p">,</span> <span class="n">StateManager</span><span class="p">[</span><span class="n">WiFiManagerMessage</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Hotspot management daemon.</span>
 
@@ -229,24 +228,6 @@
             <span class="n">status</span><span class="o">=</span><span class="n">WiFiManagerMessage</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">STOPPED</span><span class="p">,</span>
             <span class="n">hotspot_running</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="p">)</span>
-
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">handle_astmetad_message</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">match</span><span class="p">:</span> <span class="n">Match</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-            <span class="n">payload</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Event handler for metadata changes.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">payload</span><span class="p">:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">data</span> <span class="o">=</span> <span class="n">loads</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
-                <span class="n">metadata_manager_message</span> <span class="o">=</span> <span class="n">parse_obj_as</span><span class="p">(</span><span class="n">MetadataManagerMessage</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
-                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_metadata</span><span class="p">(</span><span class="n">metadata_manager_message</span><span class="o">.</span><span class="n">metadata</span><span class="p">)</span>
-            <span class="k">except</span> <span class="n">ValidationError</span><span class="p">:</span>
-                <span class="n">LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Received bad metadata manager message.&quot;</span><span class="p">)</span>
-            <span class="k">except</span> <span class="n">JSONDecodeError</span><span class="p">:</span>
-                <span class="n">LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Received bad JSON in metadata manager message.&quot;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Received empty metadata manager message.&quot;</span><span class="p">)</span>
 
     <span class="k">async</span> <span class="k">def</span> <span class="nf">handle_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="n">Metadata</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>

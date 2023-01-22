@@ -289,17 +289,6 @@ This is managed via the <code class="docutils literal notranslate"><span class="
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="astoria.astprocd.ProcessManager.handle_astmetad_message">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">handle_astmetad_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">match</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">payload</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astprocd/process_manager.html#ProcessManager.handle_astmetad_message"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astprocd.ProcessManager.handle_astmetad_message" title="Permalink to this definition">¶</a></dt>
-<dd><p>Handle disk info messages.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="astoria.astprocd.ProcessManager.handle_disk_insertion">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">handle_disk_insertion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uuid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disk_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astprocd/process_manager.html#ProcessManager.handle_disk_insertion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astprocd.ProcessManager.handle_disk_insertion" title="Permalink to this definition">¶</a></dt>
 <dd><p>Handle a disk insertion.</p>
@@ -328,6 +317,17 @@ This is managed via the <code class="docutils literal notranslate"><span class="
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../design/ipc.html#astoria.common.ipc.RequestResponse" title="astoria.common.ipc.manager_requests.RequestResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">RequestResponse</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="astoria.astprocd.ProcessManager.handle_metadata">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">handle_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astprocd/process_manager.html#ProcessManager.handle_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astprocd.ProcessManager.handle_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle a metadata update.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
