@@ -191,7 +191,7 @@ class WiFiHotspotLifeCycle:
             "bridge": self._bridge,
             "ssid": self._ssid,
             "country_code": self._region,
-            "channel": 7,
+            "channel": 6,
             "hw_mode": "g",
             # Bit field: bit0 = WPA, bit1 = WPA2
             "wpa": 2,
