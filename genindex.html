@@ -162,8 +162,10 @@
 <div class="genindex-jumpbox">
  <a href="#_"><strong>_</strong></a>
  | <a href="#A"><strong>A</strong></a>
+ | <a href="#B"><strong>B</strong></a>
  | <a href="#C"><strong>C</strong></a>
  | <a href="#D"><strong>D</strong></a>
+ | <a href="#E"><strong>E</strong></a>
  | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
  | <a href="#H"><strong>H</strong></a>
@@ -186,9 +188,11 @@
 <h2 id="_">_</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="implementation/managers/astwifid.html#astoria.astwifid.WiFiHotspotLifeCycle.__init__">__init__() (astoria.astwifid.WiFiHotspotLifeCycle method)</a>
+      <li><a href="implementation/managers/astwifid.html#astoria.astwifid.hotspot_lifecycle.WiFiHotspotLifeCycle.__init__">__init__() (astoria.astwifid.hotspot_lifecycle.WiFiHotspotLifeCycle method)</a>
 
       <ul>
+        <li><a href="implementation/managers/astwifid.html#astoria.astwifid.lifecycle.WiFiLifecycle.__init__">(astoria.astwifid.lifecycle.WiFiLifecycle method)</a>
+</li>
         <li><a href="implementation/disk_types.html#astoria.common.disks.constraints.AndConstraint.__init__">(astoria.common.disks.constraints.AndConstraint method)</a>
 </li>
         <li><a href="implementation/disk_types.html#astoria.common.disks.constraints.FilePresentConstraint.__init__">(astoria.common.disks.constraints.FilePresentConstraint method)</a>
@@ -208,15 +212,27 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="implementation/disk_types.html#astoria.common.disks.constraints.AndConstraint">AndConstraint (class in astoria.common.disks.constraints)</a>
+      <li><a href="implementation/managers/astwifid.html#astoria.astwifid.lifecycle.WiFiLifecycle.access_point_info">access_point_info (astoria.astwifid.lifecycle.WiFiLifecycle property)</a>
 </li>
-      <li><a href="implementation/managers/astmetad.html#astoria.common.metadata.Metadata.arch">arch (astoria.common.metadata.Metadata attribute)</a>
+      <li><a href="implementation/managers/astwifid.html#astoria.astwifid.lifecycle.AccessPointInfo">AccessPointInfo (class in astoria.astwifid.lifecycle)</a>
+</li>
+      <li><a href="implementation/disk_types.html#astoria.common.disks.constraints.AndConstraint">AndConstraint (class in astoria.common.disks.constraints)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astmetad.html#astoria.common.metadata.Metadata.arch">arch (astoria.common.metadata.Metadata attribute)</a>
+</li>
       <li><a href="implementation/managers/astmetad.html#astoria.common.metadata.Metadata.arena">arena (astoria.common.metadata.Metadata attribute)</a>
 </li>
       <li><a href="implementation/managers/astmetad.html#astoria.common.metadata.Metadata.astoria_version">astoria_version (astoria.common.metadata.Metadata attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="B">B</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astwifid.html#astoria.common.config.system.WiFiInfo.bridge">bridge (astoria.common.config.system.WiFiInfo attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -273,6 +289,18 @@
   </ul></td>
 </tr></table>
 
+<h2 id="E">E</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astwifid.html#astoria.common.config.system.WiFiInfo.enable_wpa3">enable_wpa3 (astoria.common.config.system.WiFiInfo attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astwifid.html#astoria.common.config.system.WiFiInfo.Config.extra">extra (astoria.common.config.system.WiFiInfo.Config attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -292,12 +320,10 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="implementation/managers/astmetad.html#astoria.common.metadata.Metadata.game_timeout">game_timeout (astoria.common.metadata.Metadata attribute)</a>
 </li>
-      <li><a href="implementation/managers/astwifid.html#astoria.astwifid.WiFiHotspotLifeCycle.generate_hostapd_config">generate_hostapd_config() (astoria.astwifid.WiFiHotspotLifeCycle method)</a>
+      <li><a href="implementation/managers/astmetad.html#astoria.common.metadata.Metadata.get_macos_release_info">get_macos_release_info() (astoria.common.metadata.Metadata class method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="implementation/managers/astmetad.html#astoria.common.metadata.Metadata.get_macos_release_info">get_macos_release_info() (astoria.common.metadata.Metadata class method)</a>
-</li>
       <li><a href="implementation/managers/astmetad.html#astoria.common.metadata.Metadata.get_os_release_info">get_os_release_info() (astoria.common.metadata.Metadata class method)</a>
 </li>
       <li><a href="implementation/managers/astmetad.html#astoria.common.metadata.Metadata.get_os_version_info">get_os_version_info() (astoria.common.metadata.Metadata class method)</a>
@@ -314,15 +340,13 @@
 </li>
       <li><a href="implementation/managers/astprocd.html#astoria.astprocd.ProcessManager.handle_kill_request">handle_kill_request() (astoria.astprocd.ProcessManager method)</a>
 </li>
-      <li><a href="implementation/managers/astprocd.html#astoria.astprocd.ProcessManager.handle_metadata">handle_metadata() (astoria.astprocd.ProcessManager method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astprocd.html#astoria.astprocd.ProcessManager.handle_metadata">handle_metadata() (astoria.astprocd.ProcessManager method)</a>
+</li>
       <li><a href="implementation/managers/astprocd.html#astoria.astprocd.ProcessManager.handle_restart_request">handle_restart_request() (astoria.astprocd.ProcessManager method)</a>
 </li>
-      <li><a href="implementation/managers/astwifid.html#astoria.astwifid.WiFiHotspotLifeCycle.has_metadata_changed">has_metadata_changed() (astoria.astwifid.WiFiHotspotLifeCycle method)</a>
-</li>
-      <li><a href="implementation/managers/astwifid.html#astoria.astwifid.WiFiHotspotLifeCycle.HOSTAPD_BINARY">HOSTAPD_BINARY (astoria.astwifid.WiFiHotspotLifeCycle attribute)</a>
+      <li><a href="implementation/managers/astwifid.html#astoria.astwifid.hotspot_lifecycle.WiFiHotspotLifeCycle.HOSTAPD_BINARY">HOSTAPD_BINARY (astoria.astwifid.hotspot_lifecycle.WiFiHotspotLifeCycle attribute)</a>
 </li>
       <li><a href="implementation/managers/astwifid.html#astoria.common.ipc.WiFiManagerMessage.hotspot_running">hotspot_running (astoria.common.ipc.WiFiManagerMessage attribute)</a>
 </li>
@@ -336,8 +360,12 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="implementation/managers/astmetad.html#astoria.common.metadata.Metadata.is_wifi_valid">is_wifi_valid() (astoria.common.metadata.Metadata method)</a>
+      <li><a href="implementation/managers/astwifid.html#astoria.astwifid.lifecycle.WiFiLifecycle.interface">interface (astoria.astwifid.lifecycle.WiFiLifecycle property)</a>
+
+      <ul>
+        <li><a href="implementation/managers/astwifid.html#astoria.common.config.system.WiFiInfo.interface">(astoria.common.config.system.WiFiInfo attribute)</a>
 </li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -419,6 +447,10 @@
       <ul>
         <li><a href="implementation/managers/astprocd.html#astoria.astprocd.ProcessManager.name">(astoria.astprocd.ProcessManager attribute)</a>
 </li>
+        <li><a href="implementation/managers/astwifid.html#astoria.astwifid.hotspot_lifecycle.WiFiHotspotLifeCycle.name">(astoria.astwifid.hotspot_lifecycle.WiFiHotspotLifeCycle attribute)</a>
+</li>
+        <li><a href="implementation/managers/astwifid.html#astoria.astwifid.lifecycle.WiFiLifecycle.name">(astoria.astwifid.lifecycle.WiFiLifecycle property)</a>
+</li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -464,6 +496,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="implementation/managers/astprocd.html#astoria.common.ipc.ProcessManagerMessage">ProcessManagerMessage (class in astoria.common.ipc)</a>
 </li>
+      <li><a href="implementation/managers/astwifid.html#astoria.astwifid.lifecycle.AccessPointInfo.psk">psk (astoria.astwifid.lifecycle.AccessPointInfo attribute)</a>
+</li>
       <li><a href="implementation/managers/astmetad.html#astoria.common.metadata.Metadata.python_version">python_version (astoria.common.metadata.Metadata attribute)</a>
 </li>
   </ul></td>
@@ -474,14 +508,20 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="design/ipc.html#astoria.common.ipc.RequestResponse.reason">reason (astoria.common.ipc.RequestResponse attribute)</a>
 </li>
+      <li><a href="implementation/managers/astwifid.html#astoria.astwifid.lifecycle.AccessPointInfo.region">region (astoria.astwifid.lifecycle.AccessPointInfo attribute)</a>
+</li>
       <li><a href="design/ipc.html#astoria.common.ipc.RequestResponse">RequestResponse (class in astoria.common.ipc)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="implementation/managers/astmetad.html#astoria.common.metadata.RobotMode">RobotMode (class in astoria.common.metadata)</a>
 </li>
-      <li><a href="implementation/managers/astwifid.html#astoria.astwifid.WiFiHotspotLifeCycle.run_hotspot">run_hotspot() (astoria.astwifid.WiFiHotspotLifeCycle method)</a>
+      <li><a href="implementation/managers/astwifid.html#astoria.astwifid.hotspot_lifecycle.WiFiHotspotLifeCycle.run">run() (astoria.astwifid.hotspot_lifecycle.WiFiHotspotLifeCycle method)</a>
+
+      <ul>
+        <li><a href="implementation/managers/astwifid.html#astoria.astwifid.lifecycle.WiFiLifecycle.run">(astoria.astwifid.lifecycle.WiFiLifecycle method)</a>
 </li>
+      </ul></li>
       <li><a href="implementation/managers/astprocd.html#astoria.common.code_status.CodeStatus.RUNNING">RUNNING (astoria.common.code_status.CodeStatus attribute)</a>
 </li>
   </ul></td>
@@ -492,12 +532,22 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="design/ipc.html#astoria.common.ipc.ManagerRequest.sender_name">sender_name (astoria.common.ipc.ManagerRequest attribute)</a>
 </li>
-      <li><a href="implementation/managers/astprocd.html#astoria.common.code_status.CodeStatus.STARTING">STARTING (astoria.common.code_status.CodeStatus attribute)</a>
+      <li><a href="implementation/managers/astwifid.html#astoria.astwifid.lifecycle.AccessPointInfo.ssid">ssid (astoria.astwifid.lifecycle.AccessPointInfo attribute)</a>
+
+      <ul>
+        <li><a href="implementation/managers/astwifid.html#astoria.astwifid.lifecycle.WiFiLifecycle.ssid">(astoria.astwifid.lifecycle.WiFiLifecycle property)</a>
 </li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="implementation/managers/astwifid.html#astoria.astwifid.WiFiHotspotLifeCycle.stop_hotspot">stop_hotspot() (astoria.astwifid.WiFiHotspotLifeCycle method)</a>
+      <li><a href="implementation/managers/astprocd.html#astoria.common.code_status.CodeStatus.STARTING">STARTING (astoria.common.code_status.CodeStatus attribute)</a>
 </li>
+      <li><a href="implementation/managers/astwifid.html#astoria.astwifid.hotspot_lifecycle.WiFiHotspotLifeCycle.stop">stop() (astoria.astwifid.hotspot_lifecycle.WiFiHotspotLifeCycle method)</a>
+
+      <ul>
+        <li><a href="implementation/managers/astwifid.html#astoria.astwifid.lifecycle.WiFiLifecycle.stop">(astoria.astwifid.lifecycle.WiFiLifecycle method)</a>
+</li>
+      </ul></li>
       <li><a href="design/ipc.html#astoria.common.ipc.RequestResponse.success">success (astoria.common.ipc.RequestResponse attribute)</a>
 </li>
   </ul></td>
@@ -548,15 +598,23 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="implementation/managers/astmetad.html#astoria.common.metadata.Metadata.wifi_enabled">wifi_enabled (astoria.common.metadata.Metadata attribute)</a>
 </li>
+      <li><a href="implementation/managers/astwifid.html#astoria.astwifid.lifecycle.WiFiLifecycle.wifi_info">wifi_info (astoria.astwifid.lifecycle.WiFiLifecycle property)</a>
+</li>
       <li><a href="implementation/managers/astmetad.html#astoria.common.metadata.Metadata.wifi_psk">wifi_psk (astoria.common.metadata.Metadata attribute)</a>
 </li>
       <li><a href="implementation/managers/astmetad.html#astoria.common.metadata.Metadata.wifi_region">wifi_region (astoria.common.metadata.Metadata attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="implementation/managers/astmetad.html#astoria.common.metadata.Metadata.wifi_ssid">wifi_ssid (astoria.common.metadata.Metadata attribute)</a>
 </li>
-      <li><a href="implementation/managers/astwifid.html#astoria.astwifid.WiFiHotspotLifeCycle">WiFiHotspotLifeCycle (class in astoria.astwifid)</a>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="implementation/managers/astwifid.html#astoria.astwifid.hotspot_lifecycle.WiFiHotspotLifeCycle">WiFiHotspotLifeCycle (class in astoria.astwifid.hotspot_lifecycle)</a>
+</li>
+      <li><a href="implementation/managers/astwifid.html#astoria.common.config.system.WiFiInfo">WiFiInfo (class in astoria.common.config.system)</a>
+</li>
+      <li><a href="implementation/managers/astwifid.html#astoria.common.config.system.WiFiInfo.Config">WiFiInfo.Config (class in astoria.common.config.system)</a>
+</li>
+      <li><a href="implementation/managers/astwifid.html#astoria.astwifid.lifecycle.WiFiLifecycle">WiFiLifecycle (class in astoria.astwifid.lifecycle)</a>
 </li>
       <li><a href="implementation/managers/astwifid.html#astoria.common.ipc.WiFiManagerMessage">WiFiManagerMessage (class in astoria.common.ipc)</a>
 </li>

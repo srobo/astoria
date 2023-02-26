@@ -1,0 +1,317 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>astoria.common.config.system &mdash; Astoria 0.11.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Astoria
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../design/index.html">Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../implementation/index.html">Implementation</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Astoria</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>astoria.common.config.system</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for astoria.common.config.system</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">System Configuration schema for Astoria.</span>
+
+<span class="sd">Common to all components.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">BinaryIO</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">parse_obj_as</span>
+
+<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">tomllib</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">tomli</span> <span class="k">as</span> <span class="nn">tomllib</span>
+
+
+<span class="k">class</span> <span class="nc">MQTTBrokerInfo</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;MQTT Broker Information.&quot;&quot;&quot;</span>
+
+    <span class="n">host</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">port</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">enable_tls</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">topic_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;astoria&quot;</span>
+    <span class="n">force_protocol_version_3_1</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Pydantic config.&quot;&quot;&quot;</span>
+
+        <span class="n">extra</span> <span class="o">=</span> <span class="s2">&quot;forbid&quot;</span>
+
+
+<div class="viewcode-block" id="WiFiInfo"><a class="viewcode-back" href="../../../../implementation/managers/astwifid.html#astoria.common.config.system.WiFiInfo">[docs]</a><span class="k">class</span> <span class="nc">WiFiInfo</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;System settings for WiFi.&quot;&quot;&quot;</span>
+
+    <span class="n">interface</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">bridge</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">enable_wpa3</span><span class="p">:</span> <span class="nb">bool</span>
+
+<div class="viewcode-block" id="WiFiInfo.Config"><a class="viewcode-back" href="../../../../implementation/managers/astwifid.html#astoria.common.config.system.WiFiInfo.Config">[docs]</a>    <span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Pydantic config.&quot;&quot;&quot;</span>
+
+        <span class="n">extra</span> <span class="o">=</span> <span class="s2">&quot;forbid&quot;</span></div></div>
+
+
+<span class="k">class</span> <span class="nc">SystemInfo</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;System settings that don&#39;t find elsewhere.&quot;&quot;&quot;</span>
+
+    <span class="n">cache_dir</span><span class="p">:</span> <span class="n">Path</span>
+    <span class="n">initial_log_lines</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Pydantic config.&quot;&quot;&quot;</span>
+
+        <span class="n">extra</span> <span class="o">=</span> <span class="s2">&quot;forbid&quot;</span>
+
+
+<span class="k">class</span> <span class="nc">DiskManagerInfo</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Settings specifically for astdiskd.&quot;&quot;&quot;</span>
+
+    <span class="n">ignored_mounts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+
+<span class="k">class</span> <span class="nc">ProcessManagerInfo</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Settings specifically for astprocd.&quot;&quot;&quot;</span>
+
+    <span class="n">default_usercode_entrypoint</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;robot.py&quot;</span>
+
+
+<span class="k">class</span> <span class="nc">AstoriaConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Config schema for Astoria.&quot;&quot;&quot;</span>
+
+    <span class="n">mqtt</span><span class="p">:</span> <span class="n">MQTTBrokerInfo</span>
+    <span class="n">wifi</span><span class="p">:</span> <span class="n">WiFiInfo</span>
+    <span class="n">astdiskd</span><span class="p">:</span> <span class="n">DiskManagerInfo</span> <span class="o">=</span> <span class="n">DiskManagerInfo</span><span class="p">()</span>  <span class="c1"># Optional section</span>
+    <span class="n">astprocd</span><span class="p">:</span> <span class="n">ProcessManagerInfo</span> <span class="o">=</span> <span class="n">ProcessManagerInfo</span><span class="p">()</span>  <span class="c1"># Optional section</span>
+    <span class="n">system</span><span class="p">:</span> <span class="n">SystemInfo</span>
+    <span class="n">env</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Pydantic config.&quot;&quot;&quot;</span>
+
+        <span class="n">extra</span> <span class="o">=</span> <span class="s2">&quot;forbid&quot;</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_get_config_path</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config_str</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check for a config file or search the filesystem for one.&quot;&quot;&quot;</span>
+        <span class="n">CONFIG_SEARCH_PATHS</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;astoria.toml&quot;</span><span class="p">),</span>
+            <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;/etc/astoria.toml&quot;</span><span class="p">),</span>
+        <span class="p">]</span>
+        <span class="k">if</span> <span class="n">config_str</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">CONFIG_SEARCH_PATHS</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">and</span> <span class="n">path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+                    <span class="k">return</span> <span class="n">path</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">config_str</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">and</span> <span class="n">path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+                <span class="k">return</span> <span class="n">path</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s2">&quot;Unable to find config file.&quot;</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config_str</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;AstoriaConfig&#39;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load the config.&quot;&quot;&quot;</span>
+        <span class="n">config_path</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_config_path</span><span class="p">(</span><span class="n">config_str</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">config_path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">load_from_file</span><span class="p">(</span><span class="n">fh</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">load_from_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">fh</span><span class="p">:</span> <span class="n">BinaryIO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;AstoriaConfig&#39;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load the config from a file.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">parse_obj_as</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">tomllib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fh</span><span class="p">))</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2020-23, Dan Trickey.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

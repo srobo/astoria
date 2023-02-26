@@ -1,0 +1,284 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>astoria.astwifid.lifecycle &mdash; Astoria 0.11.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Astoria
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../design/index.html">Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../implementation/index.html">Implementation</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Astoria</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>astoria.astwifid.lifecycle</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for astoria.astwifid.lifecycle</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Definition for a WiFi lifecycle.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">NamedTuple</span>
+
+<span class="kn">from</span> <span class="nn">astoria.common.config.system</span> <span class="kn">import</span> <span class="n">WiFiInfo</span>
+
+
+<div class="viewcode-block" id="AccessPointInfo"><a class="viewcode-back" href="../../../implementation/managers/astwifid.html#astoria.astwifid.lifecycle.AccessPointInfo">[docs]</a><span class="k">class</span> <span class="nc">AccessPointInfo</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The information required for an Access Point.&quot;&quot;&quot;</span>
+
+    <span class="n">ssid</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">psk</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">region</span><span class="p">:</span> <span class="nb">str</span></div>
+
+
+<div class="viewcode-block" id="WiFiLifecycle"><a class="viewcode-back" href="../../../implementation/managers/astwifid.html#astoria.astwifid.lifecycle.WiFiLifecycle">[docs]</a><span class="k">class</span> <span class="nc">WiFiLifecycle</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A lifecycle that can be executed by astwifid.&quot;&quot;&quot;</span>
+
+    <span class="n">_access_point_info</span><span class="p">:</span> <span class="n">AccessPointInfo</span>
+    <span class="n">_wifi_info</span><span class="p">:</span> <span class="n">WiFiInfo</span>
+
+<div class="viewcode-block" id="WiFiLifecycle.__init__"><a class="viewcode-back" href="../../../implementation/managers/astwifid.html#astoria.astwifid.lifecycle.WiFiLifecycle.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">access_point_info</span><span class="p">:</span> <span class="n">AccessPointInfo</span><span class="p">,</span>
+        <span class="n">wifi_info</span><span class="p">:</span> <span class="n">WiFiInfo</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_access_point_info</span> <span class="o">=</span> <span class="n">access_point_info</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wifi_info</span> <span class="o">=</span> <span class="n">wifi_info</span></div>
+
+    <span class="nd">@property</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The name of the lifecycle.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>  <span class="c1"># pragma: nocover</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">access_point_info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AccessPointInfo</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The access point info for the lifecycle.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_access_point_info</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">wifi_info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WiFiInfo</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The WiFi hardware info for the lifecycle.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wifi_info</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">ssid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The SSID of the network.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_point_info</span><span class="o">.</span><span class="n">ssid</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">interface</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The physical interface for the WiFi radio.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">wifi_info</span><span class="o">.</span><span class="n">interface</span>
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">__o</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Determine equality of two lifecycle.</span>
+
+<span class="sd">        Lifecycles are equal if they are both the same class and have the same access</span>
+<span class="sd">        point details. This comparison is used to determine if a lifecycle needs to be</span>
+<span class="sd">        recreated when the metadata is updated.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">access_point_info</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">__o</span><span class="p">,</span> <span class="s2">&quot;access_point_info&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">__o</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="ow">and</span> <span class="n">access_point_info</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_point_info</span>
+
+<div class="viewcode-block" id="WiFiLifecycle.run"><a class="viewcode-back" href="../../../implementation/managers/astwifid.html#astoria.astwifid.lifecycle.WiFiLifecycle.run">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Run the lifecycle.</span>
+
+<span class="sd">        This coroutine will exist for the lifetime of the lifecycle.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>  <span class="c1"># pragma: nocover</span></div>
+
+<div class="viewcode-block" id="WiFiLifecycle.stop"><a class="viewcode-back" href="../../../implementation/managers/astwifid.html#astoria.astwifid.lifecycle.WiFiLifecycle.stop">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Stop the lifecycle.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>  <span class="c1"># pragma: nocover</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2020-23, Dan Trickey.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

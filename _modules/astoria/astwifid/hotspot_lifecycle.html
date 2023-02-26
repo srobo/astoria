@@ -1,0 +1,325 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>astoria.astwifid.hotspot_lifecycle &mdash; Astoria 0.11.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Astoria
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../design/index.html">Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../implementation/index.html">Implementation</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Astoria</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>astoria.astwifid.hotspot_lifecycle</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for astoria.astwifid.hotspot_lifecycle</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Astoria WiFi Daemon.</span>
+
+<span class="sd">Manages a WiFi hotspot for the robot.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">signal</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">IO</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span> <span class="nn">astoria.common.config.system</span> <span class="kn">import</span> <span class="n">WiFiInfo</span>
+
+<span class="kn">from</span> <span class="nn">.lifecycle</span> <span class="kn">import</span> <span class="n">AccessPointInfo</span><span class="p">,</span> <span class="n">WiFiLifecycle</span>
+
+<span class="n">LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="WiFiHotspotLifeCycle"><a class="viewcode-back" href="../../../implementation/managers/astwifid.html#astoria.astwifid.hotspot_lifecycle.WiFiHotspotLifeCycle">[docs]</a><span class="k">class</span> <span class="nc">WiFiHotspotLifeCycle</span><span class="p">(</span><span class="n">WiFiLifecycle</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Manages the lifecycle of the hostapd process.&quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;WiFi Hotspot&quot;</span>
+
+    <span class="n">HOSTAPD_BINARY</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;hostapd&quot;</span>
+
+<div class="viewcode-block" id="WiFiHotspotLifeCycle.__init__"><a class="viewcode-back" href="../../../implementation/managers/astwifid.html#astoria.astwifid.hotspot_lifecycle.WiFiHotspotLifeCycle.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">access_point_info</span><span class="p">:</span> <span class="n">AccessPointInfo</span><span class="p">,</span>
+            <span class="n">wifi_info</span><span class="p">:</span> <span class="n">WiFiInfo</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_access_point_info</span> <span class="o">=</span> <span class="n">access_point_info</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wifi_info</span> <span class="o">=</span> <span class="n">wifi_info</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_config_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">IO</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_proc</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">asyncio</span><span class="o">.</span><span class="n">subprocess</span><span class="o">.</span><span class="n">Process</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_running</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="WiFiHotspotLifeCycle.run"><a class="viewcode-back" href="../../../implementation/managers/astwifid.html#astoria.astwifid.hotspot_lifecycle.WiFiHotspotLifeCycle.run">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Starts the hostapd process.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting WiFi Hotspot </span><span class="se">\&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ssid</span><span class="si">}</span><span class="se">\&quot;</span><span class="s2"> on </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_generate_hostapd_config</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_proc</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_subprocess_exec</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">HOSTAPD_BINARY</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_config_file</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">HOSTAPD_BINARY</span><span class="si">}</span><span class="s2"> started wth PID: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_proc</span><span class="o">.</span><span class="n">pid</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">sc</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_proc</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">sc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">HOSTAPD_BINARY</span><span class="si">}</span><span class="s2"> terminated with status code </span><span class="si">{</span><span class="n">sc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>  <span class="c1"># pragma: nocover</span>
+                <span class="s2">&quot;Tried to start hotspot, but the config file was not set.&quot;</span><span class="p">,</span>
+            <span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_generate_hostapd_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generates a configuration file for hostapd based on the current metadata.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_config_file</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Writing </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">HOSTAPD_BINARY</span><span class="si">}</span><span class="s2"> configuration to </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_config_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;interface&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wifi_info</span><span class="o">.</span><span class="n">interface</span><span class="p">,</span>
+            <span class="s2">&quot;bridge&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wifi_info</span><span class="o">.</span><span class="n">bridge</span><span class="p">,</span>
+            <span class="s2">&quot;ssid&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_access_point_info</span><span class="o">.</span><span class="n">ssid</span><span class="p">,</span>
+            <span class="s2">&quot;country_code&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_access_point_info</span><span class="o">.</span><span class="n">region</span><span class="p">,</span>
+            <span class="s2">&quot;channel&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+            <span class="s2">&quot;hw_mode&quot;</span><span class="p">:</span> <span class="s2">&quot;g&quot;</span><span class="p">,</span>
+            <span class="c1"># Bit field: bit0 = WPA, bit1 = WPA2</span>
+            <span class="s2">&quot;wpa&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="c1"># Bit field: 1=wpa, 2=wep, 3=both</span>
+            <span class="s2">&quot;auth_algs&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="c1"># Set of accepted cipher suites; disabling insecure TKIP</span>
+            <span class="s2">&quot;wpa_pairwise&quot;</span><span class="p">:</span> <span class="s2">&quot;CCMP&quot;</span><span class="p">,</span>
+            <span class="c1"># Set of accepted key management algorithms</span>
+            <span class="c1"># SAE = WPA3, WPA-PSK = WPA2</span>
+            <span class="s2">&quot;wpa_key_mgmt&quot;</span><span class="p">:</span> <span class="s2">&quot;WPA-PSK&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;wpa_passphrase&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_point_info</span><span class="o">.</span><span class="n">psk</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">wifi_info</span><span class="o">.</span><span class="n">enable_wpa3</span><span class="p">:</span>
+            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;wpa_key_mgmt&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;SAE WPA-PSK&quot;</span>
+            <span class="c1"># Management frame support (802.11w)</span>
+            <span class="c1"># Most client devices will not connect to a</span>
+            <span class="c1"># WPA3-SAE secured AP unless it is using 802.11w.</span>
+            <span class="c1"># This must be supported by both the AP and client.</span>
+            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;ieee80211w&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;sae_require_mfp&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="n">contents</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_config_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">contents</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_config_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<div class="viewcode-block" id="WiFiHotspotLifeCycle.stop"><a class="viewcode-back" href="../../../implementation/managers/astwifid.html#astoria.astwifid.hotspot_lifecycle.WiFiHotspotLifeCycle.stop">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the hostapd process.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Stopping WiFi Hotspot&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_proc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_proc</span><span class="o">.</span><span class="n">send_signal</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">SIGINT</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">wait_for</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_proc</span><span class="o">.</span><span class="n">communicate</span><span class="p">(),</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">5.0</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">TimeoutError</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_proc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sent SIGKILL to pid </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_proc</span><span class="o">.</span><span class="n">pid</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_proc</span><span class="o">.</span><span class="n">send_signal</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">SIGKILL</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+                <span class="c1"># Under some circumstances, there is a race condition such that</span>
+                <span class="c1"># _proc becomes None whilst the communicate timeout is running.</span>
+                <span class="c1"># We want to catch and discard this error.</span>
+                <span class="k">pass</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_proc</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config_file</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_config_file</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2020-23, Dan Trickey.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -191,18 +191,48 @@
 <li><p>Caching of WiFi configuration to allow the network to come up after a restart without the presence of a Usercode USB.</p></li>
 </ul>
 <p>It is not responsible for handling any networking components such as DHCP. These are to be handled by the operating system.</p>
-<p>Hostapd is used to create the WiFi hotspot and uses a configuration that is dynamically generate and stored in <code class="docutils literal notranslate"><span class="pre">/tmp</span></code>.
+<p>Hostapd is used to create the WiFi hotspot and uses a configuration that is dynamically generated and stored in <code class="docutils literal notranslate"><span class="pre">/tmp</span></code>.
 Hostapd is then launched as a child process of the astwifid process. This is managed via the <code class="docutils literal notranslate"><span class="pre">asyncio.subprocess</span></code> module.</p>
-<blockquote>
-<div><ul class="simple">
+<ul class="simple">
 <li><p>Metadata is received from ref:<cite>astmetad</cite></p></li>
 <li><p>If <code class="docutils literal notranslate"><span class="pre">wifi_enabled</span></code> is True and other data is provided (<code class="docutils literal notranslate"><span class="pre">ssid</span></code>, <code class="docutils literal notranslate"><span class="pre">psk</span></code>, <code class="docutils literal notranslate"><span class="pre">region</span></code>), then the hotspot is started.</p></li>
 <li><p>If the metadata changes, the hotspot will automatically restarted with updated credentials if required.</p></li>
 <li><p>If <code class="docutils literal notranslate"><span class="pre">wifi_enabled</span></code> changes to False, then the hotspot will be killed.</p></li>
 </ul>
-</div></blockquote>
 <section id="astwifid-data-structures-and-classes">
 <h2>Astwifid Data Structures and Classes<a class="headerlink" href="#astwifid-data-structures-and-classes" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="astoria.common.config.system.WiFiInfo">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.config.system.</span></span><span class="sig-name descname"><span class="pre">WiFiInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/config/system.html#WiFiInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.config.system.WiFiInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>System settings for WiFi.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="astoria.common.config.system.WiFiInfo.Config">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Config</span></span><a class="reference internal" href="../../_modules/astoria/common/config/system.html#WiFiInfo.Config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.config.system.WiFiInfo.Config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pydantic config.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="astoria.common.config.system.WiFiInfo.Config.extra">
+<span class="sig-name descname"><span class="pre">extra</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'forbid'</span></em><a class="headerlink" href="#astoria.common.config.system.WiFiInfo.Config.extra" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="astoria.common.config.system.WiFiInfo.bridge">
+<span class="sig-name descname"><span class="pre">bridge</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.common.config.system.WiFiInfo.bridge" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="astoria.common.config.system.WiFiInfo.enable_wpa3">
+<span class="sig-name descname"><span class="pre">enable_wpa3</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></em><a class="headerlink" href="#astoria.common.config.system.WiFiInfo.enable_wpa3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="astoria.common.config.system.WiFiInfo.interface">
+<span class="sig-name descname"><span class="pre">interface</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.common.config.system.WiFiInfo.interface" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="astoria.common.ipc.WiFiManagerMessage">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.common.ipc.</span></span><span class="sig-name descname"><span class="pre">WiFiManagerMessage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/common/ipc/manager_messages.html#WiFiManagerMessage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.common.ipc.WiFiManagerMessage" title="Permalink to this definition">¶</a></dt>
@@ -216,23 +246,76 @@ Hostapd is then launched as a child process of the astwifid process. This is man
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="astoria.astwifid.WiFiHotspotLifeCycle">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.astwifid.</span></span><span class="sig-name descname"><span class="pre">WiFiHotspotLifeCycle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ssid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bridge</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_wpa3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astwifid.html#WiFiHotspotLifeCycle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astwifid.WiFiHotspotLifeCycle" title="Permalink to this definition">¶</a></dt>
-<dd><p>Manages the lifecycle of the hostapd process.</p>
+<dt class="sig sig-object py" id="astoria.astwifid.lifecycle.AccessPointInfo">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.astwifid.lifecycle.</span></span><span class="sig-name descname"><span class="pre">AccessPointInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ssid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">psk</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astwifid/lifecycle.html#AccessPointInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astwifid.lifecycle.AccessPointInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>The information required for an Access Point.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="astoria.astwifid.WiFiHotspotLifeCycle.HOSTAPD_BINARY">
-<span class="sig-name descname"><span class="pre">HOSTAPD_BINARY</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'hostapd'</span></em><a class="headerlink" href="#astoria.astwifid.WiFiHotspotLifeCycle.HOSTAPD_BINARY" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.astwifid.lifecycle.AccessPointInfo.psk">
+<span class="sig-name descname"><span class="pre">psk</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.astwifid.lifecycle.AccessPointInfo.psk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="astoria.astwifid.lifecycle.AccessPointInfo.region">
+<span class="sig-name descname"><span class="pre">region</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.astwifid.lifecycle.AccessPointInfo.region" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="astoria.astwifid.lifecycle.AccessPointInfo.ssid">
+<span class="sig-name descname"><span class="pre">ssid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.astwifid.lifecycle.AccessPointInfo.ssid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="astoria.astwifid.lifecycle.WiFiLifecycle">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.astwifid.lifecycle.</span></span><span class="sig-name descname"><span class="pre">WiFiLifecycle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">access_point_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wifi_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astwifid/lifecycle.html#WiFiLifecycle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astwifid.lifecycle.WiFiLifecycle" title="Permalink to this definition">¶</a></dt>
+<dd><p>A lifecycle that can be executed by astwifid.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="astoria.astwifid.lifecycle.WiFiLifecycle.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">access_point_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wifi_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astwifid/lifecycle.html#WiFiLifecycle.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astwifid.lifecycle.WiFiLifecycle.__init__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="astoria.astwifid.WiFiHotspotLifeCycle.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ssid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bridge</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_wpa3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astwifid.html#WiFiHotspotLifeCycle.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astwifid.WiFiHotspotLifeCycle.__init__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="astoria.astwifid.lifecycle.WiFiLifecycle.access_point_info">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">access_point_info</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#astoria.astwifid.lifecycle.AccessPointInfo" title="astoria.astwifid.lifecycle.AccessPointInfo"><span class="pre">AccessPointInfo</span></a></em><a class="headerlink" href="#astoria.astwifid.lifecycle.WiFiLifecycle.access_point_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>The access point info for the lifecycle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#astoria.astwifid.lifecycle.AccessPointInfo" title="astoria.astwifid.lifecycle.AccessPointInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">AccessPointInfo</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="astoria.astwifid.lifecycle.WiFiLifecycle.interface">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">interface</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.astwifid.lifecycle.WiFiLifecycle.interface" title="Permalink to this definition">¶</a></dt>
+<dd><p>The physical interface for the WiFi radio.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="astoria.astwifid.lifecycle.WiFiLifecycle.name">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.astwifid.lifecycle.WiFiLifecycle.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the lifecycle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="astoria.astwifid.WiFiHotspotLifeCycle.generate_hostapd_config">
-<span class="sig-name descname"><span class="pre">generate_hostapd_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astwifid.html#WiFiHotspotLifeCycle.generate_hostapd_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astwifid.WiFiHotspotLifeCycle.generate_hostapd_config" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates a configuration file for hostapd based on the current metadata.</p>
+<dt class="sig sig-object py" id="astoria.astwifid.lifecycle.WiFiLifecycle.run">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astwifid/lifecycle.html#WiFiLifecycle.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astwifid.lifecycle.WiFiLifecycle.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the lifecycle.</p>
+<p>This coroutine will exist for the lifetime of the lifecycle.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
@@ -240,20 +323,63 @@ Hostapd is then launched as a child process of the astwifid process. This is man
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="astoria.astwifid.WiFiHotspotLifeCycle.has_metadata_changed">
-<span class="sig-name descname"><span class="pre">has_metadata_changed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astwifid.html#WiFiHotspotLifeCycle.has_metadata_changed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astwifid.WiFiHotspotLifeCycle.has_metadata_changed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks if the hotspot’s properties match that of a set of metadata.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="astoria.astwifid.lifecycle.WiFiLifecycle.ssid">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ssid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#astoria.astwifid.lifecycle.WiFiLifecycle.ssid" title="Permalink to this definition">¶</a></dt>
+<dd><p>The SSID of the network.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="astoria.astwifid.WiFiHotspotLifeCycle.run_hotspot">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">run_hotspot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astwifid.html#WiFiHotspotLifeCycle.run_hotspot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astwifid.WiFiHotspotLifeCycle.run_hotspot" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.astwifid.lifecycle.WiFiLifecycle.stop">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astwifid/lifecycle.html#WiFiLifecycle.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astwifid.lifecycle.WiFiLifecycle.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stop the lifecycle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="astoria.astwifid.lifecycle.WiFiLifecycle.wifi_info">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">wifi_info</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#astoria.common.config.system.WiFiInfo" title="astoria.common.config.system.WiFiInfo"><span class="pre">WiFiInfo</span></a></em><a class="headerlink" href="#astoria.astwifid.lifecycle.WiFiLifecycle.wifi_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>The WiFi hardware info for the lifecycle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#astoria.common.config.system.WiFiInfo" title="astoria.common.config.system.WiFiInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">WiFiInfo</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="astoria.astwifid.hotspot_lifecycle.WiFiHotspotLifeCycle">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">astoria.astwifid.hotspot_lifecycle.</span></span><span class="sig-name descname"><span class="pre">WiFiHotspotLifeCycle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">access_point_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wifi_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astwifid/hotspot_lifecycle.html#WiFiHotspotLifeCycle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astwifid.hotspot_lifecycle.WiFiHotspotLifeCycle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Manages the lifecycle of the hostapd process.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="astoria.astwifid.hotspot_lifecycle.WiFiHotspotLifeCycle.HOSTAPD_BINARY">
+<span class="sig-name descname"><span class="pre">HOSTAPD_BINARY</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'hostapd'</span></em><a class="headerlink" href="#astoria.astwifid.hotspot_lifecycle.WiFiHotspotLifeCycle.HOSTAPD_BINARY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="astoria.astwifid.hotspot_lifecycle.WiFiHotspotLifeCycle.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">access_point_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wifi_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astwifid/hotspot_lifecycle.html#WiFiHotspotLifeCycle.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astwifid.hotspot_lifecycle.WiFiHotspotLifeCycle.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="astoria.astwifid.hotspot_lifecycle.WiFiHotspotLifeCycle.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'WiFi</span> <span class="pre">Hotspot'</span></em><a class="headerlink" href="#astoria.astwifid.hotspot_lifecycle.WiFiHotspotLifeCycle.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="astoria.astwifid.hotspot_lifecycle.WiFiHotspotLifeCycle.run">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astwifid/hotspot_lifecycle.html#WiFiHotspotLifeCycle.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astwifid.hotspot_lifecycle.WiFiHotspotLifeCycle.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Starts the hostapd process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -263,8 +389,8 @@ Hostapd is then launched as a child process of the astwifid process. This is man
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="astoria.astwifid.WiFiHotspotLifeCycle.stop_hotspot">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_hotspot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astwifid.html#WiFiHotspotLifeCycle.stop_hotspot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astwifid.WiFiHotspotLifeCycle.stop_hotspot" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="astoria.astwifid.hotspot_lifecycle.WiFiHotspotLifeCycle.stop">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/astoria/astwifid/hotspot_lifecycle.html#WiFiHotspotLifeCycle.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astoria.astwifid.hotspot_lifecycle.WiFiHotspotLifeCycle.stop" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stops the hostapd process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
