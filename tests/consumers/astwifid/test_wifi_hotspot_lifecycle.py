@@ -2,13 +2,13 @@
 
 import asyncio
 from pathlib import Path
-from typing import List, Tuple
 
 import pytest
 
-from astoria.astwifid import WiFiHotspotLifeCycle
+from astoria.astwifid.hotspot_lifecycle import WiFiHotspotLifeCycle
+from astoria.astwifid.lifecycle import AccessPointInfo
 from astoria.common.config import AstoriaConfig
-from astoria.common.metadata import Metadata
+from astoria.common.config.system import WiFiInfo
 
 
 class FakeHostapdWiFiHotspotLifeCycle(WiFiHotspotLifeCycle):
@@ -29,12 +29,8 @@ def config() -> AstoriaConfig:
 def lifecycle() -> WiFiHotspotLifeCycle:
     """Get an instance of the WiFiHotspotLifeCycle."""
     return FakeHostapdWiFiHotspotLifeCycle(
-        "ssid",
-        "pskpskpskpsk",
-        "region",
-        "interface",
-        "bridge",
-        True,
+        AccessPointInfo("ssid", "pskpskpskpsk", "region"),
+        WiFiInfo(interface="interface", bridge="bridge", enable_wpa3=True),
     )
 
 
@@ -47,11 +43,11 @@ def valid_hostapd_config() -> str:
 
 def test_wifi_hotspot_lifecycle_constructor(lifecycle: WiFiHotspotLifeCycle) -> None:
     """Test that we can construct a WiFiHotspotLifeCycle."""
-    assert lifecycle._ssid == "ssid"
-    assert lifecycle._psk == "pskpskpskpsk"
-    assert lifecycle._region == "region"
-    assert lifecycle._interface == "interface"
-    assert lifecycle._enable_wpa3 is True
+    assert lifecycle.access_point_info.ssid == "ssid"
+    assert lifecycle.access_point_info.psk == "pskpskpskpsk"
+    assert lifecycle.access_point_info.region == "region"
+    assert lifecycle.wifi_info.interface == "interface"
+    assert lifecycle.wifi_info.enable_wpa3 is True
 
 
 def test_wifi_hotspot_hostapd_config_generation(
@@ -60,7 +56,7 @@ def test_wifi_hotspot_hostapd_config_generation(
 ) -> None:
     """Test that we generate a hostapd config correctly."""
     assert lifecycle._config_file is None
-    lifecycle.generate_hostapd_config()
+    lifecycle._generate_hostapd_config()
     assert lifecycle._config_file is not None
 
     config_path = Path(lifecycle._config_file.name)
@@ -79,7 +75,7 @@ async def test_wifi_hotspot_start_stop(
 
     for _ in range(3):
         # Start it
-        asyncio.ensure_future(lifecycle.run_hotspot())
+        asyncio.ensure_future(lifecycle.run())
         await asyncio.sleep(0.02)
         assert lifecycle._proc is not None
         assert lifecycle._config_file is not None  # Should generate the config
@@ -87,33 +83,8 @@ async def test_wifi_hotspot_start_stop(
         assert lifecycle._running
 
         # Stop it
-        await lifecycle.stop_hotspot()
+        await lifecycle.stop()
         assert not lifecycle._running
         assert lifecycle._proc is None
         assert lifecycle._config_file is not None
         assert not config_file.exists()
-
-
-METADATA_TEST_CASES: List[Tuple[str, str, str, bool]] = [
-    ("ssid", "pskpskpskpsk", "region", False),
-    ("ssid2", "pskpskpskpsk", "region", True),
-    ("ssid", "pskpskpskpskpskpsk", "region", True),
-    ("ssid", "pskpskpskpsk", "otherregion", True),
-]
-
-
-@pytest.mark.parametrize("ssid,psk,region,outcome", METADATA_TEST_CASES)
-def test_wifi_hotspot_metadata_changed(
-        config: AstoriaConfig,
-        lifecycle: WiFiHotspotLifeCycle,
-        ssid: str,
-        psk: str,
-        region: str,
-        outcome: bool,
-) -> None:
-    """Test that we can check if metadata changes."""
-    metadata = Metadata.init(config)
-    metadata.wifi_ssid = ssid
-    metadata.wifi_psk = psk
-    metadata.wifi_region = region
-    assert lifecycle.has_metadata_changed(metadata) == outcome
