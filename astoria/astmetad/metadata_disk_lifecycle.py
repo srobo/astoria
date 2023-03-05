@@ -88,11 +88,13 @@ class UsercodeDiskLifecycle(AbstractMetadataDiskLifecycle):
         :param config: Optionally, a config file to print at the bottom.
         """
         with file.open("wb") as fh:
-            fh.writelines([
-                b"There was an error loading your robot-settings.toml\n"
-                b"Your robot-settings.toml has been overwritten.\n",
-                b"\n",
-            ])
+            fh.writelines(
+                [
+                    b"There was an error loading your robot-settings.toml\n"
+                    b"Your robot-settings.toml has been overwritten.\n",
+                    b"\n",
+                ],
+            )
             fh.write(error.encode())
 
             if config is not None:

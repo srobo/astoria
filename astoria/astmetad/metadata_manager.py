@@ -39,11 +39,19 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
 
     DISK_TYPE_OVERRIDE_MAP: Dict[DiskType, Set[str]] = {
         DiskType.USERCODE: {
-            "usercode_entrypoint", "wifi_ssid",
-            "wifi_psk", "wifi_region", "wifi_enabled",
+            "usercode_entrypoint",
+            "wifi_ssid",
+            "wifi_psk",
+            "wifi_region",
+            "wifi_enabled",
         },
         DiskType.METADATA: {
-            "arena", "zone", "mode", "marker_offset", "game_timeout", "wifi_enabled",
+            "arena",
+            "zone",
+            "mode",
+            "marker_offset",
+            "game_timeout",
+            "wifi_enabled",
         },
     }
 
@@ -52,8 +60,7 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
 
     def _init(self) -> None:
         self._lifecycles: Dict[DiskType, Optional[AbstractMetadataDiskLifecycle]] = {
-            disk_type: None
-            for disk_type in self.DISK_TYPE_LIFECYCLE_MAP
+            disk_type: None for disk_type in self.DISK_TYPE_LIFECYCLE_MAP
         }
         self._cache = MetadataCache(
             self.CACHED_ATTRS,
@@ -118,7 +125,7 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
     async def handle_disk_removal(self, uuid: DiskUUID, disk_info: DiskInfo) -> None:
         """Handle a disk removal."""
         LOGGER.debug(f"Disk removed: {uuid} ({disk_info.disk_type})")
-        for disk_type, lifecycle_class in self.DISK_TYPE_LIFECYCLE_MAP.items():
+        for disk_type, _lifecycle_class in self.DISK_TYPE_LIFECYCLE_MAP.items():
             if disk_info.disk_type is disk_type:
                 LOGGER.info(f"Metadata disk {uuid} removed ({disk_info.mount_path})")
                 lifecycle = self._lifecycles[disk_type]

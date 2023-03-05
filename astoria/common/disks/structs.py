@@ -5,7 +5,7 @@ from typing import NewType
 
 from pydantic import BaseModel
 
-DiskUUID = NewType('DiskUUID', str)
+DiskUUID = NewType("DiskUUID", str)
 
 
 class DiskType(Enum):

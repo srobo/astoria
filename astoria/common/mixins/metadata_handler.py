@@ -18,9 +18,9 @@ class MetadataHandlerMixin:
     config: AstoriaConfig
 
     async def handle_astmetad_message(
-            self,
-            match: Match[str],
-            payload: str,
+        self,
+        match: Match[str],
+        payload: str,
     ) -> None:
         """Event handler for metadata changes."""
         if payload:

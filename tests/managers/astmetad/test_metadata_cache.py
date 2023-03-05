@@ -31,7 +31,7 @@ def test_metadata_cache_is_read_on_start(empty_temp_dir: Path) -> None:
     """Test that the cache file is loaded on startup."""
     cache_path = empty_temp_dir / "meta.json"
 
-    cache_path.write_text("{\"bees\": \"hive\"}")
+    cache_path.write_text('{"bees": "hive"}')
 
     meta = MetadataCache({"bees"}, cache_path=cache_path)
 
@@ -47,7 +47,7 @@ def test_metadata_cache_is_updated(empty_temp_dir: Path) -> None:
     for val in ("hive", "hive", "queen", "honey"):
         meta.update_cached_attr("bees", val)
         assert meta.data == {"bees": val}
-        assert cache_path.read_text() == f"{{\"bees\": \"{val}\"}}"
+        assert cache_path.read_text() == f'{{"bees": "{val}"}}'
 
 
 def test_metadata_cache_fails_on_uncacheable_key(empty_temp_dir: Path) -> None:
@@ -73,14 +73,14 @@ def test_metadata_cache_bad_json_is_ignored(empty_temp_dir: Path) -> None:
     # Check we can still write to the file.
     meta.update_cached_attr("bees", "hive")
     assert meta.data == {"bees": "hive"}
-    assert cache_path.read_text() == "{\"bees\": \"hive\"}"
+    assert cache_path.read_text() == '{"bees": "hive"}'
 
 
 def test_metadata_cache_non_string_is_ignored(empty_temp_dir: Path) -> None:
     """Test that bad json is ignored when loading the cache."""
     cache_path = empty_temp_dir / "meta.json"
 
-    cache_path.write_text("{\"bees\": \"hive\", \"wasps\": 100}")
+    cache_path.write_text('{"bees": "hive", "wasps": 100}')
 
     meta = MetadataCache({"bees", "wasps"}, cache_path=cache_path)
 
@@ -90,32 +90,32 @@ def test_metadata_cache_non_string_is_ignored(empty_temp_dir: Path) -> None:
     # Check we can still write to the file.
     meta.update_cached_attr("bees", "hive")
     assert meta.data == {"bees": "hive"}
-    assert cache_path.read_text() == "{\"bees\": \"hive\"}"
+    assert cache_path.read_text() == '{"bees": "hive"}'
 
 
 def test_metadata_cache_bad_keys_is_ignored(empty_temp_dir: Path) -> None:
     """Test that we ignore the cache if it has bad keys in it."""
     cache_path = empty_temp_dir / "meta.json"
 
-    cache_path.write_text("{\"bees\": \"hive\", \"notbees\": \"not\"}")
+    cache_path.write_text('{"bees": "hive", "notbees": "not"}')
 
     meta = MetadataCache({"bees"}, cache_path=cache_path)
 
     # Check data and cache are cleaned
     assert meta.data == {"bees": "hive"}
-    assert cache_path.read_text() == "{\"bees\": \"hive\"}"
+    assert cache_path.read_text() == '{"bees": "hive"}'
 
     # Check we can still write to the file.
     meta.update_cached_attr("bees", "bighive")
     assert meta.data == {"bees": "bighive"}
-    assert cache_path.read_text() == "{\"bees\": \"bighive\"}"
+    assert cache_path.read_text() == '{"bees": "bighive"}'
 
 
 def test_metadata_cache_remove_key_when_none(empty_temp_dir: Path) -> None:
     """Test that we remove an entry from the cache when the value is None."""
     cache_path = empty_temp_dir / "meta.json"
 
-    cache_path.write_text("{\"bees\": \"hive\"}")
+    cache_path.write_text('{"bees": "hive"}')
 
     meta = MetadataCache({"bees"}, cache_path=cache_path)
 

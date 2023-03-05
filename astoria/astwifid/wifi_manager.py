@@ -57,13 +57,15 @@ class WiFiManager(MetadataHandlerMixin, StateManager[WiFiManagerMessage]):
         return all_interfaces_available
 
     def _get_lifecycle(self, metadata: Metadata) -> Optional[WiFiLifecycle]:
-        hotspot_can_run = all([
-            metadata.wifi_enabled,
-            metadata.wifi_ssid is not None,
-            metadata.wifi_psk is not None,
-            metadata.wifi_region is not None,
-            self._is_hardware_available(),
-        ])
+        hotspot_can_run = all(
+            [
+                metadata.wifi_enabled,
+                metadata.wifi_ssid is not None,
+                metadata.wifi_psk is not None,
+                metadata.wifi_region is not None,
+                self._is_hardware_available(),
+            ],
+        )
         if hotspot_can_run:
             # The types here are validated by the above if statement.
             ap_info = AccessPointInfo(

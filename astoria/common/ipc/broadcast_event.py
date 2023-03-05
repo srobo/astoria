@@ -14,7 +14,7 @@ class BroadcastEvent(BaseModel):
     sender_name: str
     priority: int = 0
 
-    def __gt__(self, other: 'BroadcastEvent') -> bool:
+    def __gt__(self, other: "BroadcastEvent") -> bool:
         return self.priority > other.priority
 
 

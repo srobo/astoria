@@ -32,7 +32,7 @@ class Metadata(BaseModel):
         validate_assignment = True
 
     @classmethod
-    def init(cls, config: AstoriaConfig) -> 'Metadata':
+    def init(cls, config: AstoriaConfig) -> "Metadata":
         """
         Initialise the metadata and populate with data.
 
@@ -47,9 +47,9 @@ class Metadata(BaseModel):
             python_version=platform.python_version(),
             libc_ver="".join(platform.libc_ver()),
             usercode_entrypoint=config.astprocd.default_usercode_entrypoint,
-            os_name=os_release.get('NAME'),
-            os_pretty_name=os_release.get('PRETTY_NAME'),
-            os_version=os_release.get('VERSION_ID'),
+            os_name=os_release.get("NAME"),
+            os_pretty_name=os_release.get("PRETTY_NAME"),
+            os_version=os_release.get("VERSION_ID"),
         )
 
     @classmethod
@@ -85,15 +85,15 @@ class Metadata(BaseModel):
             brand = "macOS"
 
         return {
-            'NAME': brand,
-            'PRETTY_NAME': f"{brand} {version}",
-            'VERSION_ID': version,
+            "NAME": brand,
+            "PRETTY_NAME": f"{brand} {version}",
+            "VERSION_ID": version,
         }
 
     @classmethod
     def get_os_release_info(
-            cls,
-            os_release_path: Path = Path('/etc/os-release'),
+        cls,
+        os_release_path: Optional[Path] = None,
     ) -> Dict[str, str]:
         """
         Reads OS version information from /etc/os-release.
@@ -101,11 +101,18 @@ class Metadata(BaseModel):
         See man page os-release(5) for more information.
         :returns: dict OS release values
         """
+        if os_release_path is None:
+            os_release_path = Path("/etc/os-release")
+
         if os_release_path.exists():
             contents = os_release_path.read_text()
             return {
-                k: v for k, v in
-                re.findall(r'^([A-Z_]+)="?([^"\n]+)"?$', contents, flags=re.MULTILINE)
+                k: v
+                for k, v in re.findall(
+                    r'^([A-Z_]+)="?([^"\n]+)"?$',
+                    contents,
+                    flags=re.MULTILINE,
+                )
             }
 
         return {}

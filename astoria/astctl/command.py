@@ -31,7 +31,12 @@ class Command(StateConsumer):
         """
         return f"astctl-{uuid4()}"
 
-    def _setup_logging(self, verbose: bool, *, welcome_message: bool = True) -> None:
+    def _setup_logging(
+        self,
+        verbose: bool,  # noqa: FBT001
+        *,
+        welcome_message: bool = True,
+    ) -> None:
         super()._setup_logging(verbose, welcome_message=False)
 
 

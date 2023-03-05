@@ -36,7 +36,11 @@ class DataComponent(metaclass=ABCMeta):
 
     config: AstoriaConfig
 
-    def __init__(self, verbose: bool, config_file: Optional[str]) -> None:
+    def __init__(
+        self,
+        verbose: bool,  # noqa: FBT001
+        config_file: Optional[str],
+    ) -> None:
         self.config = AstoriaConfig.load(config_file)
 
         self._setup_logging(verbose)
@@ -45,7 +49,12 @@ class DataComponent(metaclass=ABCMeta):
 
         self._init()
 
-    def _setup_logging(self, verbose: bool, *, welcome_message: bool = True) -> None:
+    def _setup_logging(
+        self,
+        verbose: bool,  # noqa: FBT001
+        *,
+        welcome_message: bool = True,
+    ) -> None:
         if verbose:
             logging.basicConfig(
                 level=logging.DEBUG,

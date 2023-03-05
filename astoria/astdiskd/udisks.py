@@ -45,7 +45,7 @@ class UdisksConnection(DiskProvider):
     def _bytes_to_path(self, data: List[int]) -> Path:
         """Convert a null terminated int array to a path."""
         # Data is null terminated.
-        mount_point = data[:len(data) - 1]
+        mount_point = data[: len(data) - 1]
 
         chars = [chr(x) for x in mount_point]
         mount_point_str = "".join(chars)
@@ -68,10 +68,12 @@ class UdisksConnection(DiskProvider):
                 try:
                     if event_data["Operation"].value == "filesystem-mount":
                         LOGGER.debug(f"disk_signal: Mount Event detected at {path}")
-                        if all((
-                            'Objects' in event_data.keys(),
-                            len(event_data["Objects"].value) > 0,
-                        )):
+                        if all(
+                            (
+                                "Objects" in event_data.keys(),
+                                len(event_data["Objects"].value) > 0,
+                            ),
+                        ):
                             disk_bus_path = event_data["Objects"].value[0]
                             LOGGER.debug(
                                 f"disk_signal: Dispatching mount task"
@@ -105,14 +107,15 @@ class UdisksConnection(DiskProvider):
                 "org.freedesktop.UDisks2.Filesystem",
             )
 
-            mount_points: List[List[int]] = \
-                await drive_filesystem.get_mount_points()
+            mount_points: List[List[int]] = await drive_filesystem.get_mount_points()
 
             try:
                 # We are only interested in the first mountpoint.
                 mount_path = self._bytes_to_path(mount_points[0])
                 if mount_path.exists() and mount_path.is_dir():
-                    drive_block = drive_obj.get_interface("org.freedesktop.UDisks2.Block")
+                    drive_block = drive_obj.get_interface(
+                        "org.freedesktop.UDisks2.Block",
+                    )
                     uuid: DiskUUID = DiskUUID(
                         await drive_block.get_id_uuid(),
                     )
@@ -168,8 +171,10 @@ class UdisksConnection(DiskProvider):
 
         # The block devices are dbus objects managed by Udisks
         # We have to fetch them all unless we already know what they are.
-        managed_objects: Dict[str, Dict[str, str]] = \
-            await udisks_obj_manager.call_get_managed_objects()
+        managed_objects: Dict[
+            str,
+            Dict[str, str],
+        ] = await udisks_obj_manager.call_get_managed_objects()
 
         # Start a mount task for every block device and wait
         # for all of the tasks to be complete.

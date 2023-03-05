@@ -15,7 +15,7 @@ class MetadataCache:
         self,
         cached_keys: Set[str],
         *,
-        cache_path: Path = Path("/var/srobo/astmetad-cache.json"),
+        cache_path: Optional[Path] = None,
     ) -> None:
         """
         Construct the metadata cache.
@@ -24,7 +24,7 @@ class MetadataCache:
         :param cache_path: Path to the cache file in an appropriate location.
         """
         self._cached_keys = cached_keys
-        self._cache_path = cache_path
+        self._cache_path = cache_path or Path("/var/srobo/astmetad-cache.json")
         self._ensure_cache_exists()
         self._data = self._read_cache()
 
