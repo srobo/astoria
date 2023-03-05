@@ -1,4 +1,4 @@
-.PHONY: all clean docs docs-serve lint type test test-cov debian
+.PHONY: all clean docs docs-serve lint lint-fix type test test-cov
 
 CMD:=poetry run
 PYMODULE:=astoria
@@ -17,8 +17,10 @@ docs-serve:
 	$(CMD) sphinx-autobuild $(SPHINX_ARGS)
 
 lint:
-	$(CMD) flake8 $(PYMODULE) $(TESTS) $(EXTRACODE) --exclude $(EXCLUDED_PATHS)
-	$(CMD) isort $(PYMODULE) $(TESTS) $(EXTRACODE) --sg $(EXCLUDED_PATHS)
+	$(CMD) ruff $(PYMODULE) $(TESTS) $(EXTRACODE) --exclude $(EXCLUDED_PATHS)
+
+lint-fix:
+	$(CMD) ruff --fix $(PYMODULE) $(TESTS) $(EXTRACODE) --exclude $(EXCLUDED_PATHS)
 
 type:
 	$(CMD) mypy $(PYMODULE) $(TESTS) $(EXTRACODE) --exclude $(EXCLUDED_PATHS)
@@ -28,16 +30,6 @@ test:
 
 test-cov:
 	$(CMD) pytest $(PYTEST_FLAGS) --cov=$(PYMODULE) $(TESTS) --cov-report html
-
-isort:
-	$(CMD) isort $(PYMODULE) $(TESTS) $(EXTRACODE) --skip-glob $(EXCLUDED_PATHS)
-
-setup.py:
-	$(CMD) dephell deps convert --from pyproject.toml --to setup.py
-
-debian: setup.py
-	sudo mk-build-deps -ir
-	debuild -uc -us
 
 clean:
 	git clean -Xdf # Delete all files in .gitignore

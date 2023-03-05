@@ -6,11 +6,11 @@ from pydantic import ValidationError
 from astoria import __version__
 from astoria.common.ipc import ManagerMessage
 
+StatEnum = ManagerMessage.Status
+
 
 def test_manager_status_enum() -> None:
     """Test that the status enum is as expected."""
-    StatEnum = ManagerMessage.Status
-
     assert len(StatEnum) == 2
     assert StatEnum.STOPPED.value == "STOPPED"
     assert StatEnum.RUNNING.value == "RUNNING"

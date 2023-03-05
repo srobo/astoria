@@ -93,7 +93,7 @@ class Metadata(BaseModel):
     @classmethod
     def get_os_release_info(
             cls,
-            os_release_path: Path = Path('/etc/os-release'),
+            os_release_path: Optional[Path] = None,
     ) -> Dict[str, str]:
         """
         Reads OS version information from /etc/os-release.
@@ -101,6 +101,9 @@ class Metadata(BaseModel):
         See man page os-release(5) for more information.
         :returns: dict OS release values
         """
+        if os_release_path is None:
+            os_release_path = Path('/etc/os-release')
+
         if os_release_path.exists():
             contents = os_release_path.read_text()
             return {

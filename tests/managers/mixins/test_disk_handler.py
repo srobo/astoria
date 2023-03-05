@@ -2,7 +2,7 @@
 import asyncio
 from pathlib import Path
 from re import match
-from typing import Dict, List, Match
+from typing import Dict, List, Match, Optional
 
 import pytest
 
@@ -24,13 +24,15 @@ def get_match() -> Match[str]:
         raise RuntimeError("Regex did not match")
 
 
-def get_disk_info_list(names: List[str] = []) -> Dict[DiskUUID, DiskInfo]:
+def get_disk_info_list(names: Optional[List[str]] = None) -> Dict[DiskUUID, DiskInfo]:
     """
     Construct a list of disk info objects.
 
     Note that the path and type have to be the same as the comparison relies
     on set logic using the hash of the object.
     """
+    if names is None:
+        names = []
     return {
         DiskUUID(name): DiskInfo(
             uuid=name,
@@ -41,13 +43,15 @@ def get_disk_info_list(names: List[str] = []) -> Dict[DiskUUID, DiskInfo]:
     }
 
 
-def get_disk_manager_message(names: List[str] = []) -> str:
+def get_disk_manager_message(names: Optional[List[str]] = None) -> str:
     """
     Construct a dmm with the named disks.
 
     Note that the path and type have to be the same as the comparison relies
     on set logic using the hash of the object.
     """
+    if names is None:
+        names = []
     return DiskManagerMessage(
         disks={DiskUUID(name): Path() for name in names},
         status=DiskManagerMessage.Status.RUNNING,

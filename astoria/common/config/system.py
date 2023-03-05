@@ -66,6 +66,10 @@ class ProcessManagerInfo(BaseModel):
 
     default_usercode_entrypoint: str = "robot.py"
 
+CONFIG_SEARCH_PATHS = [
+    Path("astoria.toml"),
+    Path("/etc/astoria.toml"),
+]
 
 class AstoriaConfig(BaseModel):
     """Config schema for Astoria."""
@@ -85,10 +89,6 @@ class AstoriaConfig(BaseModel):
     @classmethod
     def _get_config_path(cls, config_str: Optional[str] = None) -> Path:
         """Check for a config file or search the filesystem for one."""
-        CONFIG_SEARCH_PATHS = [
-            Path("astoria.toml"),
-            Path("/etc/astoria.toml"),
-        ]
         if config_str is None:
             for path in CONFIG_SEARCH_PATHS:
                 if path.exists() and path.is_file():

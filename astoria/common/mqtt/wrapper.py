@@ -46,13 +46,13 @@ class MQTTWrapper:
         broker_info: MQTTBrokerInfo,
         *,
         last_will: Optional[BaseModel] = None,
-        dependencies: List[str] = [],
+        dependencies: Optional[List[str]] = None,
         no_dependency_event: Optional[asyncio.Event] = None,
     ) -> None:
         self._client_name = client_name
         self._broker_info = broker_info
         self._last_will = last_will
-        self._dependencies = dependencies
+        self._dependencies = dependencies or []
         self._no_dependency_event = no_dependency_event
 
         self._dependency_events: Dict[str, asyncio.Event] = {

@@ -1,6 +1,5 @@
 """A provider of disk information."""
 
-from abc import ABCMeta
 from pathlib import Path
 from typing import TYPE_CHECKING, Callable, Coroutine, Dict
 
@@ -10,7 +9,7 @@ if TYPE_CHECKING:
     from .disk_manager import DiskManager
 
 
-class DiskProvider(metaclass=ABCMeta):
+class DiskProvider():
     """
     A provider of disk information.
 

@@ -58,7 +58,7 @@ class NumberOfFilesConstraint(Constraint):
     This can be used to ensure that there are no spurious files on the disk.
     """
 
-    def __init__(self, n: int):
+    def __init__(self, n: int) -> None:
         """
         Initialise the constraint class.
 
@@ -143,7 +143,7 @@ class AndConstraint(Constraint):
 class NotConstraint(Constraint):
     """Ensure that the constraint does not match."""
 
-    def __init__(self, a: Constraint):
+    def __init__(self, a: Constraint) -> None:
         """
         Initialise the constraint class.
 

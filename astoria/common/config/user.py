@@ -20,7 +20,7 @@ SSID_PREFIX = "robot-"
 MAX_SSID_LENGTH = 32  # SSIDs must be no more than 32 octets.
 
 
-class RobotSettingsException(Exception):
+class RobotSettingsException(Exception):  # noqa: N818
     """There was an error with the robot settings file."""
 
 
@@ -155,13 +155,13 @@ class RobotSettings(BaseModel):
             with path.open("rb") as fh:
                 data = tomllib.load(fh)
         except tomllib.TOMLDecodeError as e:
-            raise NoValidRobotSettingsException(f"Invalid TOML: {e}")
+            raise NoValidRobotSettingsException(f"Invalid TOML: {e}") from None
         except UnicodeDecodeError as e:
-            raise UnreadableRobotSettingsException(f"Unicode Error: {e}")
+            raise UnreadableRobotSettingsException(f"Unicode Error: {e}") from None
 
         try:
             return parse_obj_as(RobotSettings, data)
         except ValidationError as e:
             raise NoValidRobotSettingsException(
                 f"{path.name} did not match schema: {e}",
-            )
+            ) from None

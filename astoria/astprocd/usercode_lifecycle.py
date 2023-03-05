@@ -2,7 +2,7 @@
 
 import asyncio
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from os import environ
 from signal import SIGKILL, SIGTERM
 from string import Template
@@ -231,7 +231,7 @@ class UsercodeLifecycle:
             data = await output.readline()
             while data != b"":
                 data_str = data.decode('utf-8', errors='ignore')
-                time_passed = datetime.now() - start_time
+                time_passed = datetime.now(tz=timezone.utc) - start_time
                 log(fh, f"[{time_passed}] {data_str}", log_line_idx, source)
                 data = await output.readline()
                 log_line_idx += 1
@@ -239,7 +239,7 @@ class UsercodeLifecycle:
         with log_path.open("w") as fh:
             log_line = 0
 
-            start_time = datetime.now()
+            start_time = datetime.now(tz=timezone.utc)
             time_passed = timedelta(0)
 
             # Print initial lines to the log, if any.
@@ -261,5 +261,5 @@ class UsercodeLifecycle:
                 read_from_stream(proc_outputs, LogEventSource.STDOUT, log_line),
                 read_from_stream(proc_outputs, LogEventSource.STDERR, log_line),
             )
-            time_passed = datetime.now() - start_time
+            time_passed = datetime.now(tz=timezone.utc) - start_time
             log(fh, f"[{time_passed}] === LOG FINISHED ===\n", log_line)

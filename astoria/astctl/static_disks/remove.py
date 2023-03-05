@@ -31,9 +31,9 @@ class RemoveStaticDiskCommand(Command):
     def __init__(
         self,
         path: str,
-        verbose: bool,
+        verbose: bool,  # noqa: FBT001
         config_file: Optional[str],
-    ):
+    ) -> None:
         super().__init__(verbose, config_file)
         self._path = Path(path).resolve()
 

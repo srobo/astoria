@@ -118,7 +118,7 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
     async def handle_disk_removal(self, uuid: DiskUUID, disk_info: DiskInfo) -> None:
         """Handle a disk removal."""
         LOGGER.debug(f"Disk removed: {uuid} ({disk_info.disk_type})")
-        for disk_type, lifecycle_class in self.DISK_TYPE_LIFECYCLE_MAP.items():
+        for disk_type, _lifecycle_class in self.DISK_TYPE_LIFECYCLE_MAP.items():
             if disk_info.disk_type is disk_type:
                 LOGGER.info(f"Metadata disk {uuid} removed ({disk_info.mount_path})")
                 lifecycle = self._lifecycles[disk_type]
