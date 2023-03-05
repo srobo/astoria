@@ -1,0 +1,8 @@
+# Configure git to ignore the following commits:
+# git config blame.ignoreRevsFile .git-blame-ignore-revs
+
+# Initial run of black
+8f8f3b8d18abf2dd4d338955419d4a6648c8b056
+
+# flake8 + isort -> ruff
+1d060be6488aa0617de66357dd59da153325564d
