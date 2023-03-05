@@ -51,6 +51,7 @@ class TestUsercodeDiskLifecycle:
         The fixture uses a tmpdir and copies in the robot-settings.toml file
         that needs to be tested.
         """
+
         def _inner(config_name: Optional[str]) -> UsercodeDiskLifecycle:
             if config_name:
                 config_path = data_dir / f"robot-settings/{config_name}.toml"
@@ -67,42 +68,47 @@ class TestUsercodeDiskLifecycle:
                 info,
                 config,
             )
+
         return _inner
 
     def test_load_valid_settings(self, lifecycle_factory: LifecycleFactory) -> None:
         """Test that a valid settings file is loaded."""
         lifecycle = lifecycle_factory("valid")
         assert lifecycle.diff_data == {
-            'usercode_entrypoint': 'entrypoint.py',
-            'wifi_enabled': 'True',
-            'wifi_psk': 'eightcharacters',
-            'wifi_region': 'GB',
-            'wifi_ssid': 'robot-ABC',
+            "usercode_entrypoint": "entrypoint.py",
+            "wifi_enabled": "True",
+            "wifi_psk": "eightcharacters",
+            "wifi_region": "GB",
+            "wifi_ssid": "robot-ABC",
         }
-        assert not lifecycle._disk_info.mount_path.joinpath(self.ERROR_FILENAME).exists()
+        assert not lifecycle._disk_info.mount_path.joinpath(
+            self.ERROR_FILENAME,
+        ).exists()
 
     def test_no_settings(self, lifecycle_factory: LifecycleFactory) -> None:
         """Test that a new settings file is generated if one does not exist."""
         lifecycle = lifecycle_factory(None)
         assert lifecycle.diff_data.keys() == {
-            'usercode_entrypoint',
-            'wifi_enabled',
-            'wifi_psk',
-            'wifi_region',
-            'wifi_ssid',
+            "usercode_entrypoint",
+            "wifi_enabled",
+            "wifi_psk",
+            "wifi_region",
+            "wifi_ssid",
         }
         assert lifecycle.diff_data["usercode_entrypoint"] == "robot.py"
-        assert not lifecycle._disk_info.mount_path.joinpath(self.ERROR_FILENAME).exists()
+        assert not lifecycle._disk_info.mount_path.joinpath(
+            self.ERROR_FILENAME,
+        ).exists()
 
     def test_bad_unicode(self, lifecycle_factory: LifecycleFactory) -> None:
         """Test that we handle bad unicode in the settings file."""
         lifecycle = lifecycle_factory("bad-unicode")
         assert lifecycle.diff_data.keys() == {
-            'usercode_entrypoint',
-            'wifi_enabled',
-            'wifi_psk',
-            'wifi_region',
-            'wifi_ssid',
+            "usercode_entrypoint",
+            "wifi_enabled",
+            "wifi_psk",
+            "wifi_region",
+            "wifi_ssid",
         }
         assert lifecycle.diff_data["usercode_entrypoint"] == "robot.py"
         error_file = lifecycle._disk_info.mount_path.joinpath(self.ERROR_FILENAME)
@@ -121,37 +127,37 @@ class TestUsercodeDiskLifecycle:
             (
                 "blank",
                 [
-                    'robot-settings.toml did not match schema: 3 validation errors for ParsingModel[RobotSettings]',  # noqa: E501
-                    '__root__ -> team_tla',
-                    '  field required (type=value_error.missing)',
-                    '__root__ -> usercode_entrypoint',
-                    '  field required (type=value_error.missing)',
-                    '__root__ -> wifi_psk',
-                    '  field required (type=value_error.missing)',
-                    '',
+                    "robot-settings.toml did not match schema: 3 validation errors for ParsingModel[RobotSettings]",  # noqa: E501
+                    "__root__ -> team_tla",
+                    "  field required (type=value_error.missing)",
+                    "__root__ -> usercode_entrypoint",
+                    "  field required (type=value_error.missing)",
+                    "__root__ -> wifi_psk",
+                    "  field required (type=value_error.missing)",
+                    "",
                 ],
             ),
             ("bad-toml", ["Invalid TOML: Invalid value (at line 5, column 15)", ""]),
             (
                 "extra-config",
                 [
-                    'robot-settings.toml did not match schema: 1 validation error for ParsingModel[RobotSettings]',  # noqa: E501
-                    '__root__ -> bees',
-                    '  extra fields not permitted (type=value_error.extra)',
-                    '',
+                    "robot-settings.toml did not match schema: 1 validation error for ParsingModel[RobotSettings]",  # noqa: E501
+                    "__root__ -> bees",
+                    "  extra fields not permitted (type=value_error.extra)",
+                    "",
                 ],
             ),
             (
                 "invalid-fields",
                 [
-                    'robot-settings.toml did not match schema: 3 validation errors for ParsingModel[RobotSettings]',  # noqa: E501
-                    '__root__ -> team_tla',
-                    '  Team name did not match format: ABC, ABC1 etc. (type=value_error)',
-                    '__root__ -> usercode_entrypoint',
-                    '  Value must only contain ASCII characters. (type=value_error)',
-                    '__root__ -> wifi_psk',
-                    '  WiFi PSK must be 8 - 63 characters long. (type=value_error)',
-                    '',
+                    "robot-settings.toml did not match schema: 3 validation errors for ParsingModel[RobotSettings]",  # noqa: E501
+                    "__root__ -> team_tla",
+                    "  Team name did not match format: ABC, ABC1 etc. (type=value_error)",
+                    "__root__ -> usercode_entrypoint",
+                    "  Value must only contain ASCII characters. (type=value_error)",
+                    "__root__ -> wifi_psk",
+                    "  WiFi PSK must be 8 - 63 characters long. (type=value_error)",
+                    "",
                 ],
             ),
         ],
@@ -166,11 +172,11 @@ class TestUsercodeDiskLifecycle:
         """Test that robot-settings.toml files generate the correct errors."""
         lifecycle = lifecycle_factory(filename)
         assert lifecycle.diff_data.keys() == {
-            'usercode_entrypoint',
-            'wifi_enabled',
-            'wifi_psk',
-            'wifi_region',
-            'wifi_ssid',
+            "usercode_entrypoint",
+            "wifi_enabled",
+            "wifi_psk",
+            "wifi_region",
+            "wifi_ssid",
         }
         assert lifecycle.diff_data["usercode_entrypoint"] == "robot.py"
 
@@ -192,7 +198,10 @@ class TestUsercodeDiskLifecycle:
 
         # Check that the old robot-settings was copied to the error.
         config_path = data_dir / f"robot-settings/{filename}.toml"
-        assert find_section(
-            error_file_lines,
-            None,
-        ) == config_path.read_text().splitlines()
+        assert (
+            find_section(
+                error_file_lines,
+                None,
+            )
+            == config_path.read_text().splitlines()
+        )

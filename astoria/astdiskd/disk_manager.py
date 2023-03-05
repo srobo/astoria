@@ -26,7 +26,9 @@ class DiskManager(StateManager[DiskManagerMessage]):
 
         # Add UDisks provider if it DBus is installed
         if Path("/usr/bin/dbus-daemon").exists():
-            self._providers.append(UdisksConnection(self, notify_coro=self.update_state))
+            self._providers.append(
+                UdisksConnection(self, notify_coro=self.update_state),
+            )
 
     @property
     def offline_status(self) -> DiskManagerMessage:

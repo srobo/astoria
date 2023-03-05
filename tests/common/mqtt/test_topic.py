@@ -38,7 +38,7 @@ def test_topic_str() -> None:
 def test_topic_repr() -> None:
     """Test repr."""
     t = Topic(["bees"])
-    assert repr(t) == "Topic(\"bees\")"
+    assert repr(t) == 'Topic("bees")'
 
 
 def test_topic_equality() -> None:
@@ -73,8 +73,7 @@ def test_topic_parse_no_slash() -> None:
     cases = [
         "foo/bar/",
         "/foo/bar",
-        "/foo/bar/"
-        "//",
+        "/foo/bar/" "//",
         "/",
         "",
     ]

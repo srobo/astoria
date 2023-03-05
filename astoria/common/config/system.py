@@ -66,10 +66,12 @@ class ProcessManagerInfo(BaseModel):
 
     default_usercode_entrypoint: str = "robot.py"
 
+
 CONFIG_SEARCH_PATHS = [
     Path("astoria.toml"),
     Path("/etc/astoria.toml"),
 ]
+
 
 class AstoriaConfig(BaseModel):
     """Config schema for Astoria."""
@@ -100,13 +102,13 @@ class AstoriaConfig(BaseModel):
         raise FileNotFoundError("Unable to find config file.")
 
     @classmethod
-    def load(cls, config_str: Optional[str] = None) -> 'AstoriaConfig':
+    def load(cls, config_str: Optional[str] = None) -> "AstoriaConfig":
         """Load the config."""
         config_path = cls._get_config_path(config_str)
         with config_path.open("rb") as fh:
             return cls.load_from_file(fh)
 
     @classmethod
-    def load_from_file(cls, fh: BinaryIO) -> 'AstoriaConfig':
+    def load_from_file(cls, fh: BinaryIO) -> "AstoriaConfig":
         """Load the config from a file."""
         return parse_obj_as(cls, tomllib.load(fh))

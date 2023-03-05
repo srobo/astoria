@@ -41,11 +41,13 @@ class FilePresentConstraint(Constraint):
 
         :param path: path to the mount point of the disk
         """
-        return all([
-            path.exists(),
-            path.is_dir(),
-            path.joinpath(self.filename).exists(),
-        ])
+        return all(
+            [
+                path.exists(),
+                path.is_dir(),
+                path.joinpath(self.filename).exists(),
+            ],
+        )
 
     def __repr__(self) -> str:
         return f"FilePresentConstraint(filename={self.filename})"
@@ -72,10 +74,12 @@ class NumberOfFilesConstraint(Constraint):
 
         :param path: path to the mount point of the disk
         """
-        if all([
-            path.exists(),
-            path.is_dir(),
-        ]):
+        if all(
+            [
+                path.exists(),
+                path.is_dir(),
+            ],
+        ):
             return self.n == len(list(path.iterdir()))
         else:
             return False
@@ -103,10 +107,12 @@ class OrConstraint(Constraint):
 
         :param path: path to the mount point of the disk
         """
-        return any([
-            self.a.matches(path),
-            self.b.matches(path),
-        ])
+        return any(
+            [
+                self.a.matches(path),
+                self.b.matches(path),
+            ],
+        )
 
     def __repr__(self) -> str:
         return f"OrConstraint(a={self.a}, b={self.b})"
@@ -131,10 +137,12 @@ class AndConstraint(Constraint):
 
         :param path: path to the mount point of the disk
         """
-        return all([
-            self.a.matches(path),
-            self.b.matches(path),
-        ])
+        return all(
+            [
+                self.a.matches(path),
+                self.b.matches(path),
+            ],
+        )
 
     def __repr__(self) -> str:
         return f"AndConstraint(a={self.a}, b={self.b})"

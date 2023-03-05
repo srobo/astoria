@@ -101,7 +101,9 @@ class ProcessManager(
                 )
                 asyncio.ensure_future(self._lifecycle.run_process())
             else:
-                LOGGER.warn("Cannot run usercode, there is already a lifecycle present.")
+                LOGGER.warn(
+                    "Cannot run usercode, there is already a lifecycle present.",
+                )
                 with disk_info.mount_path.joinpath("log.txt").open("w") as fh:
                     fh.write("Unable to start code.\n")
                     fh.write("It is not safe to run multiple code disks at once.\n")
@@ -121,8 +123,8 @@ class ProcessManager(
                 LOGGER.warning("Disk removed, but no code lifecycle available")
 
     async def handle_kill_request(
-            self,
-            request: UsercodeKillManagerRequest,
+        self,
+        request: UsercodeKillManagerRequest,
     ) -> RequestResponse:
         """Handle a request to kill running usercode."""
         if self._lifecycle is None:

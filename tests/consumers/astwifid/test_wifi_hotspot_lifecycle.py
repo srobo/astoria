@@ -51,8 +51,8 @@ def test_wifi_hotspot_lifecycle_constructor(lifecycle: WiFiHotspotLifeCycle) -> 
 
 
 def test_wifi_hotspot_hostapd_config_generation(
-        lifecycle: WiFiHotspotLifeCycle,
-        valid_hostapd_config: str,
+    lifecycle: WiFiHotspotLifeCycle,
+    valid_hostapd_config: str,
 ) -> None:
     """Test that we generate a hostapd config correctly."""
     assert lifecycle._config_file is None
@@ -63,12 +63,12 @@ def test_wifi_hotspot_hostapd_config_generation(
 
     assert config_path.exists()
     assert config_path.is_file()
-    assert config_path.read_text(encoding='utf-8') == valid_hostapd_config
+    assert config_path.read_text(encoding="utf-8") == valid_hostapd_config
 
 
 @pytest.mark.asyncio
 async def test_wifi_hotspot_start_stop(
-        lifecycle: WiFiHotspotLifeCycle,
+    lifecycle: WiFiHotspotLifeCycle,
 ) -> None:
     """Test that we can start and stop the hotspot."""
     assert not lifecycle._running

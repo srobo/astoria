@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from .disk_manager import DiskManager
 
 
-class DiskProvider():
+class DiskProvider:
     """
     A provider of disk information.
 
@@ -18,7 +18,7 @@ class DiskProvider():
 
     def __init__(
         self,
-        disk_manager: 'DiskManager',
+        disk_manager: "DiskManager",
         *,
         notify_coro: Callable[[], Coroutine[None, None, None]],
     ) -> None:

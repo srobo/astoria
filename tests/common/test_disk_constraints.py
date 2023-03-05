@@ -26,6 +26,7 @@ OTHER_PRESENT_PATH = DATA_PATH.joinpath("other_file_present")
 
 def test_subclass() -> None:
     """Test that we can make a subclass of constraint."""
+
     class TestConstraint(Constraint):
         """A test constraint."""
 
@@ -113,8 +114,10 @@ def test_or_constraint() -> None:
     assert OrConstraint(true, true).matches(NOT_EXIST_PATH)
 
     constraint = OrConstraint(true, false)
-    assert repr(constraint) == \
-        "OrConstraint(a=TrueConstraint(), b=NotConstraint(a=TrueConstraint()))"
+    assert (
+        repr(constraint)
+        == "OrConstraint(a=TrueConstraint(), b=NotConstraint(a=TrueConstraint()))"
+    )
 
 
 def test_and_constraint() -> None:
@@ -127,5 +130,7 @@ def test_and_constraint() -> None:
     assert AndConstraint(true, true).matches(NOT_EXIST_PATH)
 
     constraint = AndConstraint(true, false)
-    assert repr(constraint) == \
-        "AndConstraint(a=TrueConstraint(), b=NotConstraint(a=TrueConstraint()))"
+    assert (
+        repr(constraint)
+        == "AndConstraint(a=TrueConstraint(), b=NotConstraint(a=TrueConstraint()))"
+    )

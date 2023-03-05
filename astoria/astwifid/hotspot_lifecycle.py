@@ -25,9 +25,9 @@ class WiFiHotspotLifeCycle(WiFiLifecycle):
     HOSTAPD_BINARY: str = "hostapd"
 
     def __init__(
-            self,
-            access_point_info: AccessPointInfo,
-            wifi_info: WiFiInfo,
+        self,
+        access_point_info: AccessPointInfo,
+        wifi_info: WiFiInfo,
     ) -> None:
         self._access_point_info = access_point_info
         self._wifi_info = wifi_info
@@ -39,7 +39,7 @@ class WiFiHotspotLifeCycle(WiFiLifecycle):
     async def run(self) -> None:
         """Starts the hostapd process."""
         self._running = True
-        LOGGER.info(f"Starting WiFi Hotspot \"{self.ssid}\" on {self.interface}")
+        LOGGER.info(f'Starting WiFi Hotspot "{self.ssid}" on {self.interface}')
         self._generate_hostapd_config()
         if self._config_file is not None:
             while self._running:

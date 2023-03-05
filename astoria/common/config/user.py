@@ -120,7 +120,7 @@ class RobotSettings(BaseModel):
         return val
 
     @classmethod
-    def generate_default_settings(cls, config: AstoriaConfig) -> 'RobotSettings':
+    def generate_default_settings(cls, config: AstoriaConfig) -> "RobotSettings":
         """Generate default sensible settings for the robot."""
         random_tla = f"ZZZ{random.randint(0, 99999)}"
 
@@ -138,7 +138,7 @@ class RobotSettings(BaseModel):
         )
 
     @classmethod
-    def load_settings_file(cls, path: Path) -> 'RobotSettings':
+    def load_settings_file(cls, path: Path) -> "RobotSettings":
         """
         Load the robot settings file.
 

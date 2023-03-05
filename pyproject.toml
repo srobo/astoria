@@ -26,7 +26,8 @@ tomli = { version = "^2.0.1", python = "<=3.10" }
 tomli-w = "^1.0.0"
 
 [tool.poetry.dev-dependencies]
-mypy = "*"
+black = "^23"
+mypy = "^1"
 pytest = "*"
 pytest-cov = "*"
 pytest-asyncio = "*"
@@ -52,6 +53,10 @@ astwifid = 'astoria.astwifid:main'
 [build-system]
 requires = ["poetry>=1.0"]
 build-backend = "poetry.masonry.api"
+
+[tool.black]
+line-length = 90
+target-version = ['py38']
 
 [tool.mypy]
 mypy_path = "stubs"

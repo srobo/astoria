@@ -48,7 +48,7 @@ class MockBroadcastHelper(BroadcastHelper[T]):
         self._sent: List[T] = []
 
     @classmethod
-    def get_helper(cls, schema: Type[T]) -> 'MockBroadcastHelper[T]':  # type: ignore
+    def get_helper(cls, schema: Type[T]) -> "MockBroadcastHelper[T]":  # type: ignore
         """Get the broadcast helper for a given event."""
         return cls(schema.name, schema)
 
@@ -78,11 +78,11 @@ class ReadAndCleanupFile(AbstractContextManager):  # type: ignore
         return self._fh
 
     def __exit__(  # type: ignore[no-untyped-def]
-            self,
-            exc_type,  # noqa: ANN001
-            exc_value,  # noqa: ANN001
-            exc_traceback,  # noqa: ANN001
-        ) -> None:
+        self,
+        exc_type,  # noqa: ANN001
+        exc_value,  # noqa: ANN001
+        exc_traceback,  # noqa: ANN001
+    ) -> None:
         if self._fh is not None:
             self._fh.close()
         # self._file_path.unlink()
@@ -107,7 +107,7 @@ class StatusInformTestHelper:
         mount_path: Optional[Path] = None,
         *,
         config: AstoriaConfig = CONFIG,
-    ) -> Tuple[UsercodeLifecycle, 'StatusInformTestHelper']:
+    ) -> Tuple[UsercodeLifecycle, "StatusInformTestHelper"]:
         """Setup a lifecycle and helper for testing."""
         sith = cls()
         ucl = UsercodeLifecycle(

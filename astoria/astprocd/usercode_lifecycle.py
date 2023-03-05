@@ -32,13 +32,13 @@ class UsercodeLifecycle:
     """
 
     def __init__(
-            self,
-            uuid: DiskUUID,
-            disk_info: DiskInfo,
-            status_inform_callback: Callable[[CodeStatus], None],
-            log_helper: BroadcastHelper[UsercodeLogBroadcastEvent],
-            config: AstoriaConfig,
-            metadata: Metadata,
+        self,
+        uuid: DiskUUID,
+        disk_info: DiskInfo,
+        status_inform_callback: Callable[[CodeStatus], None],
+        log_helper: BroadcastHelper[UsercodeLogBroadcastEvent],
+        config: AstoriaConfig,
+        metadata: Metadata,
     ) -> None:
         self._uuid = uuid
         self._disk_info = disk_info
@@ -112,8 +112,7 @@ class UsercodeLifecycle:
         if self._process is None:
             async with self._process_lock:
                 LOGGER.info(
-                    "Starting usercode execution with "
-                    f"entrypoint {self._entrypoint}",
+                    "Starting usercode execution with " f"entrypoint {self._entrypoint}",
                 )
                 self._process_end_event.clear()
                 self._process = await asyncio.create_subprocess_exec(
@@ -128,12 +127,16 @@ class UsercodeLifecycle:
                     env={**environ.copy(), **self._config.env},
                 )
                 if self._process is not None:
-                    if self._process.stdout is not None and \
-                            self._process.stderr is not None:
+                    if (
+                        self._process.stdout is not None
+                        and self._process.stderr is not None
+                    ):
                         asyncio.ensure_future(
                             self.logger(
-                                {LogEventSource.STDOUT: self._process.stdout,
-                                    LogEventSource.STDERR: self._process.stderr},
+                                {
+                                    LogEventSource.STDOUT: self._process.stdout,
+                                    LogEventSource.STDERR: self._process.stderr,
+                                },
                             ),
                         )
                     else:
@@ -230,7 +233,7 @@ class UsercodeLifecycle:
 
             data = await output.readline()
             while data != b"":
-                data_str = data.decode('utf-8', errors='ignore')
+                data_str = data.decode("utf-8", errors="ignore")
                 time_passed = datetime.now(tz=timezone.utc) - start_time
                 log(fh, f"[{time_passed}] {data_str}", log_line_idx, source)
                 data = await output.readline()

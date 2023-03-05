@@ -24,7 +24,7 @@ class StaticDiskProvider(DiskProvider):
 
     def __init__(
         self,
-        disk_manager: 'DiskManager',
+        disk_manager: "DiskManager",
         *,
         notify_coro: Callable[[], Coroutine[None, None, None]],
     ) -> None:
@@ -81,7 +81,7 @@ class StaticDiskProvider(DiskProvider):
             for uuid, path in self.disks.items():
                 if str(path) == str(request.path):
                     del self.disks[uuid]
-                    LOGGER.info(f'Static disk {uuid} unmounted ({request.path})')
+                    LOGGER.info(f"Static disk {uuid} unmounted ({request.path})")
                     await self._notify_coro()
                     return RequestResponse(
                         uuid=request.uuid,
@@ -106,32 +106,28 @@ class StaticDiskProvider(DiskProvider):
         """Handles the remove all static disks command."""
         # Find the disks that we need to remove
         removed_disks: Dict[DiskUUID, Path] = {
-            uuid: path
-            for uuid, path in self.disks.items()
-            if uuid.startswith('static-')
+            uuid: path for uuid, path in self.disks.items() if uuid.startswith("static-")
         }
 
         # Remove those disks from the list of disks
         self._disks = {
-            uuid: path
-            for uuid, path in self.disks.items()
-            if uuid not in removed_disks
+            uuid: path for uuid, path in self.disks.items() if uuid not in removed_disks
         }
 
         # Log which disks we have remove
         for uuid, path in removed_disks.items():
-            LOGGER.info(f'Static disk {uuid} unmounted ({path})')
+            LOGGER.info(f"Static disk {uuid} unmounted ({path})")
 
         if len(removed_disks) == 0:
             return RequestResponse(
                 uuid=request.uuid,
                 success=True,
-                reason='There are no static disks to remove.',
+                reason="There are no static disks to remove.",
             )
         else:
             await self._notify_coro()
             return RequestResponse(
                 uuid=request.uuid,
                 success=True,
-                reason='Successfully removed all static disks.',
+                reason="Successfully removed all static disks.",
             )

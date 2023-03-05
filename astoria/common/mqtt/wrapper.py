@@ -230,9 +230,11 @@ class MQTTWrapper:
         if len(self._dependencies) > 0:
             LOGGER.debug("Waiting for " + ", ".join(self._dependencies))
 
-            tasks = [asyncio.gather(
-                *(event.wait() for event in self._dependency_events.values()),
-            )]
+            tasks = [
+                asyncio.gather(
+                    *(event.wait() for event in self._dependency_events.values()),
+                ),
+            ]
 
             if self._no_dependency_event is not None:
                 tasks.append(self._no_dependency_event.wait())  # type: ignore

@@ -19,7 +19,7 @@ T = TypeVar("T", bound=BroadcastEvent)
 class BroadcastHelper(Generic[T]):
     """Helper class to manager broadcast events."""
 
-    def __init__(self, mqtt: 'MQTTWrapper', name: str, schema: Type[T]) -> None:
+    def __init__(self, mqtt: "MQTTWrapper", name: str, schema: Type[T]) -> None:
         self._mqtt = mqtt
         self._name = name
         self._schema = schema
@@ -28,7 +28,7 @@ class BroadcastHelper(Generic[T]):
         self._mqtt.subscribe(f"broadcast/{name}", self._handle_broadcast)
 
     @classmethod
-    def get_helper(cls, mqtt: 'MQTTWrapper', schema: Type[T]) -> 'BroadcastHelper[T]':
+    def get_helper(cls, mqtt: "MQTTWrapper", schema: Type[T]) -> "BroadcastHelper[T]":
         """Get the broadcast helper for a given event."""
         return BroadcastHelper[T](mqtt, schema.name, schema)
 
