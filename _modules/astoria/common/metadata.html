@@ -191,7 +191,7 @@
         <span class="n">validate_assignment</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="Metadata.init"><a class="viewcode-back" href="../../../implementation/managers/astmetad.html#astoria.common.metadata.Metadata.init">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">AstoriaConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Metadata&#39;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">AstoriaConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Metadata&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialise the metadata and populate with data.</span>
 
@@ -206,9 +206,9 @@
             <span class="n">python_version</span><span class="o">=</span><span class="n">platform</span><span class="o">.</span><span class="n">python_version</span><span class="p">(),</span>
             <span class="n">libc_ver</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">platform</span><span class="o">.</span><span class="n">libc_ver</span><span class="p">()),</span>
             <span class="n">usercode_entrypoint</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">astprocd</span><span class="o">.</span><span class="n">default_usercode_entrypoint</span><span class="p">,</span>
-            <span class="n">os_name</span><span class="o">=</span><span class="n">os_release</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;NAME&#39;</span><span class="p">),</span>
-            <span class="n">os_pretty_name</span><span class="o">=</span><span class="n">os_release</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;PRETTY_NAME&#39;</span><span class="p">),</span>
-            <span class="n">os_version</span><span class="o">=</span><span class="n">os_release</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;VERSION_ID&#39;</span><span class="p">),</span>
+            <span class="n">os_name</span><span class="o">=</span><span class="n">os_release</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;NAME&quot;</span><span class="p">),</span>
+            <span class="n">os_pretty_name</span><span class="o">=</span><span class="n">os_release</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;PRETTY_NAME&quot;</span><span class="p">),</span>
+            <span class="n">os_version</span><span class="o">=</span><span class="n">os_release</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;VERSION_ID&quot;</span><span class="p">),</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="Metadata.get_os_version_info"><a class="viewcode-back" href="../../../implementation/managers/astmetad.html#astoria.common.metadata.Metadata.get_os_version_info">[docs]</a>    <span class="nd">@classmethod</span>
@@ -244,15 +244,15 @@
             <span class="n">brand</span> <span class="o">=</span> <span class="s2">&quot;macOS&quot;</span>
 
         <span class="k">return</span> <span class="p">{</span>
-            <span class="s1">&#39;NAME&#39;</span><span class="p">:</span> <span class="n">brand</span><span class="p">,</span>
-            <span class="s1">&#39;PRETTY_NAME&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">brand</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-            <span class="s1">&#39;VERSION_ID&#39;</span><span class="p">:</span> <span class="n">version</span><span class="p">,</span>
+            <span class="s2">&quot;NAME&quot;</span><span class="p">:</span> <span class="n">brand</span><span class="p">,</span>
+            <span class="s2">&quot;PRETTY_NAME&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">brand</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;VERSION_ID&quot;</span><span class="p">:</span> <span class="n">version</span><span class="p">,</span>
         <span class="p">}</span></div>
 
 <div class="viewcode-block" id="Metadata.get_os_release_info"><a class="viewcode-back" href="../../../implementation/managers/astmetad.html#astoria.common.metadata.Metadata.get_os_release_info">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_os_release_info</span><span class="p">(</span>
-            <span class="bp">cls</span><span class="p">,</span>
-            <span class="n">os_release_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;/etc/os-release&#39;</span><span class="p">),</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">os_release_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reads OS version information from /etc/os-release.</span>
@@ -260,11 +260,18 @@
 <span class="sd">        See man page os-release(5) for more information.</span>
 <span class="sd">        :returns: dict OS release values</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">os_release_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">os_release_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;/etc/os-release&quot;</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">os_release_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
             <span class="n">contents</span> <span class="o">=</span> <span class="n">os_release_path</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
             <span class="k">return</span> <span class="p">{</span>
-                <span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span>
-                <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^([A-Z_]+)=&quot;?([^&quot;\n]+)&quot;?$&#39;</span><span class="p">,</span> <span class="n">contents</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">)</span>
+                <span class="n">k</span><span class="p">:</span> <span class="n">v</span>
+                <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span>
+                    <span class="sa">r</span><span class="s1">&#39;^([A-Z_]+)=&quot;?([^&quot;\n]+)&quot;?$&#39;</span><span class="p">,</span>
+                    <span class="n">contents</span><span class="p">,</span>
+                    <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">,</span>
+                <span class="p">)</span>
             <span class="p">}</span>
 
         <span class="k">return</span> <span class="p">{}</span></div>

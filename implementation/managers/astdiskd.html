@@ -228,11 +228,6 @@ to receive information about the mounted volumes on the system.</p>
 <dd><p>Status to publish when the manager goes offline.</p>
 <p>This status should ensure that any other components relying
 on this data go into a safe state.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#astoria.common.ipc.DiskManagerMessage" title="astoria.common.ipc.manager_messages.DiskManagerMessage"><code class="xref py py-class docutils literal notranslate"><span class="pre">DiskManagerMessage</span></code></a></p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -260,17 +255,17 @@ on this data go into a safe state.</p>
 <dd><p>Information about a mounted disk.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.disks.DiskInfo.disk_type">
-<span class="sig-name descname"><span class="pre">disk_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../disk_types.html#astoria.common.disks.DiskType" title="astoria.common.disks.structs.DiskType"><span class="pre">DiskType</span></a></em><a class="headerlink" href="#astoria.common.disks.DiskInfo.disk_type" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">disk_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../disk_types.html#astoria.common.disks.DiskType" title="astoria.common.disks.structs.DiskType"><code class="xref py py-class docutils literal notranslate"><span class="pre">DiskType</span></code></a></em><a class="headerlink" href="#astoria.common.disks.DiskInfo.disk_type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.disks.DiskInfo.mount_path">
-<span class="sig-name descname"><span class="pre">mount_path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.11)"><span class="pre">Path</span></a></em><a class="headerlink" href="#astoria.common.disks.DiskInfo.mount_path" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">mount_path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></a></em><a class="headerlink" href="#astoria.common.disks.DiskInfo.mount_path" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.disks.DiskInfo.uuid">
-<span class="sig-name descname"><span class="pre">uuid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#astoria.common.disks.structs.DiskUUID" title="astoria.common.disks.structs.DiskUUID"><span class="pre">DiskUUID</span></a></em><a class="headerlink" href="#astoria.common.disks.DiskInfo.uuid" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">uuid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-func docutils literal notranslate"><span class="pre">NewType()</span></code><span class="pre">(</span><code class="docutils literal notranslate"><span class="pre">DiskUUID</span></code><span class="pre">,</span> <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a><span class="pre">)</span></em><a class="headerlink" href="#astoria.common.disks.DiskInfo.uuid" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -301,7 +296,7 @@ we need to calculate the type of each disk in the message.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.ipc.DiskManagerMessage.disks">
-<span class="sig-name descname"><span class="pre">disks</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#astoria.common.disks.structs.DiskUUID" title="astoria.common.disks.structs.DiskUUID"><span class="pre">DiskUUID</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.11)"><span class="pre">Path</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#astoria.common.ipc.DiskManagerMessage.disks" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">disks</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a><span class="pre">[</span><code class="xref py py-func docutils literal notranslate"><span class="pre">NewType()</span></code><span class="pre">(</span><code class="docutils literal notranslate"><span class="pre">DiskUUID</span></code><span class="pre">,</span> <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a><span class="pre">),</span> <a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></a><span class="pre">]</span></em><a class="headerlink" href="#astoria.common.ipc.DiskManagerMessage.disks" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

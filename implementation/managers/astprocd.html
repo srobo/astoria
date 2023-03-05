@@ -264,17 +264,17 @@ This is managed via the <code class="docutils literal notranslate"><span class="
 <p>Published to astoria/astprocd</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.ipc.ProcessManagerMessage.code_status">
-<span class="sig-name descname"><span class="pre">code_status</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#astoria.common.code_status.CodeStatus" title="astoria.common.code_status.CodeStatus"><span class="pre">CodeStatus</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></em><a class="headerlink" href="#astoria.common.ipc.ProcessManagerMessage.code_status" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">code_status</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a><span class="pre">[</span><a class="reference internal" href="#astoria.common.code_status.CodeStatus" title="astoria.common.code_status.CodeStatus"><code class="xref py py-class docutils literal notranslate"><span class="pre">CodeStatus</span></code></a><span class="pre">]</span></em><a class="headerlink" href="#astoria.common.ipc.ProcessManagerMessage.code_status" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.ipc.ProcessManagerMessage.disk_info">
-<span class="sig-name descname"><span class="pre">disk_info</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="astdiskd.html#astoria.common.disks.DiskInfo" title="astoria.common.disks.structs.DiskInfo"><span class="pre">DiskInfo</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></em><a class="headerlink" href="#astoria.common.ipc.ProcessManagerMessage.disk_info" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">disk_info</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a><span class="pre">[</span><a class="reference internal" href="astdiskd.html#astoria.common.disks.DiskInfo" title="astoria.common.disks.structs.DiskInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">DiskInfo</span></code></a><span class="pre">]</span></em><a class="headerlink" href="#astoria.common.ipc.ProcessManagerMessage.disk_info" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="astoria.common.ipc.ProcessManagerMessage.pid">
-<span class="sig-name descname"><span class="pre">pid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></em><a class="headerlink" href="#astoria.common.ipc.ProcessManagerMessage.pid" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">pid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a><span class="pre">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a><span class="pre">]</span></em><a class="headerlink" href="#astoria.common.ipc.ProcessManagerMessage.pid" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -365,11 +365,6 @@ This is managed via the <code class="docutils literal notranslate"><span class="
 <dd><p>Status to publish when the manager goes offline.</p>
 <p>This status should ensure that any other components relying
 on this data go into a safe state.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#astoria.common.ipc.ProcessManagerMessage" title="astoria.common.ipc.manager_messages.ProcessManagerMessage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessManagerMessage</span></code></a></p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">

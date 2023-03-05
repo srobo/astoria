@@ -260,7 +260,9 @@
                 <span class="p">)</span>
                 <span class="n">asyncio</span><span class="o">.</span><span class="n">ensure_future</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_lifecycle</span><span class="o">.</span><span class="n">run_process</span><span class="p">())</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">LOGGER</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Cannot run usercode, there is already a lifecycle present.&quot;</span><span class="p">)</span>
+                <span class="n">LOGGER</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="s2">&quot;Cannot run usercode, there is already a lifecycle present.&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
                 <span class="k">with</span> <span class="n">disk_info</span><span class="o">.</span><span class="n">mount_path</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;log.txt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
                     <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Unable to start code.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
                     <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;It is not safe to run multiple code disks at once.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
@@ -280,8 +282,8 @@
                 <span class="n">LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Disk removed, but no code lifecycle available&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ProcessManager.handle_kill_request"><a class="viewcode-back" href="../../../implementation/managers/astprocd.html#astoria.astprocd.ProcessManager.handle_kill_request">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">handle_kill_request</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">request</span><span class="p">:</span> <span class="n">UsercodeKillManagerRequest</span><span class="p">,</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">request</span><span class="p">:</span> <span class="n">UsercodeKillManagerRequest</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RequestResponse</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Handle a request to kill running usercode.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lifecycle</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>

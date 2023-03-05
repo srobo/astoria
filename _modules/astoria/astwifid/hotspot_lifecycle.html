@@ -184,9 +184,9 @@
     <span class="n">HOSTAPD_BINARY</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;hostapd&quot;</span>
 
 <div class="viewcode-block" id="WiFiHotspotLifeCycle.__init__"><a class="viewcode-back" href="../../../implementation/managers/astwifid.html#astoria.astwifid.hotspot_lifecycle.WiFiHotspotLifeCycle.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">access_point_info</span><span class="p">:</span> <span class="n">AccessPointInfo</span><span class="p">,</span>
-            <span class="n">wifi_info</span><span class="p">:</span> <span class="n">WiFiInfo</span><span class="p">,</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">access_point_info</span><span class="p">:</span> <span class="n">AccessPointInfo</span><span class="p">,</span>
+        <span class="n">wifi_info</span><span class="p">:</span> <span class="n">WiFiInfo</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_access_point_info</span> <span class="o">=</span> <span class="n">access_point_info</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_wifi_info</span> <span class="o">=</span> <span class="n">wifi_info</span>
@@ -198,7 +198,7 @@
 <div class="viewcode-block" id="WiFiHotspotLifeCycle.run"><a class="viewcode-back" href="../../../implementation/managers/astwifid.html#astoria.astwifid.hotspot_lifecycle.WiFiHotspotLifeCycle.run">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Starts the hostapd process.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_running</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting WiFi Hotspot </span><span class="se">\&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ssid</span><span class="si">}</span><span class="se">\&quot;</span><span class="s2"> on </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Starting WiFi Hotspot &quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ssid</span><span class="si">}</span><span class="s1">&quot; on </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_generate_hostapd_config</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running</span><span class="p">:</span>
