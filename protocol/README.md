@@ -1,0 +1,445 @@
+# Astoria Protocol
+
+*Version 1.0.0 Draft*
+
+This document defines the protocol used for Astoria and it's various
+services. This document SHOULD be used when implementing clients for
+Astoria.
+
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", 
+"SHOULD NOT", "RECOMMENDED",  "MAY", and "OPTIONAL" in this document are to be 
+interpreted as described in RFC 2119.
+
+This document uses semantic versioning and MUST have changes to it
+reviewed and approved appropriately to ensure that any breaking changes
+are dealt with appropriately.
+
+Where appropriate, schemas are provided alongside this document and MUST
+be kept up to date as the protocol develops over time.
+
+## Protocol Overview
+
+The Astoria is an IPC mechanism between multiple independent programs
+that hold individual state on a robot.
+
+There are two categories of program that interact using the Astoria
+Protocol:
+
+-   Astoria Services  
+    -   A service is a program that holds and manages its own state.
+    -   The state usually reflects a *domain* that the service is
+        controlling, e.g running usercode.
+    -   Each service must be defined in the protocol specification.
+    -   Additionally, each service has a *slug*, usually the name of the
+        service in snake case.
+
+-   Astoria Clients  
+    -   A client is a program that interacts with Astoria but does not
+        expose state to other programs using Astoria
+    -   The client is able to read the state of services but may not
+        necessarily be able to manipulate the state.
+    -   A client is usually associated with a user, such as a web
+        interface or command line client.
+
+Services and clients communicate using defined message types over a
+transport, defined later in this specification.
+
+## Transport
+
+The protocol sends and receives messages using [MQTT v5.0][mqtt-v5] or later, as
+ specified by OASIS. Message data MUST be encoded using JSON (RFC 8259) and 
+UTF-8 (RFC 3629) within the MQTT payload.
+
+[mqtt-v5]: https://docs.oasis-open.org/mqtt/mqtt/v5.0/mqtt-v5.0.html
+
+Each message MUST be published to a defined MQTT topic and SHALL have a QoS 
+value of `1`.
+
+The Payload Format Indicator property SHALL be set to `1` to indicate a UTF-8 
+encoded payload. The `contentType` property MUST be set to 
+`application/vnd.astoria+json`. Clients and Services MUST reject any messages 
+that do not have these properties set.
+
+Astoria services MUST set their MQTT client identifier to be the same
+value as the service *slug*.
+
+MQTT MAY be over TCP (RFC 793) or a WebSocket (RFC 6455) transport, although 
+services SHOULD connect to the broker using MQTT over TCP.
+
+## Protocol Message Types
+
+There are three IPC mechanisms defined in the Astoria Protocol:
+
+-   State Updates
+-   Request-Response
+-   Streams
+
+### State Updates
+
+Services MUST publish their current state as soon as possible upon
+starting and then whenever the state is changed.
+
+The exact state that a service publishes varies per service and is
+defined in the protocol specification for the service.
+
+Services MUST publish their state to the topic: `astoria/<slug>` where
+`<slug>` is the defined *slug* for that service.
+
+When a service becomes unavailable, it MUST publish an empty message to the
+state topic. An empty message on the state topic MUST also be set as the
+Last Will and Testament when the service connects to the MQTT broker.
+
+When the empty message is published, the expected behaviour is that the broker
+will distribute the message to all subscribers and then clear the retain message
+from the broker. Any clients that connect afterwards will not receive a retained
+message until the service is available again.
+
+MQTT messages for state updates SHALL be sent with the retained flag.
+
+The schema of a state update SHALL be as follows:
+
+``` json
+{
+    "v": "1.2.3",
+    "pv": "1.0.0",
+    "type": "state_update",
+    "state": {}
+}
+```
+
+-   `v` - software version for the service
+-   `pv` - protocol version for the service
+-   `type` - always `state_update` for state updates.
+-   `state`- current state of the service, schema varies per service.
+
+### Request-Response
+
+Services MAY allow other services or clients to make a request against
+the service.
+
+Each defined request has a *request slug*, a unique identifier for the
+request, e.g `kill_usercode`.
+
+A *request topic* is of the format `astoria/<slug>/request/<request_slug>`
+where `<slug>` is the *slug* for the service and `<request_slug>` is the 
+*request slug*.
+
+A request MUST be made to a service by publishing a message to the
+appropriate *request topic*. The message MAY have the MQTT *response
+topic* set.
+
+A *request message* must be a JSON object of the following format:
+
+``` json
+{
+    "pv": "1.0.0",
+    "type": "request",
+    "data": {}
+}
+```
+
+-   `pv` - protocol version used by the requester
+-   `type` - always `request` for request messages.
+-   `data` - optionally, a JSON encoded data payload
+
+The schema for the data payload can vary depending on the request, and may be
+an empty object or emitted if no parameters are required.
+
+If the *response topic* is set on a request message, the service MUST
+respond by publishing a *response message* to the *response topic*, even if the
+*request slug* is not known.
+
+If no *response topic* is set, the service SHOULD not respond, but MUST still 
+attempt to perform the requested action.
+
+A *response topic* SHOULD be of the format `astoria/<slug>/response/+` where the
+last part of the topic MAY be unique. It is recommended that a client is
+subscribed to that topic before it sends the request.
+
+A *response message* must be a JSON object of the following format:
+
+``` json
+{
+    "pv": "1.0.0",
+    "v": "1.2.3",
+    "type": "response",
+    "success": true,
+    "message": "An optional user-facing message"
+}
+```
+
+-   `pv` - protocol version for the service
+-   `v` - software version for the service
+-   `type` - always `response` for response messages.
+-   `success`- boolean value, `true` if the request was successful,
+    `false` if not.
+-   `message` - optionally, a message for the user. This attribute may
+    be excluded from the message.
+
+### Streams
+
+A stream is a series of stream messages published to a given topic. A
+stream message can be published by clients or services, and is not necessarily
+associated with a particular service.
+
+A stream message MUST only be acted on by clients. A service SHALL be
+actioned using a request instead.
+
+Stream messages are published to `astoria/stream/<stream_slug>`. It can
+be published by any component and multiple components can publish to the
+same stream simultaneously.
+
+Every stream MUST have a unique `stream_slug` that identifies the stream
+and its purpose, e.g `usercode_log`.
+
+A stream message MUST be a JSON object of the format:
+
+``` json
+{
+    "pv": "1.0.0",
+    "type": "stream",
+    "stream": "example",
+    "sender": "example_sender",
+    "data": {"some_data": 1}
+}
+```
+
+-   `pv` - protocol version
+-   `type` - always `stream` for stream messages.
+-   `stream` - *slug* for the stream
+-   `sender`- MQTT client name of the program that published the message
+-   `data` - The data for the event, varies by stream.
+
+Note: the `version` is intentionally excluded here as the software version of
+the client is not useful to other clients.
+
+## Defined Services
+
+Every service that operates as part of Astoria SHOULD be defined in this
+specification.
+
+### Disk Service
+
+Slug: `disks`
+Reference Implementation: `astdiskd`
+
+-   Detects newly mounted disk drives
+-   Detects the removal of drives
+-   Communicating a list of currently mounted drives to other
+    components.
+
+#### Disk Service State
+
+The following state is included in state update messages:
+
+``` json
+{
+    "disks": {
+        "<uuid>": {
+            "path": "<mount_path>"
+        }
+    }
+}
+```
+
+-   `uuid` - The UUID of the mounted disk
+-   `path` - The mount path of the mounted disk
+
+Multiple disks can be included in the messages.
+
+#### Disk Service Requests
+
+There are three possible requests to the disks service, all of which are
+primarily exist for debugging.
+
+-   `static_disk_add`  
+    -   Data: `{"path": "/path/to/static-disk"}`
+    -   Add a new static disk.
+
+-   `static_disk_remove`  
+    -   Data: `{"path": "/path/to/static-disk"}`
+    -   Remove an existing static disk.
+
+-   `static_disk_remove_all`  
+    -   Data: N / A
+    -   Remove all existing static disks.
+
+### Metadata Service
+
+Reference Implementation: `astmetad`
+Slug: `metadata`
+
+-   Publishes metadata information.
+-   Uses state from other services to determine dynamic metadata.
+
+#### Metadata Service State
+
+The following state is included in state update messages:
+
+``` json
+{
+    "game": {
+        "arena": "A",
+        "zone": 0,
+        "mode": "DEV",
+        "marker_offset": 0,
+        "timeout": 120,
+    },
+    "system": {
+        "kernel": "5.15",
+        "arch": "aarch64",
+        "python_ver": "3.9.3",
+        "os_name": "MacOS",
+        "os_pretty_name": "MacOS 13.0",
+        "os_version": "13.0"
+    },
+    "wifi": {
+        "region": "GB",
+        "mode": "ap",
+        "ap": {
+            "ssid": "network",
+            "psk": "password"
+        }
+    }
+}
+```
+
+Further information on the exact values and constraints of this data can
+be found in the JSON Schema included with this specification.
+
+#### Metadata Service Requests
+
+The following requests are available:
+
+-   `mutate`  
+    -   Data: `{"attr": "arena", "value": "A"}`
+    -   Mutate a metadata attribute to a new value.
+    -   The following attributes are mutable: `arena`, `zone`, `mode`
+
+### Usercode Service
+
+Slug: `usercode`
+Reference Implementation: `astprocd`
+
+-   Waiting for usercode drive information from the disk service
+-   Starting and managing the usercode lifecycle
+-   Writing logs to the usercode drive
+-   Making logs available to other components in real time
+
+#### Usercode Service State
+
+The following state is included in state update messages:
+
+``` json
+{
+    "lifecycle": {
+        "status": "running",
+        "pid": 1234,
+        "disk": {
+            "uuid": "<uuid>",
+            "path": "/path/to/disk"
+        }
+    }
+}
+```
+
+The `lifecycle` is optional and only present when there is an active
+lifecycle.
+
+-   `lifecycle.status` - The status of the lifecycle, one of:  
+    -   `starting`
+    -   `running`
+    -   `killed`
+    -   `finished`
+    -   `crashed`
+
+-   `lifecycle.pid` - The process ID of the running usercode, if
+    available.
+
+-   `lifecycle.disk.uuid` - The UUID of the usercode disk
+
+-   `lifecycle.disk.path` - The mount path of the usercode disk
+
+#### Usercode Service Requests
+
+The following requests are available:
+
+-   `kill`  
+    -   Data: N / A
+    -   Kill the usercode lifecycle, if there is one.
+
+-   `restart`
+    - Data: N / A
+    - Restart the usercode lifecycle. If code is currently running, #
+       kill it first.
+
+#### Usercode Service Streams
+
+The usercode service publishes a stream of logs as the `usercode_log`
+stream.
+
+The data for the log stream is published in the following format:
+
+``` json
+{
+    "pid": 123,
+    "lineno": 0,
+    "source": "stdout",
+    "content": "A log line from the program"
+
+}
+```
+
+-   `pid` - The process ID of the usercode process
+-   `lineno` - The line number of the log, starting from 0.
+-   `source` - The source of the log, one of `astoria`, `stdout` and
+    `stderr`
+-   `content` - Content of the log line.
+
+### WiFi Service
+
+Slug: `wifi`
+Reference Implementation: `astwifid`
+
+-   Hosting a WiFi Access Point (AP) while the kit is running in
+    development mode.
+-   Configuring the WiFi network based on metadata.
+
+#### WiFi Service State
+
+The following state is included in state update messages:
+
+``` json
+{
+    "ap": {
+        "status": "ready"
+    }
+}
+```
+
+The `ap` is optional and only present when an access point is
+configured.
+
+-   `ap.status` - The status of the access point, one of:  
+    -   `starting`
+    -   `ready`
+    -   `failed`
+
+#### WiFi Service Requests
+
+There are currently no service requests defined.
+
+## Other Streams
+
+Other than those streams defined above, the following streams are also
+available:
+
+### Usercode Trigger Stream
+
+This event triggers the usercode and is equivalent to the start button
+on a robot.
+
+The content of this event is: `{}`.
+
+The usercode process client waits for this event whilst it waits for the
+start button.
