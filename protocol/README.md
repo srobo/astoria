@@ -100,15 +100,15 @@ The schema of a state update SHALL be as follows:
 
 ``` json
 {
-    "version": "1.2.3",
-    "protocol_version": "1.0.0",
+    "v": "1.2.3",
+    "pv": "1.0.0",
     "type": "state_update",
     "state": {}
 }
 ```
 
--   `version` - software version for the service
--   `protocol_version` - protocol version for the service
+-   `v` - software version for the service
+-   `pv` - protocol version for the service
 -   `type` - always `state_update` for state updates.
 -   `state`- current state of the service, schema varies per service.
 
@@ -143,16 +143,16 @@ A *response message* must be a JSON object of the following format:
 
 ``` json
 {
-    "protocol_version": "1.0.0",
-    "version": "1.2.3",
+    "pv": "1.0.0",
+    "v": "1.2.3",
     "type": "response",
     "success": true,
     "message": "An optional user-facing message"
 }
 ```
 
--   `protocol_version` - protocol version for the service
--   `version` - software version for the service
+-   `pv` - protocol version for the service
+-   `v` - software version for the service
 -   `type` - always `response` for response messages.
 -   `success`- boolean value, `true` if the request was successful,
     `false` if not.
@@ -179,7 +179,7 @@ A stream message MUST be a JSON object of the format:
 
 ``` json
 {
-    "protocol_version": "1.0.0",
+    "pv": "1.0.0",
     "type": "stream",
     "stream": "example",
     "sender": "example_sender",
@@ -187,7 +187,7 @@ A stream message MUST be a JSON object of the format:
 }
 ```
 
--   `protocol_version` - protocol version
+-   `pv` - protocol version
 -   `type` - always `stream` for stream messages.
 -   `stream` - *slug* for the stream
 -   `sender`- MQTT client name of the program that published the message
