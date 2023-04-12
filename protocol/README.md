@@ -117,23 +117,40 @@ The schema of a state update SHALL be as follows:
 Services MAY allow other services or clients to make a request against
 the service.
 
-Services MUST listen on the *request topic* `astoria/<slug>/request/+`
-where `<slug>` is the *slug* for the service. The wildcard at the end of
-the topic is for the *request slug*, a unique identifier for the
+Each defined request has a *request slug*, a unique identifier for the
 request, e.g `kill_usercode`.
+
+A *request topic* is of the format `astoria/<slug>/request/<request_slug>`
+where `<slug>` is the *slug* for the service and `<request_slug>` is the 
+*request slug*.
 
 A request MUST be made to a service by publishing a message to the
 appropriate *request topic*. The message MAY have the MQTT *response
 topic* set.
 
-The message content for a request must be a valid JSON object. The
-schema for the JSON object can vary depending on the request, and may be
-an empty object if no parameters are required.
+A *request message* must be a JSON object of the following format:
+
+``` json
+{
+    "pv": "1.0.0",
+    "type": "request",
+    "data": {}
+}
+```
+
+-   `pv` - protocol version used by the requester
+-   `type` - always `request` for request messages.
+-   `data` - optionally, a JSON encoded data payload
+
+The schema for the data payload can vary depending on the request, and may be
+an empty object or emitted if no parameters are required.
 
 If the *response topic* is set on a request message, the service MUST
-respond by publishing a *response message* to the *response topic*. If
-no *response topic* is set, the service does not need to response, but
-MUST still attempt to perform the requested action.
+respond by publishing a *response message* to the *response topic*, even if the
+*request slug* is not known.
+
+If no *response topic* is set, the service SHOULD not respond, but MUST still 
+attempt to perform the requested action.
 
 A *response topic* SHOULD be of the format `astoria/<slug>/response/+` where the
 last part of the topic MAY be unique. It is recommended that a client is
@@ -236,15 +253,15 @@ There are three possible requests to the disks service, all of which are
 primarily exist for debugging.
 
 -   `static_disk_add`  
-    -   Payload: `{"path": "/path/to/static-disk"}`
+    -   Data: `{"path": "/path/to/static-disk"}`
     -   Add a new static disk.
 
 -   `static_disk_remove`  
-    -   Payload: `{"path": "/path/to/static-disk"}`
+    -   Data: `{"path": "/path/to/static-disk"}`
     -   Remove an existing static disk.
 
 -   `static_disk_remove_all`  
-    -   Payload: `{}`
+    -   Data: N / A
     -   Remove all existing static disks.
 
 ### Metadata Service
@@ -295,7 +312,7 @@ be found in the JSON Schema included with this specification.
 The following requests are available:
 
 -   `mutate`  
-    -   Payload: `{"attr": "arena", "value": "A"}`
+    -   Data: `{"attr": "arena", "value": "A"}`
     -   Mutate a metadata attribute to a new value.
     -   The following attributes are mutable: `arena`, `zone`, `mode`
 
@@ -348,12 +365,13 @@ lifecycle.
 The following requests are available:
 
 -   `kill`  
-    -   Payload: `{}`
+    -   Data: N / A
     -   Kill the usercode lifecycle, if there is one.
 
--   `restart`<span class="title-ref"> - Payload: </span><span class="title-ref">{}</span>\`  
-    -   Restart the usercode lifecycle. If code is currently running,
-        kill it first.
+-   `restart`
+    - Data: N / A
+    - Restart the usercode lifecycle. If code is currently running, #
+       kill it first.
 
 #### Usercode Service Streams
 
