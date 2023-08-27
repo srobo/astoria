@@ -2,6 +2,7 @@
 
 import asyncio
 import logging
+import sys
 from datetime import datetime, timedelta
 from os import environ
 from signal import SIGKILL, SIGTERM
@@ -110,7 +111,7 @@ class UsercodeLifecycle:
                 )
                 self._process_end_event.clear()
                 self._process = await asyncio.create_subprocess_exec(
-                    "python3",
+                    sys.executable,
                     "-u",
                     self._entrypoint,
                     stdin=asyncio.subprocess.DEVNULL,
