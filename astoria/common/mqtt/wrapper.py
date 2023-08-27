@@ -235,7 +235,7 @@ class MQTTWrapper:
             )]
 
             if self._no_dependency_event is not None:
-                tasks.append(self._no_dependency_event.wait())  # type: ignore
+                tasks.append(asyncio.create_task(self._no_dependency_event.wait()))
 
             await asyncio.wait(
                 tasks,
