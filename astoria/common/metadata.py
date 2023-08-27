@@ -61,7 +61,10 @@ class Metadata(BaseModel):
         """
         system = platform.system()
         if system == "Linux":
-            return cls.get_os_release_info()
+            if Path('/etc/srobo-release').exists():
+                return cls.get_os_release_info(Path('/etc/srobo-release'))
+            else:
+                return cls.get_os_release_info()
         elif system == "Darwin":
             return cls.get_macos_release_info()
         return {}
