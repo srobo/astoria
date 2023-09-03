@@ -3,7 +3,6 @@ name: Tests
 on:
   push:
     branches:
-      - "*"
   pull_request:
 
 jobs:
@@ -12,11 +11,12 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        python: [3.8, 3.9, "3.10"]
+        python: [3.8, 3.9, "3.10", "3.11"]
+      fail-fast: false
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python }}
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python }}
       - name: Install APT dependencies
