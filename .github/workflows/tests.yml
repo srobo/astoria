@@ -14,7 +14,7 @@ jobs:
         python: [3.8, 3.9, "3.10", "3.11"]
       fail-fast: false
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python }}
         uses: actions/setup-python@v4
         with:
@@ -25,7 +25,7 @@ jobs:
         run: pip install poetry
       - name: Use in-project virtualenv
         run: poetry config virtualenvs.in-project true
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: .venv/
           key: ${{ runner.os }}-${{ matrix.python }}-pip-${{ hashFiles('poetry.lock') }}-${{ hashFiles('pyproject.toml') }}
@@ -38,4 +38,5 @@ jobs:
       - name: Unit tests
         run: make test-cov
       - name: Build Docs
+        if: matrix.python != '3.11'
         run: make docs
