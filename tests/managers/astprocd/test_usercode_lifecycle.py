@@ -56,7 +56,7 @@ class MockBroadcastHelper(BroadcastHelper[T]):
         """Get lines in the same format as the file."""
         return "".join(a.content for a in self._sent).splitlines()  # type: ignore
 
-    def send(self, **kwargs: Any) -> None:  # type: ignore
+    def send(self, **kwargs: Any) -> None:
         """Send an event."""
         data = self._schema(  # noqa: F841
             event_name=self._schema.name,

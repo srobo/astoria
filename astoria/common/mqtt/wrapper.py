@@ -26,7 +26,7 @@ from .topic import Topic
 
 LOGGER = logging.getLogger(__name__)
 
-Handler = Callable[[Match[str], str], Coroutine[Any, Any, None]]  # type: ignore
+Handler = Callable[[Match[str], str], Coroutine[Any, Any, None]]
 RequestT = TypeVar("RequestT", bound=ManagerRequest)
 
 
@@ -231,7 +231,7 @@ class MQTTWrapper:
         if len(self._dependencies) > 0:
             LOGGER.debug("Waiting for " + ", ".join(self._dependencies))
 
-            tasks: List[Union[asyncio.Future[Any], asyncio.Task[Any]]] = [  # type: ignore
+            tasks: List[Union[asyncio.Future[Any], asyncio.Task[Any]]] = [
                 asyncio.gather(
                     *(event.wait() for event in self._dependency_events.values()),
                 ),
