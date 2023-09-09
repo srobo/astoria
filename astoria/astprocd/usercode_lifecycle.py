@@ -4,7 +4,7 @@ import asyncio
 import logging
 import sys
 from datetime import datetime, timedelta
-from os import environ
+from os import environ, fsync
 from signal import SIGKILL, SIGTERM
 from string import Template
 from typing import IO, Callable, Dict, Optional
@@ -208,6 +208,7 @@ class UsercodeLifecycle:
         ) -> None:
             fh.write(data)
             fh.flush()
+            fsync(fh.fileno())
             self._log_helper.send(
                 pid=pid,
                 priority=log_line_idx,
