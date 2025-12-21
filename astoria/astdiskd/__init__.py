@@ -10,8 +10,6 @@ from .disk_manager import DiskManager
 
 LOGGER = logging.getLogger(__name__)
 
-loop = asyncio.get_event_loop()
-
 
 @click.command("astdiskd")
 @click.option("-v", "--verbose", is_flag=True)
@@ -19,7 +17,7 @@ loop = asyncio.get_event_loop()
 def main(*, verbose: bool, config_file: Optional[str]) -> None:
     """Disk Manager Application Entrypoint."""
     diskd = DiskManager(verbose, config_file)
-    loop.run_until_complete(diskd.run())
+    asyncio.run(diskd.run())
 
 
 if __name__ == "__main__":

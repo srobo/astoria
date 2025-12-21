@@ -21,8 +21,6 @@ from astoria.common.mqtt import BroadcastHelper
 
 LOGGER = logging.getLogger(__name__)
 
-loop = asyncio.get_event_loop()
-
 
 class UsercodeLifecycle:
     """

@@ -7,8 +7,6 @@ import click
 from astoria.astctl.command import SingleManagerMessageCommand
 from astoria.common.ipc import ProcessManagerMessage
 
-loop = asyncio.get_event_loop()
-
 
 @click.command("show")
 @click.option("-v", "--verbose", is_flag=True)
@@ -16,7 +14,7 @@ loop = asyncio.get_event_loop()
 def show(*, verbose: bool, config_file: Optional[str]) -> None:
     """Show current usercode."""
     command = ShowUsercodeCommand(verbose, config_file)
-    loop.run_until_complete(command.run())
+    asyncio.run(command.run())
 
 
 class ShowUsercodeCommand(SingleManagerMessageCommand[ProcessManagerMessage]):

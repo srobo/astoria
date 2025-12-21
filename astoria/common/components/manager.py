@@ -13,8 +13,6 @@ from .component import DataComponent
 
 LOGGER = logging.getLogger(__name__)
 
-loop = asyncio.get_event_loop()
-
 T = TypeVar("T", bound=ManagerMessage)
 RequestT = TypeVar("RequestT", bound=ManagerRequest)
 

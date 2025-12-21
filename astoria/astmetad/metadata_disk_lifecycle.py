@@ -21,8 +21,6 @@ from astoria.common.disks import DiskInfo, DiskUUID
 
 LOGGER = logging.getLogger(__name__)
 
-loop = asyncio.get_event_loop()
-
 
 class AbstractMetadataDiskLifecycle(metaclass=ABCMeta):
     """Load and validate metadata from a disk."""

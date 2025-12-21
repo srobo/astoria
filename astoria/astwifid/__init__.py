@@ -6,8 +6,6 @@ import click
 
 from .wifi_manager import WiFiManager
 
-loop = asyncio.get_event_loop()
-
 
 @click.command("astwifid")
 @click.option("-v", "--verbose", is_flag=True)
@@ -15,7 +13,7 @@ loop = asyncio.get_event_loop()
 def main(*, verbose: bool, config_file: Optional[str]) -> None:
     """The WiFi Manager Application Entrypoint."""
     wifid = WiFiManager(verbose, config_file)
-    loop.run_until_complete(wifid.run())
+    asyncio.run(wifid.run())
 
 
 if __name__ == "__main__":

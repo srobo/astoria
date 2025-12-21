@@ -22,9 +22,6 @@ from .usercode_lifecycle import UsercodeLifecycle
 
 LOGGER = logging.getLogger(__name__)
 
-loop = asyncio.get_event_loop()
-
-
 class ProcessManager(
     DiskHandlerMixin,
     MetadataHandlerMixin,

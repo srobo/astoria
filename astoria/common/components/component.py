@@ -22,9 +22,6 @@ from astoria.common.mqtt.wrapper import MQTTWrapper
 
 LOGGER = logging.getLogger(__name__)
 
-loop = asyncio.get_event_loop()
-
-
 class DataComponent(metaclass=ABCMeta):
     """
     Data Component base class.
@@ -76,6 +73,7 @@ class DataComponent(metaclass=ABCMeta):
 
     def _setup_event_loop(self) -> None:
         self._stop_event = asyncio.Event()
+        loop = asyncio.get_event_loop()
 
         loop.add_signal_handler(SIGHUP, self.halt)
         loop.add_signal_handler(SIGINT, self.halt)
