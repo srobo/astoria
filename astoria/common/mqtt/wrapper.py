@@ -2,7 +2,6 @@
 
 import asyncio
 import logging
-from json import JSONDecodeError, loads
 from typing import (
     Any,
     Callable,
@@ -16,7 +15,7 @@ from typing import (
 from uuid import UUID
 
 import gmqtt
-from pydantic import BaseModel, ValidationError, parse_obj_as
+from pydantic import BaseModel, ValidationError, TypeAdapter
 
 from astoria.common.config.system import MQTTBrokerInfo
 from astoria.common.ipc import ManagerMessage, ManagerRequest, RequestResponse
@@ -257,7 +256,7 @@ class MQTTWrapper:
         """Handle status messages from state managers."""
         manager = match.group(1)
         try:
-            info = parse_obj_as(ManagerMessage, loads(payload))
+            info = TypeAdapter(ManagerMessage).validate_json(payload)
             LOGGER.debug(f"Status update from {manager}: {info.status}")
             if info.status is ManagerMessage.Status.RUNNING:
                 try:
@@ -269,7 +268,7 @@ class MQTTWrapper:
                     LOGGER.warning(f"{manager} is unavailable!")
                     if self._no_dependency_event is not None:
                         self._no_dependency_event.set()
-        except JSONDecodeError:
+        except Exception:
             LOGGER.warning(
                 f"Received invalid JSON in manager message for {manager}: {payload}",
             )
@@ -330,11 +329,8 @@ class MQTTWrapper:
         # If uuid not recognised, probably a response for another client
         if uuid in self._request_response_events:
             try:
-                self._request_response_data[uuid] = parse_obj_as(
-                    RequestResponse,
-                    loads(payload),
-                )
-            except JSONDecodeError:
+                self._request_response_data[uuid] = TypeAdapter(RequestResponse).validate_json(payload)
+            except Exception:
                 self._request_response_data[uuid] = RequestResponse(
                     uuid=uuid,
                     success=False,

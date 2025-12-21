@@ -2,10 +2,9 @@
 import asyncio
 import logging
 from abc import ABCMeta, abstractmethod
-from json import JSONDecodeError, loads
 from typing import Callable, Coroutine, Generic, Match, Type, TypeVar
 
-from pydantic import ValidationError, parse_obj_as
+from pydantic import ValidationError, TypeAdapter
 
 from astoria.common.ipc import ManagerMessage, ManagerRequest, RequestResponse
 
@@ -72,13 +71,13 @@ class StateManager(DataComponent, Generic[T], metaclass=ABCMeta):
 
         async def _handler(match: Match[str], payload: str) -> None:
             try:
-                req = parse_obj_as(typ, loads(payload))
+                req = TypeAdapter(typ).validate_json(payload)
                 response = await handler(req)
                 self._mqtt.publish(
                     f"request/{name}/{req.uuid}",
                     response,
                 )
-            except JSONDecodeError:
+            except Exception:
                 LOGGER.warning(
                     f"Received {name} request, but unable to decode JSON: {payload}",
                 )

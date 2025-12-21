@@ -12,7 +12,7 @@ else:
     import tomli as tomllib
 
 
-from pydantic import BaseModel, ValidationError, parse_obj_as, validator
+from pydantic import BaseModel, ValidationError, validator, TypeAdapter
 
 from astoria.common.config import AstoriaConfig
 
@@ -160,7 +160,7 @@ class RobotSettings(BaseModel):
             raise UnreadableRobotSettingsException(f"Unicode Error: {e}") from None
 
         try:
-            return parse_obj_as(RobotSettings, data)
+            return TypeAdapter(RobotSettings).validate_python(data)
         except ValidationError as e:
             raise NoValidRobotSettingsException(
                 f"{path.name} did not match schema: {e}",

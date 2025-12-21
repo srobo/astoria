@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Dict, Type, Union
 
 import pytest
-from pydantic import ValidationError, parse_obj_as
+from pydantic import ValidationError, TypeAdapter
 
 from astoria.common.config import (
     NoRobotSettingsException,
@@ -63,17 +63,17 @@ class TestUserSettingsValidation:
 
     def test_valid_config(self, valid_config: Dict[str, str]) -> None:
         """Test that we can load a valid config."""
-        parse_obj_as(RobotSettings, valid_config)
+        TypeAdapter(RobotSettings).validate_python(valid_config)
 
     def test_spurious_config(self, valid_config: Dict[str, str]) -> None:
         """Test that an error is thrown when a spurious field is present."""
         valid_config["bees"] = "yes"
         with pytest.raises(ValidationError) as e:
-            parse_obj_as(RobotSettings, valid_config)
+            TypeAdapter(RobotSettings).validate_python(valid_config)
         errors = e.value.errors()
         assert len(errors) == 1
-        assert errors[0]["loc"] == ("__root__", "bees")
-        assert errors[0]["msg"] == "extra fields not permitted"
+        assert errors[0]["loc"] == ("bees",)
+        assert errors[0]["msg"] == "Extra inputs are not permitted"
 
     @pytest.mark.parametrize("field", ["team_tla", "usercode_entrypoint", "wifi_psk"])
     def test_error_when_required_field_missing(
@@ -84,11 +84,11 @@ class TestUserSettingsValidation:
         """Test that an error is raised when a required field is missing."""
         del valid_config[field]
         with pytest.raises(ValidationError) as e:
-            parse_obj_as(RobotSettings, valid_config)
+            TypeAdapter(RobotSettings).validate_python(valid_config)
         errors = e.value.errors()
         assert len(errors) == 1
-        assert errors[0]["loc"] == ("__root__", field)
-        assert errors[0]["msg"] == "field required"
+        assert errors[0]["loc"] == (field,)
+        assert errors[0]["msg"] == "Field required"
 
     @pytest.mark.parametrize(
         "field,default_val",
@@ -105,7 +105,7 @@ class TestUserSettingsValidation:
     ) -> None:
         """Test that we allow optional fields to be missing."""
         del valid_config[field]
-        config = parse_obj_as(RobotSettings, valid_config)
+        config = TypeAdapter(RobotSettings).validate_python(valid_config)
         assert getattr(config, field) is default_val
 
     @pytest.mark.parametrize(
@@ -131,7 +131,7 @@ class TestUserSettingsValidation:
     ) -> None:
         """Test that valid team TLAs are accepted."""
         valid_config["team_tla"] = tla
-        config = parse_obj_as(RobotSettings, valid_config)
+        config = TypeAdapter(RobotSettings).validate_python(valid_config)
         assert config.team_tla == expected_tla
 
     @pytest.mark.parametrize(
@@ -162,11 +162,11 @@ class TestUserSettingsValidation:
         """Test that an invalid TLA is rejected."""
         valid_config["team_tla"] = tla
         with pytest.raises(ValidationError) as e:
-            parse_obj_as(RobotSettings, valid_config)
+            TypeAdapter(RobotSettings).validate_python(valid_config)
         errors = e.value.errors()
         assert len(errors) == 1
-        assert errors[0]["loc"] == ("__root__", "team_tla")
-        assert errors[0]["msg"] == expected_error
+        assert errors[0]["loc"] == ("team_tla",)
+        assert errors[0]["msg"] == f"Value error, {expected_error}"
 
     @pytest.mark.parametrize("psk", ["helloworld", "????????432!{}"])
     def test_valid_psk_are_accepted(
@@ -176,7 +176,7 @@ class TestUserSettingsValidation:
     ) -> None:
         """Test that we accept valid wifi PSKs."""
         valid_config["wifi_psk"] = psk
-        config = parse_obj_as(RobotSettings, valid_config)
+        config = TypeAdapter(RobotSettings).validate_python(valid_config)
         assert config.wifi_psk == psk
 
     @pytest.mark.parametrize(
@@ -210,11 +210,11 @@ class TestUserSettingsValidation:
         """Test that an invalid WiFi PSK is rejected."""
         valid_config["wifi_psk"] = psk
         with pytest.raises(ValidationError) as e:
-            parse_obj_as(RobotSettings, valid_config)
+            TypeAdapter(RobotSettings).validate_python(valid_config)
         errors = e.value.errors()
         assert len(errors) == 1
-        assert errors[0]["loc"] == ("__root__", "wifi_psk")
-        assert errors[0]["msg"] == expected_error
+        assert errors[0]["loc"] == ("wifi_psk",)
+        assert errors[0]["msg"] == f"Value error, {expected_error}"
 
     @pytest.mark.parametrize(
         "entrypoint",
@@ -230,9 +230,9 @@ class TestUserSettingsValidation:
         entrypoint: str,
         valid_config: Dict[str, str],
     ) -> None:
-        """Test that we accept valid usercode entrypoints.."""
+        """Test that we accept valid usercode entrypoints."""
         valid_config["usercode_entrypoint"] = entrypoint
-        config = parse_obj_as(RobotSettings, valid_config)
+        config = TypeAdapter(RobotSettings).validate_python(valid_config)
         assert config.usercode_entrypoint == entrypoint
 
     @pytest.mark.parametrize(
@@ -259,8 +259,8 @@ class TestUserSettingsValidation:
         """Test that an invalid usercode entrypoint is rejected."""
         valid_config["usercode_entrypoint"] = entrypoint
         with pytest.raises(ValidationError) as e:
-            parse_obj_as(RobotSettings, valid_config)
+            TypeAdapter(RobotSettings).validate_python(valid_config)
         errors = e.value.errors()
         assert len(errors) == 1
-        assert errors[0]["loc"] == ("__root__", "usercode_entrypoint")
-        assert errors[0]["msg"] == expected_error
+        assert errors[0]["loc"] == ("usercode_entrypoint",)
+        assert errors[0]["msg"] == f"Value error, {expected_error}"

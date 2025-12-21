@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 from typing import BinaryIO, Dict, List, Optional
 
-from pydantic import BaseModel, parse_obj_as
+from pydantic import BaseModel, TypeAdapter
 
 if sys.version_info >= (3, 11):
     import tomllib
@@ -111,4 +111,4 @@ class AstoriaConfig(BaseModel):
     @classmethod
     def load_from_file(cls, fh: BinaryIO) -> "AstoriaConfig":
         """Load the config from a file."""
-        return parse_obj_as(cls, tomllib.load(fh))
+        return TypeAdapter(cls).validate_python(tomllib.load(fh))

@@ -1,10 +1,9 @@
 """Helper class to manage broadcast events."""
 import logging
 from asyncio import PriorityQueue
-from json import JSONDecodeError, loads
 from typing import TYPE_CHECKING, Any, Generic, Match, Type, TypeVar
 
-from pydantic import parse_obj_as
+from pydantic import TypeAdapter
 
 from astoria.common.ipc import BroadcastEvent
 
@@ -43,12 +42,12 @@ class BroadcastHelper(Generic[T]):
         Inserts the event inserts it into the priority queue.
         """
         try:
-            ev = parse_obj_as(self._schema, loads(payload))
+            ev = TypeAdapter(self._schema).validate_json(payload)
             LOGGER.debug(
                 f"Received {ev.event_name} broadcast event from {ev.sender_name}",
             )
             await self._event_queue.put(ev)
-        except JSONDecodeError:
+        except Exception:
             LOGGER.warning(f"Broadcast event {self._name} contained invalid JSON")
 
     def send(self, **kwargs: Any) -> None:  # type: ignore

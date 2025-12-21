@@ -3,7 +3,7 @@ import logging
 from json import JSONDecodeError, loads
 from typing import Match
 
-from pydantic import ValidationError, parse_obj_as
+from pydantic import ValidationError, TypeAdapter
 
 from astoria.common.config import AstoriaConfig
 from astoria.common.ipc import MetadataManagerMessage
@@ -26,7 +26,7 @@ class MetadataHandlerMixin:
         if payload:
             try:
                 data = loads(payload)
-                metadata_manager_message = parse_obj_as(MetadataManagerMessage, data)
+                metadata_manager_message = TypeAdapter(MetadataManagerMessage).validate_python(data)
                 await self.handle_metadata(metadata_manager_message.metadata)
             except ValidationError:
                 LOGGER.warning("Received bad metadata manager message.")

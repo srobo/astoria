@@ -26,7 +26,7 @@ def test_manager_status_fields() -> None:
     assert message.astoria_version == __version__
 
     assert (
-        message.json() == f'{{"status": "STOPPED", "astoria_version": "{__version__}"}}'
+        message.model_dump_json() == f'{{"status":"STOPPED","astoria_version":"{__version__}"}}'
     )
 
 
@@ -46,8 +46,8 @@ def test_manager_status_subclass() -> None:
     assert message.custom_field == 12
 
     assert (
-        message.json()
-        == f'{{"status": "RUNNING", "astoria_version": "{__version__}", "custom_field": 12}}'  # noqa: E501
+        message.model_dump_json()
+        == f'{{"status":"RUNNING","astoria_version":"{__version__}","custom_field":12}}'  # noqa: E501
     )
 
     # Check for Validation Error

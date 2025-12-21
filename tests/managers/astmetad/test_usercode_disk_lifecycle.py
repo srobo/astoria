@@ -16,7 +16,7 @@ def find_section(iterator: Iterator[str], deliminator: Optional[str]) -> List[st
     """
     Split out a section of the error file.
 
-    :param iterable: An iterator of the lines in the file.
+    :param iterator: An iterator of the lines in the file.
     :param deliminator: The section deliminator, or None if EOF is allowed.
     :returns: A list of lines in the section.
     """
@@ -60,7 +60,7 @@ class TestUsercodeDiskLifecycle:
             uuid = DiskUUID("temp")
             info = DiskInfo(
                 uuid=uuid,
-                mount_path=tmpdir,
+                mount_path=Path(tmpdir),
                 disk_type=DiskType.USERCODE,
             )
             return UsercodeDiskLifecycle(
@@ -101,7 +101,7 @@ class TestUsercodeDiskLifecycle:
         ).exists()
 
     def test_bad_unicode(self, lifecycle_factory: LifecycleFactory) -> None:
-        """Test that we handle bad unicode in the settings file."""
+        """Test that we handle bad Unicode in the settings file."""
         lifecycle = lifecycle_factory("bad-unicode")
         assert lifecycle.diff_data.keys() == {
             "usercode_entrypoint",
@@ -127,12 +127,12 @@ class TestUsercodeDiskLifecycle:
             (
                 "blank",
                 [
-                    "robot-settings.toml did not match schema: 3 validation errors for ParsingModel[RobotSettings]",  # noqa: E501
-                    "__root__ -> team_tla",
+                    "robot-settings.toml did not match schema: 3 validation errors for RobotSettings",  # noqa: E501
+                    "team_tla",
                     "  field required (type=value_error.missing)",
-                    "__root__ -> usercode_entrypoint",
+                    "usercode_entrypoint",
                     "  field required (type=value_error.missing)",
-                    "__root__ -> wifi_psk",
+                    "wifi_psk",
                     "  field required (type=value_error.missing)",
                     "",
                 ],
@@ -141,8 +141,8 @@ class TestUsercodeDiskLifecycle:
             (
                 "extra-config",
                 [
-                    "robot-settings.toml did not match schema: 1 validation error for ParsingModel[RobotSettings]",  # noqa: E501
-                    "__root__ -> bees",
+                    "robot-settings.toml did not match schema: 1 validation error for RobotSettings",  # noqa: E501
+                    "bees",
                     "  extra fields not permitted (type=value_error.extra)",
                     "",
                 ],
@@ -150,12 +150,12 @@ class TestUsercodeDiskLifecycle:
             (
                 "invalid-fields",
                 [
-                    "robot-settings.toml did not match schema: 3 validation errors for ParsingModel[RobotSettings]",  # noqa: E501
-                    "__root__ -> team_tla",
+                    "robot-settings.toml did not match schema: 3 validation errors for RobotSettings",  # noqa: E501
+                    "team_tla",
                     "  Team name did not match format: ABC, ABC1 etc. (type=value_error)",
-                    "__root__ -> usercode_entrypoint",
+                    "usercode_entrypoint",
                     "  Value must only contain ASCII characters. (type=value_error)",
-                    "__root__ -> wifi_psk",
+                    "wifi_psk",
                     "  WiFi PSK must be 8 - 63 characters long. (type=value_error)",
                     "",
                 ],

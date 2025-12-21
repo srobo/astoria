@@ -5,7 +5,7 @@ from json import JSONDecodeError, loads
 from typing import Generic, Match, Type, TypeVar
 from uuid import uuid4
 
-from pydantic import parse_obj_as
+from pydantic import TypeAdapter
 
 from astoria.common.components import StateConsumer
 from astoria.common.ipc import ManagerMessage
@@ -86,7 +86,7 @@ class SingleManagerMessageCommand(Command, Generic[T]):
             self._received = True
             try:
                 data = loads(payload)
-                message = parse_obj_as(self.message_schema, data)
+                message = TypeAdapter(self.message_schema).validate_python(data)
                 if message.status == self.message_schema.Status.RUNNING:
                     self.handle_message(message)
                 else:
