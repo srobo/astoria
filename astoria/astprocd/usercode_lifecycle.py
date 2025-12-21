@@ -80,6 +80,19 @@ class UsercodeLifecycle:
         self._status = status
         self._status_inform_callback(status)
 
+    def _get_robot_settings(self) -> RobotSettings | None:
+        settings_path = self._disk_info.mount_path / "robot-settings.toml"
+
+        if settings_path.exists():
+            try:
+                return RobotSettings.load_settings_file(settings_path)
+            except RobotSettingsException:
+                # Note: This is theoretically unreachable as we have already
+                # validated the robot settings when determining the disk type.
+                pass
+
+        return None
+
     def _determine_entrypoint(self) -> str:
         """
         Determine the entrypoint for the usercode.
@@ -88,16 +101,9 @@ class UsercodeLifecycle:
 
         :returns: The name of the Python file to execute.
         """
-        settings_path = self._disk_info.mount_path / "robot-settings.toml"
-
-        if settings_path.exists():
-            try:
-                settings = RobotSettings.load_settings_file(settings_path)
-                return settings.usercode_entrypoint
-            except RobotSettingsException:
-                # Note: This is theoretically unreachable as we have already
-                # validated the robot settings when determining the disk type.
-                pass
+        settings = self._get_robot_settings()
+        if settings is not None:
+            return settings.usercode_entrypoint
 
         return self._config.astprocd.default_usercode_entrypoint
 
@@ -250,10 +256,15 @@ class UsercodeLifecycle:
 
                 for line in self._config.system.initial_log_lines:
                     template = Template(line)
-                    line_substituted = template.safe_substitute(self._metadata.dict())
+                    line_substituted = template.safe_substitute(self._metadata.model_dump())
                     log(fh, f"[{time_passed}] {line_substituted}\n", log_line)
 
                 log(fh, f"[{time_passed}] ---\n", log_line)
+
+            settings = self._get_robot_settings()
+            if settings and settings.wifi_enabled and settings.team_tla.startswith('ZZZ'):
+                log(fh, f"[{time_passed}] Default WiFi network name is in use.\n", log_line)
+                log(fh, f"[{time_passed}] Please update the TLA in robot-settings.toml to your team's TLA.", log_line)
 
             log(fh, f"[{time_passed}] === LOG STARTED ===\n", log_line)
             log_line += 1
