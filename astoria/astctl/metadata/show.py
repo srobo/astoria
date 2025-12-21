@@ -3,11 +3,10 @@ import asyncio
 from typing import Optional
 
 import click
+import uvloop
 
 from astoria.astctl.command import SingleManagerMessageCommand
 from astoria.common.ipc import MetadataManagerMessage
-
-loop = asyncio.get_event_loop()
 
 
 @click.command("show")
@@ -15,8 +14,9 @@ loop = asyncio.get_event_loop()
 @click.option("-c", "--config-file", type=click.Path(exists=True))
 def show(*, verbose: bool, config_file: Optional[str]) -> None:
     """Show current metadata."""
-    command = ShowMetadataCommand(verbose, config_file)
-    loop.run_until_complete(command.run())
+    with asyncio.Runner(loop_factory=uvloop.new_event_loop) as runner:
+        command = ShowMetadataCommand(verbose, config_file)
+        runner.run(command.run())
 
 
 class ShowMetadataCommand(SingleManagerMessageCommand[MetadataManagerMessage]):

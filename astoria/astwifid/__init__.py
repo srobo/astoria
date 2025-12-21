@@ -3,6 +3,7 @@ import asyncio
 from typing import Optional
 
 import click
+import uvloop
 
 from .wifi_manager import WiFiManager
 
@@ -12,8 +13,9 @@ from .wifi_manager import WiFiManager
 @click.option("-c", "--config-file", type=click.Path(exists=True))
 def main(*, verbose: bool, config_file: Optional[str]) -> None:
     """The WiFi Manager Application Entrypoint."""
-    wifid = WiFiManager(verbose, config_file)
-    asyncio.run(wifid.run())
+    with asyncio.Runner(loop_factory=uvloop.new_event_loop) as runner:
+        wifid = WiFiManager(verbose, config_file)
+        runner.run(wifid.run())
 
 
 if __name__ == "__main__":

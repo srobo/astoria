@@ -12,9 +12,6 @@ from astoria.common.ipc import ManagerMessage
 
 T = TypeVar("T", bound=ManagerMessage)
 
-loop = asyncio.get_event_loop()
-
-
 class Command(StateConsumer):
     """
     Command base class for astctl.

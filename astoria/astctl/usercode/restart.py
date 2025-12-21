@@ -3,6 +3,7 @@ import asyncio
 from typing import Optional
 
 import click
+import uvloop
 
 from astoria.astctl.command import Command
 from astoria.common.ipc import ManagerRequest
@@ -13,8 +14,9 @@ from astoria.common.ipc import ManagerRequest
 @click.option("-c", "--config-file", type=click.Path(exists=True))
 def restart(*, verbose: bool, config_file: Optional[str]) -> None:
     """Restart running usercode."""
-    command = RestartUsercodeCommand(verbose, config_file)
-    asyncio.run(command.run())
+    with asyncio.Runner(loop_factory=uvloop.new_event_loop) as runner:
+        command = RestartUsercodeCommand(verbose, config_file)
+        runner.run(command.run())
 
 
 class RestartUsercodeCommand(Command):

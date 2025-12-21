@@ -3,11 +3,11 @@ import asyncio
 from typing import Optional
 
 import click
+import uvloop
 
 from astoria.astctl.command import Command
 from astoria.common.ipc import RemoveAllStaticDisksRequest
 
-loop = asyncio.get_event_loop()
 
 
 @click.command("remove-all")
@@ -15,8 +15,9 @@ loop = asyncio.get_event_loop()
 @click.option("-c", "--config-file", type=click.Path(exists=True))
 def remove_all(*, verbose: bool, config_file: Optional[str]) -> None:
     """Unmount all currently mounted static disks."""
-    command = RemoveAllStaticDiskCommand(verbose, config_file)
-    loop.run_until_complete(command.run())
+    with asyncio.Runner(loop_factory=uvloop.new_event_loop) as runner:
+        command = RemoveAllStaticDiskCommand(verbose, config_file)
+        runner.run(command.run())
 
 
 class RemoveAllStaticDiskCommand(Command):

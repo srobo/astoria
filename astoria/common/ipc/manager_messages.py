@@ -31,9 +31,9 @@ class ProcessManagerMessage(ManagerMessage):
     Published to astoria/astprocd
     """
 
-    code_status: Optional[CodeStatus]
-    disk_info: Optional[DiskInfo]
-    pid: Optional[int]
+    code_status: Optional[CodeStatus] = None
+    disk_info: Optional[DiskInfo] = None
+    pid: Optional[int] = None
 
 
 class MetadataManagerMessage(ManagerMessage):

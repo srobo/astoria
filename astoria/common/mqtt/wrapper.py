@@ -227,16 +227,16 @@ class MQTTWrapper:
     async def wait_dependencies(self) -> None:
         """Wait for all dependencies."""
         if len(self._dependencies) > 0:
-            LOGGER.debug("Waiting for " + ", ".join(self._dependencies))
+            LOGGER.debug("Waiting for " + ", ".join(self._dependencies) + "…")
 
             tasks = [
                 asyncio.gather(
-                    *(event.wait() for event in self._dependency_events.values()),
+                    *(asyncio.create_task(event.wait()) for event in self._dependency_events.values()),
                 ),
             ]
 
             if self._no_dependency_event is not None:
-                tasks.append(self._no_dependency_event.wait())  # type: ignore
+                tasks.append(asyncio.create_task(self._no_dependency_event.wait()))  # type: ignore
 
             await asyncio.wait(
                 tasks,

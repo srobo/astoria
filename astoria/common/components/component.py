@@ -39,9 +39,9 @@ class DataComponent(metaclass=ABCMeta):
         config_file: Optional[str],
     ) -> None:
         self.config = AstoriaConfig.load(config_file)
+        self._stop_event = asyncio.Event()
 
         self._setup_logging(verbose)
-        self._setup_event_loop()
         self._setup_mqtt()
 
         self._init()
@@ -71,8 +71,7 @@ class DataComponent(metaclass=ABCMeta):
         if welcome_message:
             LOGGER.info(f"{self.name} v{__version__} - {self.__doc__}")
 
-    def _setup_event_loop(self) -> None:
-        self._stop_event = asyncio.Event()
+    async def _setup_signal_handlers(self) -> None:
         loop = asyncio.get_event_loop()
 
         loop.add_signal_handler(SIGHUP, self.halt)
@@ -121,6 +120,7 @@ class DataComponent(metaclass=ABCMeta):
 
     async def run(self) -> None:
         """Entrypoint for the data component."""
+        await self._setup_signal_handlers()
         await self._pre_connect()
         await self._mqtt.connect()
         await self._post_connect()

@@ -3,6 +3,7 @@ import asyncio
 from typing import Optional
 
 import click
+import uvloop
 
 from astoria.astctl.command import Command
 from astoria.common.ipc import UsercodeLogBroadcastEvent
@@ -14,8 +15,9 @@ from astoria.common.mqtt import BroadcastHelper
 @click.option("-c", "--config-file", type=click.Path(exists=True))
 def log(*, verbose: bool, config_file: Optional[str]) -> None:
     """View usercode logs in real-time."""
-    command = ViewUsercodeLogCommand(verbose, config_file)
-    asyncio.run(command.run())
+    with asyncio.Runner(loop_factory=uvloop.new_event_loop) as runner:
+        command = ViewUsercodeLogCommand(verbose, config_file)
+        runner.run(command.run())
 
 
 class ViewUsercodeLogCommand(Command):
@@ -35,7 +37,7 @@ class ViewUsercodeLogCommand(Command):
     async def main(self) -> None:
         """Send a trigger event."""
         while not self._stop_event.is_set():
-            # wait_broadcast waits forever until a broadcoast, so we will use a short
+            # wait_broadcast waits forever until a broadcast, so we will use a short
             # timeout to ensure that the loop condition is checked.
             try:
                 ev = await asyncio.wait_for(
