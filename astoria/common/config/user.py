@@ -3,13 +3,9 @@
 import random
 import re
 import secrets
-import sys
 from pathlib import Path
 
-if sys.version_info >= (3, 11):
-    import tomllib
-else:
-    import tomli as tomllib
+import tomllib
 
 
 from pydantic import BaseModel, ValidationError, validator, TypeAdapter

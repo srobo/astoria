@@ -1,13 +1,11 @@
 """Lifecycle classes to load metadata from disks."""
 
-import asyncio
 import logging
+import tomllib
 from abc import ABCMeta, abstractmethod
 from json import JSONDecodeError, loads
 from pathlib import Path
 from typing import Dict, Optional
-
-import tomli_w
 
 from astoria.common.config import (
     SSID_PREFIX,
@@ -104,7 +102,7 @@ class UsercodeDiskLifecycle(AbstractMetadataDiskLifecycle):
         """Generate a new user settings file and write it to the path."""
         settings = RobotSettings.generate_default_settings(self._config)
         with robot_settings_file.open("wb") as fh:
-            tomli_w.dump(settings.dict(), fh)
+            tomllib.dump(settings.dict(), fh)
         return settings
 
     def _load_settings(self) -> RobotSettings:

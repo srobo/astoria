@@ -7,10 +7,7 @@ from typing import Type
 import pytest
 from pydantic import ValidationError
 
-if sys.version_info >= (3, 11):
-    import tomllib
-else:
-    import tomli as tomllib
+import tomllib
 
 
 from astoria.common.config import AstoriaConfig
