@@ -22,6 +22,7 @@ dependencies = [
     "pytest-cov==7.0.0",
     "mypy==1.19.1",
     "uvloop==0.22.1",
+    "tomli-w>=1.2.0",
 ]
 
 [project.urls]
@@ -55,10 +56,6 @@ dev = [
     "m2r2",
     "types-click",
 ]
-
-[tool.black]
-line-length = 90
-target-version = ['py310']
 
 [tool.mypy]
 mypy_path = "stubs"
@@ -115,5 +112,5 @@ ignore = [
     "S101",    # S101 Use of `assert` detected
 ]
 
-target-version = "py38"
+target-version = "py312"
 line-length = 90

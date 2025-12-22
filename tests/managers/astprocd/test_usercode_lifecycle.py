@@ -303,7 +303,7 @@ async def test_run_with_valid_python_additional_log_lines() -> None:
     - Output is written to the log file
     - The correct status is passed to the state manager
     """
-    config = CONFIG.dict()
+    config = CONFIG.model_dump()
     config["system"]["initial_log_lines"] = ["Hello", "World"]
     ucl, sith = StatusInformTestHelper.setup(
         EXECUTE_CODE_DATA / "valid_python_short",
@@ -340,7 +340,7 @@ async def test_run_additional_log_lines_templated() -> None:
     - Output is written to the log file
     - The output has the template variables correctly substituted.
     """
-    config = CONFIG.dict()
+    config = CONFIG.model_dump()
     config["system"]["initial_log_lines"] = [
         "Hello",
         "World",

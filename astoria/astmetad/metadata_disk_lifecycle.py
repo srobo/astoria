@@ -1,6 +1,7 @@
 """Lifecycle classes to load metadata from disks."""
 
 import logging
+import tomli_w
 import tomllib
 from abc import ABCMeta, abstractmethod
 from json import JSONDecodeError, loads
@@ -102,7 +103,7 @@ class UsercodeDiskLifecycle(AbstractMetadataDiskLifecycle):
         """Generate a new user settings file and write it to the path."""
         settings = RobotSettings.generate_default_settings(self._config)
         with robot_settings_file.open("wb") as fh:
-            tomllib.dump(settings.dict(), fh)
+            tomli_w.dump(settings.model_dump(), fh)
         return settings
 
     def _load_settings(self) -> RobotSettings:

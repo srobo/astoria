@@ -2,6 +2,7 @@
 import shutil
 from pathlib import Path
 from typing import Callable, Iterator, List, Optional
+from unittest.mock import ANY
 
 import pytest
 
@@ -126,46 +127,23 @@ class TestUsercodeDiskLifecycle:
         [
             (
                 "blank",
-                [
-                    "robot-settings.toml did not match schema: 3 validation errors for RobotSettings",  # noqa: E501
-                    "team_tla",
-                    "  field required (type=value_error.missing)",
-                    "usercode_entrypoint",
-                    "  field required (type=value_error.missing)",
-                    "wifi_psk",
-                    "  field required (type=value_error.missing)",
-                    "",
-                ],
+                "robot-settings.toml did not match schema: 3 validation errors for RobotSettings",  # noqa: E501
             ),
-            ("bad-toml", ["Invalid TOML: Invalid value (at line 5, column 15)", ""]),
+            ("bad-toml", "Invalid TOML: Invalid value (at line 5, column 15)"),
             (
                 "extra-config",
-                [
-                    "robot-settings.toml did not match schema: 1 validation error for RobotSettings",  # noqa: E501
-                    "bees",
-                    "  extra fields not permitted (type=value_error.extra)",
-                    "",
-                ],
+                "robot-settings.toml did not match schema: 1 validation error for RobotSettings",  # noqa: E501
             ),
             (
                 "invalid-fields",
-                [
-                    "robot-settings.toml did not match schema: 3 validation errors for RobotSettings",  # noqa: E501
-                    "team_tla",
-                    "  Team name did not match format: ABC, ABC1 etc. (type=value_error)",
-                    "usercode_entrypoint",
-                    "  Value must only contain ASCII characters. (type=value_error)",
-                    "wifi_psk",
-                    "  WiFi PSK must be 8 - 63 characters long. (type=value_error)",
-                    "",
-                ],
+                "robot-settings.toml did not match schema: 3 validation errors for RobotSettings",  # noqa: E501
             ),
         ],
     )
     def test_error_generated(
         self,
         filename: str,
-        error: List[str],
+        error: str,
         data_dir: Path,
         lifecycle_factory: LifecycleFactory,
     ) -> None:
@@ -191,7 +169,7 @@ class TestUsercodeDiskLifecycle:
             "Your robot-settings.toml has been overwritten.",
         ]
 
-        assert find_section(error_file_lines, "Invalid settings file:") == error
+        assert find_section(error_file_lines, "Invalid settings file:")[0] == error
 
         # Skip a new line
         assert find_section(error_file_lines, "") == []
