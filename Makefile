@@ -17,10 +17,10 @@ docs-serve:
 	$(CMD) sphinx-autobuild $(SPHINX_ARGS)
 
 lint:
-	$(CMD) ruff $(PYMODULE) $(TESTS) $(EXTRACODE) --exclude $(EXCLUDED_PATHS)
+	$(CMD) ruff check $(PYMODULE) $(TESTS) $(EXTRACODE) --exclude $(EXCLUDED_PATHS)
 
 lint-fix:
-	$(CMD) ruff --fix $(PYMODULE) $(TESTS) $(EXTRACODE) --exclude $(EXCLUDED_PATHS)
+	$(CMD) ruff format $(PYMODULE) $(TESTS) $(EXTRACODE) --exclude $(EXCLUDED_PATHS)
 
 type:
 	$(CMD) mypy $(PYMODULE) $(TESTS) $(EXTRACODE) --exclude $(EXCLUDED_PATHS)
