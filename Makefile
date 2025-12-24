@@ -1,6 +1,6 @@
 .PHONY: all clean docs docs-serve lint lint-fix type test test-cov
 
-CMD:=poetry run
+CMD:=uv run
 PYMODULE:=astoria
 TESTS:=tests
 EXTRACODE:=docs/_code

@@ -23,6 +23,7 @@ dependencies = [
     "mypy==1.19.1",
     "uvloop==0.22.1",
     "tomli-w>=1.2.0",
+    "ty>=0.0.5",
 ]
 
 [project.urls]
