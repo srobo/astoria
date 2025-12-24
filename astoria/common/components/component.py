@@ -5,6 +5,7 @@ A data component represents the common functionality between
 State Managers and Consumers. It handles connecting to the broker
 and managing the event loop.
 """
+
 import asyncio
 import logging
 import signal
@@ -21,6 +22,7 @@ from astoria.common.config import AstoriaConfig
 from astoria.common.mqtt.wrapper import MQTTWrapper
 
 LOGGER = logging.getLogger(__name__)
+
 
 class DataComponent(metaclass=ABCMeta):
     """

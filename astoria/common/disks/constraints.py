@@ -3,6 +3,7 @@ USB Constraint.
 
 Defines a set of parameters that a USB / Folder can conform to.
 """
+
 from abc import ABCMeta, abstractmethod
 from pathlib import Path
 

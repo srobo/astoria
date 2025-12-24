@@ -1,4 +1,5 @@
 """Command to show usercode info."""
+
 import asyncio
 from typing import Optional
 

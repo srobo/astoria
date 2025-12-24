@@ -1,4 +1,5 @@
 """Command to restart running usercode."""
+
 import asyncio
 from typing import Optional
 

@@ -1,4 +1,5 @@
 """Command to list information about mounted disks."""
+
 import asyncio
 from typing import Optional
 

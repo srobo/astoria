@@ -1,4 +1,5 @@
 """Command base for astctl."""
+
 import asyncio
 from abc import abstractmethod
 from json import JSONDecodeError, loads
@@ -11,6 +12,7 @@ from astoria.common.components import StateConsumer
 from astoria.common.ipc import ManagerMessage
 
 T = TypeVar("T", bound=ManagerMessage)
+
 
 class Command(StateConsumer):
     """

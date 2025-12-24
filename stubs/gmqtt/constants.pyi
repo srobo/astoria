@@ -4,7 +4,6 @@ import enum
 MQTTv311 = 4
 MQTTv50 = 5
 
-
 class PubRecReasonCode(enum.IntEnum):
     SUCCESS = 0
     NO_MATCHING_SUBSCRIBERS = 16

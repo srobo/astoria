@@ -1,4 +1,5 @@
 """Command to add a filesystem path as a static disk."""
+
 import asyncio
 from pathlib import Path
 from typing import Optional

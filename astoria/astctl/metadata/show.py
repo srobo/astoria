@@ -1,4 +1,5 @@
 """Command to show metadata."""
+
 import asyncio
 from typing import Optional
 

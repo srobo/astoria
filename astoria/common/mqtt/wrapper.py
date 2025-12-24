@@ -231,7 +231,10 @@ class MQTTWrapper:
 
             tasks = [
                 asyncio.gather(
-                    *(asyncio.create_task(event.wait()) for event in self._dependency_events.values()),
+                    *(
+                        asyncio.create_task(event.wait())
+                        for event in self._dependency_events.values()
+                    ),
                 ),
             ]
 
@@ -329,7 +332,9 @@ class MQTTWrapper:
         # If uuid not recognised, probably a response for another client
         if uuid in self._request_response_events:
             try:
-                self._request_response_data[uuid] = TypeAdapter(RequestResponse).validate_json(payload)
+                self._request_response_data[uuid] = TypeAdapter(
+                    RequestResponse
+                ).validate_json(payload)
             except Exception:
                 self._request_response_data[uuid] = RequestResponse(
                     uuid=uuid,

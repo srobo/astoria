@@ -1,4 +1,5 @@
 """Schema for the robot metadata."""
+
 import platform
 import re
 from enum import Enum

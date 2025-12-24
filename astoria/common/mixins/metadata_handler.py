@@ -1,4 +1,5 @@
 """Mixin to handle metadata."""
+
 import logging
 from json import JSONDecodeError, loads
 from typing import Match
@@ -26,7 +27,9 @@ class MetadataHandlerMixin:
         if payload:
             try:
                 data = loads(payload)
-                metadata_manager_message = TypeAdapter(MetadataManagerMessage).validate_python(data)
+                metadata_manager_message = TypeAdapter(
+                    MetadataManagerMessage
+                ).validate_python(data)
                 await self.handle_metadata(metadata_manager_message.metadata)
             except ValidationError:
                 LOGGER.warning("Received bad metadata manager message.")

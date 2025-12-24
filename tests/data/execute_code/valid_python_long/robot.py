@@ -1,4 +1,5 @@
 """A long, valid Python program."""
+
 from time import sleep
 
 print("Starting")

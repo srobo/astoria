@@ -1,4 +1,5 @@
 """Allows disks to be added manually through local filesystem paths."""
+
 import logging
 from pathlib import Path
 from typing import TYPE_CHECKING, Callable, Coroutine, Dict

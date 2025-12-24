@@ -1,4 +1,5 @@
 """Command to view usercode logs in real-time."""
+
 import asyncio
 from typing import Optional
 

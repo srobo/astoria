@@ -1,4 +1,5 @@
 """Tests for the usercode disk lifecycle."""
+
 import shutil
 from pathlib import Path
 from typing import Callable, Iterator, List, Optional

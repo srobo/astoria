@@ -116,7 +116,7 @@ class UsercodeLifecycle:
         if self._process is None:
             async with self._process_lock:
                 LOGGER.info(
-                    "Starting usercode execution with " f"entrypoint {self._entrypoint}",
+                    f"Starting usercode execution with entrypoint {self._entrypoint}",
                 )
                 self._process_end_event.clear()
                 self._process = await asyncio.create_subprocess_exec(
@@ -162,8 +162,7 @@ class UsercodeLifecycle:
                     elif rc > 0:
                         self.status = CodeStatus.CRASHED
                     LOGGER.info(
-                        f"Usercode process exited with code {rc} "
-                        f"({self.status.name})",
+                        f"Usercode process exited with code {rc} ({self.status.name})",
                     )
 
                     self._process = None
@@ -256,15 +255,25 @@ class UsercodeLifecycle:
 
                 for line in self._config.system.initial_log_lines:
                     template = Template(line)
-                    line_substituted = template.safe_substitute(self._metadata.model_dump())
+                    line_substituted = template.safe_substitute(
+                        self._metadata.model_dump()
+                    )
                     log(fh, f"[{time_passed}] {line_substituted}\n", log_line)
 
                 log(fh, f"[{time_passed}] ---\n", log_line)
 
             settings = self._get_robot_settings()
-            if settings and settings.wifi_enabled and settings.team_tla.startswith('ZZZ'):
-                log(fh, f"[{time_passed}] Default WiFi network name is in use.\n", log_line)
-                log(fh, f"[{time_passed}] Please update the TLA in robot-settings.toml to your team's TLA.", log_line)
+            if settings and settings.wifi_enabled and settings.team_tla.startswith("ZZZ"):
+                log(
+                    fh,
+                    f"[{time_passed}] Default WiFi network name is in use.\n",
+                    log_line,
+                )
+                log(
+                    fh,
+                    f"[{time_passed}] Please update the TLA in robot-settings.toml to your team's TLA.",
+                    log_line,
+                )
 
             log(fh, f"[{time_passed}] === LOG STARTED ===\n", log_line)
             log_line += 1

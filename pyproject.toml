@@ -24,6 +24,7 @@ dependencies = [
     "uvloop==0.22.1",
     "tomli-w>=1.2.0",
     "ty>=0.0.5",
+    "ruff==0.14.10",
 ]
 
 [project.urls]
@@ -84,7 +85,7 @@ module = ["dbus_next.*", "gmqtt.*"]
 disallow_any_explicit = false
 
 [tool.ruff]
-select = [
+lint.select = [
     "A",
     "ANN",
     "B",
@@ -103,14 +104,16 @@ select = [
     "UP",
     "W",
 ]
-ignore = [
-    "ANN101",  # Missing type annotation for `self` in method
-    "ANN102",  # Missing type annotation for `cls` in classmethod
+lint.ignore = [
     "ANN401",  # Dynamically typed expressions (typing.Any) are disallowed
     "B009",    # Do not call `getattr` with a constant attribute value.
     "B027",    # an empty method in an abstract base class, but has no abstract decorator
+    "COM812",  # Missing trailing comma
     "N805",    # First argument of a method should be named `self`
     "S101",    # S101 Use of `assert` detected
+]
+exclude = [
+    "tests/data/execute_code"
 ]
 
 target-version = "py312"

@@ -26,7 +26,8 @@ def test_manager_status_fields() -> None:
     assert message.astoria_version == __version__
 
     assert (
-        message.model_dump_json() == f'{{"status":"STOPPED","astoria_version":"{__version__}"}}'
+        message.model_dump_json()
+        == f'{{"status":"STOPPED","astoria_version":"{__version__}"}}'
     )
 
 

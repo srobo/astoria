@@ -1,4 +1,5 @@
 """Helper class to manage broadcast events."""
+
 import logging
 from asyncio import PriorityQueue
 from typing import TYPE_CHECKING, Any, Generic, Match, Type, TypeVar

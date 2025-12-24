@@ -1,4 +1,5 @@
 """Command to virtually press start button."""
+
 import asyncio
 from typing import Optional
 

@@ -1,4 +1,5 @@
 """Command to set a metadata attribute."""
+
 import asyncio
 from typing import Optional
 

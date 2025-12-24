@@ -1,4 +1,5 @@
 """Command to add a filesystem path as a static disk."""
+
 import asyncio
 from typing import Optional
 
@@ -7,7 +8,6 @@ import uvloop
 
 from astoria.astctl.command import Command
 from astoria.common.ipc import RemoveAllStaticDisksRequest
-
 
 
 @click.command("remove-all")

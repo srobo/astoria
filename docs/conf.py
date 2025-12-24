@@ -15,8 +15,8 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx.ext.viewcode",
     "sphinx.ext.githubpages",
-    'sphinx.ext.autosectionlabel',
-    'sphinx.ext.graphviz',
+    "sphinx.ext.autosectionlabel",
+    "sphinx.ext.graphviz",
     "sphinx_rtd_theme",
     "sphinx-pydantic",
     "sphinx_click",
@@ -45,8 +45,8 @@ autodoc_default_options = {
 autodoc_mock_imports = []
 
 nitpick_ignore = [
-    ('py:data', 'DiskUUID'),
-    ('py:func', 'typing.NewType'),
+    ("py:data", "DiskUUID"),
+    ("py:func", "typing.NewType"),
 ]
 
 source_suffix = [".rst", ".md"]

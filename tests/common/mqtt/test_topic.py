@@ -73,7 +73,7 @@ def test_topic_parse_no_slash() -> None:
     cases = [
         "foo/bar/",
         "/foo/bar",
-        "/foo/bar/" "//",
+        "/foo/bar///",
         "/",
         "",
     ]

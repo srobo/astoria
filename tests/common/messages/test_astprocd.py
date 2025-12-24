@@ -1,4 +1,5 @@
 """Tests for astprocd message definitions."""
+
 from pathlib import Path
 
 from astoria import __version__

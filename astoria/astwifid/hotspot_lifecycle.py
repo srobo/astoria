@@ -3,6 +3,7 @@ Astoria WiFi Daemon.
 
 Manages a WiFi hotspot for the robot.
 """
+
 import asyncio
 import logging
 import os

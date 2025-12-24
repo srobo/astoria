@@ -1,4 +1,5 @@
 """Commands to interact with metadata."""
+
 import click
 
 from .set import set

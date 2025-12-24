@@ -1,4 +1,5 @@
 """Definition for a WiFi lifecycle."""
+
 from abc import ABCMeta, abstractmethod
 from typing import NamedTuple
 

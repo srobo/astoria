@@ -1,4 +1,5 @@
 """Broadcast Event Schemas."""
+
 from enum import Enum
 from typing import ClassVar
 

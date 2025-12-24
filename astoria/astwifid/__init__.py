@@ -1,4 +1,5 @@
 """Wifi Daemon - Handles Hotspot and WiFi Client connection."""
+
 import asyncio
 from typing import Optional
 

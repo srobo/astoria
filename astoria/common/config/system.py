@@ -3,12 +3,14 @@ System Configuration schema for Astoria.
 
 Common to all components.
 """
+
 from pathlib import Path
 from typing import BinaryIO, Dict, List, Optional
 
 from pydantic import BaseModel, TypeAdapter
 
 import tomllib
+
 
 class MQTTBrokerInfo(BaseModel):
     """MQTT Broker Information."""

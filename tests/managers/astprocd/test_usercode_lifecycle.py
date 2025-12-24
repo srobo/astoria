@@ -1,4 +1,5 @@
 """Test the usercode lifecycle code used by astprocd."""
+
 import asyncio
 from contextlib import AbstractContextManager
 from pathlib import Path
