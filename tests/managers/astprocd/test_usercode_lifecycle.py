@@ -1,10 +1,10 @@
 """Test the usercode lifecycle code used by astprocd."""
 
 import asyncio
+import re
 from contextlib import AbstractContextManager
 from pathlib import Path
-from re import compile
-from typing import IO, Any, List, Optional, Tuple, Type
+from typing import IO, Any
 
 import pytest
 
@@ -18,7 +18,7 @@ from astoria.common.mqtt.broadcast_helper import BroadcastHelper, T
 
 EXTRACT_ZIP_DATA = Path("tests/data/extract_zip")
 EXECUTE_CODE_DATA = Path("tests/data/execute_code")
-TIMESTAMP_REGEX = compile(r"^(\[.*\]) (.*)$")
+TIMESTAMP_REGEX = re.compile(r"^(\[.*\]) (.*)$")
 
 with Path("tests/data/config/valid.toml").open("rb") as fh:
     CONFIG = AstoriaConfig.load_from_file(fh)
@@ -41,19 +41,19 @@ def _strip_timestamp(line: str) -> str:
 class MockBroadcastHelper(BroadcastHelper[T]):
     """Mock BroadcastHelper class to help with tests."""
 
-    def __init__(self, name: str, schema: Type[T]) -> None:
+    def __init__(self, name: str, schema: type[T]) -> None:
         self._name = name
         self._schema = schema
 
         self._event_queue: asyncio.PriorityQueue[T] = asyncio.PriorityQueue()
-        self._sent: List[T] = []
+        self._sent: list[T] = []
 
     @classmethod
-    def get_helper(cls, schema: Type[T]) -> "MockBroadcastHelper[T]":  # type: ignore
+    def get_helper(cls, schema: type[T]) -> "MockBroadcastHelper[T]":  # type: ignore
         """Get the broadcast helper for a given event."""
         return cls(schema.name, schema)
 
-    def get_lines(self) -> List[str]:
+    def get_lines(self) -> list[str]:
         """Get lines in the same format as the file."""
         return "".join(a.content for a in self._sent).splitlines()  # type: ignore
 
@@ -72,7 +72,7 @@ class ReadAndCleanupFile(AbstractContextManager):  # type: ignore
 
     def __init__(self, file_path: Path) -> None:
         self._file_path = file_path
-        self._fh: Optional[IO[str]] = None
+        self._fh: IO[str] | None = None
 
     def __enter__(self) -> IO[str]:
         self._fh = self._file_path.open("r")
@@ -95,7 +95,7 @@ class StatusInformTestHelper:
     def __init__(self) -> None:
         self.times_called = 0
         self.log_helper = MockBroadcastHelper.get_helper(UsercodeLogBroadcastEvent)
-        self.called_queue: List[CodeStatus] = []
+        self.called_queue: list[CodeStatus] = []
 
     def callback(self, status: CodeStatus) -> None:
         """Mock inform callback."""
@@ -105,16 +105,17 @@ class StatusInformTestHelper:
     @classmethod
     def setup(
         cls,
-        mount_path: Optional[Path] = None,
+        mount_path: Path | None = None,
         *,
         config: AstoriaConfig = CONFIG,
-    ) -> Tuple[UsercodeLifecycle, "StatusInformTestHelper"]:
+    ) -> tuple[UsercodeLifecycle, "StatusInformTestHelper"]:
         """Setup a lifecycle and helper for testing."""
         sith = cls()
+        uuid = DiskUUID("foo")
         ucl = UsercodeLifecycle(
-            uuid=DiskUUID("foo"),
+            uuid=uuid,
             disk_info=DiskInfo(
-                uuid="foo",
+                uuid=uuid,
                 mount_path=mount_path or Path(),
                 disk_type=DiskType.USERCODE,
             ),

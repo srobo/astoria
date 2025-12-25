@@ -1,7 +1,6 @@
 """Command to set a metadata attribute."""
 
 import asyncio
-from typing import Optional
 
 import click
 import uvloop
@@ -20,7 +19,7 @@ def set(  # noqa: A001
     value: str,
     *,
     verbose: bool,
-    config_file: Optional[str],
+    config_file: str | None,
 ) -> None:
     """Set a metadata attribute."""
     with asyncio.Runner(loop_factory=uvloop.new_event_loop) as runner:
@@ -38,7 +37,7 @@ class SetMetadataCommand(Command):
         attribute: str,
         value: str,
         verbose: bool,  # noqa: FBT001
-        config_file: Optional[str],
+        config_file: str | None,
     ) -> None:
         super().__init__(verbose, config_file)
         self._attr = attribute

@@ -2,20 +2,16 @@
 
 import asyncio
 import logging
+from collections.abc import Callable, Coroutine
+from re import Match
 from typing import (
     Any,
-    Callable,
-    Coroutine,
-    Dict,
-    List,
-    Match,
-    Optional,
     TypeVar,
 )
 from uuid import UUID
 
 import gmqtt
-from pydantic import BaseModel, ValidationError, TypeAdapter
+from pydantic import BaseModel, TypeAdapter, ValidationError
 
 from astoria.common.config.system import MQTTBrokerInfo
 from astoria.common.ipc import ManagerMessage, ManagerRequest, RequestResponse
@@ -44,9 +40,9 @@ class MQTTWrapper:
         client_name: str,
         broker_info: MQTTBrokerInfo,
         *,
-        last_will: Optional[BaseModel] = None,
-        dependencies: Optional[List[str]] = None,
-        no_dependency_event: Optional[asyncio.Event] = None,
+        last_will: BaseModel | None = None,
+        dependencies: list[str] | None = None,
+        no_dependency_event: asyncio.Event | None = None,
     ) -> None:
         self._client_name = client_name
         self._broker_info = broker_info
@@ -54,11 +50,11 @@ class MQTTWrapper:
         self._dependencies = dependencies or []
         self._no_dependency_event = no_dependency_event
 
-        self._dependency_events: Dict[str, asyncio.Event] = {
+        self._dependency_events: dict[str, asyncio.Event] = {
             name: asyncio.Event() for name in self._dependencies
         }
 
-        self._topic_handlers: Dict[Topic, Handler] = {}
+        self._topic_handlers: dict[Topic, Handler] = {}
 
         self._client = gmqtt.Client(
             self._client_name,
@@ -79,8 +75,8 @@ class MQTTWrapper:
                 f"{manager}/request/+/+",
                 self._request_response_message_handler,
             )
-        self._request_response_events: Dict[UUID, asyncio.Event] = {}
-        self._request_response_data: Dict[UUID, RequestResponse] = {}
+        self._request_response_events: dict[UUID, asyncio.Event] = {}
+        self._request_response_data: dict[UUID, RequestResponse] = {}
 
     @property
     def is_connected(self) -> bool:
@@ -88,12 +84,12 @@ class MQTTWrapper:
         return self._client.is_connected
 
     @property
-    def last_will_message(self) -> Optional[gmqtt.Message]:
+    def last_will_message(self) -> gmqtt.Message | None:
         """Last will and testament message for this client."""
         if self._last_will is not None:
             return gmqtt.Message(
                 self.mqtt_prefix,
-                self._last_will.json(),
+                self._last_will.model_dump_json(),
                 retain=True,
             )
         else:
@@ -136,7 +132,7 @@ class MQTTWrapper:
         client: gmqtt.client.Client,
         flags: int,
         rc: int,
-        properties: Dict[str, List[int]],
+        properties: dict[str, list[int]],
     ) -> None:
         """Callback for mqtt connection."""
         for topic in self._topic_handlers:
@@ -155,7 +151,7 @@ class MQTTWrapper:
         topic: str,
         payload: bytes,
         qos: int,
-        properties: Dict[str, int],
+        properties: dict[str, int],
     ) -> gmqtt.constants.PubRecReasonCode:
         """Callback for mqtt messages."""
         LOGGER.debug(f"Message received on {topic} with payload: {payload!r}")
@@ -163,7 +159,7 @@ class MQTTWrapper:
             match = t.match(topic)
             if match:
                 asyncio.ensure_future(self.wait_dependencies())
-                LOGGER.debug(f"Calling {handler.__name__} to handle {topic}")
+                LOGGER.debug(f"Calling {handler=} to handle {topic}")
                 asyncio.ensure_future(handler(match, payload.decode()))
 
         return gmqtt.constants.PubRecReasonCode.SUCCESS
@@ -200,7 +196,7 @@ class MQTTWrapper:
 
         self._client.publish(
             str(topic_complete),
-            payload.json(),
+            payload.model_dump_json(),
             qos=1,
             retain=retain,
         )
@@ -271,7 +267,7 @@ class MQTTWrapper:
                     LOGGER.warning(f"{manager} is unavailable!")
                     if self._no_dependency_event is not None:
                         self._no_dependency_event.set()
-        except Exception:
+        except Exception:  # noqa: BLE001
             LOGGER.warning(
                 f"Received invalid JSON in manager message for {manager}: {payload}",
             )
@@ -309,7 +305,7 @@ class MQTTWrapper:
                 self._request_response_events[request.uuid].wait(),
                 response_timeout,
             )
-        except asyncio.TimeoutError as e:
+        except TimeoutError as e:
             raise RuntimeError("No response to manager request") from e
         if request.uuid not in self._request_response_data:
             raise RuntimeError("Request Response not available.")
@@ -335,7 +331,7 @@ class MQTTWrapper:
                 self._request_response_data[uuid] = TypeAdapter(
                     RequestResponse
                 ).validate_json(payload)
-            except Exception:
+            except Exception:  # noqa: BLE001
                 self._request_response_data[uuid] = RequestResponse(
                     uuid=uuid,
                     success=False,

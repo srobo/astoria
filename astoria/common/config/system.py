@@ -4,12 +4,11 @@ System Configuration schema for Astoria.
 Common to all components.
 """
 
+import tomllib
 from pathlib import Path
-from typing import BinaryIO, Dict, List, Optional
+from typing import BinaryIO
 
 from pydantic import BaseModel, TypeAdapter
-
-import tomllib
 
 
 class MQTTBrokerInfo(BaseModel):
@@ -44,7 +43,7 @@ class SystemInfo(BaseModel):
     """System settings that don't find elsewhere."""
 
     cache_dir: Path
-    initial_log_lines: List[str] = []
+    initial_log_lines: list[str] = []
 
     class Config:
         """Pydantic config."""
@@ -55,7 +54,7 @@ class SystemInfo(BaseModel):
 class DiskManagerInfo(BaseModel):
     """Settings specifically for astdiskd."""
 
-    ignored_mounts: List[Path] = []
+    ignored_mounts: list[Path] = []
 
 
 class ProcessManagerInfo(BaseModel):
@@ -78,7 +77,7 @@ class AstoriaConfig(BaseModel):
     astdiskd: DiskManagerInfo = DiskManagerInfo()  # Optional section
     astprocd: ProcessManagerInfo = ProcessManagerInfo()  # Optional section
     system: SystemInfo
-    env: Dict[str, str] = {}
+    env: dict[str, str] = {}
 
     class Config:
         """Pydantic config."""
@@ -86,7 +85,7 @@ class AstoriaConfig(BaseModel):
         extra = "forbid"
 
     @classmethod
-    def _get_config_path(cls, config_str: Optional[str] = None) -> Path:
+    def _get_config_path(cls, config_str: str | None = None) -> Path:
         """Check for a config file or search the filesystem for one."""
         if config_str is None:
             for path in CONFIG_SEARCH_PATHS:
@@ -99,7 +98,7 @@ class AstoriaConfig(BaseModel):
         raise FileNotFoundError("Unable to find config file.")
 
     @classmethod
-    def load(cls, config_str: Optional[str] = None) -> "AstoriaConfig":
+    def load(cls, config_str: str | None = None) -> "AstoriaConfig":
         """Load the config."""
         config_path = cls._get_config_path(config_str)
         with config_path.open("rb") as fh:

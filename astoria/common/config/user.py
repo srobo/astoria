@@ -3,12 +3,10 @@
 import random
 import re
 import secrets
+import tomllib
 from pathlib import Path
 
-import tomllib
-
-
-from pydantic import BaseModel, ValidationError, validator, TypeAdapter
+from pydantic import BaseModel, TypeAdapter, ValidationError, field_validator
 
 from astoria.common.config import AstoriaConfig
 
@@ -50,7 +48,8 @@ class RobotSettings(BaseModel):
 
         extra = "forbid"
 
-    @validator("team_tla")
+    @classmethod
+    @field_validator("team_tla")
     def validate_team_tla(cls, val: str) -> str:
         """
         Validate the TLA.
@@ -72,7 +71,8 @@ class RobotSettings(BaseModel):
 
         return val.upper()
 
-    @validator("usercode_entrypoint", "wifi_psk")
+    @classmethod
+    @field_validator("usercode_entrypoint", "wifi_psk")
     def validate_plain_text(cls, val: str) -> str:
         """Validate that the attributes are plaintext."""
         if not val.isprintable():
@@ -83,7 +83,8 @@ class RobotSettings(BaseModel):
 
         return val
 
-    @validator("usercode_entrypoint")
+    @classmethod
+    @field_validator("usercode_entrypoint")
     def validate_usercode_entrypoint(cls, val: str) -> str:
         """
         Validate that the usercode entrypoint is valid.
@@ -102,7 +103,8 @@ class RobotSettings(BaseModel):
 
         return val
 
-    @validator("wifi_psk")
+    @classmethod
+    @field_validator("wifi_psk")
     def validate_wifi_psk(cls, val: str) -> str:
         """
         Validate that the WiFi PSK is valid.
@@ -118,7 +120,7 @@ class RobotSettings(BaseModel):
     @classmethod
     def generate_default_settings(cls, config: AstoriaConfig) -> "RobotSettings":
         """Generate default sensible settings for the robot."""
-        random_tla = f"ZZZ{random.randint(0, 99999)}"
+        random_tla = f"ZZZ{random.randint(0, 99999)}"  # noqa: S311
 
         # Use random characters for the WiFi password as passphrase schemes
         # such as Diceware are very language specific. This can be changed

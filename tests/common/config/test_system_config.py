@@ -1,14 +1,10 @@
 """Test the config."""
 
-import sys
+import tomllib
 from pathlib import Path
-from typing import Type
 
 import pytest
 from pydantic import ValidationError
-
-import tomllib
-
 
 from astoria.common.config import AstoriaConfig
 
@@ -37,7 +33,7 @@ class TestSystemConfig:
     def test_config_raises_correct_exception(
         self,
         filename: Path,
-        exception: Type[Exception],
+        exception: type[Exception],
         data_dir: Path,
     ) -> None:
         """Test for bad type validation."""

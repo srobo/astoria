@@ -53,4 +53,4 @@ def test_manager_status_subclass() -> None:
 
     # Check for Validation Error
     with pytest.raises(ValidationError):
-        MyManagerStatusMessage(status=MyManagerStatusMessage.Status.RUNNING)
+        MyManagerStatusMessage(status=MyManagerStatusMessage.Status.RUNNING)  # ty:ignore[missing-argument]

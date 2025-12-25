@@ -2,11 +2,12 @@
 
 import asyncio
 import logging
-from datetime import datetime, timedelta, timezone
+from collections.abc import Callable
+from datetime import UTC, datetime, timedelta
 from os import environ
 from signal import SIGKILL, SIGTERM
 from string import Template
-from typing import IO, Callable, Dict, Optional
+from typing import IO
 
 from astoria.common.code_status import CodeStatus
 from astoria.common.config import (
@@ -45,7 +46,7 @@ class UsercodeLifecycle:
         self._config = config
         self._metadata = metadata
 
-        self._process: Optional[asyncio.subprocess.Process] = None
+        self._process: asyncio.subprocess.Process | None = None
         self._process_end_event = asyncio.Event()
         self._process_lock = asyncio.Lock()
 
@@ -63,7 +64,7 @@ class UsercodeLifecycle:
         return self._disk_info
 
     @property
-    def pid(self) -> Optional[int]:
+    def pid(self) -> int | None:
         """Process ID of the usercode process."""
         if self._process and self._process.returncode is None:
             return self._process.pid
@@ -182,7 +183,7 @@ class UsercodeLifecycle:
             self._process.send_signal(SIGTERM)
             try:
                 await asyncio.wait_for(self._process_end_event.wait(), timeout=5.0)
-            except asyncio.TimeoutError:
+            except TimeoutError:
                 if self._process is not None:
                     LOGGER.info(f"Sent SIGKILL to pid {self._process.pid}")
                     self._process.send_signal(SIGKILL)
@@ -196,7 +197,7 @@ class UsercodeLifecycle:
 
     async def logger(
         self,
-        proc_outputs: Dict[LogEventSource, asyncio.StreamReader],
+        proc_outputs: dict[LogEventSource, asyncio.StreamReader],
     ) -> None:
         """
         Logger task.
@@ -228,7 +229,7 @@ class UsercodeLifecycle:
             )
 
         async def read_from_stream(
-            outputs: Dict[LogEventSource, asyncio.StreamReader],
+            outputs: dict[LogEventSource, asyncio.StreamReader],
             source: LogEventSource,
             log_line_idx: int,
         ) -> None:
@@ -237,7 +238,7 @@ class UsercodeLifecycle:
             data = await output.readline()
             while data != b"":
                 data_str = data.decode("utf-8", errors="ignore")
-                time_passed = datetime.now(tz=timezone.utc) - start_time
+                time_passed = datetime.now(tz=UTC) - start_time
                 log(fh, f"[{time_passed}] {data_str}", log_line_idx, source)
                 data = await output.readline()
                 log_line_idx += 1
@@ -245,7 +246,7 @@ class UsercodeLifecycle:
         with log_path.open("w") as fh:
             log_line = 0
 
-            start_time = datetime.now(tz=timezone.utc)
+            start_time = datetime.now(tz=UTC)
             time_passed = timedelta(0)
 
             # Print initial lines to the log, if any.
@@ -271,7 +272,8 @@ class UsercodeLifecycle:
                 )
                 log(
                     fh,
-                    f"[{time_passed}] Please update the TLA in robot-settings.toml to your team's TLA.",
+                    f"[{time_passed}] Please update the TLA in robot-settings.toml to "
+                    f"your team's TLA.\n",
                     log_line,
                 )
 
@@ -282,5 +284,5 @@ class UsercodeLifecycle:
                 read_from_stream(proc_outputs, LogEventSource.STDOUT, log_line),
                 read_from_stream(proc_outputs, LogEventSource.STDERR, log_line),
             )
-            time_passed = datetime.now(tz=timezone.utc) - start_time
+            time_passed = datetime.now(tz=UTC) - start_time
             log(fh, f"[{time_passed}] === LOG FINISHED ===\n", log_line)

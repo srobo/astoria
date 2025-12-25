@@ -1,6 +1,6 @@
 """Tests for MQTT topic abstraction."""
 
-from re import compile
+import re
 
 import pytest
 
@@ -98,7 +98,7 @@ def test_topic_regex() -> None:
     """Test the regex property."""
     for parts, topic in BASIC_TOPICS:
         t = Topic(parts)
-        assert t.regex == compile(f"^{topic}$")
+        assert t.regex == re.compile(f"^{topic}$")
 
     for parts, _topic, example in WILDCARD_TOPICS:
         t = Topic(parts)

@@ -1,9 +1,8 @@
 """Tests for the usercode disk lifecycle."""
 
 import shutil
+from collections.abc import Callable, Iterator
 from pathlib import Path
-from typing import Callable, Iterator, List, Optional
-from unittest.mock import ANY
 
 import pytest
 
@@ -11,10 +10,10 @@ from astoria.astmetad.metadata_disk_lifecycle import UsercodeDiskLifecycle
 from astoria.common.config import AstoriaConfig
 from astoria.common.disks import DiskInfo, DiskType, DiskUUID
 
-LifecycleFactory = Callable[[Optional[str]], UsercodeDiskLifecycle]
+LifecycleFactory = Callable[[str | None], UsercodeDiskLifecycle]
 
 
-def find_section(iterator: Iterator[str], deliminator: Optional[str]) -> List[str]:
+def find_section(iterator: Iterator[str], deliminator: str | None) -> list[str]:
     """
     Split out a section of the error file.
 
@@ -22,7 +21,7 @@ def find_section(iterator: Iterator[str], deliminator: Optional[str]) -> List[st
     :param deliminator: The section deliminator, or None if EOF is allowed.
     :returns: A list of lines in the section.
     """
-    lines: List[str] = []
+    lines: list[str] = []
     for line in iterator:
         if line == deliminator:
             return lines
@@ -54,7 +53,7 @@ class TestUsercodeDiskLifecycle:
         that needs to be tested.
         """
 
-        def _inner(config_name: Optional[str]) -> UsercodeDiskLifecycle:
+        def _inner(config_name: str | None) -> UsercodeDiskLifecycle:
             if config_name:
                 config_path = data_dir / f"robot-settings/{config_name}.toml"
                 shutil.copy(config_path, tmpdir / "robot-settings.toml")

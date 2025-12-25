@@ -4,7 +4,6 @@ import platform
 import re
 from enum import Enum
 from pathlib import Path
-from typing import Dict, Optional
 
 from pydantic import BaseModel
 
@@ -54,7 +53,7 @@ class Metadata(BaseModel):
         )
 
     @classmethod
-    def get_os_version_info(cls) -> Dict[str, str]:
+    def get_os_version_info(cls) -> dict[str, str]:
         """
         Reads OS version information.
 
@@ -68,7 +67,7 @@ class Metadata(BaseModel):
         return {}
 
     @classmethod
-    def get_macos_release_info(cls) -> Dict[str, str]:
+    def get_macos_release_info(cls) -> dict[str, str]:
         """
         Get the release information for MacOS.
 
@@ -94,8 +93,8 @@ class Metadata(BaseModel):
     @classmethod
     def get_os_release_info(
         cls,
-        os_release_path: Optional[Path] = None,
-    ) -> Dict[str, str]:
+        os_release_path: Path | None = None,
+    ) -> dict[str, str]:
         """
         Reads OS version information from /etc/os-release.
 
@@ -107,14 +106,11 @@ class Metadata(BaseModel):
 
         if os_release_path.exists():
             contents = os_release_path.read_text()
-            return {
-                k: v
-                for k, v in re.findall(
+            return dict(re.findall(
                     r'^([A-Z_]+)="?([^"\n]+)"?$',
                     contents,
                     flags=re.MULTILINE,
-                )
-            }
+                ))
 
         return {}
 
@@ -123,7 +119,7 @@ class Metadata(BaseModel):
     zone: int = 0
     mode: RobotMode = RobotMode.DEV
     marker_offset: int = 0
-    game_timeout: Optional[int] = None
+    game_timeout: int | None = None
     wifi_enabled: bool = True
 
     # From Software
@@ -132,12 +128,12 @@ class Metadata(BaseModel):
     arch: str
     python_version: str
     libc_ver: str
-    os_name: Optional[str] = None
-    os_pretty_name: Optional[str] = None
-    os_version: Optional[str] = None
+    os_name: str | None = None
+    os_pretty_name: str | None = None
+    os_version: str | None = None
 
     # From robot settings file
     usercode_entrypoint: str
-    wifi_ssid: Optional[str] = None
-    wifi_psk: Optional[str] = None
-    wifi_region: Optional[str] = None
+    wifi_ssid: str | None = None
+    wifi_psk: str | None = None
+    wifi_region: str | None = None

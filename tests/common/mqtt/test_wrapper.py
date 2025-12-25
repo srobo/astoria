@@ -1,7 +1,7 @@
 """Test the MQTT Wrapper class."""
 
 import asyncio
-from typing import Match
+from re import Match
 
 import gmqtt
 import pytest
@@ -63,7 +63,7 @@ def test_wrapper_init_dependencies() -> None:
 
 def test_wrapper_init_last_will() -> None:
     """Test that the wrapper constructor sets up the last will."""
-    lw = ManagerMessage(status="RUNNING")
+    lw = ManagerMessage(status=ManagerMessage.Status.RUNNING)
     wr = MQTTWrapper("foo", BROKER_INFO, last_will=lw)
     assert wr._last_will is lw
 
@@ -90,7 +90,7 @@ def test_wrapper_last_will_message_null() -> None:
 
 def test_wrapper_last_will_message() -> None:
     """Test that the wrapper gives a valid last will message."""
-    lw = ManagerMessage(status="RUNNING")
+    lw = ManagerMessage(status=ManagerMessage.Status.RUNNING)
     wr = MQTTWrapper("foo", BROKER_INFO, last_will=lw)
 
     message = wr.last_will_message
@@ -98,7 +98,7 @@ def test_wrapper_last_will_message() -> None:
     assert message.topic == b"astoria/foo"
     assert message.qos == 0
     assert message.retain
-    assert message.payload == lw.json().encode()
+    assert message.payload == lw.model_dump_json().encode()
 
 
 def test_wrapper_mqtt_prefix() -> None:

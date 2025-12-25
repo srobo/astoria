@@ -3,7 +3,6 @@
 import logging
 from json import JSONDecodeError, dumps, loads
 from pathlib import Path
-from typing import Dict, Optional, Set
 
 LOGGER = logging.getLogger(__name__)
 
@@ -13,9 +12,9 @@ class MetadataCache:
 
     def __init__(
         self,
-        cached_keys: Set[str],
+        cached_keys: set[str],
         *,
-        cache_path: Optional[Path] = None,
+        cache_path: Path | None = None,
     ) -> None:
         """
         Construct the metadata cache.
@@ -44,7 +43,7 @@ class MetadataCache:
             LOGGER.info("Creating new cache file.")
             self._write_cache({})
 
-    def _read_cache(self) -> Dict[str, str]:
+    def _read_cache(self) -> dict[str, str]:
         """
         Read the data from the cache file.
 
@@ -76,7 +75,7 @@ class MetadataCache:
             LOGGER.warning(f"Invalid JSON data in cache: {raw_data}")
             return {}
 
-    def _write_cache(self, data: Dict[str, str]) -> None:
+    def _write_cache(self, data: dict[str, str]) -> None:
         """
         Write the data to the cache file.
 
@@ -87,11 +86,11 @@ class MetadataCache:
             fh.write(dumps(data))
 
     @property
-    def data(self) -> Dict[str, str]:
+    def data(self) -> dict[str, str]:
         """The cached data."""
         return self._data
 
-    def update_cached_attr(self, key: str, value: Optional[str]) -> None:
+    def update_cached_attr(self, key: str, value: str | None) -> None:
         """
         Update a cached attribute.
 

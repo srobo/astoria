@@ -20,10 +20,8 @@ dependencies = [
     "gmqtt>=0.7.0",
     "pytest-asyncio==1.3.0",
     "pytest-cov==7.0.0",
-    "mypy==1.19.1",
     "uvloop==0.22.1",
     "tomli-w>=1.2.0",
-    "ty>=0.0.5",
     "ruff==0.14.10",
 ]
 
@@ -41,7 +39,7 @@ astwifid = "astoria.astwifid:main"
 
 [dependency-groups]
 dev = [
-    "mypy>=1,<2",
+    "ty>=0.0.6",
     "pyyaml<5.4",
     "pytest",
     "pytest-cov",
@@ -59,30 +57,8 @@ dev = [
     "types-click",
 ]
 
-[tool.mypy]
-mypy_path = "stubs"
-
-warn_unused_ignores = true
-warn_return_any = true
-
-strict_optional = true
-no_implicit_optional = true
-
-disallow_any_unimported = true
-disallow_any_explicit = true
-disallow_subclassing_any = true
-disallow_any_generics = true
-
-disallow_untyped_calls = true
-disallow_untyped_defs = true
-disallow_incomplete_defs = true
-disallow_untyped_decorators = true
-
-check_untyped_defs = true
-
-[[tool.mypy.overrides]]
-module = ["dbus_next.*", "gmqtt.*"]
-disallow_any_explicit = false
+[tool.ty]
+src.include = ["stubs"]
 
 [tool.ruff]
 lint.select = [
@@ -118,3 +94,9 @@ exclude = [
 
 target-version = "py312"
 line-length = 90
+
+[tool.uv]
+package = true
+
+[tool.setuptools]
+packages = ["astoria"]

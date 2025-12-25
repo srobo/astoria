@@ -1,6 +1,5 @@
 """State Consumer base class."""
 
-import asyncio
 import logging
 from abc import ABCMeta
 

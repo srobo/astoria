@@ -1,9 +1,9 @@
 """Command base for astctl."""
 
-import asyncio
 from abc import abstractmethod
 from json import JSONDecodeError, loads
-from typing import Generic, Match, Type, TypeVar
+from re import Match
+from typing import TypeVar
 from uuid import uuid4
 
 from pydantic import TypeAdapter
@@ -39,7 +39,7 @@ class Command(StateConsumer):
         super()._setup_logging(verbose, welcome_message=False)
 
 
-class SingleManagerMessageCommand(Command, Generic[T]):
+class SingleManagerMessageCommand[T: ManagerMessage](Command):
     """
     A command that waits for the message from a single manager and does something with it.
 
@@ -54,7 +54,7 @@ class SingleManagerMessageCommand(Command, Generic[T]):
 
     @property
     @abstractmethod
-    def message_schema(self) -> Type[T]:
+    def message_schema(self) -> type[T]:
         """The schema of the message for the manager."""
         raise NotImplementedError
 

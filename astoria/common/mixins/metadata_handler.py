@@ -2,9 +2,9 @@
 
 import logging
 from json import JSONDecodeError, loads
-from typing import Match
+from re import Match
 
-from pydantic import ValidationError, TypeAdapter
+from pydantic import TypeAdapter, ValidationError
 
 from astoria.common.config import AstoriaConfig
 from astoria.common.ipc import MetadataManagerMessage
@@ -44,4 +44,4 @@ class MetadataHandlerMixin:
 
         :param metadata: The metadata included in the update.
         """
-        LOGGER.debug(f"Received new metadata: {metadata.json()}")
+        LOGGER.debug(f"Received new metadata: {metadata.model_dump_json()}")

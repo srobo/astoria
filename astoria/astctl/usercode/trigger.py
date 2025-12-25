@@ -1,7 +1,6 @@
 """Command to virtually press start button."""
 
 import asyncio
-from typing import Optional
 
 import click
 import uvloop
@@ -14,7 +13,7 @@ from astoria.common.mqtt import BroadcastHelper
 @click.command("trigger")
 @click.option("-v", "--verbose", is_flag=True)
 @click.option("-c", "--config-file", type=click.Path(exists=True))
-def trigger(*, verbose: bool, config_file: Optional[str]) -> None:
+def trigger(*, verbose: bool, config_file: str | None) -> None:
     """Virtually trigger the start button."""
     with asyncio.Runner(loop_factory=uvloop.new_event_loop) as runner:
         command = TriggerUsercodeCommand(verbose, config_file)

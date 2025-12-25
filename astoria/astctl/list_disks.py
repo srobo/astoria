@@ -1,7 +1,6 @@
 """Command to list information about mounted disks."""
 
 import asyncio
-from typing import Optional
 
 import click
 import uvloop
@@ -14,7 +13,7 @@ from .command import SingleManagerMessageCommand
 @click.command("list-disks")
 @click.option("-v", "--verbose", is_flag=True)
 @click.option("-c", "--config-file", type=click.Path(exists=True))
-def list_disks(*, verbose: bool, config_file: Optional[str]) -> None:
+def list_disks(*, verbose: bool, config_file: str | None) -> None:
     """List information about mounted disks."""
     with asyncio.Runner(loop_factory=uvloop.new_event_loop) as runner:
         command = ListDisksCommand(verbose, config_file)

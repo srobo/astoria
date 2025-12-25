@@ -1,7 +1,6 @@
 """Command to restart running usercode."""
 
 import asyncio
-from typing import Optional
 
 import click
 import uvloop
@@ -13,7 +12,7 @@ from astoria.common.ipc import ManagerRequest
 @click.command("kill")
 @click.option("-v", "--verbose", is_flag=True)
 @click.option("-c", "--config-file", type=click.Path(exists=True))
-def kill(*, verbose: bool, config_file: Optional[str]) -> None:
+def kill(*, verbose: bool, config_file: str | None) -> None:
     """Kill running usercode."""
     with asyncio.Runner(loop_factory=uvloop.new_event_loop) as runner:
         command = KillUsercodeCommand(verbose, config_file)

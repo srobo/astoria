@@ -1,8 +1,9 @@
 """Allows disks to be added manually through local filesystem paths."""
 
 import logging
+from collections.abc import Callable, Coroutine
 from pathlib import Path
-from typing import TYPE_CHECKING, Callable, Coroutine, Dict
+from typing import TYPE_CHECKING
 
 from astoria.common.disks import DiskUUID
 from astoria.common.ipc import (
@@ -106,7 +107,7 @@ class StaticDiskProvider(DiskProvider):
     ) -> RequestResponse:
         """Handles the remove all static disks command."""
         # Find the disks that we need to remove
-        removed_disks: Dict[DiskUUID, Path] = {
+        removed_disks: dict[DiskUUID, Path] = {
             uuid: path for uuid, path in self.disks.items() if uuid.startswith("static-")
         }
 

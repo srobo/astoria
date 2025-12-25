@@ -20,10 +20,10 @@ lint:
 	$(CMD) ruff check $(PYMODULE) $(TESTS) $(EXTRACODE) --exclude $(EXCLUDED_PATHS)
 
 lint-fix:
-	$(CMD) ruff format $(PYMODULE) $(TESTS) $(EXTRACODE) --exclude $(EXCLUDED_PATHS)
+	$(CMD) ruff check --fix $(PYMODULE) $(TESTS) $(EXTRACODE) --exclude $(EXCLUDED_PATHS)
 
 type:
-	$(CMD) mypy $(PYMODULE) $(TESTS) $(EXTRACODE) --exclude $(EXCLUDED_PATHS)
+	$(CMD) ty check $(PYMODULE) $(TESTS) $(EXTRACODE) --exclude $(EXCLUDED_PATHS)
 
 test:
 	$(CMD) pytest $(PYTEST_FLAGS) --cov=$(PYMODULE) $(TESTS)

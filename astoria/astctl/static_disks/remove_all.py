@@ -1,7 +1,6 @@
 """Command to add a filesystem path as a static disk."""
 
 import asyncio
-from typing import Optional
 
 import click
 import uvloop
@@ -13,7 +12,7 @@ from astoria.common.ipc import RemoveAllStaticDisksRequest
 @click.command("remove-all")
 @click.option("-v", "--verbose", is_flag=True)
 @click.option("-c", "--config-file", type=click.Path(exists=True))
-def remove_all(*, verbose: bool, config_file: Optional[str]) -> None:
+def remove_all(*, verbose: bool, config_file: str | None) -> None:
     """Unmount all currently mounted static disks."""
     with asyncio.Runner(loop_factory=uvloop.new_event_loop) as runner:
         command = RemoveAllStaticDiskCommand(verbose, config_file)

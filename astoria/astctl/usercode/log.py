@@ -1,7 +1,6 @@
 """Command to view usercode logs in real-time."""
 
 import asyncio
-from typing import Optional
 
 import click
 import uvloop
@@ -14,7 +13,7 @@ from astoria.common.mqtt import BroadcastHelper
 @click.command("log")
 @click.option("-v", "--verbose", is_flag=True)
 @click.option("-c", "--config-file", type=click.Path(exists=True))
-def log(*, verbose: bool, config_file: Optional[str]) -> None:
+def log(*, verbose: bool, config_file: str | None) -> None:
     """View usercode logs in real-time."""
     with asyncio.Runner(loop_factory=uvloop.new_event_loop) as runner:
         command = ViewUsercodeLogCommand(verbose, config_file)
@@ -46,5 +45,5 @@ class ViewUsercodeLogCommand(Command):
                     timeout=0.1,
                 )
                 print(ev.content.rstrip())
-            except asyncio.TimeoutError:
+            except TimeoutError:
                 pass

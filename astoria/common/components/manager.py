@@ -1,11 +1,12 @@
 """State Manager base class."""
 
-import asyncio
 import logging
 from abc import ABCMeta, abstractmethod
-from typing import Callable, Coroutine, Generic, Match, Type, TypeVar
+from collections.abc import Callable, Coroutine
+from re import Match
+from typing import TypeVar
 
-from pydantic import ValidationError, TypeAdapter
+from pydantic import TypeAdapter, ValidationError
 
 from astoria.common.ipc import ManagerMessage, ManagerRequest, RequestResponse
 
@@ -17,7 +18,7 @@ T = TypeVar("T", bound=ManagerMessage)
 RequestT = TypeVar("RequestT", bound=ManagerRequest)
 
 
-class StateManager(DataComponent, Generic[T], metaclass=ABCMeta):
+class StateManager[T: ManagerMessage](DataComponent, metaclass=ABCMeta):
     """
     State Manager.
 
@@ -65,7 +66,7 @@ class StateManager(DataComponent, Generic[T], metaclass=ABCMeta):
     def _register_request(
         self,
         name: str,
-        typ: Type[RequestT],
+        typ: type[RequestT],
         handler: Callable[[RequestT], Coroutine[None, None, RequestResponse]],
     ) -> None:
         LOGGER.debug(f"Registering {name} request for {self.name} component")
@@ -78,7 +79,7 @@ class StateManager(DataComponent, Generic[T], metaclass=ABCMeta):
                     f"request/{name}/{req.uuid}",
                     response,
                 )
-            except Exception:
+            except Exception:  # noqa: BLE001
                 LOGGER.warning(
                     f"Received {name} request, but unable to decode JSON: {payload}",
                 )

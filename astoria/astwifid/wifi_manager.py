@@ -7,7 +7,6 @@ Manages a WiFi hotspot for the robot.
 import asyncio
 import logging
 from pathlib import Path
-from typing import Optional
 
 from astoria.common.components import StateManager
 from astoria.common.ipc import WiFiManagerMessage
@@ -33,7 +32,7 @@ class WiFiManager(MetadataHandlerMixin, StateManager[WiFiManagerMessage]):
 
     def _init(self) -> None:
         self._lifecycle_lock = asyncio.Lock()
-        self._lifecycle: Optional[WiFiLifecycle] = None
+        self._lifecycle: WiFiLifecycle | None = None
 
         self._mqtt.subscribe("astmetad", self.handle_astmetad_message)
 
@@ -57,7 +56,7 @@ class WiFiManager(MetadataHandlerMixin, StateManager[WiFiManagerMessage]):
             LOGGER.warning("Some physical interfaces were not available.")
         return all_interfaces_available
 
-    def _get_lifecycle(self, metadata: Metadata) -> Optional[WiFiLifecycle]:
+    def _get_lifecycle(self, metadata: Metadata) -> WiFiLifecycle | None:
         hotspot_can_run = all(
             [
                 metadata.wifi_enabled,

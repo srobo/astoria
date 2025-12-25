@@ -61,7 +61,7 @@ def test_metadata_fields() -> None:
     assert metadata.wifi_region == "GB"
 
     assert (
-        metadata.json()
+        metadata.model_dump_json()
         == '{"arena":"B","zone":12,"mode":"COMP","marker_offset":40,"game_timeout":120,"wifi_enabled":false,"astoria_version":"0.0.0","kernel_version":"5.0.0","arch":"x64","python_version":"3","libc_ver":"2.0","os_name":"Student Robotics OS","os_pretty_name":"Student Robotics OS 2023.0.0","os_version":"2023.0.0","usercode_entrypoint":"robot.py","wifi_ssid":"robot","wifi_psk":"bees","wifi_region":"GB"}'  # noqa: E501
     )
 

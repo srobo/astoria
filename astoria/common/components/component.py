@@ -13,7 +13,6 @@ import sys
 from abc import ABCMeta, abstractmethod
 from signal import SIGHUP, SIGINT, SIGTERM
 from types import FrameType
-from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -38,7 +37,7 @@ class DataComponent(metaclass=ABCMeta):
     def __init__(
         self,
         verbose: bool,  # noqa: FBT001
-        config_file: Optional[str],
+        config_file: str | None,
     ) -> None:
         self.config = AstoriaConfig.load(config_file)
         self._stop_event = asyncio.Event()
@@ -111,12 +110,12 @@ class DataComponent(metaclass=ABCMeta):
         raise NotImplementedError
 
     @property
-    def dependencies(self) -> List[str]:
+    def dependencies(self) -> list[str]:
         """State Managers to depend on."""
         return []
 
     @property
-    def last_will(self) -> Optional[BaseModel]:
+    def last_will(self) -> BaseModel | None:
         """Last will and testament of the MQTT client."""
         return None
 

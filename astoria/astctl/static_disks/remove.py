@@ -2,7 +2,6 @@
 
 import asyncio
 from pathlib import Path
-from typing import Optional
 
 import click
 import uvloop
@@ -15,7 +14,7 @@ from astoria.common.ipc import RemoveStaticDiskRequest
 @click.argument("path")
 @click.option("-v", "--verbose", is_flag=True)
 @click.option("-c", "--config-file", type=click.Path(exists=True))
-def remove(path: str, *, verbose: bool, config_file: Optional[str]) -> None:
+def remove(path: str, *, verbose: bool, config_file: str | None) -> None:
     """Unmount a static disk."""
     with asyncio.Runner(loop_factory=uvloop.new_event_loop) as runner:
         command = RemoveStaticDiskCommand(path, verbose, config_file)
@@ -33,7 +32,7 @@ class RemoveStaticDiskCommand(Command):
         self,
         path: str,
         verbose: bool,  # noqa: FBT001
-        config_file: Optional[str],
+        config_file: str | None,
     ) -> None:
         super().__init__(verbose, config_file)
         self._path = Path(path).resolve()

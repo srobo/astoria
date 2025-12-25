@@ -4,8 +4,8 @@ MQTT Topic Abstraction.
 Allows topic strings to be constructed, along with regex to match them.
 """
 
-from re import compile
-from typing import Dict, Match, Optional, Pattern, Sequence
+import re
+from collections.abc import Sequence
 
 
 class Topic:
@@ -15,7 +15,7 @@ class Topic:
     A topic that may be published or subscribed to.
     """
 
-    WILDCARDS: Dict[str, str] = {
+    WILDCARDS: dict[str, str] = {
         "+": "([^/]+)",
         "#": "(.+)",
     }
@@ -23,7 +23,7 @@ class Topic:
     def __init__(self, parts: Sequence[str]) -> None:
         self.parts = parts
 
-    def match(self, topic: str) -> Optional[Match[str]]:
+    def match(self, topic: str) -> re.Match[str] | None:
         """Perform a regex match on a topic."""
         return self.regex.match(topic)
 
@@ -69,7 +69,7 @@ class Topic:
         return all(x not in self.parts for x in self.WILDCARDS)
 
     @property
-    def regex(self) -> Pattern[str]:
+    def regex(self) -> re.Pattern[str]:
         """
         Regular expression to match the topic.
 
@@ -82,4 +82,4 @@ class Topic:
             except KeyError:
                 handled_parts.append(p)
 
-        return compile("^" + "/".join(handled_parts) + "$")
+        return re.compile("^" + "/".join(handled_parts) + "$")

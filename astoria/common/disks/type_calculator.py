@@ -1,7 +1,6 @@
 """Class to determine the type of a disk."""
 
 from pathlib import Path
-from typing import Dict
 
 from astoria.common.config import RobotSettings, RobotSettingsException
 
@@ -52,7 +51,7 @@ class DiskTypeCalculator:
         :param path: The mount path of the drive.
         :returns: The type of the disk.
         """
-        constraints: Dict["DiskType", Constraint] = {
+        constraints: dict[DiskType, Constraint] = {
             DiskType.USERCODE: self._get_usercode_constraint(path),
             DiskType.METADATA: FilePresentConstraint("astoria.json"),
             DiskType.NOACTION: TrueConstraint(),  # Always match

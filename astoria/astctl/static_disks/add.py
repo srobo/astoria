@@ -2,7 +2,6 @@
 
 import asyncio
 from pathlib import Path
-from typing import Optional
 
 import click
 import uvloop
@@ -15,7 +14,7 @@ from astoria.common.ipc import AddStaticDiskRequest
 @click.argument("path")
 @click.option("-v", "--verbose", is_flag=True)
 @click.option("-c", "--config-file", type=click.Path(exists=True))
-def add(path: str, *, verbose: bool, config_file: Optional[str]) -> None:
+def add(path: str, *, verbose: bool, config_file: str | None) -> None:
     """Mount a filesystem path as a disk."""
     with asyncio.Runner(loop_factory=uvloop.new_event_loop) as runner:
         command = AddStaticDiskCommand(path, verbose, config_file)
@@ -33,7 +32,7 @@ class AddStaticDiskCommand(Command):
         self,
         path: str,
         verbose: bool,  # noqa: FBT001
-        config_file: Optional[str],
+        config_file: str | None,
     ) -> None:
         super().__init__(verbose, config_file)
         self._path = Path(path).resolve()

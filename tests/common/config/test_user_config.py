@@ -1,10 +1,9 @@
 """Test the user config."""
 
 from pathlib import Path
-from typing import Dict, Type, Union
 
 import pytest
-from pydantic import ValidationError, TypeAdapter
+from pydantic import TypeAdapter, ValidationError
 
 from astoria.common.config import (
     NoRobotSettingsException,
@@ -39,7 +38,7 @@ class TestLoadUserConfig:
     def test_load_config_raises_correct_exception(
         self,
         filename: Path,
-        exception: Type[Exception],
+        exception: type[Exception],
         data_dir: Path,
     ) -> None:
         """Test for bad type validation."""
@@ -51,7 +50,7 @@ class TestUserSettingsValidation:
     """Test that we validate the user settings properly."""
 
     @pytest.fixture
-    def valid_config(self) -> Dict[str, str]:
+    def valid_config(self) -> dict[str, str]:
         """A dictionary for a valid robot settings."""
         return {
             "team_tla": "ABC",
@@ -61,11 +60,11 @@ class TestUserSettingsValidation:
             "wifi_enabled": "true",
         }
 
-    def test_valid_config(self, valid_config: Dict[str, str]) -> None:
+    def test_valid_config(self, valid_config: dict[str, str]) -> None:
         """Test that we can load a valid config."""
         TypeAdapter(RobotSettings).validate_python(valid_config)
 
-    def test_spurious_config(self, valid_config: Dict[str, str]) -> None:
+    def test_spurious_config(self, valid_config: dict[str, str]) -> None:
         """Test that an error is thrown when a spurious field is present."""
         valid_config["bees"] = "yes"
         with pytest.raises(ValidationError) as e:
@@ -79,7 +78,7 @@ class TestUserSettingsValidation:
     def test_error_when_required_field_missing(
         self,
         field: str,
-        valid_config: Dict[str, str],
+        valid_config: dict[str, str],
     ) -> None:
         """Test that an error is raised when a required field is missing."""
         del valid_config[field]
@@ -100,8 +99,8 @@ class TestUserSettingsValidation:
     def test_no_error_when_optional_field_missing(
         self,
         field: str,
-        default_val: Union[str, bool],
-        valid_config: Dict[str, str],
+        default_val: str | bool,  # noqa: FBT001
+        valid_config: dict[str, str],
     ) -> None:
         """Test that we allow optional fields to be missing."""
         del valid_config[field]
@@ -127,7 +126,7 @@ class TestUserSettingsValidation:
         self,
         tla: str,
         expected_tla: str,
-        valid_config: Dict[str, str],
+        valid_config: dict[str, str],
     ) -> None:
         """Test that valid team TLAs are accepted."""
         valid_config["team_tla"] = tla
@@ -157,7 +156,7 @@ class TestUserSettingsValidation:
         self,
         tla: str,
         expected_error: str,
-        valid_config: Dict[str, str],
+        valid_config: dict[str, str],
     ) -> None:
         """Test that an invalid TLA is rejected."""
         valid_config["team_tla"] = tla
@@ -172,7 +171,7 @@ class TestUserSettingsValidation:
     def test_valid_psk_are_accepted(
         self,
         psk: str,
-        valid_config: Dict[str, str],
+        valid_config: dict[str, str],
     ) -> None:
         """Test that we accept valid wifi PSKs."""
         valid_config["wifi_psk"] = psk
@@ -205,7 +204,7 @@ class TestUserSettingsValidation:
         self,
         psk: str,
         expected_error: str,
-        valid_config: Dict[str, str],
+        valid_config: dict[str, str],
     ) -> None:
         """Test that an invalid WiFi PSK is rejected."""
         valid_config["wifi_psk"] = psk
@@ -228,7 +227,7 @@ class TestUserSettingsValidation:
     def test_valid_usercode_entrypoint_are_accepted(
         self,
         entrypoint: str,
-        valid_config: Dict[str, str],
+        valid_config: dict[str, str],
     ) -> None:
         """Test that we accept valid usercode entrypoints."""
         valid_config["usercode_entrypoint"] = entrypoint
@@ -254,7 +253,7 @@ class TestUserSettingsValidation:
         self,
         entrypoint: str,
         expected_error: str,
-        valid_config: Dict[str, str],
+        valid_config: dict[str, str],
     ) -> None:
         """Test that an invalid usercode entrypoint is rejected."""
         valid_config["usercode_entrypoint"] = entrypoint
