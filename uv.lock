@@ -28,10 +28,14 @@ dependencies = [
     { name = "click" },
     { name = "dbus-next" },
     { name = "gmqtt" },
+    { name = "myst-parser" },
     { name = "pydantic" },
     { name = "pytest-asyncio" },
     { name = "pytest-cov" },
     { name = "ruff" },
+    { name = "sphinx" },
+    { name = "sphinx-autodoc-typehints" },
+    { name = "sphinx-rtd-theme" },
     { name = "tomli-w" },
     { name = "uvloop" },
 ]
@@ -61,10 +65,14 @@ requires-dist = [
     { name = "click", specifier = "==8.3.1" },
     { name = "dbus-next", specifier = ">=0.2.3,<0.3" },
     { name = "gmqtt", specifier = ">=0.7.0" },
+    { name = "myst-parser", specifier = ">=4.0.1" },
     { name = "pydantic", specifier = "==2.12.5" },
     { name = "pytest-asyncio", specifier = "==1.3.0" },
     { name = "pytest-cov", specifier = "==7.0.0" },
     { name = "ruff", specifier = "==0.14.10" },
+    { name = "sphinx", specifier = "==7.1.2" },
+    { name = "sphinx-autodoc-typehints", specifier = "==1.25.3" },
+    { name = "sphinx-rtd-theme", specifier = "==3.1.0" },
     { name = "tomli-w", specifier = ">=1.2.0" },
     { name = "uvloop", specifier = "==0.22.1" },
 ]
@@ -301,15 +309,27 @@ wheels = [
 
 [[package]]
 name = "m2r2"
-version = "0.3.3.post2"
+version = "0.3.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "docutils" },
     { name = "mistune" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ee/09/fe73f1739c727ba119cbd67c43b65316af56e55f5501ba601c79dd7ba080/m2r2-0.3.3.post2.tar.gz", hash = "sha256:e62bcb0e74b3ce19cda0737a0556b04cf4a43b785072fcef474558f2c1482ca8", size = 17005, upload-time = "2023-01-30T03:41:43.85Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/26/a9/ab03ff21972cfb2e6ea766b1dc015c2c081af70f8f956806e948c62044ba/m2r2-0.3.4.tar.gz", hash = "sha256:e278f5f337e9aa7b2080fcc3e94b051bda9615b02e36c6fb3f23ff019872f043", size = 17082, upload-time = "2025-05-01T16:55:53.244Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/57/57/164112275965de407680ac176f96434d02329539438324c0ab8084df0343/m2r2-0.3.3.post2-py3-none-any.whl", hash = "sha256:86157721eb6eabcd54d4eea7195890cc58fa6188b8d0abea633383cfbb5e11e3", size = 11207, upload-time = "2023-01-30T03:41:42.176Z" },
+    { url = "https://files.pythonhosted.org/packages/a9/50/5b1d70de548fb1e11e15ea9ebec0480365462d202f98b66ad7e154284327/m2r2-0.3.4-py3-none-any.whl", hash = "sha256:1a445514af8a229496bfb1380c52da8dd38313e48600359ee92b2c9d2e4df34a", size = 11199, upload-time = "2025-05-01T16:55:51.87Z" },
+]
+
+[[package]]
+name = "markdown-it-py"
+version = "3.0.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "mdurl" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/38/71/3b932df36c1a044d397a1f92d1cf91ee0a503d91e470cbd670aa66b07ed0/markdown-it-py-3.0.0.tar.gz", hash = "sha256:e3f60a94fa066dc52ec76661e37c851cb232d92f9886b15cb560aaada2df8feb", size = 74596, upload-time = "2023-06-03T06:41:14.443Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/42/d7/1ec15b46af6af88f19b8e5ffea08fa375d433c998b8a7639e76935c14f1f/markdown_it_py-3.0.0-py3-none-any.whl", hash = "sha256:355216845c60bd96232cd8d8c40e8f9765cc86f46880e43a8fd22dc1a1a8cab1", size = 87528, upload-time = "2023-06-03T06:41:11.019Z" },
 ]
 
 [[package]]
@@ -319,12 +339,50 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/95/7e/68018b70268fb4a2a605e2be44ab7b4dd7ce7808adae6c5ef32e34f4b55a/MarkupSafe-2.1.2.tar.gz", hash = "sha256:abcabc8c2b26036d62d4c746381a6f7cf60aafcc653198ad678306986b09450d", size = 19080, upload-time = "2023-01-17T18:23:59.903Z" }
 
 [[package]]
+name = "mdit-py-plugins"
+version = "0.5.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "markdown-it-py" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/b2/fd/a756d36c0bfba5f6e39a1cdbdbfdd448dc02692467d83816dff4592a1ebc/mdit_py_plugins-0.5.0.tar.gz", hash = "sha256:f4918cb50119f50446560513a8e311d574ff6aaed72606ddae6d35716fe809c6", size = 44655, upload-time = "2025-08-11T07:25:49.083Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/fb/86/dd6e5db36df29e76c7a7699123569a4a18c1623ce68d826ed96c62643cae/mdit_py_plugins-0.5.0-py3-none-any.whl", hash = "sha256:07a08422fc1936a5d26d146759e9155ea466e842f5ab2f7d2266dd084c8dab1f", size = 57205, upload-time = "2025-08-11T07:25:47.597Z" },
+]
+
+[[package]]
+name = "mdurl"
+version = "0.1.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/d6/54/cfe61301667036ec958cb99bd3efefba235e65cdeb9c84d24a8293ba1d90/mdurl-0.1.2.tar.gz", hash = "sha256:bb413d29f5eea38f31dd4754dd7377d4465116fb207585f97bf925588687c1ba", size = 8729, upload-time = "2022-08-14T12:40:10.846Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b3/38/89ba8ad64ae25be8de66a6d463314cf1eb366222074cfda9ee839c56a4b4/mdurl-0.1.2-py3-none-any.whl", hash = "sha256:84008a41e51615a49fc9966191ff91509e3c40b939176e643fd50a5c2196b8f8", size = 9979, upload-time = "2022-08-14T12:40:09.779Z" },
+]
+
+[[package]]
 name = "mistune"
 version = "0.8.4"
 source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/2d/a4/509f6e7783ddd35482feda27bc7f72e65b5e7dc910eca4ab2164daf9c577/mistune-0.8.4.tar.gz", hash = "sha256:59a3429db53c50b5c6bcc8a07f8848cb00d7dc8bdb431a4ab41920d201d4756e", size = 58322, upload-time = "2018-10-11T06:59:27.908Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/09/ec/4b43dae793655b7d8a25f76119624350b4d65eb663459eb9603d7f1f0345/mistune-0.8.4-py2.py3-none-any.whl", hash = "sha256:88a1051873018da288eee8538d476dffe1262495144b33ecb586c4ab266bb8d4", size = 16220, upload-time = "2018-10-11T06:59:26.044Z" },
+]
+
+[[package]]
+name = "myst-parser"
+version = "4.0.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "docutils" },
+    { name = "jinja2" },
+    { name = "markdown-it-py" },
+    { name = "mdit-py-plugins" },
+    { name = "pyyaml" },
+    { name = "sphinx" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/66/a5/9626ba4f73555b3735ad86247a8077d4603aa8628537687c839ab08bfe44/myst_parser-4.0.1.tar.gz", hash = "sha256:5cfea715e4f3574138aecbf7d54132296bfd72bb614d31168f48c477a830a7c4", size = 93985, upload-time = "2025-02-12T10:53:03.833Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/5f/df/76d0321c3797b54b60fef9ec3bd6f4cfd124b9e422182156a1dd418722cf/myst_parser-4.0.1-py3-none-any.whl", hash = "sha256:9134e88959ec3b5780aedf8a99680ea242869d012e8821db3126d427edc9c95d", size = 84579, upload-time = "2025-02-12T10:53:02.078Z" },
 ]
 
 [[package]]
@@ -588,7 +646,7 @@ wheels = [
 
 [[package]]
 name = "sphinx"
-version = "6.1.3"
+version = "7.1.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "alabaster" },
@@ -608,9 +666,9 @@ dependencies = [
     { name = "sphinxcontrib-qthelp" },
     { name = "sphinxcontrib-serializinghtml" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/db/0b/a0f60c4abd8a69bd5b0d20edde8a8d8d9d4ca825bbd920d328d248fd0290/Sphinx-6.1.3.tar.gz", hash = "sha256:0dac3b698538ffef41716cf97ba26c1c7788dba73ce6f150c1ff5b4720786dd2", size = 6663266, upload-time = "2023-01-10T15:58:38.349Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/dc/01/688bdf9282241dca09fe6e3a1110eda399fa9b10d0672db609e37c2e7a39/sphinx-7.1.2.tar.gz", hash = "sha256:780f4d32f1d7d1126576e0e5ecc19dc32ab76cd24e950228dcf7b1f6d3d9e22f", size = 6828258, upload-time = "2023-08-02T02:06:09.375Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/2e/2c/22a20486cad91a66f4f70bd88c20c8bb306ae719cbba93d7debae7efa80d/sphinx-6.1.3-py3-none-any.whl", hash = "sha256:807d1cb3d6be87eb78a381c3e70ebd8d346b9a25f3753e9947e866b2786865fc", size = 3027954, upload-time = "2023-01-10T15:58:34.907Z" },
+    { url = "https://files.pythonhosted.org/packages/48/17/325cf6a257d84751a48ae90752b3d8fe0be8f9535b6253add61c49d0d9bc/sphinx-7.1.2-py3-none-any.whl", hash = "sha256:d170a81825b2fcacb6dfd5a0d7f578a053e45d3f2b153fecc948c37344eb4cbe", size = 3169543, upload-time = "2023-08-02T02:06:06.816Z" },
 ]
 
 [[package]]
@@ -629,14 +687,14 @@ wheels = [
 
 [[package]]
 name = "sphinx-autodoc-typehints"
-version = "1.22"
+version = "1.25.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "sphinx" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/9c/fe/3f7b14afe895f6d3abb168d451c785527489b24cad21c765a59d0f4f4f74/sphinx_autodoc_typehints-1.22.tar.gz", hash = "sha256:71fca2d5eee9b034204e4c686ab20b4d8f5eb9409396216bcae6c87c38e18ea6", size = 35474, upload-time = "2023-01-30T23:09:26.916Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/a1/19/1131e37f815864efbdb6498cc41f5ce3da82b7e952456900968132c7dcba/sphinx_autodoc_typehints-1.25.3.tar.gz", hash = "sha256:70db10b391acf4e772019765991d2de0ff30ec0899b9ba137706dc0b3c4835e0", size = 37709, upload-time = "2024-01-26T14:57:07.564Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/bd/c7/b0420587d02468ca65669f9084f1c69f07cce14c115dc843c3c76a5fd62a/sphinx_autodoc_typehints-1.22-py3-none-any.whl", hash = "sha256:ef4a8b9d52de66065aa7d3adfabf5a436feb8a2eff07c2ddc31625d8807f2b69", size = 17826, upload-time = "2023-01-30T23:09:25.354Z" },
+    { url = "https://files.pythonhosted.org/packages/ba/d3/8c375e2a6ce21c29021d413e5ebb4d285431acd209f82b89101f157d4b9b/sphinx_autodoc_typehints-1.25.3-py3-none-any.whl", hash = "sha256:d3da7fa9a9761eff6ff09f8b1956ae3090a2d4f4ad54aebcade8e458d6340835", size = 19239, upload-time = "2024-01-26T14:57:05.542Z" },
 ]
 
 [[package]]
@@ -680,14 +738,16 @@ wheels = [
 
 [[package]]
 name = "sphinx-rtd-theme"
-version = "0.5.1"
+version = "3.1.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
+    { name = "docutils" },
     { name = "sphinx" },
+    { name = "sphinxcontrib-jquery" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/4e/e5/0d55470572e0a0934c600c4cda0c98209883aaeb45ff6bfbadcda7006255/sphinx_rtd_theme-0.5.1.tar.gz", hash = "sha256:eda689eda0c7301a80cf122dad28b1861e5605cbf455558f3775e1e8200e83a5", size = 2774928, upload-time = "2021-01-04T22:57:24.103Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/84/68/a1bfbf38c0f7bccc9b10bbf76b94606f64acb1552ae394f0b8285bfaea25/sphinx_rtd_theme-3.1.0.tar.gz", hash = "sha256:b44276f2c276e909239a4f6c955aa667aaafeb78597923b1c60babc76db78e4c", size = 7620915, upload-time = "2026-01-12T16:03:31.17Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/76/81/d5af3a50a45ee4311ac2dac5b599d69f68388401c7a4ca902e0e450a9f94/sphinx_rtd_theme-0.5.1-py2.py3-none-any.whl", hash = "sha256:fa6bebd5ab9a73da8e102509a86f3fcc36dec04a0b52ea80e5a033b2aba00113", size = 2793140, upload-time = "2021-01-04T22:57:15.177Z" },
+    { url = "https://files.pythonhosted.org/packages/87/c7/b5c8015d823bfda1a346adb2c634a2101d50bb75d421eb6dcb31acd25ebc/sphinx_rtd_theme-3.1.0-py2.py3-none-any.whl", hash = "sha256:1785824ae8e6632060490f67cf3a72d404a85d2d9fc26bce3619944de5682b89", size = 7655617, upload-time = "2026-01-12T16:03:28.101Z" },
 ]
 
 [[package]]
@@ -715,6 +775,18 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/b3/47/64cff68ea3aa450c373301e5bebfbb9fce0a3e70aca245fcadd4af06cd75/sphinxcontrib-htmlhelp-2.0.1.tar.gz", hash = "sha256:0cbdd302815330058422b98a113195c9249825d681e18f11e8b1f78a2f11efff", size = 27967, upload-time = "2023-01-31T17:29:20.935Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/6e/ee/a1f5e39046cbb5f8bc8fba87d1ddf1c6643fbc9194e58d26e606de4b9074/sphinxcontrib_htmlhelp-2.0.1-py3-none-any.whl", hash = "sha256:c38cb46dccf316c79de6e5515e1770414b797162b23cd3d06e67020e1d2a6903", size = 99833, upload-time = "2023-01-31T17:29:18.489Z" },
+]
+
+[[package]]
+name = "sphinxcontrib-jquery"
+version = "4.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "sphinx" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/de/f3/aa67467e051df70a6330fe7770894b3e4f09436dea6881ae0b4f3d87cad8/sphinxcontrib-jquery-4.1.tar.gz", hash = "sha256:1620739f04e36a2c779f1a131a2dfd49b2fd07351bf1968ced074365933abc7a", size = 122331, upload-time = "2023-03-14T15:01:01.944Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/76/85/749bd22d1a68db7291c89e2ebca53f4306c3f205853cf31e9de279034c3c/sphinxcontrib_jquery-4.1-py2.py3-none-any.whl", hash = "sha256:f936030d7d0147dd026a4f2b5a57343d233f1fc7b363f68b3d4f1cb0993878ae", size = 121104, upload-time = "2023-03-14T15:01:00.356Z" },
 ]
 
 [[package]]

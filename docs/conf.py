@@ -1,5 +1,3 @@
-from typing import List
-
 import astoria
 
 project = "Astoria"
@@ -20,10 +18,10 @@ extensions = [
     "sphinx_rtd_theme",
     "sphinx-pydantic",
     "sphinx_click",
-    "m2r2",
+    "myst_parser",
 ]
 
-templates_path = []  # type: List[str]
+templates_path: list[str] = []
 
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
@@ -33,7 +31,7 @@ intersphinx_mapping = {
 
 html_theme = "sphinx_rtd_theme"
 
-html_static_path = []  # type: List[str]
+html_static_path: list[str] = []
 
 autodoc_default_options = {
     "member-order": "alphabetical",
