@@ -1,5 +1,4 @@
 """Command base for astctl."""
-
 from abc import abstractmethod
 from json import JSONDecodeError, loads
 from re import Match

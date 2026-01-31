@@ -1,10 +1,8 @@
 """Disk Manager Application."""
 
-import asyncio
 import logging
 
 import click
-import uvloop
 
 from .disk_manager import DiskManager
 
@@ -16,9 +14,7 @@ LOGGER = logging.getLogger(__name__)
 @click.option("-c", "--config-file", type=click.Path(exists=True))
 def main(*, verbose: bool, config_file: str | None) -> None:
     """Disk Manager Application Entrypoint."""
-    with asyncio.Runner(loop_factory=uvloop.new_event_loop) as runner:
-        diskd = DiskManager(verbose, config_file)
-        runner.run(diskd.run())
+    DiskManager(verbose, config_file).execute()
 
 
 if __name__ == "__main__":

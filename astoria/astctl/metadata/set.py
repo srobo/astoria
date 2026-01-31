@@ -1,9 +1,6 @@
 """Command to set a metadata attribute."""
 
-import asyncio
-
 import click
-import uvloop
 
 from astoria.astctl.command import Command
 from astoria.common.ipc import MetadataSetManagerRequest
@@ -22,9 +19,7 @@ def set(  # noqa: A001
     config_file: str | None,
 ) -> None:
     """Set a metadata attribute."""
-    with asyncio.Runner(loop_factory=uvloop.new_event_loop) as runner:
-        command = SetMetadataCommand(attribute, value, verbose, config_file)
-        runner.run(command.run())
+    SetMetadataCommand(attribute, value, verbose, config_file).execute()
 
 
 class SetMetadataCommand(Command):

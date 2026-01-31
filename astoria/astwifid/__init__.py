@@ -1,9 +1,6 @@
 """Wifi Daemon - Handles Hotspot and WiFi Client connection."""
 
-import asyncio
-
 import click
-import uvloop
 
 from .wifi_manager import WiFiManager
 
@@ -13,9 +10,7 @@ from .wifi_manager import WiFiManager
 @click.option("-c", "--config-file", type=click.Path(exists=True))
 def main(*, verbose: bool, config_file: str | None) -> None:
     """The WiFi Manager Application Entrypoint."""
-    with asyncio.Runner(loop_factory=uvloop.new_event_loop) as runner:
-        wifid = WiFiManager(verbose, config_file)
-        runner.run(wifid.run())
+    WiFiManager(verbose, config_file).execute()
 
 
 if __name__ == "__main__":

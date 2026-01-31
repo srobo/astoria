@@ -1,9 +1,6 @@
 """Command to list information about mounted disks."""
 
-import asyncio
-
 import click
-import uvloop
 
 from astoria.common.ipc import DiskManagerMessage
 
@@ -15,9 +12,7 @@ from .command import SingleManagerMessageCommand
 @click.option("-c", "--config-file", type=click.Path(exists=True))
 def list_disks(*, verbose: bool, config_file: str | None) -> None:
     """List information about mounted disks."""
-    with asyncio.Runner(loop_factory=uvloop.new_event_loop) as runner:
-        command = ListDisksCommand(verbose, config_file)
-        runner.run(command.run())
+    ListDisksCommand(verbose, config_file).execute()
 
 
 class ListDisksCommand(SingleManagerMessageCommand[DiskManagerMessage]):

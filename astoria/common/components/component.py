@@ -14,6 +14,7 @@ from abc import ABCMeta, abstractmethod
 from signal import SIGHUP, SIGINT, SIGTERM
 from types import FrameType
 
+import uvloop
 from pydantic import BaseModel
 
 from astoria import __version__
@@ -141,6 +142,10 @@ class DataComponent(metaclass=ABCMeta):
         if not silent:
             LOGGER.info("Halting")
         self._stop_event.set()
+
+    def execute(self) -> None:
+        with asyncio.Runner(loop_factory=uvloop.new_event_loop) as runner:
+            runner.run(self.run())
 
     @abstractmethod
     async def main(self) -> None:
