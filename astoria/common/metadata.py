@@ -4,8 +4,9 @@ import platform
 import re
 from enum import Enum
 from pathlib import Path
+from typing import ClassVar
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from astoria import __version__
 from astoria.common.config import AstoriaConfig
@@ -25,11 +26,8 @@ class Metadata(BaseModel):
     As the metadata is passed into a templating engine for initial log lines, please do
     not add nested fields to this schema.
     """
+    model_config: ClassVar[ConfigDict] = ConfigDict(validate_assignment=True)
 
-    class Config:
-        """Pydantic config."""
-
-        validate_assignment = True
 
     @classmethod
     def init(cls, config: AstoriaConfig) -> "Metadata":

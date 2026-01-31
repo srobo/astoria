@@ -5,8 +5,9 @@ import re
 import secrets
 import tomllib
 from pathlib import Path
+from typing import ClassVar
 
-from pydantic import BaseModel, TypeAdapter, ValidationError, field_validator
+from pydantic import BaseModel, ConfigDict, TypeAdapter, ValidationError, field_validator
 
 from astoria.common.config import AstoriaConfig
 
@@ -42,11 +43,8 @@ class RobotSettings(BaseModel):
     wifi_psk: str
     wifi_region: str = "GB"  # Assume GB as that is where most competitors are.
     wifi_enabled: bool = True
+    model_config: ClassVar[ConfigDict] = ConfigDict(extra="forbid")
 
-    class Config:
-        """Pydantic config."""
-
-        extra = "forbid"
 
     @field_validator("team_tla")
     @classmethod

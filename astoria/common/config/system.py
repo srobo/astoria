@@ -6,9 +6,9 @@ Common to all components.
 
 import tomllib
 from pathlib import Path
-from typing import BinaryIO
+from typing import BinaryIO, ClassVar
 
-from pydantic import BaseModel, TypeAdapter
+from pydantic import BaseModel, ConfigDict, TypeAdapter
 
 
 class MQTTBrokerInfo(BaseModel):
@@ -19,11 +19,7 @@ class MQTTBrokerInfo(BaseModel):
     enable_tls: bool = False
     topic_prefix: str = "astoria"
     force_protocol_version_3_1: bool = False
-
-    class Config:
-        """Pydantic config."""
-
-        extra = "forbid"
+    model_config: ClassVar[ConfigDict] = ConfigDict(extra="forbid")
 
 
 class WiFiInfo(BaseModel):
@@ -32,11 +28,7 @@ class WiFiInfo(BaseModel):
     interface: str
     bridge: str
     enable_wpa3: bool
-
-    class Config:
-        """Pydantic config."""
-
-        extra = "forbid"
+    model_config: ClassVar[ConfigDict] = ConfigDict(extra="forbid")
 
 
 class SystemInfo(BaseModel):
@@ -44,11 +36,7 @@ class SystemInfo(BaseModel):
 
     cache_dir: Path
     initial_log_lines: list[str] = []
-
-    class Config:
-        """Pydantic config."""
-
-        extra = "forbid"
+    model_config: ClassVar[ConfigDict] = ConfigDict(extra="forbid")
 
 
 class DiskManagerInfo(BaseModel):
@@ -78,11 +66,7 @@ class AstoriaConfig(BaseModel):
     astprocd: ProcessManagerInfo = ProcessManagerInfo()  # Optional section
     system: SystemInfo
     env: dict[str, str] = {}
-
-    class Config:
-        """Pydantic config."""
-
-        extra = "forbid"
+    model_config: ClassVar[ConfigDict] = ConfigDict(extra="forbid")
 
     @classmethod
     def _get_config_path(cls, config_str: str | None = None) -> Path:
