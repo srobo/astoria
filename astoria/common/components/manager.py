@@ -6,7 +6,7 @@ from collections.abc import Callable, Coroutine
 from re import Match
 from typing import TypeVar
 
-from pydantic import TypeAdapter, ValidationError
+from pydantic import PydanticUserError, TypeAdapter, ValidationError
 
 from astoria.common.ipc import ManagerMessage, ManagerRequest, RequestResponse
 
@@ -79,7 +79,7 @@ class StateManager[T: ManagerMessage](DataComponent, metaclass=ABCMeta):
                     f"request/{name}/{req.uuid}",
                     response,
                 )
-            except Exception:  # noqa: BLE001
+            except PydanticUserError:
                 LOGGER.warning(
                     f"Received {name} request, but unable to decode JSON: {payload}",
                 )

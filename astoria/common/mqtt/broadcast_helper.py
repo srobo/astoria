@@ -5,7 +5,7 @@ from asyncio import PriorityQueue
 from re import Match
 from typing import TYPE_CHECKING, Any, TypeVar
 
-from pydantic import TypeAdapter
+from pydantic import TypeAdapter, ValidationError
 
 from astoria.common.ipc import BroadcastEvent
 
@@ -49,7 +49,7 @@ class BroadcastHelper[T: BroadcastEvent]:
                 f"Received {ev.event_name} broadcast event from {ev.sender_name}",
             )
             await self._event_queue.put(ev)
-        except Exception:  # noqa: BLE001
+        except ValidationError:
             LOGGER.warning(f"Broadcast event {self._name} contained invalid JSON")
 
     def send(self, **kwargs: Any) -> None:  # type: ignore
