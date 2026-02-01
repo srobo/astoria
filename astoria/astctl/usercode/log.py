@@ -3,7 +3,6 @@
 import asyncio
 
 import click
-import uvloop
 
 from astoria.astctl.command import Command
 from astoria.common.ipc import UsercodeLogBroadcastEvent
@@ -15,9 +14,7 @@ from astoria.common.mqtt import BroadcastHelper
 @click.option("-c", "--config-file", type=click.Path(exists=True))
 def log(*, verbose: bool, config_file: str | None) -> None:
     """View usercode logs in real-time."""
-    with asyncio.Runner(loop_factory=uvloop.new_event_loop) as runner:
-        command = ViewUsercodeLogCommand(verbose, config_file)
-        runner.run(command.run())
+    ViewUsercodeLogCommand(verbose, config_file).execute()
 
 
 class ViewUsercodeLogCommand(Command):

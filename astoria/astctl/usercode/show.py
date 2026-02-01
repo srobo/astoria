@@ -1,9 +1,6 @@
 """Command to show usercode info."""
 
-import asyncio
-
 import click
-import uvloop
 
 from astoria.astctl.command import SingleManagerMessageCommand
 from astoria.common.ipc import ProcessManagerMessage
@@ -14,9 +11,7 @@ from astoria.common.ipc import ProcessManagerMessage
 @click.option("-c", "--config-file", type=click.Path(exists=True))
 def show(*, verbose: bool, config_file: str | None) -> None:
     """Show current usercode."""
-    with asyncio.Runner(loop_factory=uvloop.new_event_loop) as runner:
-        command = ShowUsercodeCommand(verbose, config_file)
-        runner.run(command.run())
+    ShowUsercodeCommand(verbose, config_file).execute()
 
 
 class ShowUsercodeCommand(SingleManagerMessageCommand[ProcessManagerMessage]):
