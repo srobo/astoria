@@ -44,4 +44,6 @@ class MetadataHandlerMixin:
 
         :param metadata: The metadata included in the update.
         """
-        LOGGER.debug(f"Received new metadata: {metadata.model_dump_json()}")
+        if LOGGER.getEffectiveLevel() == logging.DEBUG:
+            # ∴ we don't needlessly generate the JSON if it's not being logged
+            LOGGER.debug(f"Received new metadata: {metadata.model_dump_json()}")
