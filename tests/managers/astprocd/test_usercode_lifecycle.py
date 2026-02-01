@@ -395,8 +395,7 @@ async def test_run_with_valid_python_wait_kill() -> None:
     log_file = EXECUTE_CODE_DATA / "valid_python_long" / "log.txt"
 
     # Make sure it's had time to exit the script and finish writing the log to disk
-    if ucl._process is not None:
-        await ucl._process.wait()
+    await asyncio.sleep(.275)
 
     with ReadAndCleanupFile(log_file) as fh:
         lines = fh.read().splitlines()
