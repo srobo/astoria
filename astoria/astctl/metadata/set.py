@@ -1,13 +1,9 @@
 """Command to set a metadata attribute."""
-import asyncio
-from typing import Optional
 
 import click
 
 from astoria.astctl.command import Command
 from astoria.common.ipc import MetadataSetManagerRequest
-
-loop = asyncio.get_event_loop()
 
 
 @click.command("set")
@@ -20,11 +16,10 @@ def set(  # noqa: A001
     value: str,
     *,
     verbose: bool,
-    config_file: Optional[str],
+    config_file: str | None,
 ) -> None:
     """Set a metadata attribute."""
-    command = SetMetadataCommand(attribute, value, verbose, config_file)
-    loop.run_until_complete(command.run())
+    SetMetadataCommand(attribute, value, verbose, config_file).execute()
 
 
 class SetMetadataCommand(Command):
@@ -37,7 +32,7 @@ class SetMetadataCommand(Command):
         attribute: str,
         value: str,
         verbose: bool,  # noqa: FBT001
-        config_file: Optional[str],
+        config_file: str | None,
     ) -> None:
         super().__init__(verbose, config_file)
         self._attr = attribute

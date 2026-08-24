@@ -3,6 +3,7 @@ USB Constraint.
 
 Defines a set of parameters that a USB / Folder can conform to.
 """
+
 from abc import ABCMeta, abstractmethod
 from pathlib import Path
 
@@ -178,11 +179,11 @@ class TrueConstraint(Constraint):
     Useful to create a default value when matching disks in order.
     """
 
-    def matches(self, _: Path) -> bool:
+    def matches(self, path: Path) -> bool:
         """
         Determine if the disk at the given path matches the constraint.
 
-        :param _: path to the mount point of the disk. Not used.
+        :param path: path to the mount point of the disk. Not used.
         """
         return True
 
@@ -193,11 +194,11 @@ class TrueConstraint(Constraint):
 class FalseConstraint(Constraint):
     """A constraint that is always false."""
 
-    def matches(self, _: Path) -> bool:
+    def matches(self, path: Path) -> bool:
         """
         Determine if the disk at the given path matches the constraint.
 
-        :param _: path to the mount point of the disk. Not used.
+        :param path: path to the mount point of the disk. Not used.
         """
         return False
 

@@ -1,10 +1,11 @@
 """Helper class to manage broadcast events."""
+
 import logging
 from asyncio import PriorityQueue
-from json import JSONDecodeError, loads
-from typing import TYPE_CHECKING, Any, Generic, Match, Type, TypeVar
+from re import Match
+from typing import TYPE_CHECKING, Any, TypeVar
 
-from pydantic import parse_obj_as
+from pydantic import TypeAdapter, ValidationError
 
 from astoria.common.ipc import BroadcastEvent
 
@@ -16,10 +17,10 @@ LOGGER = logging.getLogger(__name__)
 T = TypeVar("T", bound=BroadcastEvent)
 
 
-class BroadcastHelper(Generic[T]):
+class BroadcastHelper[T: BroadcastEvent]:
     """Helper class to manager broadcast events."""
 
-    def __init__(self, mqtt: "MQTTWrapper", name: str, schema: Type[T]) -> None:
+    def __init__(self, mqtt: "MQTTWrapper", name: str, schema: type[T]) -> None:
         self._mqtt = mqtt
         self._name = name
         self._schema = schema
@@ -28,7 +29,7 @@ class BroadcastHelper(Generic[T]):
         self._mqtt.subscribe(f"broadcast/{name}", self._handle_broadcast)
 
     @classmethod
-    def get_helper(cls, mqtt: "MQTTWrapper", schema: Type[T]) -> "BroadcastHelper[T]":
+    def get_helper(cls, mqtt: "MQTTWrapper", schema: type[T]) -> "BroadcastHelper[T]":
         """Get the broadcast helper for a given event."""
         return BroadcastHelper[T](mqtt, schema.name, schema)
 
@@ -43,12 +44,12 @@ class BroadcastHelper(Generic[T]):
         Inserts the event inserts it into the priority queue.
         """
         try:
-            ev = parse_obj_as(self._schema, loads(payload))
+            ev = TypeAdapter(self._schema).validate_json(payload)
             LOGGER.debug(
                 f"Received {ev.event_name} broadcast event from {ev.sender_name}",
             )
             await self._event_queue.put(ev)
-        except JSONDecodeError:
+        except ValidationError:
             LOGGER.warning(f"Broadcast event {self._name} contained invalid JSON")
 
     def send(self, **kwargs: Any) -> None:  # type: ignore

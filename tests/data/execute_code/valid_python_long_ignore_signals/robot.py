@@ -1,4 +1,5 @@
 """A long, valid Python program that ignores SIGINT."""
+
 import signal
 from time import sleep
 

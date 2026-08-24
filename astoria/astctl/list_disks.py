@@ -1,6 +1,4 @@
 """Command to list information about mounted disks."""
-import asyncio
-from typing import Optional
 
 import click
 
@@ -8,16 +6,13 @@ from astoria.common.ipc import DiskManagerMessage
 
 from .command import SingleManagerMessageCommand
 
-loop = asyncio.get_event_loop()
-
 
 @click.command("list-disks")
 @click.option("-v", "--verbose", is_flag=True)
 @click.option("-c", "--config-file", type=click.Path(exists=True))
-def list_disks(*, verbose: bool, config_file: Optional[str]) -> None:
+def list_disks(*, verbose: bool, config_file: str | None) -> None:
     """List information about mounted disks."""
-    command = ListDisksCommand(verbose, config_file)
-    loop.run_until_complete(command.run())
+    ListDisksCommand(verbose, config_file).execute()
 
 
 class ListDisksCommand(SingleManagerMessageCommand[DiskManagerMessage]):

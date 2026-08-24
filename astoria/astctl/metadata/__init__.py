@@ -1,7 +1,8 @@
 """Commands to interact with metadata."""
+
 import click
 
-from .set import set
+from .set import set  # noqa: A004
 from .show import show
 
 

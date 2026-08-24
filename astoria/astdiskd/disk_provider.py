@@ -1,7 +1,8 @@
 """A provider of disk information."""
 
+from collections.abc import Callable, Coroutine
 from pathlib import Path
-from typing import TYPE_CHECKING, Callable, Coroutine, Dict
+from typing import TYPE_CHECKING
 
 from astoria.common.disks import DiskUUID
 
@@ -25,10 +26,10 @@ class DiskProvider:
         self._disk_manager = disk_manager
         self._notify_coro = notify_coro
 
-        self._disks: Dict[DiskUUID, Path] = {}
+        self._disks: dict[DiskUUID, Path] = {}
 
     @property
-    def disks(self) -> Dict[DiskUUID, Path]:
+    def disks(self) -> dict[DiskUUID, Path]:
         """Currently mounted disks."""
         return self._disks
 

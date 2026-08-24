@@ -3,16 +3,12 @@ System Configuration schema for Astoria.
 
 Common to all components.
 """
-import sys
+
+import tomllib
 from pathlib import Path
-from typing import BinaryIO, Dict, List, Optional
+from typing import BinaryIO, ClassVar
 
-from pydantic import BaseModel, parse_obj_as
-
-if sys.version_info >= (3, 11):
-    import tomllib
-else:
-    import tomli as tomllib
+from pydantic import BaseModel, ConfigDict, TypeAdapter
 
 
 class MQTTBrokerInfo(BaseModel):
@@ -23,11 +19,7 @@ class MQTTBrokerInfo(BaseModel):
     enable_tls: bool = False
     topic_prefix: str = "astoria"
     force_protocol_version_3_1: bool = False
-
-    class Config:
-        """Pydantic config."""
-
-        extra = "forbid"
+    model_config: ClassVar[ConfigDict] = ConfigDict(extra="forbid")
 
 
 class WiFiInfo(BaseModel):
@@ -36,29 +28,21 @@ class WiFiInfo(BaseModel):
     interface: str
     bridge: str
     enable_wpa3: bool
-
-    class Config:
-        """Pydantic config."""
-
-        extra = "forbid"
+    model_config: ClassVar[ConfigDict] = ConfigDict(extra="forbid")
 
 
 class SystemInfo(BaseModel):
     """System settings that don't find elsewhere."""
 
     cache_dir: Path
-    initial_log_lines: List[str] = []
-
-    class Config:
-        """Pydantic config."""
-
-        extra = "forbid"
+    initial_log_lines: list[str] = []
+    model_config: ClassVar[ConfigDict] = ConfigDict(extra="forbid")
 
 
 class DiskManagerInfo(BaseModel):
     """Settings specifically for astdiskd."""
 
-    ignored_mounts: List[Path] = []
+    ignored_mounts: list[Path] = []
 
 
 class ProcessManagerInfo(BaseModel):
@@ -81,15 +65,11 @@ class AstoriaConfig(BaseModel):
     astdiskd: DiskManagerInfo = DiskManagerInfo()  # Optional section
     astprocd: ProcessManagerInfo = ProcessManagerInfo()  # Optional section
     system: SystemInfo
-    env: Dict[str, str] = {}
-
-    class Config:
-        """Pydantic config."""
-
-        extra = "forbid"
+    env: dict[str, str] = {}
+    model_config: ClassVar[ConfigDict] = ConfigDict(extra="forbid")
 
     @classmethod
-    def _get_config_path(cls, config_str: Optional[str] = None) -> Path:
+    def _get_config_path(cls, config_str: str | None = None) -> Path:
         """Check for a config file or search the filesystem for one."""
         if config_str is None:
             for path in CONFIG_SEARCH_PATHS:
@@ -102,7 +82,7 @@ class AstoriaConfig(BaseModel):
         raise FileNotFoundError("Unable to find config file.")
 
     @classmethod
-    def load(cls, config_str: Optional[str] = None) -> "AstoriaConfig":
+    def load(cls, config_str: str | None = None) -> "AstoriaConfig":
         """Load the config."""
         config_path = cls._get_config_path(config_str)
         with config_path.open("rb") as fh:
@@ -111,4 +91,4 @@ class AstoriaConfig(BaseModel):
     @classmethod
     def load_from_file(cls, fh: BinaryIO) -> "AstoriaConfig":
         """Load the config from a file."""
-        return parse_obj_as(cls, tomllib.load(fh))
+        return TypeAdapter(cls).validate_python(tomllib.load(fh))

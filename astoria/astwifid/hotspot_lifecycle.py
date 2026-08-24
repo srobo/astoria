@@ -3,12 +3,13 @@ Astoria WiFi Daemon.
 
 Manages a WiFi hotspot for the robot.
 """
+
 import asyncio
 import logging
 import os
 import signal
 import tempfile
-from typing import IO, Optional
+from typing import IO
 
 from astoria.common.config.system import WiFiInfo
 
@@ -32,8 +33,8 @@ class WiFiHotspotLifeCycle(WiFiLifecycle):
         self._access_point_info = access_point_info
         self._wifi_info = wifi_info
 
-        self._config_file: Optional[IO[bytes]] = None
-        self._proc: Optional[asyncio.subprocess.Process] = None
+        self._config_file: IO[bytes] | None = None
+        self._proc: asyncio.subprocess.Process | None = None
         self._running: bool = False
 
     async def run(self) -> None:
@@ -105,7 +106,7 @@ class WiFiHotspotLifeCycle(WiFiLifecycle):
             self._proc.send_signal(signal.SIGINT)
             try:
                 await asyncio.wait_for(self._proc.communicate(), timeout=5.0)
-            except asyncio.TimeoutError:
+            except TimeoutError:
                 if self._proc is not None:
                     LOGGER.info(f"Sent SIGKILL to pid {self._proc.pid}")
                     self._proc.send_signal(signal.SIGKILL)

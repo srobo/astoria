@@ -1,11 +1,12 @@
 """State Manager base class."""
-import asyncio
+
 import logging
 from abc import ABCMeta, abstractmethod
-from json import JSONDecodeError, loads
-from typing import Callable, Coroutine, Generic, Match, Type, TypeVar
+from collections.abc import Callable, Coroutine
+from re import Match
+from typing import TypeVar
 
-from pydantic import ValidationError, parse_obj_as
+from pydantic import PydanticUserError, TypeAdapter, ValidationError
 
 from astoria.common.ipc import ManagerMessage, ManagerRequest, RequestResponse
 
@@ -13,13 +14,11 @@ from .component import DataComponent
 
 LOGGER = logging.getLogger(__name__)
 
-loop = asyncio.get_event_loop()
-
 T = TypeVar("T", bound=ManagerMessage)
 RequestT = TypeVar("RequestT", bound=ManagerRequest)
 
 
-class StateManager(DataComponent, Generic[T], metaclass=ABCMeta):
+class StateManager[T: ManagerMessage](DataComponent, metaclass=ABCMeta):
     """
     State Manager.
 
@@ -67,20 +66,20 @@ class StateManager(DataComponent, Generic[T], metaclass=ABCMeta):
     def _register_request(
         self,
         name: str,
-        typ: Type[RequestT],
+        typ: type[RequestT],
         handler: Callable[[RequestT], Coroutine[None, None, RequestResponse]],
     ) -> None:
         LOGGER.debug(f"Registering {name} request for {self.name} component")
 
         async def _handler(match: Match[str], payload: str) -> None:
             try:
-                req = parse_obj_as(typ, loads(payload))
+                req = TypeAdapter(typ).validate_json(payload)
                 response = await handler(req)
                 self._mqtt.publish(
                     f"request/{name}/{req.uuid}",
                     response,
                 )
-            except JSONDecodeError:
+            except PydanticUserError:
                 LOGGER.warning(
                     f"Received {name} request, but unable to decode JSON: {payload}",
                 )

@@ -1,4 +1,5 @@
 """Schema definitions for manager requests."""
+
 from pathlib import Path
 from typing import final
 from uuid import UUID, uuid4

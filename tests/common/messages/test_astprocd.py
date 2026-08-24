@@ -1,4 +1,5 @@
 """Tests for astprocd message definitions."""
+
 from pathlib import Path
 
 from astoria import __version__
@@ -23,6 +24,6 @@ def test_proc_manager_fields() -> None:
     )
 
     assert (
-        pmm.json()
-        == f'{{"status": "RUNNING", "astoria_version": "{__version__}", "code_status": "code_running", "disk_info": {{"uuid": "foobar", "mount_path": "/mnt", "disk_type": "NOACTION"}}, "pid": 8335}}'  # noqa: E501
+        pmm.model_dump_json()
+        == f'{{"status":"RUNNING","astoria_version":"{__version__}","code_status":"code_running","disk_info":{{"uuid":"foobar","mount_path":"/mnt","disk_type":"NOACTION"}},"pid":8335}}'  # noqa: E501
     )

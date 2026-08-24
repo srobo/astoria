@@ -1,11 +1,9 @@
 """Lifecycle classes to load metadata from disks."""
 
-import asyncio
 import logging
 from abc import ABCMeta, abstractmethod
 from json import JSONDecodeError, loads
 from pathlib import Path
-from typing import Dict, Optional
 
 import tomli_w
 
@@ -20,8 +18,6 @@ from astoria.common.config import (
 from astoria.common.disks import DiskInfo, DiskUUID
 
 LOGGER = logging.getLogger(__name__)
-
-loop = asyncio.get_event_loop()
 
 
 class AbstractMetadataDiskLifecycle(metaclass=ABCMeta):
@@ -40,12 +36,12 @@ class AbstractMetadataDiskLifecycle(metaclass=ABCMeta):
         self._diff = self.extract_diff_data()
 
     @abstractmethod
-    def extract_diff_data(self) -> Dict[str, str]:
+    def extract_diff_data(self) -> dict[str, str]:
         """Extract the diff data from the disk."""
         raise NotImplementedError
 
     @property
-    def diff_data(self) -> Dict[str, str]:
+    def diff_data(self) -> dict[str, str]:
         """The data to be used as override."""
         return self._diff
 
@@ -53,7 +49,7 @@ class AbstractMetadataDiskLifecycle(metaclass=ABCMeta):
 class MetadataDiskLifecycle(AbstractMetadataDiskLifecycle):
     """Load and validate metadata from a JSON file on the disk."""
 
-    def extract_diff_data(self) -> Dict[str, str]:
+    def extract_diff_data(self) -> dict[str, str]:
         """
         Extract the diff data from the disk.
 
@@ -78,7 +74,7 @@ class UsercodeDiskLifecycle(AbstractMetadataDiskLifecycle):
         self,
         file: Path,
         error: str,
-        config: Optional[bytes] = None,
+        config: bytes | None = None,
     ) -> None:
         """
         Write an error file to the disk.
@@ -106,7 +102,7 @@ class UsercodeDiskLifecycle(AbstractMetadataDiskLifecycle):
         """Generate a new user settings file and write it to the path."""
         settings = RobotSettings.generate_default_settings(self._config)
         with robot_settings_file.open("wb") as fh:
-            tomli_w.dump(settings.dict(), fh)
+            tomli_w.dump(settings.model_dump(), fh)
         return settings
 
     def _load_settings(self) -> RobotSettings:
@@ -140,7 +136,7 @@ class UsercodeDiskLifecycle(AbstractMetadataDiskLifecycle):
 
         return self._regenerate_config(robot_settings_file)
 
-    def extract_diff_data(self) -> Dict[str, str]:
+    def extract_diff_data(self) -> dict[str, str]:
         """
         Extract the diff data from the disk.
 

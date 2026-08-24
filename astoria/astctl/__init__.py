@@ -3,6 +3,7 @@ Astoria command line interface.
 
 Split up into one class per command.
 """
+
 import click
 
 from .list_disks import list_disks

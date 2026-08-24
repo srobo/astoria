@@ -1,4 +1,5 @@
 """Tests for astmetad message definitions."""
+
 from astoria.common.ipc import MetadataManagerMessage
 from astoria.common.metadata import Metadata
 

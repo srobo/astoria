@@ -1,22 +1,17 @@
 """Command to show usercode info."""
-import asyncio
-from typing import Optional
 
 import click
 
 from astoria.astctl.command import SingleManagerMessageCommand
 from astoria.common.ipc import ProcessManagerMessage
 
-loop = asyncio.get_event_loop()
-
 
 @click.command("show")
 @click.option("-v", "--verbose", is_flag=True)
 @click.option("-c", "--config-file", type=click.Path(exists=True))
-def show(*, verbose: bool, config_file: Optional[str]) -> None:
+def show(*, verbose: bool, config_file: str | None) -> None:
     """Show current usercode."""
-    command = ShowUsercodeCommand(verbose, config_file)
-    loop.run_until_complete(command.run())
+    ShowUsercodeCommand(verbose, config_file).execute()
 
 
 class ShowUsercodeCommand(SingleManagerMessageCommand[ProcessManagerMessage]):

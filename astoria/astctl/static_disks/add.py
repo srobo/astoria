@@ -1,24 +1,20 @@
 """Command to add a filesystem path as a static disk."""
-import asyncio
+
 from pathlib import Path
-from typing import Optional
 
 import click
 
 from astoria.astctl.command import Command
 from astoria.common.ipc import AddStaticDiskRequest
 
-loop = asyncio.get_event_loop()
-
 
 @click.command("add")
 @click.argument("path")
 @click.option("-v", "--verbose", is_flag=True)
 @click.option("-c", "--config-file", type=click.Path(exists=True))
-def add(path: str, *, verbose: bool, config_file: Optional[str]) -> None:
+def add(path: str, *, verbose: bool, config_file: str | None) -> None:
     """Mount a filesystem path as a disk."""
-    command = AddStaticDiskCommand(path, verbose, config_file)
-    loop.run_until_complete(command.run())
+    AddStaticDiskCommand(path, verbose, config_file).execute()
 
 
 class AddStaticDiskCommand(Command):
@@ -32,7 +28,7 @@ class AddStaticDiskCommand(Command):
         self,
         path: str,
         verbose: bool,  # noqa: FBT001
-        config_file: Optional[str],
+        config_file: str | None,
     ) -> None:
         super().__init__(verbose, config_file)
         self._path = Path(path).resolve()

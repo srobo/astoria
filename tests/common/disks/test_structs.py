@@ -25,5 +25,6 @@ def test_disk_info_fields() -> None:
     assert info.disk_type == DiskType.NOACTION
 
     assert (
-        info.json() == '{"uuid": "foobar", "mount_path": "/mnt", "disk_type": "NOACTION"}'
+        info.model_dump_json()
+        == '{"uuid":"foobar","mount_path":"/mnt","disk_type":"NOACTION"}'
     )

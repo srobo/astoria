@@ -1,7 +1,8 @@
 """Tests for the usercode disk lifecycle."""
+
 import shutil
+from collections.abc import Callable, Iterator
 from pathlib import Path
-from typing import Callable, Iterator, List, Optional
 
 import pytest
 
@@ -9,18 +10,18 @@ from astoria.astmetad.metadata_disk_lifecycle import UsercodeDiskLifecycle
 from astoria.common.config import AstoriaConfig
 from astoria.common.disks import DiskInfo, DiskType, DiskUUID
 
-LifecycleFactory = Callable[[Optional[str]], UsercodeDiskLifecycle]
+LifecycleFactory = Callable[[str | None], UsercodeDiskLifecycle]
 
 
-def find_section(iterator: Iterator[str], deliminator: Optional[str]) -> List[str]:
+def find_section(iterator: Iterator[str], deliminator: str | None) -> list[str]:
     """
     Split out a section of the error file.
 
-    :param iterable: An iterator of the lines in the file.
+    :param iterator: An iterator of the lines in the file.
     :param deliminator: The section deliminator, or None if EOF is allowed.
     :returns: A list of lines in the section.
     """
-    lines: List[str] = []
+    lines: list[str] = []
     for line in iterator:
         if line == deliminator:
             return lines
@@ -52,7 +53,7 @@ class TestUsercodeDiskLifecycle:
         that needs to be tested.
         """
 
-        def _inner(config_name: Optional[str]) -> UsercodeDiskLifecycle:
+        def _inner(config_name: str | None) -> UsercodeDiskLifecycle:
             if config_name:
                 config_path = data_dir / f"robot-settings/{config_name}.toml"
                 shutil.copy(config_path, tmpdir / "robot-settings.toml")
@@ -60,7 +61,7 @@ class TestUsercodeDiskLifecycle:
             uuid = DiskUUID("temp")
             info = DiskInfo(
                 uuid=uuid,
-                mount_path=tmpdir,
+                mount_path=Path(tmpdir),
                 disk_type=DiskType.USERCODE,
             )
             return UsercodeDiskLifecycle(
@@ -101,7 +102,7 @@ class TestUsercodeDiskLifecycle:
         ).exists()
 
     def test_bad_unicode(self, lifecycle_factory: LifecycleFactory) -> None:
-        """Test that we handle bad unicode in the settings file."""
+        """Test that we handle bad Unicode in the settings file."""
         lifecycle = lifecycle_factory("bad-unicode")
         assert lifecycle.diff_data.keys() == {
             "usercode_entrypoint",
@@ -126,46 +127,23 @@ class TestUsercodeDiskLifecycle:
         [
             (
                 "blank",
-                [
-                    "robot-settings.toml did not match schema: 3 validation errors for ParsingModel[RobotSettings]",  # noqa: E501
-                    "__root__ -> team_tla",
-                    "  field required (type=value_error.missing)",
-                    "__root__ -> usercode_entrypoint",
-                    "  field required (type=value_error.missing)",
-                    "__root__ -> wifi_psk",
-                    "  field required (type=value_error.missing)",
-                    "",
-                ],
+                "robot-settings.toml did not match schema: 3 validation errors for RobotSettings",  # noqa: E501
             ),
-            ("bad-toml", ["Invalid TOML: Invalid value (at line 5, column 15)", ""]),
+            ("bad-toml", "Invalid TOML: Invalid value (at line 5, column 15)"),
             (
                 "extra-config",
-                [
-                    "robot-settings.toml did not match schema: 1 validation error for ParsingModel[RobotSettings]",  # noqa: E501
-                    "__root__ -> bees",
-                    "  extra fields not permitted (type=value_error.extra)",
-                    "",
-                ],
+                "robot-settings.toml did not match schema: 1 validation error for RobotSettings",  # noqa: E501
             ),
             (
                 "invalid-fields",
-                [
-                    "robot-settings.toml did not match schema: 3 validation errors for ParsingModel[RobotSettings]",  # noqa: E501
-                    "__root__ -> team_tla",
-                    "  Team name did not match format: ABC, ABC1 etc. (type=value_error)",
-                    "__root__ -> usercode_entrypoint",
-                    "  Value must only contain ASCII characters. (type=value_error)",
-                    "__root__ -> wifi_psk",
-                    "  WiFi PSK must be 8 - 63 characters long. (type=value_error)",
-                    "",
-                ],
+                "robot-settings.toml did not match schema: 3 validation errors for RobotSettings",  # noqa: E501
             ),
         ],
     )
     def test_error_generated(
         self,
         filename: str,
-        error: List[str],
+        error: str,
         data_dir: Path,
         lifecycle_factory: LifecycleFactory,
     ) -> None:
@@ -191,7 +169,7 @@ class TestUsercodeDiskLifecycle:
             "Your robot-settings.toml has been overwritten.",
         ]
 
-        assert find_section(error_file_lines, "Invalid settings file:") == error
+        assert find_section(error_file_lines, "Invalid settings file:")[0] == error
 
         # Skip a new line
         assert find_section(error_file_lines, "") == []

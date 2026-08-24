@@ -1,4 +1,5 @@
 """Struct definitions for astdiskd."""
+
 from enum import Enum
 from pathlib import Path
 from typing import NewType

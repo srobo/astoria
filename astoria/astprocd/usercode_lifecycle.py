@@ -2,11 +2,12 @@
 
 import asyncio
 import logging
-from datetime import datetime, timedelta, timezone
+from collections.abc import Callable
+from datetime import UTC, datetime, timedelta
 from os import environ
 from signal import SIGKILL, SIGTERM
 from string import Template
-from typing import IO, Callable, Dict, Optional
+from typing import IO
 
 from astoria.common.code_status import CodeStatus
 from astoria.common.config import (
@@ -20,8 +21,6 @@ from astoria.common.metadata import Metadata
 from astoria.common.mqtt import BroadcastHelper
 
 LOGGER = logging.getLogger(__name__)
-
-loop = asyncio.get_event_loop()
 
 
 class UsercodeLifecycle:
@@ -47,7 +46,7 @@ class UsercodeLifecycle:
         self._config = config
         self._metadata = metadata
 
-        self._process: Optional[asyncio.subprocess.Process] = None
+        self._process: asyncio.subprocess.Process | None = None
         self._process_end_event = asyncio.Event()
         self._process_lock = asyncio.Lock()
 
@@ -65,7 +64,7 @@ class UsercodeLifecycle:
         return self._disk_info
 
     @property
-    def pid(self) -> Optional[int]:
+    def pid(self) -> int | None:
         """Process ID of the usercode process."""
         if self._process and self._process.returncode is None:
             return self._process.pid
@@ -82,6 +81,19 @@ class UsercodeLifecycle:
         self._status = status
         self._status_inform_callback(status)
 
+    def _get_robot_settings(self) -> RobotSettings | None:
+        settings_path = self._disk_info.mount_path / "robot-settings.toml"
+
+        if settings_path.exists():
+            try:
+                return RobotSettings.load_settings_file(settings_path)
+            except RobotSettingsException:
+                # Note: This is theoretically unreachable as we have already
+                # validated the robot settings when determining the disk type.
+                pass
+
+        return None
+
     def _determine_entrypoint(self) -> str:
         """
         Determine the entrypoint for the usercode.
@@ -90,16 +102,9 @@ class UsercodeLifecycle:
 
         :returns: The name of the Python file to execute.
         """
-        settings_path = self._disk_info.mount_path / "robot-settings.toml"
-
-        if settings_path.exists():
-            try:
-                settings = RobotSettings.load_settings_file(settings_path)
-                return settings.usercode_entrypoint
-            except RobotSettingsException:
-                # Note: This is theoretically unreachable as we have already
-                # validated the robot settings when determining the disk type.
-                pass
+        settings = self._get_robot_settings()
+        if settings is not None:
+            return settings.usercode_entrypoint
 
         return self._config.astprocd.default_usercode_entrypoint
 
@@ -112,7 +117,7 @@ class UsercodeLifecycle:
         if self._process is None:
             async with self._process_lock:
                 LOGGER.info(
-                    "Starting usercode execution with " f"entrypoint {self._entrypoint}",
+                    f"Starting usercode execution with entrypoint {self._entrypoint}",
                 )
                 self._process_end_event.clear()
                 self._process = await asyncio.create_subprocess_exec(
@@ -158,8 +163,7 @@ class UsercodeLifecycle:
                     elif rc > 0:
                         self.status = CodeStatus.CRASHED
                     LOGGER.info(
-                        f"Usercode process exited with code {rc} "
-                        f"({self.status.name})",
+                        f"Usercode process exited with code {rc} ({self.status.name})",
                     )
 
                     self._process = None
@@ -179,7 +183,7 @@ class UsercodeLifecycle:
             self._process.send_signal(SIGTERM)
             try:
                 await asyncio.wait_for(self._process_end_event.wait(), timeout=5.0)
-            except asyncio.TimeoutError:
+            except TimeoutError:
                 if self._process is not None:
                     LOGGER.info(f"Sent SIGKILL to pid {self._process.pid}")
                     self._process.send_signal(SIGKILL)
@@ -193,7 +197,7 @@ class UsercodeLifecycle:
 
     async def logger(
         self,
-        proc_outputs: Dict[LogEventSource, asyncio.StreamReader],
+        proc_outputs: dict[LogEventSource, asyncio.StreamReader],
     ) -> None:
         """
         Logger task.
@@ -225,7 +229,7 @@ class UsercodeLifecycle:
             )
 
         async def read_from_stream(
-            outputs: Dict[LogEventSource, asyncio.StreamReader],
+            outputs: dict[LogEventSource, asyncio.StreamReader],
             source: LogEventSource,
             log_line_idx: int,
         ) -> None:
@@ -234,7 +238,7 @@ class UsercodeLifecycle:
             data = await output.readline()
             while data != b"":
                 data_str = data.decode("utf-8", errors="ignore")
-                time_passed = datetime.now(tz=timezone.utc) - start_time
+                time_passed = datetime.now(tz=UTC) - start_time
                 log(fh, f"[{time_passed}] {data_str}", log_line_idx, source)
                 data = await output.readline()
                 log_line_idx += 1
@@ -242,7 +246,7 @@ class UsercodeLifecycle:
         with log_path.open("w") as fh:
             log_line = 0
 
-            start_time = datetime.now(tz=timezone.utc)
+            start_time = datetime.now(tz=UTC)
             time_passed = timedelta(0)
 
             # Print initial lines to the log, if any.
@@ -252,10 +256,26 @@ class UsercodeLifecycle:
 
                 for line in self._config.system.initial_log_lines:
                     template = Template(line)
-                    line_substituted = template.safe_substitute(self._metadata.dict())
+                    line_substituted = template.safe_substitute(
+                        self._metadata.model_dump()
+                    )
                     log(fh, f"[{time_passed}] {line_substituted}\n", log_line)
 
                 log(fh, f"[{time_passed}] ---\n", log_line)
+
+            settings = self._get_robot_settings()
+            if settings and settings.wifi_enabled and settings.team_tla.startswith("ZZZ"):
+                log(
+                    fh,
+                    f"[{time_passed}] Default WiFi network name is in use.\n",
+                    log_line,
+                )
+                log(
+                    fh,
+                    f"[{time_passed}] Please update the TLA in robot-settings.toml to "
+                    f"your team's TLA.\n",
+                    log_line,
+                )
 
             log(fh, f"[{time_passed}] === LOG STARTED ===\n", log_line)
             log_line += 1
@@ -264,5 +284,5 @@ class UsercodeLifecycle:
                 read_from_stream(proc_outputs, LogEventSource.STDOUT, log_line),
                 read_from_stream(proc_outputs, LogEventSource.STDERR, log_line),
             )
-            time_passed = datetime.now(tz=timezone.utc) - start_time
+            time_passed = datetime.now(tz=UTC) - start_time
             log(fh, f"[{time_passed}] === LOG FINISHED ===\n", log_line)

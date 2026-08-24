@@ -1,8 +1,8 @@
 """Communicate with UDisks2 over DBus."""
+
 import asyncio
 import logging
 from pathlib import Path
-from typing import Dict, List
 
 from dbus_next.aio import MessageBus
 from dbus_next.aio.proxy_object import ProxyInterface
@@ -42,7 +42,7 @@ class UdisksConnection(DiskProvider):
 
         await self._detect_initial_disks(udisks_obj_manager)
 
-    def _bytes_to_path(self, data: List[int]) -> Path:
+    def _bytes_to_path(self, data: list[int]) -> Path:
         """Convert a null terminated int array to a path."""
         # Data is null terminated.
         mount_point = data[: len(data) - 1]
@@ -52,7 +52,7 @@ class UdisksConnection(DiskProvider):
 
         return Path(mount_point_str)
 
-    def _disk_signal(self, path: str, data: Dict[str, Dict[str, Variant]]) -> None:
+    def _disk_signal(self, path: str, data: dict[str, dict[str, Variant]]) -> None:
         """
         Handle a disk signal event from UDisks2.
 
@@ -107,7 +107,7 @@ class UdisksConnection(DiskProvider):
                 "org.freedesktop.UDisks2.Filesystem",
             )
 
-            mount_points: List[List[int]] = await drive_filesystem.get_mount_points()
+            mount_points: list[list[int]] = await drive_filesystem.get_mount_points()
 
             try:
                 # We are only interested in the first mountpoint.
@@ -149,7 +149,7 @@ class UdisksConnection(DiskProvider):
 
         # We have no information to tell which disk(s) left.
         # Thus we need to check all of them.
-        removed_disks: List[DiskUUID] = []
+        removed_disks: list[DiskUUID] = []
         for uuid, path in self._disks.items():
             if not path.exists():
                 LOGGER.info(f"Disks {uuid} removed ({path})")
@@ -171,9 +171,9 @@ class UdisksConnection(DiskProvider):
 
         # The block devices are dbus objects managed by Udisks
         # We have to fetch them all unless we already know what they are.
-        managed_objects: Dict[
+        managed_objects: dict[
             str,
-            Dict[str, str],
+            dict[str, str],
         ] = await udisks_obj_manager.call_get_managed_objects()
 
         # Start a mount task for every block device and wait

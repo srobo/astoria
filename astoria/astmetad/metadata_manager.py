@@ -2,7 +2,6 @@
 
 import asyncio
 import logging
-from typing import Dict, List, Optional, Set, Tuple, Type
 
 from pydantic import ValidationError
 
@@ -32,12 +31,17 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
     name = "astmetad"
     dependencies = ["astdiskd"]
 
-    DISK_TYPE_LIFECYCLE_MAP: Dict[DiskType, Type[AbstractMetadataDiskLifecycle]] = {
+    _lifecycles: dict[DiskType, AbstractMetadataDiskLifecycle | None] = {}
+    _cache: MetadataCache
+    _cur_disks: dict[DiskUUID, DiskInfo]
+    _requested_data: dict[str, str]
+
+    DISK_TYPE_LIFECYCLE_MAP: dict[DiskType, type[AbstractMetadataDiskLifecycle]] = {
         DiskType.USERCODE: UsercodeDiskLifecycle,
         DiskType.METADATA: MetadataDiskLifecycle,
     }
 
-    DISK_TYPE_OVERRIDE_MAP: Dict[DiskType, Set[str]] = {
+    DISK_TYPE_OVERRIDE_MAP: dict[DiskType, set[str]] = {
         DiskType.USERCODE: {
             "usercode_entrypoint",
             "wifi_ssid",
@@ -55,22 +59,20 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
         },
     }
 
-    MUTABLE_ATTRS_BY_REQUEST: Set[str] = {"arena", "zone", "mode"}
-    CACHED_ATTRS: Set[str] = {"wifi_ssid", "wifi_psk", "wifi_region"}
+    MUTABLE_ATTRS_BY_REQUEST: set[str] = {"arena", "zone", "mode"}
+    CACHED_ATTRS: set[str] = {"wifi_ssid", "wifi_psk", "wifi_region"}
 
     def _init(self) -> None:
-        self._lifecycles: Dict[DiskType, Optional[AbstractMetadataDiskLifecycle]] = {
-            disk_type: None for disk_type in self.DISK_TYPE_LIFECYCLE_MAP
-        }
+        self._lifecycles = dict.fromkeys(self.DISK_TYPE_LIFECYCLE_MAP)
         self._cache = MetadataCache(
             self.CACHED_ATTRS,
             cache_path=self.config.system.cache_dir / "astmetad-metadata.json",
         )
 
-        self._cur_disks: Dict[DiskUUID, DiskInfo] = {}
+        self._cur_disks = {}
         self._mqtt.subscribe("astdiskd", self.handle_astdiskd_disk_info_message)
 
-        self._requested_data: Dict[str, str] = {}
+        self._requested_data = {}
         self._register_request(
             "mutate",
             MetadataSetManagerRequest,
@@ -106,8 +108,7 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
         for disk_type, lifecycle_class in self.DISK_TYPE_LIFECYCLE_MAP.items():
             if disk_info.disk_type is disk_type:
                 LOGGER.info(
-                    f"{disk_type.name} disk {uuid} is mounted"
-                    f" at {disk_info.mount_path}",
+                    f"{disk_type.name} disk {uuid} is mounted at {disk_info.mount_path}",
                 )
                 if self._lifecycles[disk_type] is None:
                     LOGGER.debug(f"Starting lifecycle for {uuid}")
@@ -118,7 +119,7 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
                     )
                     self.update_status()
                 else:
-                    LOGGER.warn(
+                    LOGGER.warning(
                         "Cannot use metadata, there is already a lifecycle present.",
                     )
 
@@ -194,7 +195,7 @@ class MetadataManager(DiskHandlerMixin, StateManager[MetadataManagerMessage]):
         can be overridden.
         """
         # Metadata sources in priority order.
-        metadata_sources: List[Tuple[Set[str], Dict[str, str]]] = [
+        metadata_sources: list[tuple[set[str], dict[str, str]]] = [
             (self.CACHED_ATTRS, self._cache.data),
             (self.MUTABLE_ATTRS_BY_REQUEST, self._requested_data),
         ]

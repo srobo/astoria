@@ -5,6 +5,7 @@ A data component represents the common functionality between
 State Managers and Consumers. It handles connecting to the broker
 and managing the event loop.
 """
+
 import asyncio
 import logging
 import signal
@@ -12,8 +13,8 @@ import sys
 from abc import ABCMeta, abstractmethod
 from signal import SIGHUP, SIGINT, SIGTERM
 from types import FrameType
-from typing import List, Optional
 
+import uvloop
 from pydantic import BaseModel
 
 from astoria import __version__
@@ -21,8 +22,6 @@ from astoria.common.config import AstoriaConfig
 from astoria.common.mqtt.wrapper import MQTTWrapper
 
 LOGGER = logging.getLogger(__name__)
-
-loop = asyncio.get_event_loop()
 
 
 class DataComponent(metaclass=ABCMeta):
@@ -39,12 +38,12 @@ class DataComponent(metaclass=ABCMeta):
     def __init__(
         self,
         verbose: bool,  # noqa: FBT001
-        config_file: Optional[str],
+        config_file: str | None,
     ) -> None:
         self.config = AstoriaConfig.load(config_file)
+        self._stop_event = asyncio.Event()
 
         self._setup_logging(verbose)
-        self._setup_event_loop()
         self._setup_mqtt()
 
         self._init()
@@ -74,8 +73,8 @@ class DataComponent(metaclass=ABCMeta):
         if welcome_message:
             LOGGER.info(f"{self.name} v{__version__} - {self.__doc__}")
 
-    def _setup_event_loop(self) -> None:
-        self._stop_event = asyncio.Event()
+    async def _setup_signal_handlers(self) -> None:
+        loop = asyncio.get_event_loop()
 
         loop.add_signal_handler(SIGHUP, self.halt)
         loop.add_signal_handler(SIGINT, self.halt)
@@ -112,17 +111,18 @@ class DataComponent(metaclass=ABCMeta):
         raise NotImplementedError
 
     @property
-    def dependencies(self) -> List[str]:
+    def dependencies(self) -> list[str]:
         """State Managers to depend on."""
         return []
 
     @property
-    def last_will(self) -> Optional[BaseModel]:
+    def last_will(self) -> BaseModel | None:
         """Last will and testament of the MQTT client."""
         return None
 
     async def run(self) -> None:
         """Entrypoint for the data component."""
+        await self._setup_signal_handlers()
         await self._pre_connect()
         await self._mqtt.connect()
         await self._post_connect()
@@ -142,6 +142,10 @@ class DataComponent(metaclass=ABCMeta):
         if not silent:
             LOGGER.info("Halting")
         self._stop_event.set()
+
+    def execute(self) -> None:
+        with asyncio.Runner(loop_factory=uvloop.new_event_loop) as runner:
+            runner.run(self.run())
 
     @abstractmethod
     async def main(self) -> None:

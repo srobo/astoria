@@ -1,6 +1,6 @@
 .PHONY: all clean docs docs-serve lint lint-fix type test test-cov
 
-CMD:=poetry run
+CMD:=uv run
 PYMODULE:=astoria
 TESTS:=tests
 EXTRACODE:=docs/_code
@@ -17,15 +17,13 @@ docs-serve:
 	$(CMD) sphinx-autobuild $(SPHINX_ARGS)
 
 lint:
-	$(CMD) ruff $(PYMODULE) $(TESTS) $(EXTRACODE) --exclude $(EXCLUDED_PATHS)
-	$(CMD) black --check $(PYMODULE) $(TESTS) $(EXTRACODE) --exclude $(EXCLUDED_PATHS)
+	$(CMD) ruff check $(PYMODULE) $(TESTS) $(EXTRACODE) --exclude $(EXCLUDED_PATHS)
 
 lint-fix:
-	$(CMD) ruff --fix $(PYMODULE) $(TESTS) $(EXTRACODE) --exclude $(EXCLUDED_PATHS)
-	$(CMD) black $(PYMODULE) $(TESTS) $(EXTRACODE) --exclude $(EXCLUDED_PATHS)
+	$(CMD) ruff check --fix $(PYMODULE) $(TESTS) $(EXTRACODE) --exclude $(EXCLUDED_PATHS)
 
 type:
-	$(CMD) mypy $(PYMODULE) $(TESTS) $(EXTRACODE) --exclude $(EXCLUDED_PATHS)
+	$(CMD) ty check $(PYMODULE) $(TESTS) $(EXTRACODE) --exclude $(EXCLUDED_PATHS)
 
 test:
 	$(CMD) pytest $(PYTEST_FLAGS) --cov=$(PYMODULE) $(TESTS)

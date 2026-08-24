@@ -3,16 +3,11 @@
 import random
 import re
 import secrets
-import sys
+import tomllib
 from pathlib import Path
+from typing import ClassVar
 
-if sys.version_info >= (3, 11):
-    import tomllib
-else:
-    import tomli as tomllib
-
-
-from pydantic import BaseModel, ValidationError, parse_obj_as, validator
+from pydantic import BaseModel, ConfigDict, TypeAdapter, ValidationError, field_validator
 
 from astoria.common.config import AstoriaConfig
 
@@ -48,35 +43,34 @@ class RobotSettings(BaseModel):
     wifi_psk: str
     wifi_region: str = "GB"  # Assume GB as that is where most competitors are.
     wifi_enabled: bool = True
+    model_config: ClassVar[ConfigDict] = ConfigDict(extra="forbid")
 
-    class Config:
-        """Pydantic config."""
 
-        extra = "forbid"
-
-    @validator("team_tla")
-    def validate_team_tla(cls, val: str) -> str:
+    @field_validator("team_tla")
+    @classmethod
+    def validate_team_tla(cls, value: str) -> str:
         """
         Validate the TLA.
 
-        :param val: The received TLA value.
+        :param value: The received TLA value.
         :returns: The TLA value.
         """
-        if val == "beeeeees":
+        if value == "beeeeees":
             return "🐝" * 6
 
-        if not re.match(r"^[A-Z]{3}\d*$", val, re.IGNORECASE):
+        if not re.match(r"^[A-Z]{3}\d*$", value, re.IGNORECASE):
             raise ValueError("Team name did not match format: ABC, ABC1 etc.")
 
-        if len(val.encode()) > MAX_SSID_LENGTH - len(SSID_PREFIX):
+        if len(value.encode()) > MAX_SSID_LENGTH - len(SSID_PREFIX):
             raise ValueError(
-                f"SSID {SSID_PREFIX}{val} is longer than "
+                f"SSID {SSID_PREFIX}{value} is longer than "
                 f"maximum length: {MAX_SSID_LENGTH} octets.",
             )
 
-        return val.upper()
+        return value.upper()
 
-    @validator("usercode_entrypoint", "wifi_psk")
+    @field_validator("usercode_entrypoint", "wifi_psk")
+    @classmethod
     def validate_plain_text(cls, val: str) -> str:
         """Validate that the attributes are plaintext."""
         if not val.isprintable():
@@ -87,7 +81,8 @@ class RobotSettings(BaseModel):
 
         return val
 
-    @validator("usercode_entrypoint")
+    @field_validator("usercode_entrypoint")
+    @classmethod
     def validate_usercode_entrypoint(cls, val: str) -> str:
         """
         Validate that the usercode entrypoint is valid.
@@ -106,7 +101,8 @@ class RobotSettings(BaseModel):
 
         return val
 
-    @validator("wifi_psk")
+    @field_validator("wifi_psk")
+    @classmethod
     def validate_wifi_psk(cls, val: str) -> str:
         """
         Validate that the WiFi PSK is valid.
@@ -122,7 +118,7 @@ class RobotSettings(BaseModel):
     @classmethod
     def generate_default_settings(cls, config: AstoriaConfig) -> "RobotSettings":
         """Generate default sensible settings for the robot."""
-        random_tla = f"ZZZ{random.randint(0, 99999)}"
+        random_tla = f"ZZZ{random.randint(0, 99999)}"  # noqa: S311
 
         # Use random characters for the WiFi password as passphrase schemes
         # such as Diceware are very language specific. This can be changed
@@ -160,7 +156,7 @@ class RobotSettings(BaseModel):
             raise UnreadableRobotSettingsException(f"Unicode Error: {e}") from None
 
         try:
-            return parse_obj_as(RobotSettings, data)
+            return TypeAdapter(RobotSettings).validate_python(data)
         except ValidationError as e:
             raise NoValidRobotSettingsException(
                 f"{path.name} did not match schema: {e}",

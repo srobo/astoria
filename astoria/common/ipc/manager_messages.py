@@ -1,7 +1,7 @@
 """Manager Messages."""
+
 from enum import Enum
 from pathlib import Path
-from typing import Dict, Optional
 
 from pydantic import BaseModel
 
@@ -31,9 +31,9 @@ class ProcessManagerMessage(ManagerMessage):
     Published to astoria/astprocd
     """
 
-    code_status: Optional[CodeStatus]
-    disk_info: Optional[DiskInfo]
-    pid: Optional[int]
+    code_status: CodeStatus | None = None
+    disk_info: DiskInfo | None = None
+    pid: int | None = None
 
 
 class MetadataManagerMessage(ManagerMessage):
@@ -53,12 +53,12 @@ class DiskManagerMessage(ManagerMessage):
     Published to /astoria/astdiskd
     """
 
-    disks: Dict[DiskUUID, Path]
+    disks: dict[DiskUUID, Path]
 
     def calculate_disk_info(
         self,
         default_usercode_entrypoint: str,
-    ) -> Dict[DiskUUID, DiskInfo]:
+    ) -> dict[DiskUUID, DiskInfo]:
         """
         Calculate the disk info of the disks in the message.
 

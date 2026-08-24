@@ -1,13 +1,11 @@
 """State Consumer base class."""
-import asyncio
+
 import logging
 from abc import ABCMeta
 
 from .component import DataComponent
 
 LOGGER = logging.getLogger(__name__)
-
-loop = asyncio.get_event_loop()
 
 
 class StateConsumer(DataComponent, metaclass=ABCMeta):

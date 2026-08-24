@@ -1,4 +1,5 @@
 """Commands for managing static disks."""
+
 import click
 
 from .add import add

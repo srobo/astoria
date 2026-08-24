@@ -1,8 +1,8 @@
 """Tests for DiskHandlerMixin."""
+
 import asyncio
 from pathlib import Path
-from re import match
-from typing import Dict, List, Match, Optional
+from re import Match, match
 
 import pytest
 
@@ -24,7 +24,7 @@ def get_match() -> Match[str]:
         raise RuntimeError("Regex did not match")
 
 
-def get_disk_info_list(names: Optional[List[str]] = None) -> Dict[DiskUUID, DiskInfo]:
+def get_disk_info_list(names: list[str] | None = None) -> dict[DiskUUID, DiskInfo]:
     """
     Construct a list of disk info objects.
 
@@ -35,7 +35,7 @@ def get_disk_info_list(names: Optional[List[str]] = None) -> Dict[DiskUUID, Disk
         names = []
     return {
         DiskUUID(name): DiskInfo(
-            uuid=name,
+            uuid=DiskUUID(name),
             mount_path=Path(),
             disk_type=DiskType.NOACTION,
         )
@@ -43,7 +43,7 @@ def get_disk_info_list(names: Optional[List[str]] = None) -> Dict[DiskUUID, Disk
     }
 
 
-def get_disk_manager_message(names: Optional[List[str]] = None) -> str:
+def get_disk_manager_message(names: list[str] | None = None) -> str:
     """
     Construct a dmm with the named disks.
 
@@ -55,7 +55,7 @@ def get_disk_manager_message(names: Optional[List[str]] = None) -> str:
     return DiskManagerMessage(
         disks={DiskUUID(name): Path() for name in names},
         status=DiskManagerMessage.Status.RUNNING,
-    ).json()
+    ).model_dump_json()
 
 
 class StubHelper(DiskHandlerMixin):

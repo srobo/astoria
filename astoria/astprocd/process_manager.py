@@ -2,7 +2,6 @@
 
 import asyncio
 import logging
-from typing import Dict, Optional
 
 from astoria.common.code_status import CodeStatus
 from astoria.common.components import StateManager
@@ -22,8 +21,6 @@ from .usercode_lifecycle import UsercodeLifecycle
 
 LOGGER = logging.getLogger(__name__)
 
-loop = asyncio.get_event_loop()
-
 
 class ProcessManager(
     DiskHandlerMixin,
@@ -38,8 +35,8 @@ class ProcessManager(
     _recent_metadata: Metadata
 
     def _init(self) -> None:
-        self._lifecycle: Optional[UsercodeLifecycle] = None
-        self._cur_disks: Dict[DiskUUID, DiskInfo] = {}
+        self._lifecycle: UsercodeLifecycle | None = None
+        self._cur_disks: dict[DiskUUID, DiskInfo] = {}
 
         self._mqtt.subscribe("astdiskd", self.handle_astdiskd_disk_info_message)
         self._mqtt.subscribe("astmetad", self.handle_astmetad_message)
@@ -101,7 +98,7 @@ class ProcessManager(
                 )
                 asyncio.ensure_future(self._lifecycle.run_process())
             else:
-                LOGGER.warn(
+                LOGGER.warning(
                     "Cannot run usercode, there is already a lifecycle present.",
                 )
                 with disk_info.mount_path.joinpath("log.txt").open("w") as fh:
@@ -167,7 +164,7 @@ class ProcessManager(
                     success=True,
                 )
 
-    def update_status(self, code_status: Optional[CodeStatus] = None) -> None:
+    def update_status(self, code_status: CodeStatus | None = None) -> None:
         """
         Calculate and update the status of this manager.
 

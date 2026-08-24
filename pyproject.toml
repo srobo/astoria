@@ -1,90 +1,71 @@
-[tool.poetry]
+[project]
 name = "astoria"
 version = "0.11.1"
 description = "Robot Management System for Student Robotics Kit"
 authors = [
-    "Dan Trickey <dtrickey@studentrobotics.org>",
-    "Karina Kwiatek <kkwiatek@studentrobotics.org>",
+    { name = "Dan Trickey", email = "dtrickey@studentrobotics.org" },
+    { name = "Karina Kwiatek", email = "kkwiatek@studentrobotics.org" },
 ]
-license = "MIT"
+requires-python = ">=3.12,<4"
 readme = "README.md"
-repository = "https://github.com/srobo/astoria"
-homepage = "https://github.com/srobo/astoria"
-documentation = "https://srobo.github.io/astoria"
+license = "MIT"
 classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Typing :: Typed",
 ]
+dependencies = [
+    "pydantic==2.12.5",
+    "click==8.3.1",
+    "dbus-next>=0.2.3,<0.3",
+    "gmqtt>=0.7.0",
+    "pytest-asyncio==1.3.0",
+    "pytest-cov==7.0.0",
+    "uvloop==0.22.1",
+    "tomli-w>=1.2.0",
+    "ruff==0.14.10",
+    "sphinx==7.1.2",
+    "sphinx-autodoc-typehints==1.25.3",
+    "sphinx-rtd-theme==3.1.0",
+    "myst-parser>=4.0.1",
+]
 
-[tool.poetry.dependencies]
-python = "^3.8"
-pydantic = "^1.9.1"
-click = "^8.1.2"
-dbus-next = "^0.2.3"
-gmqtt = "^0.6.11"
-tomli = { version = "^2.0.1", python = "<=3.10" }
-tomli-w = "^1.0.0"
+[project.urls]
+Homepage = "https://github.com/srobo/astoria"
+Repository = "https://github.com/srobo/astoria"
+Documentation = "https://srobo.github.io/astoria"
 
-[tool.poetry.dev-dependencies]
-black = "^23"
-mypy = "^1"
-pytest = "*"
-pytest-cov = "*"
-pytest-asyncio = "*"
-rope = "*"
-ruff = "*"
-sphinx = "*"
-sphinx-rtd-theme = "*"
-sphinx_autodoc_typehints = "*"
-sphinx-pydantic = "*"
-sphinx-jsonschema = "*"
-sphinx-autobuild = "*"
-sphinx-click = "*"
-m2r2 = "*"
-types-click = "*"
+[project.scripts]
+astctl = "astoria.astctl:main"
+astdiskd = "astoria.astdiskd:main"
+astmetad = "astoria.astmetad:main"
+astprocd = "astoria.astprocd:main"
+astwifid = "astoria.astwifid:main"
 
-[tool.poetry.scripts]
-astctl = 'astoria.astctl:main'
-astdiskd = 'astoria.astdiskd:main'
-astmetad = 'astoria.astmetad:main'
-astprocd = 'astoria.astprocd:main'
-astwifid = 'astoria.astwifid:main'
+[dependency-groups]
+dev = [
+    "ty>=0.0.6",
+    "pyyaml<5.4",
+    "pytest",
+    "pytest-cov",
+    "pytest-asyncio",
+    "rope",
+    "ruff",
+    "sphinx",
+    "sphinx-rtd-theme",
+    "sphinx_autodoc_typehints",
+    "sphinx-pydantic",
+    "sphinx-jsonschema",
+    "sphinx-autobuild",
+    "sphinx-click",
+    "m2r2",
+    "types-click",
+]
 
-[build-system]
-requires = ["poetry>=1.0"]
-build-backend = "poetry.masonry.api"
-
-[tool.black]
-line-length = 90
-target-version = ['py38']
-
-[tool.mypy]
-mypy_path = "stubs"
-
-warn_unused_ignores = true
-warn_return_any = true
-
-strict_optional = true
-no_implicit_optional = true
-
-disallow_any_unimported = true
-disallow_any_explicit = true
-disallow_subclassing_any = true
-disallow_any_generics = true
-
-disallow_untyped_calls = true
-disallow_untyped_defs = true
-disallow_incomplete_defs = true
-disallow_untyped_decorators = true
-
-check_untyped_defs = true
-
-[[tool.mypy.overrides]]
-module = ["dbus_next.*", "gmqtt.*"]
-disallow_any_explicit = false
+[tool.ty]
+src.include = ["stubs"]
 
 [tool.ruff]
-select = [
+lint.select = [
     "A",
     "ANN",
     "B",
@@ -103,15 +84,23 @@ select = [
     "UP",
     "W",
 ]
-ignore = [
-    "ANN101",  # Missing type annotation for `self` in method
-    "ANN102",  # Missing type annotation for `cls` in classmethod
+lint.ignore = [
     "ANN401",  # Dynamically typed expressions (typing.Any) are disallowed
     "B009",    # Do not call `getattr` with a constant attribute value.
     "B027",    # an empty method in an abstract base class, but has no abstract decorator
+    "COM812",  # Missing trailing comma
     "N805",    # First argument of a method should be named `self`
     "S101",    # S101 Use of `assert` detected
 ]
+exclude = [
+    "tests/data/execute_code"
+]
 
-target-version = "py38"
+target-version = "py312"
 line-length = 90
+
+[tool.uv]
+package = true
+
+[tool.setuptools]
+packages = ["astoria"]

@@ -1,8 +1,8 @@
 """StateManager to manage disks."""
+
 import asyncio
 import logging
 from pathlib import Path
-from typing import List
 
 from astoria.common.components import StateManager
 from astoria.common.ipc import DiskManagerMessage
@@ -20,7 +20,7 @@ class DiskManager(StateManager[DiskManagerMessage]):
     name = "astdiskd"
 
     def _init(self) -> None:
-        self._providers: List[DiskProvider] = [
+        self._providers: list[DiskProvider] = [
             StaticDiskProvider(self, notify_coro=self.update_state),
         ]
 

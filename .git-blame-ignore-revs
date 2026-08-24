@@ -6,3 +6,6 @@
 
 # flake8 + isort -> ruff
 1d060be6488aa0617de66357dd59da153325564d
+
+# ruff update
+d3084f2c0db6b3dbd40e939f2ff01f9c3ded318d

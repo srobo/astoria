@@ -1,9 +1,10 @@
 """Mixin to handle metadata."""
+
 import logging
 from json import JSONDecodeError, loads
-from typing import Match
+from re import Match
 
-from pydantic import ValidationError, parse_obj_as
+from pydantic import TypeAdapter, ValidationError
 
 from astoria.common.config import AstoriaConfig
 from astoria.common.ipc import MetadataManagerMessage
@@ -26,7 +27,9 @@ class MetadataHandlerMixin:
         if payload:
             try:
                 data = loads(payload)
-                metadata_manager_message = parse_obj_as(MetadataManagerMessage, data)
+                metadata_manager_message = TypeAdapter(
+                    MetadataManagerMessage
+                ).validate_python(data)
                 await self.handle_metadata(metadata_manager_message.metadata)
             except ValidationError:
                 LOGGER.warning("Received bad metadata manager message.")
@@ -41,4 +44,6 @@ class MetadataHandlerMixin:
 
         :param metadata: The metadata included in the update.
         """
-        LOGGER.debug(f"Received new metadata: {metadata.json()}")
+        if LOGGER.getEffectiveLevel() == logging.DEBUG:
+            # ∴ we don't needlessly generate the JSON if it's not being logged
+            LOGGER.debug(f"Received new metadata: {metadata.model_dump_json()}")
